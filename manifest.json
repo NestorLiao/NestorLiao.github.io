@@ -1,0 +1,15 @@
+{
+  "name": "Just Dont Panic",
+  "short_name": "Just Dont Panic",
+  "start_url": "/NestorLiao/NestorLiao.github.io.git/",
+  "scope": "/NestorLiao/NestorLiao.github.io.git/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "icons": [
+    {
+      "src": "/NestorLiao/NestorLiao.github.io.git/favicon.svg",
+      "sizes": "512x512"
+    }
+  ]
+}
