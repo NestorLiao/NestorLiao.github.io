@@ -1,1 +1,54 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Tags on Just Dont Panic</title><link>http://localhost:1313/NestorLiao/NestorLiao.github.io.git/tags/</link><description>Recent content in Tags on Just Dont Panic</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Wed, 02 Apr 2014 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/NestorLiao/NestorLiao.github.io.git/tags/index.xml" rel="self" type="application/rss+xml"/><item><title>Development</title><link>http://localhost:1313/NestorLiao/NestorLiao.github.io.git/tags/development/</link><pubDate>Wed, 02 Apr 2014 00:00:00 +0000</pubDate><guid>http://localhost:1313/NestorLiao/NestorLiao.github.io.git/tags/development/</guid><description/></item><item><title>Go</title><link>http://localhost:1313/NestorLiao/NestorLiao.github.io.git/tags/go/</link><pubDate>Wed, 02 Apr 2014 00:00:00 +0000</pubDate><guid>http://localhost:1313/NestorLiao/NestorLiao.github.io.git/tags/go/</guid><description/></item><item><title>Golang</title><link>http://localhost:1313/NestorLiao/NestorLiao.github.io.git/tags/golang/</link><pubDate>Wed, 02 Apr 2014 00:00:00 +0000</pubDate><guid>http://localhost:1313/NestorLiao/NestorLiao.github.io.git/tags/golang/</guid><description/></item><item><title>Hugo</title><link>http://localhost:1313/NestorLiao/NestorLiao.github.io.git/tags/hugo/</link><pubDate>Wed, 02 Apr 2014 00:00:00 +0000</pubDate><guid>http://localhost:1313/NestorLiao/NestorLiao.github.io.git/tags/hugo/</guid><description/></item><item><title>Templates</title><link>http://localhost:1313/NestorLiao/NestorLiao.github.io.git/tags/templates/</link><pubDate>Wed, 02 Apr 2014 00:00:00 +0000</pubDate><guid>http://localhost:1313/NestorLiao/NestorLiao.github.io.git/tags/templates/</guid><description/></item><item><title>Themes</title><link>http://localhost:1313/NestorLiao/NestorLiao.github.io.git/tags/themes/</link><pubDate>Wed, 02 Apr 2014 00:00:00 +0000</pubDate><guid>http://localhost:1313/NestorLiao/NestorLiao.github.io.git/tags/themes/</guid><description/></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on Just Dont Panic</title>
+    <link>https://NestorLiao.github.io/tags/</link>
+    <description>Recent content in Tags on Just Dont Panic</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 02 Apr 2014 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://NestorLiao.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Development</title>
+      <link>https://NestorLiao.github.io/tags/development/</link>
+      <pubDate>Wed, 02 Apr 2014 00:00:00 +0000</pubDate>
+      <guid>https://NestorLiao.github.io/tags/development/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Go</title>
+      <link>https://NestorLiao.github.io/tags/go/</link>
+      <pubDate>Wed, 02 Apr 2014 00:00:00 +0000</pubDate>
+      <guid>https://NestorLiao.github.io/tags/go/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Golang</title>
+      <link>https://NestorLiao.github.io/tags/golang/</link>
+      <pubDate>Wed, 02 Apr 2014 00:00:00 +0000</pubDate>
+      <guid>https://NestorLiao.github.io/tags/golang/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Hugo</title>
+      <link>https://NestorLiao.github.io/tags/hugo/</link>
+      <pubDate>Wed, 02 Apr 2014 00:00:00 +0000</pubDate>
+      <guid>https://NestorLiao.github.io/tags/hugo/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Templates</title>
+      <link>https://NestorLiao.github.io/tags/templates/</link>
+      <pubDate>Wed, 02 Apr 2014 00:00:00 +0000</pubDate>
+      <guid>https://NestorLiao.github.io/tags/templates/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Themes</title>
+      <link>https://NestorLiao.github.io/tags/themes/</link>
+      <pubDate>Wed, 02 Apr 2014 00:00:00 +0000</pubDate>
+      <guid>https://NestorLiao.github.io/tags/themes/</guid>
+      <description></description>
+    </item>
+  </channel>
+</rss>
