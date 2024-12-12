@@ -1,4 +1,4 @@
-1. *Recommended Online Time*:  
+*Recommended. 1 Online Time*:  
    - *2 to 3 hours per day* for research, troubleshooting, and engaging with online communities like Stack Overflow or GitHub. This includes watching tutorials, participating in forums, and downloading relevant coding resources.
    - The rest of your study time can be spent offline, coding on your own, reading textbooks, or working through problems. This minimizes distractions while maximizing focus on the learning process.
 
@@ -22,4 +22,21 @@
 
 By following this structured approach, you’ll likely be able to balance your online time effectively while maintaining your programming goals and mental well-being. 
 
-As a reference, studies suggest that avoiding excessive screen time can help preserve focus and prevent burnout, especially when you're working intensively on complex subjects
+As a reference, studies suggest that avoiding excessive screen time can help preserve focus and prevent burnout, especially when you're working intensively on complex subjects.
+
+
+* So my solution to this:
+only turn on network in sat-fri during 12am to 15am: three hous online peroid
+only turn on network in weekend during 12am to 13am: one hou online peroid
+block porn/news/3s/entertainment sites, or any search engine on hosts and router level and ublock origin, and tell ai search engine don't talk about anything no relavent to programming.
+
+Then you goona not only value the online time without brainless browse sites, the rest time you will experien the mindful moment though:
+meditation
+walk outside
+kettlebell
+programming
+chat with people
+cooking or learn new skill
+
+
+
