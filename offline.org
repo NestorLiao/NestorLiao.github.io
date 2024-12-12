@@ -1,0 +1,25 @@
+1. *Recommended Online Time*:  
+   - *2 to 3 hours per day* for research, troubleshooting, and engaging with online communities like Stack Overflow or GitHub. This includes watching tutorials, participating in forums, and downloading relevant coding resources.
+   - The rest of your study time can be spent offline, coding on your own, reading textbooks, or working through problems. This minimizes distractions while maximizing focus on the learning process.
+
+2. *Offline Coding and Study*:
+   - *4 to 6 hours per day* of uninterrupted coding and reading, with breaks for rest and mental clarity.
+   - Focus on solving real-world problems, building projects, and applying theoretical knowledge. You can study books and manuals offline and code in your offline environment without the constant distraction of online interactions.
+
+3. *Long-Term Learning Plan* (3-6 months):
+   - *Weekdays*: Devote time to specific learning goals such as mastering data structures, algorithms, or system programming.
+     - *Example schedule*: 3 hours of online study for tutorials/documentation + 4-6 hours of focused offline coding practice.
+   - *Weekends*: Focus on larger projects or tackling more challenging tasks (possibly with the help of online resources as needed).
+     - *Example weekend schedule*: Limit online time to 2 hours for research or collaboration, focus the rest of the weekend on hands-on project development.
+
+4. *Minimizing Distractions*:
+   - Try to *disconnect from social media* or news sites to keep your mental energy focused on learning.
+   - Consider blocking distracting websites or using "focus" tools to restrict internet access during study periods.
+
+5. *Mental Health and Breaks*:
+   - Ensure you *take regular breaks* (every hour or so) to avoid burnout.
+   - Engage in *offline hobbies* like walking or reading to recharge your brain.
+
+By following this structured approach, you’ll likely be able to balance your online time effectively while maintaining your programming goals and mental well-being. 
+
+As a reference, studies suggest that avoiding excessive screen time can help preserve focus and prevent burnout, especially when you're working intensively on complex subjects

@@ -1,0 +1,84 @@
+** DONE Babel set up elisp,nix/scheme/rust,zig/lua,python/C,C++/bash,python,golang
+CLOSED: [2024-12-04 Wed 19:34]
+:LOGBOOK:
+- State "DONE"       from "NEXT"       [2024-12-04 Wed 19:34]
+:END:
+- [-] set up org code block
+  - [X] elisp   [[https://orgmode.org/worg/org-contrib/babel/languages/ob-doc-elisp.html][doc]]
+  - [ ] nix
+  - [X] scheme[[https://orgmode.org/worg/org-contrib/babel/languages/ob-doc-scheme.html][   doc]]
+  - [X] lua    [[https://orgmode.org/worg/org-contrib/babel/languages/ob-doc-lua.html][doc]]
+  - [X] c c++[[https://orgmode.org/worg/org-contrib/babel/languages/ob-doc-C.html][  doc]]
+  - [X] zig[[https://github.com/jolby/ob-zig.el][     doc]]
+  - [X] python[[https://orgmode.org/worg/org-contrib/babel/languages/ob-doc-python.html][  doc]]
+  - [ ] go - networks
+  - [ ] rust
+  - [ ] bash
+
+
+** elisp
+
+[[/home/leeao/save/books/structure and interpretation of computer programs.epub][SICP]]
+
+
+** Rust
+[[https://github.com/rust-unofficial/awesome-rust?tab=readme-ov-file][awesome-rust]]
+[[https://rustycab.github.io/LearnRustEasy/chapter_1.html][learnrusteasy]]
+[[https://doc.rust-lang.org/stable/book/][the rust programming language]]
+
+** Zig
+
+[[https://github.com/catdevnull/awesome-zig#readme][awesome-zig]]
+[[https://pedropark99.github.io/zig-book/Chapters/01-zig-weird.html][zig-book]]
+
+
+#+source: simple
+#+begin_src zig :imports '(std)
+const stdout = std.io.getStdOut().writer();
+try stdout.print("{s}", .{"hello world"});
+#+end_src
+
+#+RESULTS: simple
+: hello world
+
+
+
+
+** Learn Python
+#+NAME: hello
+#+BEGIN_SRC python :results output :exports code
+def print_hello():
+    print("Httelltto")
+
+print_hello()
+#+END_SRC
+
+#+RESULTS: hello
+: Httelltto
+
+
+
+**Learn C/C++
+[[file:~/save/books/Beej's Guide to C Programming.html#how-to-read-this-book][Beej's Guide to C Programming]]
+
+#+begin_src C++ :includes <stdio.h> <math.h>
+    void newline(void)
+    {
+        printf("hello\n");
+    }
+  int main(){
+      double pi = 3.1416;
+      printf("sin(pi/2)=%f\nln1=%f\n", sin(pi/2), log(1.0));
+    newline();
+      int a=2;
+      int b=3;
+      int c=5;
+      printf("%d\n", a+b+c);
+      }
+#+end_src
+
+#+RESULTS:
+| sin(pi/2)=1.000000 |
+| ln1=0.000000      |
+| hello             |
+| 10               |

@@ -1,0 +1,14 @@
+* using eink screen coding.
+
+** ui: nixos-stylix, firefox-pure white
+Use the pure white theme in anywhere, you can do this by using stylix to set pure white as wallpaper to make system level as white style
+font constract and eink addons  in firefox.
+** editor
+emacs-modules theme without syntax highlighting, and stop using monospace, just try kindle's bookerly font, then you will feel you are reading kindle in such comfor and informative mode.
+** mental
+use black++, m1 mode, 5 constract, no color, lees distraction, and more concentrate
+You will never care about font or color theme anymore, because emacs+bookerly+eink is such a warm blanket.
+** physical
+no lcd/led/any crazy bright square, it's such a nature piece like book, can feel the eye strain anymore.
+no addictive colorful attraction, you can just stand up to drink or stretch like we used to be.
+
