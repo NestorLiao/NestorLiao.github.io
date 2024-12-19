@@ -1,0 +1,956 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!--
+R1: initial release
+R2: added set disassembly-flavor stuff, moved "more" to top of doc,
+    license, DDD link, corefile stuff, stepi
+-->
+<html class="TridactylThemeAuto wvzyfagm idc0_343" style="scroll-behavior: unset;"><iframe class="cleanslate hidden" src="Beej's%20Quick%20Guide%20to%20GDB_files/commandline.html" id="cmdline_iframe" loading="lazy" style="height: 0px !important; scroll-behavior: unset;"></iframe><head style="scroll-behavior: unset;">
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+<title style="scroll-behavior: unset;">Beej's Quick Guide to GDB</title>
+<link rel="stylesheet" href="Beej's%20Quick%20Guide%20to%20GDB_files/bg.css" type="text/css" style="scroll-behavior: unset;">
+<link rel="icon" type="image/gif" href="https://beej.us/guide/favicon.gif" style="scroll-behavior: unset;">
+<style id="_fc_" style="scroll-behavior: unset;">[d__],[d__][style]{color:rgba(0, 0, 0, 1)!important}[s__='1']{font-size: calc(1px + 15%)!important}
+[s__='2']{font-size: calc(2px + 15%)!important}
+[s__='3']{font-size: calc(3px + 15%)!important}
+[s__='4']{font-size: calc(4px + 15%)!important}
+[s__='5']{font-size: calc(5px + 15%)!important}
+[s__='6']{font-size: calc(6px + 15%)!important}
+[s__='7']{font-size: calc(7px + 15%)!important}
+[s__='8']{font-size: calc(8px + 15%)!important}
+[s__='9']{font-size: calc(9px + 15%)!important}
+[s__='10']{font-size: calc(10px + 15%)!important}
+[s__='11']{font-size: calc(11px + 15%)!important}
+[s__='12']{font-size: calc(12px + 15%)!important}
+[s__='13']{font-size: calc(13px + 15%)!important}
+[s__='14']{font-size: calc(14px + 15%)!important}
+::placeholder{opacity:1!important;}[b__]{border:1px solid black!important}</style></head>
+
+<body style="scroll-behavior: unset;">
+
+<h1 class="guidetitle" style="scroll-behavior: unset;">Beej's Quick Guide to GDB</h1>
+<i style="scroll-behavior: unset;">Release 2 (2009 Jun 14)</i>
+
+<p style="scroll-behavior: unset;">Translations:
+</p><ul style="scroll-behavior: unset;">
+<li style="scroll-behavior: unset;"><a href="https://paintingvalley.com/ru-bggdb" d__="" style="scroll-behavior: unset;">Russian</a>
+</li></ul>
+
+<p style="scroll-behavior: unset;">This is a very quick-and-dirty guide meant to get you started with
+the GNU Debugger, <b class="command" style="scroll-behavior: unset;">gdb</b>, from the command line in a
+terminal.  Often times <b class="command" style="scroll-behavior: unset;">gdb</b> is run via an IDE, but
+many people out there shun IDEs for a variety of reasons, and this
+tutorial is for you!</p>
+
+<p style="scroll-behavior: unset;">Again, this is only a getting-started guide.  There's much much MUCH
+more to learn about what the debugger does than is written in these few
+short paragraphs.  Check out your "man" pages or the online resources
+listed below for more info.</p>
+
+<p style="scroll-behavior: unset;">This tutorial is meant to be read in order, up to, but not including,
+the "Misc" section.</p>
+
+<!-- ================================================================ -->
+<h2 style="scroll-behavior: unset;">Contents</h2>
+<ul style="scroll-behavior: unset;">
+<li style="scroll-behavior: unset;"><a href="#compiling" d__="" style="scroll-behavior: unset;">Compiling to use a debugger</a>
+</li><li style="scroll-behavior: unset;"><a href="#more" d__="" style="scroll-behavior: unset;">More Information</a>
+</li><li style="scroll-behavior: unset;"><a href="#license" d__="" style="scroll-behavior: unset;">License</a>
+</li><li style="scroll-behavior: unset;"><a href="#starting" d__="" style="scroll-behavior: unset;">Starting <b class="command" d__="" style="scroll-behavior: unset;">gdb</b> and getting to <tt class="code" s__="12" d__="" style="scroll-behavior: unset;">main()</tt></a>
+</li><li style="scroll-behavior: unset;"><a href="#breakpoints" d__="" style="scroll-behavior: unset;">Breakpoints</a>
+</li><li style="scroll-behavior: unset;"><a href="#stepping" d__="" style="scroll-behavior: unset;">Stepping Around</a>
+</li><li style="scroll-behavior: unset;"><a href="#exvars" d__="" style="scroll-behavior: unset;">Examining Variables</a>
+</li><li style="scroll-behavior: unset;"><a href="#misc" d__="" style="scroll-behavior: unset;">Misc Stuff</a>
+	<ul style="scroll-behavior: unset;">
+	<li style="scroll-behavior: unset;"><a href="#stackman" d__="" style="scroll-behavior: unset;">Stack Manipulation</a>
+	</li><li style="scroll-behavior: unset;"><a href="#morestep" d__="" style="scroll-behavior: unset;">Additional Stepping Methods</a>
+	</li><li style="scroll-behavior: unset;"><a href="#jump" d__="" style="scroll-behavior: unset;">Jumping to an Arbitrary Section of Code</a>
+	</li><li style="scroll-behavior: unset;"><a href="#varmod" d__="" style="scroll-behavior: unset;">Changing Variables and Values at Runtime</a>
+	</li><li style="scroll-behavior: unset;"><a href="#hardwatch" d__="" style="scroll-behavior: unset;">Hardware Watchpoints</a>
+	</li><li style="scroll-behavior: unset;"><a href="#attach" d__="" style="scroll-behavior: unset;">Attach to a Running Process</a>
+	</li><li style="scroll-behavior: unset;"><a href="#coredump" d__="" style="scroll-behavior: unset;">Using Coredumps for Postmortem Analysis</a>
+	</li><li style="scroll-behavior: unset;"><a href="#window" d__="" style="scroll-behavior: unset;">Window Functions</a>
+	</li><li style="scroll-behavior: unset;"><a href="#regasm" d__="" style="scroll-behavior: unset;">Display Registers and Assembly</a>
+	</li><li style="scroll-behavior: unset;"><a href="#frontend" d__="" style="scroll-behavior: unset;">Writing a Front-End</a>
+	</li></ul>
+</li><li style="scroll-behavior: unset;"><a href="#qref" d__="" style="scroll-behavior: unset;">Quick Reference Cheat Sheet</a>
+</li></ul>
+
+<!-- ================================================================ -->
+<a name="compiling" style="scroll-behavior: unset;"></a>
+<h2 class="pbb" style="scroll-behavior: unset;">Compiling</h2>
+
+<p style="scroll-behavior: unset;">You have to tell your compiler to compile your code with symbolic
+debugging information included.  Here's how to do it with <b class="command" style="scroll-behavior: unset;">gcc</b>, with the <b class="option" style="scroll-behavior: unset;">-g</b> switch:</p>
+
+<pre class="screen" s__="14" style="scroll-behavior: unset;">
+$ <b class="userinput" s__="14" style="scroll-behavior: unset;">gcc -g hello.c -o hello</b>
+
+$ <b class="userinput" s__="14" style="scroll-behavior: unset;">g++ -g hello.cpp -o hello</b>
+
+</pre>
+
+<p style="scroll-behavior: unset;">Once you've done that, you should be able to view program listings in
+the debugger.</p>
+
+<!-- ================================================================ -->
+<a name="more" style="scroll-behavior: unset;"></a>
+<h2 style="scroll-behavior: unset;">More Information</h2>
+
+<p style="scroll-behavior: unset;">Check out the <a target="_blank" href="http://www.gnu.org/software/gdb/documentation/" d__="" style="scroll-behavior: unset;">Official GDB
+Documentation</a> for more information than you can shake a stick
+at!</p>
+
+<p style="scroll-behavior: unset;">Also, a good GNU GDB front-end is <a target="_blank" href="http://www.gnu.org/software/ddd/" d__="" style="scroll-behavior: unset;">DDD, the
+DataDisplayDebugger</a>.</p>
+
+<!-- ================================================================ -->
+<a name="license" style="scroll-behavior: unset;"></a>
+<h2 style="scroll-behavior: unset;">License</h2>
+
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/us/" target="_blank" style="scroll-behavior: unset;"><img alt="Creative Commons License" style="border-width: 0px; float: right; padding-left: 20px; scroll-behavior: unset;" src="Beej's%20Quick%20Guide%20to%20GDB_files/88x31.svg"></a><p style="scroll-behavior: unset;"><span xmlns:dc="http://purl.org/dc/elements/1.1/" href="http://purl.org/dc/dcmitype/Text" property="dc:title" rel="dc:type" style="scroll-behavior: unset;">Beej's Quick Guide to GDB</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://beej.us/guide/bggdb/" property="cc:attributionName" rel="cc:attributionURL" d__="" style="scroll-behavior: unset;">Brian "Beej Jorgensen" Hall</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/us/" target="_blank" d__="" style="scroll-behavior: unset;">Creative Commons Attribution-Noncommercial-No Derivative Works 3.0 United States License</a>.</p>
+
+<!-- ================================================================ -->
+<a name="starting" style="scroll-behavior: unset;"></a>
+<h2 class="pbb" style="scroll-behavior: unset;">Starting The Debugger</h2>
+
+<p style="scroll-behavior: unset;">First things first: you can enter <b class="userinput" style="scroll-behavior: unset;">help</b> at
+any <b class="command" style="scroll-behavior: unset;">gdb</b> prompt and get more information.  Also,
+you can enter <b class="userinput" style="scroll-behavior: unset;">quit</b> to quit the debugger.
+Finally, just hitting <b class="userinput" style="scroll-behavior: unset;">RETURN</b> will repeat the
+last command entered. Now let's fire it up!</p>
+
+<p style="scroll-behavior: unset;">There are several ways to start the debugger (e.g. if you were an IDE
+you might start it with a particular mode that's not so human-friendly)
+but I'll mention two of them here: vanilla console mode and curses GUI
+mode.  The GUI is better, but let's quickly cover the simple one, and
+launch a program called <b class="command" style="scroll-behavior: unset;">hello</b> in the debugger:</p>
+
+<pre class="screen" s__="14" style="scroll-behavior: unset;">$ <b class="userinput" s__="14" style="scroll-behavior: unset;">gdb hello</b>
+GNU gdb 6.8
+Copyright (C) 2008 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later &lt;http://gnu.org/licenses/gpl.html&gt;
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.  Type "show copying"
+and "show warranty" for details.
+This GDB was configured as "i486-slackware-linux"...
+(gdb) <b class="userinput" s__="14" style="scroll-behavior: unset;">run</b>
+Starting program: /home/beej/hello 
+Hello, world!
+
+Program exited normally.
+(gdb) 
+</pre>
+
+<p style="scroll-behavior: unset;">The last line is the <b class="command" style="scroll-behavior: unset;">gdb</b> prompt, waiting for
+you to tell it what to do.  Type <b class="userinput" style="scroll-behavior: unset;">r</b> or <b class="userinput" style="scroll-behavior: unset;">run</b> to run the program.  (<b class="command" style="scroll-behavior: unset;">gdb</b> allows you to abbreviate commands until they
+become ambiguous.)</p>
+
+<p style="scroll-behavior: unset;"><b style="scroll-behavior: unset;">To start in neato and highly-recommended GUI mode</b>, start the
+debugger with <b class="command" style="scroll-behavior: unset;">gdb -tui</b>.  (For many of the
+examples, below, I show the output of <b class="command" style="scroll-behavior: unset;">gdb</b>'s dumb
+terminal mode, but in real life I use TUI mode exclusively.)</p>
+
+<p style="scroll-behavior: unset;">And here is a screenshot of what you'll see, approximately:</p>
+
+<center style="scroll-behavior: unset;"><img src="Beej's%20Quick%20Guide%20to%20GDB_files/hellotui.svg" class="figureimg" border="0" style="scroll-behavior: unset;"></center>
+
+<p style="scroll-behavior: unset;">All the normal <b class="command" style="scroll-behavior: unset;">gdb</b> commands will work in GUI
+mode, and additionally the arrow keys and pgup/pgdown keys will scroll
+the source window (when it has focus, which it does by default).  Also,
+you can change which file or function is displayed in the source window
+by giving the command <b class="userinput" style="scroll-behavior: unset;">list</b> with a location as
+an argument, for example, "<b class="userinput" style="scroll-behavior: unset;">list hello.c:5</b> to
+bring up the file <tt class="filename" s__="12" style="scroll-behavior: unset;">hello.c</tt> on line 5.  (See "<a href="#breakpoints" d__="" style="scroll-behavior: unset;">Breakpoints</a>", below, for sample
+locations—the same locations that work with breakpoints will work
+with the <b class="userinput" style="scroll-behavior: unset;">list</b> command.)  As a side note, <b class="userinput" style="scroll-behavior: unset;">list</b> also works in dumb terminal mode.</p>
+
+<p style="scroll-behavior: unset;">Now, notice that we passed the name of the executable on the command
+line.  Another option you have is to just start <b class="command" style="scroll-behavior: unset;">gdb</b> with nothing else on the command line, then give
+it the command <b class="userinput" style="scroll-behavior: unset;">file hello</b>, and that will cause
+the executable "hello" to be loaded up.</p><p style="scroll-behavior: unset;">
+
+</p><p style="scroll-behavior: unset;">Command line arguments!  What if you have to get something into <tt class="variable" s__="12" style="scroll-behavior: unset;">argv</tt> in your program?  Pass them as arguments to
+the <b class="command" style="scroll-behavior: unset;">run</b> command when you start execution:</p>
+
+<pre class="screen" s__="14" style="scroll-behavior: unset;">$ <b class="userinput" s__="14" style="scroll-behavior: unset;">gdb hello</b>
+GNU gdb 6.8
+Copyright (C) 2008 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later &lt;http://gnu.org/licenses/gpl.html&gt;
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.  Type "show copying"
+and "show warranty" for details.
+This GDB was configured as "i486-slackware-linux"...
+(gdb) <b class="userinput" s__="14" style="scroll-behavior: unset;">run arg1 arg2</b>
+Starting program: /home/beej/hello arg1 arg2
+Hello, world!
+
+Program exited normally.
+(gdb) 
+</pre>
+
+<p style="scroll-behavior: unset;">Notice where it says "Starting Program", above, it shows the
+arguments "arg1" and "arg2" being passed to "hello".</p>
+
+<!-- ================================================================ -->
+<a name="breakpoints" style="scroll-behavior: unset;"></a>
+<h2 class="pbb" style="scroll-behavior: unset;">Breakpoints</h2>
+
+<p style="scroll-behavior: unset;">Just starting the debugger to run the program straight through isn't
+very useful—we need to stop execution and get into stepping
+mode.
+
+</p><p style="scroll-behavior: unset;">First, before you issue the <b class="userinput" style="scroll-behavior: unset;">run</b> command, you
+need to set a breakpoint someplace you'd like to stop.  You use the <b class="userinput" style="scroll-behavior: unset;">break</b> or <b class="userinput" style="scroll-behavior: unset;">b</b> command, and
+specify a location, which can be a function name, a line number, or a
+source file and line number.  These are examples of locations, which are
+used by various other commands as well as <b class="userinput" style="scroll-behavior: unset;">break</b>:</p>
+
+<center style="scroll-behavior: unset;"><table border="0" class="singleborder" style="scroll-behavior: unset;">
+
+<tbody style="scroll-behavior: unset;"><tr style="scroll-behavior: unset;"><td class="rightpad" align="left" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">break main</b></td><td align="left" style="scroll-behavior: unset;">Break at the beginning of the <tt class="function" s__="12" style="scroll-behavior: unset;">main()</tt> function</td></tr>
+
+<tr style="scroll-behavior: unset;"><td class="rightpad" align="left" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">break 5</b></td><td align="left" style="scroll-behavior: unset;">Break at line 5 of the current file</td></tr>
+
+<tr style="scroll-behavior: unset;"><td class="rightpad" align="left" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">break hello.c:5</b></td><td align="left" style="scroll-behavior: unset;">Break at line 5 of <tt class="filename" s__="12" style="scroll-behavior: unset;">hello.c</tt></td></tr>
+
+</tbody></table>
+</center>
+
+<p style="scroll-behavior: unset;">So for this test, let's set a breakpoint at <tt class="function" s__="12" style="scroll-behavior: unset;">main()</tt>, and start the program:
+
+</p><pre class="screen" s__="14" style="scroll-behavior: unset;">$ <b class="userinput" s__="14" style="scroll-behavior: unset;">gdb hello</b>
+GNU gdb 6.8
+Copyright (C) 2008 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later &lt;http://gnu.org/licenses/gpl.html&gt;
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.  Type "show copying"
+and "show warranty" for details.
+This GDB was configured as "i486-slackware-linux"...
+(gdb) <b class="userinput" s__="14" style="scroll-behavior: unset;">b main</b>
+Breakpoint 1 at 0x8048395: file hello.c, line 5.
+(gdb) <b class="userinput" s__="14" style="scroll-behavior: unset;">r</b>
+Starting program: /home/beej/hello 
+
+Breakpoint 1, main () at hello.c:5
+5		printf("Hello, world!\n");
+(gdb)
+</pre>
+
+<p style="scroll-behavior: unset;">As you see, we've arrived at <tt class="function" s__="12" style="scroll-behavior: unset;">main()</tt> and
+execution has stopped at the breakpoint we set there.  If you're running
+in dumb terminal mode, <b class="command" style="scroll-behavior: unset;">gdb</b> will print the line it
+will execute next.  If you're running in cool GUI mode, the line it will
+execute next will be highlighted in the source window.</p>
+
+<p style="scroll-behavior: unset;">To list the current breakpoints, use the <b class="userinput" style="scroll-behavior: unset;">info</b> command, like so: "<b class="userinput" style="scroll-behavior: unset;">info
+breakpoints</b>" (or the shorter "<b class="userinput" style="scroll-behavior: unset;">i b</b>"):</p>
+
+<pre class="screen" s__="14" style="scroll-behavior: unset;">(gdb) <b class="userinput" s__="14" style="scroll-behavior: unset;">b main</b>
+Breakpoint 1 at 0x8048395: file hello.c, line 5.
+(gdb) <b class="userinput" s__="14" style="scroll-behavior: unset;">i b</b>
+Num     Type           Disp Enb Address    What
+1       breakpoint     keep y   0x08048395 in main at hello.c:5
+</pre>
+
+<p style="scroll-behavior: unset;">To clear a breakpoint, use the <b class="userinput" style="scroll-behavior: unset;">clear</b> command
+with the breakpoint location.  You can also clear a breakpoint by number
+with the <b class="userinput" style="scroll-behavior: unset;">delete</b> command.</p>
+
+<p style="scroll-behavior: unset;">Additionally, you can <b class="userinput" style="scroll-behavior: unset;">enable</b> or <b class="userinput" style="scroll-behavior: unset;">disable</b> breakpoints, though these two commands
+take a breakpoint number as an argument, not a location!  The
+enabled/disabled status of a breakpoint is visible under the "Enb"
+column in the breakpoint listing.</p>
+
+<pre class="screen" s__="14" style="scroll-behavior: unset;">(gdb) <b class="userinput" s__="14" style="scroll-behavior: unset;">i b</b>
+Num     Type           Disp Enb Address    What
+1       breakpoint     keep y   0x08048395 in main at hello.c:5
+(gdb) <b class="userinput" s__="14" style="scroll-behavior: unset;">disable 1</b>
+(gdb) <b class="userinput" s__="14" style="scroll-behavior: unset;">i b</b>
+Num     Type           Disp Enb Address    What
+1       breakpoint     keep n   0x08048395 in main at hello.c:5
+(gdb) <b class="userinput" s__="14" style="scroll-behavior: unset;">clear main</b>
+Deleted breakpoint 1 
+(gdb) <b class="userinput" s__="14" style="scroll-behavior: unset;">i b</b>
+No breakpoints or watchpoints.
+</pre>
+
+<!-- ================================================================ -->
+<a name="stepping" style="scroll-behavior: unset;"></a>
+<h2 class="pbb" style="scroll-behavior: unset;">Stepping Around</h2>
+
+<p style="scroll-behavior: unset;">Once execution stops at a breakpoint, you can tell the debugger to do
+a few things.  Let's start with the <b class="userinput" style="scroll-behavior: unset;">next</b>
+command (or <b class="userinput" style="scroll-behavior: unset;">n</b>).  This command moves you to the
+next statement in the current function (or returns to the function's
+caller if you've stepped off the end of the function.)  Here's a sample
+run; remember that <b class="command" style="scroll-behavior: unset;">gdb</b> is printing the line <i style="scroll-behavior: unset;">it
+will execute next</i> just before the "(gdb)" prompt.  Also notice that
+when we run <b class="userinput" style="scroll-behavior: unset;">next</b> on the <tt class="function" s__="12" style="scroll-behavior: unset;">printf()</tt> line, we see the output appear.</p>
+
+<pre class="screen" s__="14" style="scroll-behavior: unset;">(gdb) <b class="userinput" s__="14" style="scroll-behavior: unset;">b main</b>
+Breakpoint 1 at 0x8048395: file hello.c, line 5.
+(gdb) <b class="userinput" s__="14" style="scroll-behavior: unset;">r</b>
+Starting program: /home/beej/hello 
+
+Breakpoint 1, main () at hello.c:5
+5		printf("Hello, world!\n");
+(gdb) <b class="userinput" s__="14" style="scroll-behavior: unset;">next</b>
+Hello, world!
+7		return 0;
+(gdb) <b class="userinput" s__="14" style="scroll-behavior: unset;">next</b>
+8	}
+(gdb) <b class="userinput" s__="14" style="scroll-behavior: unset;">next</b>
+0xb7d6c6a5 in __libc_start_main () from /lib/libc.so.6
+(gdb) <b class="userinput" s__="14" style="scroll-behavior: unset;">next</b>
+Single stepping until exit from function __libc_start_main, 
+which has no line number information.
+
+Program exited normally.
+(gdb) 
+</pre>
+
+<p style="scroll-behavior: unset;">(That weird stuff at the end about <tt class="function" s__="12" style="scroll-behavior: unset;">
+__libc_start_main()</tt> shows you that there was another function that
+called your <tt class="function" s__="12" style="scroll-behavior: unset;">main()</tt> function!  It wasn't
+compiled with debugging information so we can't see the source, but we
+can still step through it—which we do—and the program exits
+normally.)</p>
+
+<p style="scroll-behavior: unset;">Now, notice that <b class="userinput" style="scroll-behavior: unset;">next</b> <i style="scroll-behavior: unset;">steps over</i>
+function calls. This doesn't mean that function doesn't get called; it
+means that <b class="userinput" style="scroll-behavior: unset;">next</b> will execute the function until
+it's done, and then return you to the next line in your current
+function.</p>
+
+<p style="scroll-behavior: unset;">What if you have a function you want to <i style="scroll-behavior: unset;">step into</i> from your
+current function, and trace through that function line-by-line?  Use the
+<b class="userinput" style="scroll-behavior: unset;">step</b> (or <b class="userinput" style="scroll-behavior: unset;">s</b>) command to
+do this.  It works just like <b class="userinput" style="scroll-behavior: unset;">next</b>, except it
+steps into functions.</p>
+
+<p style="scroll-behavior: unset;">Let's say you're tired of single stepping, and just want the program
+to run again.  Use the <b class="userinput" style="scroll-behavior: unset;">continue</b> (or <b class="userinput" style="scroll-behavior: unset;">c</b>) command to continue execution.</p><p style="scroll-behavior: unset;">
+
+</p><p style="scroll-behavior: unset;">What if the program is running but you forgot to set breakpoints?
+You can hit <b class="userinput" style="scroll-behavior: unset;">CTRL-C</b> and that'll stop the program
+wherever it happens to be and return you to a "(gdb)" prompt.  At that
+point, you could set up a proper breakpoint somewhere and <b class="userinput" style="scroll-behavior: unset;">continue</b> to that breakpoint.</p>
+
+<p style="scroll-behavior: unset;">One final shortcut is that just hitting <b class="userinput" style="scroll-behavior: unset;">RETURN</b> will repeat the last command entered; this
+will save you typing <b class="userinput" style="scroll-behavior: unset;">next</b> over and over
+again.</p>
+
+<!-- ================================================================ -->
+<a name="exvars" style="scroll-behavior: unset;"></a>
+<h2 class="pbb" style="scroll-behavior: unset;">Examining Variables</h2>
+
+<p style="scroll-behavior: unset;">If you have some variables you wish to inspect over the course of the
+run, you can <b class="userinput" style="scroll-behavior: unset;">display</b> them, but only if the
+variable is currently in scope.  Each time you step the code, the value
+of the variable will be displayed (if it's in scope).</p>
+
+<p style="scroll-behavior: unset;">(The following output is missing source code output between lines for
+clarity—it's what you'd see in GUI mode.  Imagine you're seeing
+the highlight bar bouncing around the source code while you're running
+this:)</p>
+
+<pre class="screen" s__="14" style="scroll-behavior: unset;">(gdb) <b class="userinput" style="scroll-behavior: unset;">b main</b>
+Breakpoint 1 at 0x8048365: file hello.c, line 5.
+(gdb) <b class="userinput" style="scroll-behavior: unset;">r</b>
+Starting program: /home/beej/hello 
+
+Breakpoint 1, main () at hello.c:5
+(gdb) <b class="userinput" style="scroll-behavior: unset;">disp i</b>
+1: i = -1207447872
+(gdb) <b class="userinput" style="scroll-behavior: unset;">next</b>
+1: i = 1
+(gdb) <b class="userinput" style="scroll-behavior: unset;">next</b>
+1: i = 1
+(gdb) <b class="userinput" style="scroll-behavior: unset;">next</b>
+1: i = 2
+(gdb) <b class="userinput" style="scroll-behavior: unset;">next</b>
+1: i = 2
+(gdb) <b class="userinput" style="scroll-behavior: unset;">next</b>
+1: i = 4
+(gdb) <b class="userinput" style="scroll-behavior: unset;">next</b>
+1: i = 4
+(gdb) <b class="userinput" style="scroll-behavior: unset;">next</b>
+1: i = 4
+(gdb) 
+</pre>
+
+<p style="scroll-behavior: unset;">The number to the left of "i", above, is the display number of the
+variable.  Use this number to <b class="userinput" style="scroll-behavior: unset;">undisplay</b> the
+variable.  If you forget the display numbers, you can type <b class="userinput" style="scroll-behavior: unset;">info display</b> to get them:</p>
+
+<pre class="screen" s__="14" style="scroll-behavior: unset;">(gdb) <b class="userinput" style="scroll-behavior: unset;">b main</b>
+Breakpoint 1 at 0x8048365: file hello.c, line 5.
+(gdb) <b class="userinput" style="scroll-behavior: unset;">r</b>
+Starting program: /home/beej/hello 
+
+Breakpoint 1, main () at hello.c:5
+(gdb) <b class="userinput" style="scroll-behavior: unset;">display i</b>
+1: i = -1207447872
+(gdb) <b class="userinput" style="scroll-behavior: unset;">info display</b>
+Auto-display expressions now in effect:
+Num Enb Expression
+1:   y  i
+(gdb) <b class="userinput" style="scroll-behavior: unset;">undisplay 1</b>
+(gdb)
+</pre>
+
+<p style="scroll-behavior: unset;">If you just want to one-off know the value of a variable, you can <b class="userinput" style="scroll-behavior: unset;">print</b> it.  Here we see the value of "i" is 40:</p>
+
+<pre class="screen" s__="14" style="scroll-behavior: unset;">(gdb) <b class="userinput" style="scroll-behavior: unset;">print i</b>
+$1 = 40
+(gdb)
+</pre>
+
+<p style="scroll-behavior: unset;">(The "$" with the number after it means something, but it's not
+important for beginners.)</p>
+
+<p style="scroll-behavior: unset;">There's also a handy <b class="userinput" style="scroll-behavior: unset;">printf</b> command that you
+can use to better format your output if you want to:
+
+</p><pre class="screen" s__="14" style="scroll-behavior: unset;">(gdb) <b class="userinput" style="scroll-behavior: unset;">printf "%d\n", i</b>
+40
+(gdb) <b class="userinput" style="scroll-behavior: unset;">printf "%08X\n", i</b>
+00000028
+(gdb)
+</pre>
+
+<a name="misc" style="scroll-behavior: unset;"></a>
+
+<!-- ================================================================ -->
+<a name="misc" style="scroll-behavior: unset;"></a>
+<h2 class="pbb" style="scroll-behavior: unset;">Misc Stuff</h2>
+
+<p style="scroll-behavior: unset;">This is stuff that doesn't really fit in the earlier sections, but it
+fun enough to list somewhere.</p>
+
+<!-- ============================ -->
+<a name="stackman" style="scroll-behavior: unset;"></a>
+<h3 style="scroll-behavior: unset;">Stack Manipulation</h3>
+
+<p style="scroll-behavior: unset;">The command <b class="userinput" style="scroll-behavior: unset;">backtrace</b> (or <b class="userinput" style="scroll-behavior: unset;">bt</b>) will show you the current function call
+stack, with the current function at the top, and the callers in order
+beneath it:</p>
+
+<pre class="screen" s__="14" style="scroll-behavior: unset;">(gdb) <b class="userinput" style="scroll-behavior: unset;">backtrace</b>
+#0  subsubfunction () at hello.c:5
+#1  0x080483a7 in subfunction () at hello.c:10
+#2  0x080483cf in main () at hello.c:16
+(gdb)
+</pre>
+
+<p style="scroll-behavior: unset;">Type <b class="userinput" style="scroll-behavior: unset;">help stack</b> for more info on what you
+can do with this.</p>
+
+<!-- ============================ -->
+<a name="morestep" style="scroll-behavior: unset;"></a>
+<h3 style="scroll-behavior: unset;">Additional Stepping Methods</h3>
+
+<p style="scroll-behavior: unset;">To exit the current function and return to the calling function, use
+the <b class="userinput" style="scroll-behavior: unset;">finish</b> command.</p>
+
+<p style="scroll-behavior: unset;">To step for a single assembly instruction, use the <b class="userinput" style="scroll-behavior: unset;">stepi</b> command.</p>
+
+<p style="scroll-behavior: unset;">To continue to a specific location, use the <b class="userinput" style="scroll-behavior: unset;">advance</b> command, specifying a location like those
+shown in the "<a href="#breakpoints" d__="" style="scroll-behavior: unset;">Breakpoints</a>" section, above.
+Here's an example which advances from the current location until the
+function <tt class="function" s__="12" style="scroll-behavior: unset;">subsubfunction()</tt> is called:</p>
+
+<pre class="screen" s__="14" style="scroll-behavior: unset;">Breakpoint 1, main () at hello.c:15
+15		printf("Hello, world!\n");
+(gdb) <b class="userinput" style="scroll-behavior: unset;">advance subsubfunction</b>
+Hello, world!
+subsubfunction () at hello.c:5
+5		printf("Deepest!\n");
+(gdb) 
+</pre>
+
+<p style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">advance</b> is just shorthand for "continue to
+this temporary breakpoint."</p>
+
+<!-- ============================ -->
+<a name="jump" style="scroll-behavior: unset;"></a>
+<h3 style="scroll-behavior: unset;">Jumping to an Arbitrary Section of Code</h3>
+
+<p style="scroll-behavior: unset;">The <b class="userinput" style="scroll-behavior: unset;">jump</b> command works exactly like <b class="userinput" style="scroll-behavior: unset;">continue</b>, except it takes a location to jump to as
+an argument.  (See the the "<a href="#breakpoints" d__="" style="scroll-behavior: unset;">Breakpoints</a>"
+section, above, for more information on locations.)</p>
+
+<p style="scroll-behavior: unset;">If you need to stop at the jump destination, set a breakpoint there
+first.</p>
+
+<!-- ============================ -->
+<a name="varmod" style="scroll-behavior: unset;"></a>
+<h3 style="scroll-behavior: unset;">Changing Variables and Values at Runtime</h3>
+
+<p style="scroll-behavior: unset;">You can use the <b class="userinput" style="scroll-behavior: unset;">set variable</b> command with an
+expression to evaluate, and this allows you to change the value of a
+variable during the run.  You can also shorthand this by just using <b class="userinput" style="scroll-behavior: unset;">set</b> with a parenthesized expression after it:</p>
+
+<pre class="screen" s__="14" style="scroll-behavior: unset;">Breakpoint 1, main () at hello.c:15
+15		int i = 10;
+(gdb) <b class="userinput" style="scroll-behavior: unset;">print i</b>
+$1 = -1208234304
+(gdb) <b class="userinput" style="scroll-behavior: unset;">set (i = 20)</b>
+(gdb) <b class="userinput" style="scroll-behavior: unset;">print i</b>
+$2 = 20
+(gdb) <b class="userinput" style="scroll-behavior: unset;">set variable i = 40</b>
+(gdb) <b class="userinput" style="scroll-behavior: unset;">print i</b>
+$3 = 40
+(gdb) 
+</pre>
+
+<p style="scroll-behavior: unset;">This, along with the <b class="userinput" style="scroll-behavior: unset;">jump</b> command, can help
+you repeat sections of code without restarting the program.</p>
+
+<!-- ============================ -->
+<a name="hardwatch" style="scroll-behavior: unset;"></a>
+<h3 style="scroll-behavior: unset;">Hardware Watchpoints</h3>
+
+<p style="scroll-behavior: unset;">Hardware watchpoints are special breakpoints that will trigger
+whenever an expression changes.  Often you just want to know when a
+variable changes (is written to), and for that you can use the <b class="userinput" style="scroll-behavior: unset;">watch</b> command:</p>
+
+<pre class="screen" s__="14" style="scroll-behavior: unset;">Breakpoint 1, main () at hello.c:5
+5		int i = 1;
+(gdb) <b class="userinput" style="scroll-behavior: unset;">watch i</b>
+Hardware watchpoint 2: i
+(gdb) <b class="userinput" style="scroll-behavior: unset;">continue</b>
+Continuing.
+Hardware watchpoint 2: i
+
+Old value = -1208361280
+New value = 2
+main () at hello.c:7
+7		while (i &lt; 100) {
+(gdb) <b class="userinput" style="scroll-behavior: unset;">continue</b>
+Continuing.
+Hardware watchpoint 2: i
+
+Old value = 2
+New value = 3
+main () at hello.c:7
+7		while (i &lt; 100) {
+(gdb)
+</pre>
+
+<p style="scroll-behavior: unset;">Note that <b class="userinput" style="scroll-behavior: unset;">watch</b> takes an expression as an
+argument, so you can put a variable name in there, or something more
+complex like <tt class="code" s__="12" style="scroll-behavior: unset;">*(p+5)</tt> or <tt class="code" s__="12" style="scroll-behavior: unset;">a[15]</tt>.  I've even tried it with conditional
+expressions like <tt class="code" s__="12" style="scroll-behavior: unset;">i&nbsp;&gt;&nbsp;10</tt>, but have had
+mixed results.</p>
+
+<p style="scroll-behavior: unset;">You can get a list of watch points with <b class="userinput" style="scroll-behavior: unset;">info
+break</b> or <b class="userinput" style="scroll-behavior: unset;">info watch</b>, and you can delete
+them by number with the <b class="userinput" style="scroll-behavior: unset;">delete</b> command.</p>
+
+<p style="scroll-behavior: unset;">Finally, you can use <b class="userinput" style="scroll-behavior: unset;">rwatch</b> to detect when a
+variable is read, and you can use <b class="userinput" style="scroll-behavior: unset;">awatch</b> to
+detect when a variable is either read or written.</p>
+
+<!-- ============================ -->
+<a name="attach" style="scroll-behavior: unset;"></a>
+<h3 style="scroll-behavior: unset;">Attach to a Running Process</h3>
+
+<p style="scroll-behavior: unset;">If your program is already going and you want to stop it and debug,
+first you'll need the process ID (PID), which will be a number.  (Get it
+from Unix's <b class="command" style="scroll-behavior: unset;">ps</b> command.)  Then you'll use the <b class="userinput" style="scroll-behavior: unset;">attach</b> command with the PID to attach to (and
+break) the running program.</p>
+
+<p style="scroll-behavior: unset;">For this, you can just start <b class="command" style="scroll-behavior: unset;">gdb</b> with no
+arguments.</p>
+
+<p style="scroll-behavior: unset;">In the following complete run, you'll notice a few things.  First I
+attach to the running process, and it tells me it's in some function
+deep down called <tt class="function" s__="12" style="scroll-behavior: unset;">__nanosleep_nocancel()</tt>, which
+isn't too surprising since I called <tt class="function" s__="12" style="scroll-behavior: unset;">sleep()</tt> in
+my code.  Indeed, asking for a <b class="userinput" style="scroll-behavior: unset;">backtrace</b> shows
+exactly this call stack.  So I say <b class="userinput" style="scroll-behavior: unset;">finish</b> a
+couple times to get back up to <tt class="function" s__="12" style="scroll-behavior: unset;">main()</tt>.
+
+</p><pre class="screen" s__="14" style="scroll-behavior: unset;">$ <b class="command" style="scroll-behavior: unset;">gdb</b>
+GNU gdb 6.8
+Copyright (C) 2008 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later &lt;http://gnu.org/licenses/gpl.html&gt;
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.  Type "show copying"
+and "show warranty" for details.
+This GDB was configured as "i486-slackware-linux".
+(gdb) <b class="command" style="scroll-behavior: unset;">attach 3490</b>
+Attaching to process 3490
+Reading symbols from /home/beej/hello...done.
+Reading symbols from /lib/libsafe.so.2...done.
+Loaded symbols for /lib/libsafe.so.2
+Reading symbols from /lib/libc.so.6...done.
+Loaded symbols for /lib/libc.so.6
+Reading symbols from /lib/libdl.so.2...done.
+Loaded symbols for /lib/libdl.so.2
+Reading symbols from /lib/ld-linux.so.2...done.
+Loaded symbols for /lib/ld-linux.so.2
+0xb7eab21b in __nanosleep_nocancel () from /lib/libc.so.6
+(gdb) <b class="command" style="scroll-behavior: unset;">backtrace </b>
+#0  0xb7eab21b in __nanosleep_nocancel () from /lib/libc.so.6
+#1  0xb7eab05f in sleep () from /lib/libc.so.6
+#2  0x080483ab in main () at hello.c:10
+(gdb) <b class="command" style="scroll-behavior: unset;">finish</b>
+Run till exit from #0  0xb7eab21b in __nanosleep_nocancel ()
+   from /lib/libc.so.6
+0xb7eab05f in sleep () from /lib/libc.so.6
+(gdb) <b class="command" style="scroll-behavior: unset;">finish</b>
+Run till exit from #0  0xb7eab05f in sleep () from /lib/libc.so.6
+0x080483ab in main () at hello.c:10
+10			sleep(1);
+(gdb) <b class="command" style="scroll-behavior: unset;">list</b>
+5	{
+6		int i = 1;
+7	
+8		while (i &lt; 60) {
+9			i++;
+10			sleep(1);
+11		}
+12	
+13		return 0;
+14	}
+(gdb) <b class="command" style="scroll-behavior: unset;">print i</b>
+$1 = 19
+(gdb) <b class="command" style="scroll-behavior: unset;">quit</b>
+The program is running.  Quit anyway (and detach it)? (y or n) <b class="command" style="scroll-behavior: unset;">y</b>
+Detaching from program: /home/beej/hello, process 3490
+</pre>
+
+<p style="scroll-behavior: unset;">Notice that when I get back to <tt class="function" s__="12" style="scroll-behavior: unset;">main()</tt>, I
+print the value of <tt s__="12" style="scroll-behavior: unset;">i</tt> and it's 19—because in this case the
+program has been running for 19 seconds, and <tt s__="12" style="scroll-behavior: unset;">i</tt> gets incremented
+once per second.</p>
+
+<p style="scroll-behavior: unset;">Once we've quit the debugger and detached from the program, the
+program returns to running normally.</p>
+
+<p style="scroll-behavior: unset;">Mix this with <b class="userinput" style="scroll-behavior: unset;">set variable</b>, above, and
+you've got some power!</p>
+
+<!-- ============================ -->
+<a name="coredump" style="scroll-behavior: unset;"></a>
+<h3 style="scroll-behavior: unset;">Using Coredumps for Postmortem Analysis</h3>
+
+<p style="scroll-behavior: unset;">Let's say you build and run a program, and it dumps core on you for
+some reason or another:</p>
+
+<pre class="screen" s__="14" style="scroll-behavior: unset;">$ <b class="userinput" style="scroll-behavior: unset;">cc -g -o foo foo.c</b>
+$ <b class="userinput" style="scroll-behavior: unset;">./foo</b>
+Segmentation fault (core dumped)
+</pre>
+
+<p style="scroll-behavior: unset;">This means that a core file (with a memory snapshot from the time of
+the crash) has been created with the name "core".  If you're not getting
+a core file (that is, it only says "Segmentation fault" and no core file
+is created), you might have your ulimit set too low; try typing <b class="command" style="scroll-behavior: unset;">ulimit&nbsp;-c&nbsp;unlimited</b> at your shell
+prompt.</p>
+
+<p style="scroll-behavior: unset;">You can fire up <b class="command" style="scroll-behavior: unset;">gdb</b> with the <b class="option" style="scroll-behavior: unset;">-c</b> option to specify a core file:</p>
+
+<pre class="screen" s__="14" style="scroll-behavior: unset;">$ <b class="userinput" style="scroll-behavior: unset;">gdb -tui -c core foo</b>
+</pre>
+
+<p style="scroll-behavior: unset;">And, if in TUI mode, you'll be greeted with a screen of information,
+telling you why the program exited ("signal 11, Segmentation fault"),
+and the highlight will be on the offending line.  (In dumb terminal
+mode, the offending line is printed out.)</p>
+
+<p style="scroll-behavior: unset;">In this example, I print the variable that's causing the problem.
+Indeed it is NULL:</p>
+
+<center style="scroll-behavior: unset;"><img src="Beej's%20Quick%20Guide%20to%20GDB_files/coredump.svg" class="figureimg" border="0" style="scroll-behavior: unset;"></center>
+
+<p style="scroll-behavior: unset;">Even if you don't have all the source code, it's often useful to get
+a <b class="userinput" style="scroll-behavior: unset;">backtrace</b> from the point the program
+crashed.</p>
+
+<!-- ============================ -->
+<a name="window" style="scroll-behavior: unset;"></a>
+<h3 style="scroll-behavior: unset;">Window Functions</h3>
+
+<p style="scroll-behavior: unset;">In TUI mode, you can get a list of existing windows with the <b class="userinput" style="scroll-behavior: unset;">info win</b> command.  You can then change which
+window has focus with the <b class="userinput" style="scroll-behavior: unset;">focus</b> (or <b class="userinput" style="scroll-behavior: unset;">fs</b>) command.  <b class="userinput" style="scroll-behavior: unset;">focus</b> takes
+either a window name, or "prev" or "next" as an argument.  Valid window
+names are "SRC" (source window), "CMD" (command window), "REGS"
+(registers window), and "ASM" (assembly window).  See the next section
+for how to use these other windows.</p>
+
+<p style="scroll-behavior: unset;">Note that when the SRC window has focus, the arrow keys will move the
+source code, but when the CMD window has focus, the arrow keys will
+select the previous and next commands in the command history.  (For the
+record, the commands to move the SRC window single lines and single
+pages are <b class="userinput" style="scroll-behavior: unset;">+</b>, <b class="userinput" style="scroll-behavior: unset;">-</b>, <b class="userinput" style="scroll-behavior: unset;">&lt;</b>, and <b class="userinput" style="scroll-behavior: unset;">&gt;</b>.)</p>
+
+<pre class="screen" s__="14" style="scroll-behavior: unset;">(gdb) <b class="userinput" style="scroll-behavior: unset;">info win</b>
+        SRC     (36 lines)  &lt;has focus&gt;
+        CMD     (18 lines)
+(gdb) <b class="userinput" style="scroll-behavior: unset;">fs next</b>
+Focus set to CMD window.
+(gdb) <b class="userinput" style="scroll-behavior: unset;">info win</b>
+        SRC     (36 lines)
+        CMD     (18 lines)  &lt;has focus&gt;
+(gdb) <b class="userinput" style="scroll-behavior: unset;">fs SRC</b>
+Focus set to SRC window.
+(gdb)
+</pre>
+
+<p style="scroll-behavior: unset;">(Window names are case in-sensitive.)</p>
+
+<p style="scroll-behavior: unset;">The <b class="userinput" style="scroll-behavior: unset;">winheight</b> (or <b class="userinput" style="scroll-behavior: unset;">wh</b>) command sets the height of a particular
+window, but I've had bad luck with this working well.</p>
+
+<!-- ============================ -->
+<a name="regasm" style="scroll-behavior: unset;"></a>
+<h3 style="scroll-behavior: unset;">Display Registers and Assembly</h3>
+
+<p style="scroll-behavior: unset;">In TUI mode, the <b class="userinput" style="scroll-behavior: unset;">layout</b> command controls
+which windows you see.  Additionally, the <b class="userinput" style="scroll-behavior: unset;">tui
+reg</b> allows control of the register window, and will open it if it's
+not already open.</p>
+
+The commands are:<p style="scroll-behavior: unset;"></p>
+
+<center style="scroll-behavior: unset;"><table border="0" class="singleborder" style="scroll-behavior: unset;">
+
+<tbody style="scroll-behavior: unset;"><tr style="scroll-behavior: unset;"><td align="left" class="rightpad" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">layout src</b></td><td align="left" style="scroll-behavior: unset;">Standard layout—source on top, command window on the
+bottom</td></tr>
+
+<tr style="scroll-behavior: unset;"><td align="left" class="rightpad" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">layout asm</b></td><td align="left" style="scroll-behavior: unset;">Just like the "src" layout, except it's an assembly window
+on top</td></tr>
+
+<tr style="scroll-behavior: unset;"><td align="left" class="rightpad" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">layout split</b></td><td align="left" style="scroll-behavior: unset;">Three windows: source on top, assembly in the middle, and
+command at the bottom</td></tr>
+
+<tr style="scroll-behavior: unset;"><td align="left" class="rightpad" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">layout reg</b></td><td align="left" style="scroll-behavior: unset;">Opens the register window on top of either source or
+assembly, whichever was opened last</td></tr>
+
+<tr style="scroll-behavior: unset;"><td align="left" class="rightpad" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">tui&nbsp;reg&nbsp;general</b></td><td align="left" style="scroll-behavior: unset;">Show the general registers</td></tr>
+
+<tr style="scroll-behavior: unset;"><td align="left" class="rightpad" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">tui reg float</b></td><td align="left" style="scroll-behavior: unset;">Show the floating point registers</td></tr>
+
+<tr style="scroll-behavior: unset;"><td align="left" class="rightpad" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">tui&nbsp;reg&nbsp;system</b></td><td align="left" style="scroll-behavior: unset;">Show the "system" registers</td></tr>
+
+<tr style="scroll-behavior: unset;"><td align="left" class="rightpad" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">tui reg next</b></td><td align="left" style="scroll-behavior: unset;">Show the next page of registers—this is important
+because there might be pages of registers that aren't in the "general",
+"float", or "system" sets</td></tr>
+
+</tbody></table></center>
+
+<p style="scroll-behavior: unset;">Here's a nifty screenshot to whet your appetite, showing source and
+assembly in "split" mode:</p>
+
+<center style="scroll-behavior: unset;"><img src="Beej's%20Quick%20Guide%20to%20GDB_files/gdbwinss.svg" border="0" style="scroll-behavior: unset;"></center>
+
+<p style="scroll-behavior: unset;">Assembly code comes in two flavors on Intel machines: Intel and
+AT&amp;T.  You can set which one appears in the disassembly window with
+<b class="userinput" style="scroll-behavior: unset;">set disassembly-flavor</b>.  Valid values are
+"intel" and "att".  If you already have the assembly window open, you'll
+have to close it and reopen it (<b class="userinput" style="scroll-behavior: unset;">layout src</b>
+followed by <b class="userinput" style="scroll-behavior: unset;">layout split</b>, for example.)</p>
+
+<p style="scroll-behavior: unset;">To display registers in dumb terminal mode, type <b class="userinput" style="scroll-behavior: unset;">info registers</b> for the integer registers, or <b class="userinput" style="scroll-behavior: unset;">info all-registers</b> for everything.</p>
+
+<!-- ============================ -->
+<a name="frontend" style="scroll-behavior: unset;"></a>
+<h3 style="scroll-behavior: unset;">Writing a Front-End</h3>
+
+<p style="scroll-behavior: unset;">You're thinking, "Wow, this is pretty cool, but I could write a
+killer front-end for this thing that worked so much better!  How do I do
+it?"</p>
+
+<p style="scroll-behavior: unset;">GDB supports what it calls the "machine interface interpreter", or
+GDB/MI.  The interpreter is selected on the <b class="command" style="scroll-behavior: unset;">gdb</b>
+command line with the <b class="option" style="scroll-behavior: unset;">--interpreter</b> switch.</p>
+
+<p style="scroll-behavior: unset;">Basically you'll launch <b class="command" style="scroll-behavior: unset;">gdb</b> and read commands
+and results to and from it (probably using pipes).  Pretty
+straightforward.</p>
+
+<p style="scroll-behavior: unset;">See the <a target="_blank" href="http://sourceware.org/gdb/current/onlinedocs/gdb_26.html#SEC263" d__="" style="scroll-behavior: unset;">GDB
+documentation for all the details</a>.</p>
+
+
+<!-- ================================================================ -->
+<a name="qref" style="scroll-behavior: unset;"></a>
+<h2 class="pbb" style="scroll-behavior: unset;">Quick Reference</h2>
+
+<p style="scroll-behavior: unset;">Command parameters are in italics.  Optional parameters are in square
+brackets.  All commands can be abbreviated until they become ambiguous.</p>
+
+<p style="scroll-behavior: unset;"><i style="scroll-behavior: unset;">This list is very very incomplete, and only shows things talked
+about in this tutorial!</i></p>
+
+<center style="scroll-behavior: unset;"><table border="0" class="singleborder" style="scroll-behavior: unset;">
+
+<tbody style="scroll-behavior: unset;"><tr style="scroll-behavior: unset;"><td align="left" colspan="2" style="scroll-behavior: unset;"><b class="tableheader" style="scroll-behavior: unset;">Help Commands</b></td></tr>
+
+<tr style="scroll-behavior: unset;"><td class="rightpad" align="left" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">help
+<i style="scroll-behavior: unset;">command</i></b></td><td align="left" style="scroll-behavior: unset;">Get help on a certain command</td></tr>
+
+<tr style="scroll-behavior: unset;"><td class="rightpad" align="left" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">apropos
+<i style="scroll-behavior: unset;">keyword</i></b></td><td align="left" style="scroll-behavior: unset;">Search help for a particular
+keyword</td></tr>
+
+
+
+<tr style="scroll-behavior: unset;"><td class="tablespacer" align="left" colspan="2" style="scroll-behavior: unset;"><b class="tableheader" style="scroll-behavior: unset;">Starting and Quitting</b></td></tr>
+
+<tr style="scroll-behavior: unset;"><td class="rightpad" align="left" style="scroll-behavior: unset;"><b class="command" style="scroll-behavior: unset;">gdb <i style="scroll-behavior: unset;">[-tui]
+[-c core] [exename]</i></b></td><td align="left" style="scroll-behavior: unset;"><b style="scroll-behavior: unset;">(Unix Command)</b>
+Start <b class="command" style="scroll-behavior: unset;">gdb</b> on an executable or standalone; specify
+"-tui" to start the TUI GUI; specify "-c" with a corefile name to see
+where a crash occurred</td></tr>
+
+<tr style="scroll-behavior: unset;"><td class="rightpad" align="left" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">run <i style="scroll-behavior: unset;">[arg1] [arg2]
+[...]</i></b></td><td align="left" style="scroll-behavior: unset;">Run the currently loaded program with
+the given command line arguments</td></tr>
+
+<tr style="scroll-behavior: unset;"><td class="rightpad" align="left" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">quit</b></td><td align="left" style="scroll-behavior: unset;">Exit the debugger</td></tr>
+
+<tr style="scroll-behavior: unset;"><td class="rightpad" align="left" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">file
+<i style="scroll-behavior: unset;">exename</i></b></td><td align="left" style="scroll-behavior: unset;">Load an executable file by
+name</td></tr>
+
+
+
+<tr style="scroll-behavior: unset;"><td class="tablespacer" align="left" colspan="2" style="scroll-behavior: unset;"><b class="tableheader" style="scroll-behavior: unset;">Breakpoints and Watchpoints</b></td></tr>
+
+<tr style="scroll-behavior: unset;"><td class="rightpad" align="left" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">break
+<i style="scroll-behavior: unset;">location</i></b></td><td align="left" style="scroll-behavior: unset;">Set a breakpoint at a location,
+line number, or file (e.g. "main", "5", or "hello.c:23")</td></tr>
+
+<tr style="scroll-behavior: unset;"><td class="rightpad" align="left" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">watch
+<i style="scroll-behavior: unset;">expression</i></b></td><td align="left" style="scroll-behavior: unset;">Break when a variable is
+written to</td></tr>
+
+<tr style="scroll-behavior: unset;"><td class="rightpad" align="left" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">rwatch
+<i style="scroll-behavior: unset;">expression</i></b></td><td align="left" style="scroll-behavior: unset;">Break when a variable is
+read from</td></tr>
+
+<tr style="scroll-behavior: unset;"><td class="rightpad" align="left" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">awatch
+<i style="scroll-behavior: unset;">expression</i></b></td><td align="left" style="scroll-behavior: unset;">Break when a variable is
+written to or read from</td></tr>
+
+<tr style="scroll-behavior: unset;"><td class="rightpad" align="left" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">info break</b></td><td align="left" style="scroll-behavior: unset;">Display breakpoint and watchpoint information and numbers</td></tr>
+
+<tr style="scroll-behavior: unset;"><td class="rightpad" align="left" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">info watch</b></td><td align="left" style="scroll-behavior: unset;">Same as <b class="userinput" style="scroll-behavior: unset;">info break</b></td></tr>
+
+<tr style="scroll-behavior: unset;"><td class="rightpad" align="left" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">clear
+<i style="scroll-behavior: unset;">location</i></b></td><td align="left" style="scroll-behavior: unset;">Clear a breakpoint from a
+location</td></tr>
+
+<tr style="scroll-behavior: unset;"><td class="rightpad" align="left" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">delete <i style="scroll-behavior: unset;">num</i></b></td><td align="left" style="scroll-behavior: unset;">Delete a breakpoint or watchpoint by number</td></tr>
+
+
+<tr style="scroll-behavior: unset;"><td class="tablespacer" align="left" colspan="2" style="scroll-behavior: unset;"><b class="tableheader" style="scroll-behavior: unset;">Stepping and Running</b></td></tr>
+
+<tr style="scroll-behavior: unset;"><td class="rightpad" align="left" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">next</b></td><td align="left" style="scroll-behavior: unset;">Run to the next line of this function</td></tr>
+
+<tr style="scroll-behavior: unset;"><td class="rightpad" align="left" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">step</b></td><td align="left" style="scroll-behavior: unset;">Step into the function on this line, if possible</td></tr>
+
+<tr style="scroll-behavior: unset;"><td class="rightpad" align="left" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">stepi</b></td><td align="left" style="scroll-behavior: unset;">Step a single assembly instruction</td></tr>
+
+<tr style="scroll-behavior: unset;"><td class="rightpad" align="left" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">continue</b></td><td align="left" style="scroll-behavior: unset;">Keep running from here</td></tr>
+
+<tr style="scroll-behavior: unset;"><td class="rightpad" align="left" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">CTRL-C</b></td><td align="left" style="scroll-behavior: unset;">Stop running, wherever you are</td></tr>
+
+<tr style="scroll-behavior: unset;"><td class="rightpad" align="left" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">finish</b></td><td align="left" style="scroll-behavior: unset;">Run until the end of the current function</td></tr>
+
+<tr style="scroll-behavior: unset;"><td class="rightpad" align="left" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">advance
+<i style="scroll-behavior: unset;">location</i></b></td><td align="left" style="scroll-behavior: unset;">Advance to a location,
+line number, or file (e.g. "somefunction", "5", or "hello.c:23")</td></tr>
+
+<tr style="scroll-behavior: unset;"><td class="rightpad" align="left" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">jump <i style="scroll-behavior: unset;">location</i></b></td><td align="left" style="scroll-behavior: unset;">Just like <b class="userinput" style="scroll-behavior: unset;">continue</b>, except jump to
+a particular location first.</td></tr>
+
+
+<tr style="scroll-behavior: unset;"><td class="tablespacer" align="left" colspan="2" style="scroll-behavior: unset;"><b class="tableheader" style="scroll-behavior: unset;">Examining and Modifying Variables</b></td></tr>
+
+<tr style="scroll-behavior: unset;"><td class="rightpad" align="left" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">display
+<i style="scroll-behavior: unset;">expression</i></b></td><td align="left" style="scroll-behavior: unset;">Display the value of a
+variable or expression every step of the program—the expression
+must make sense in the current scope</td></tr>
+
+<tr style="scroll-behavior: unset;"><td class="rightpad" align="left" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">info display</b></td><td align="left" style="scroll-behavior: unset;">Show a list of expressions currently being displayed and
+their numbers</td></tr>
+
+<tr style="scroll-behavior: unset;"><td class="rightpad" align="left" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">undisplay
+<i style="scroll-behavior: unset;">num</i></b></td><td align="left" style="scroll-behavior: unset;">Stop showing an expression
+identified by its number (see <b class="userinput" style="scroll-behavior: unset;">info display</b>)</td></tr>
+
+<tr style="scroll-behavior: unset;"><td class="rightpad" align="left" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">print
+<i style="scroll-behavior: unset;">expression</i></b></td><td align="left" style="scroll-behavior: unset;">Print the value of a variable
+or expression</td></tr>
+
+<tr style="scroll-behavior: unset;"><td class="rightpad" align="left" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">printf&nbsp;<i style="scroll-behavior: unset;">formatstr</i>&nbsp;<i style="scroll-behavior: unset;">expressionlist</i></b></td><td align="left" style="scroll-behavior: unset;">Do some
+formatted output with <tt class="function" s__="12" style="scroll-behavior: unset;">printf()</tt> e.g. <tt class="code" s__="12" style="scroll-behavior: unset;">printf&nbsp;"i&nbsp;=&nbsp;%d,&nbsp;p&nbsp;=&nbsp;%s\n",&nbsp;i,&nbsp;p</tt></td></tr>
+
+<tr style="scroll-behavior: unset;"><td class="rightpad" align="left" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">set variable
+<i style="scroll-behavior: unset;">expression</i></b></td><td align="left" style="scroll-behavior: unset;">Set a variable to value, e.g.
+<tt class="code" s__="12" style="scroll-behavior: unset;">set&nbsp;variable&nbsp;x=20</tt></td></tr>
+
+<tr style="scroll-behavior: unset;"><td class="rightpad" align="left" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">set
+(<i style="scroll-behavior: unset;">expression</i>)</b></td><td align="left" style="scroll-behavior: unset;">Works like <b class="userinput" style="scroll-behavior: unset;">set variable</b></td></tr>
+
+
+<tr style="scroll-behavior: unset;"><td class="tablespacer" align="left" colspan="2" style="scroll-behavior: unset;"><b class="tableheader" style="scroll-behavior: unset;">Window Commands</b></td></tr>
+
+<tr style="scroll-behavior: unset;"><td class="rightpad" align="left" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">info win</b></td><td align="left" style="scroll-behavior: unset;">Shows current window info</td></tr>
+
+<tr style="scroll-behavior: unset;"><td class="rightpad" align="left" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">focus
+<i style="scroll-behavior: unset;">winname</i></b></td><td align="left" style="scroll-behavior: unset;">Set focus to a particular window
+bby name ("SRC", "CMD", "ASM", or "REG") or by position ("next" or
+"prev")</td></tr>
+
+<tr style="scroll-behavior: unset;"><td class="rightpad" align="left" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">fs</b></td><td align="left" style="scroll-behavior: unset;">Alias for <b class="userinput" style="scroll-behavior: unset;">focus</b></td></tr>
+
+<tr style="scroll-behavior: unset;"><td class="rightpad" align="left" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">layout <i style="scroll-behavior: unset;">type</i></b></td><td align="left" style="scroll-behavior: unset;">Set the window layout ("src", "asm", "split", or "reg")</td></tr>
+
+<tr style="scroll-behavior: unset;"><td class="rightpad" align="left" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">tui reg <i style="scroll-behavior: unset;">type</i></b></td><td align="left" style="scroll-behavior: unset;">Set the register window layout ("general", "float",
+"system", or "next")</td></tr>
+
+<tr style="scroll-behavior: unset;"><td class="rightpad" align="left" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">winheight <i style="scroll-behavior: unset;">val</i></b></td><td align="left" style="scroll-behavior: unset;">Set the window height (either an absolute value, or a
+relative value prefaced with "+" or "-")</td></tr>
+
+<tr style="scroll-behavior: unset;"><td class="rightpad" align="left" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">wh</b></td><td align="left" style="scroll-behavior: unset;">Alias for <b class="userinput" style="scroll-behavior: unset;">winheight</b></td></tr>
+
+<tr style="scroll-behavior: unset;"><td class="rightpad" align="left" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">set&nbsp;disassembly-flavor&nbsp;<i style="scroll-behavior: unset;">flavor</i></b></td><td align="left" style="scroll-behavior: unset;">Set the look-and-feel of the disassembly.  On Intel
+machines, valid flavors are <b class="userinput" style="scroll-behavior: unset;">intel</b> and <b class="userinput" style="scroll-behavior: unset;">att</b></td></tr>
+
+
+
+<tr style="scroll-behavior: unset;"><td class="tablespacer" align="left" colspan="2" style="scroll-behavior: unset;"><b class="tableheader" style="scroll-behavior: unset;">Misc Commands</b></td></tr>
+
+<tr style="scroll-behavior: unset;"><td class="rightpad" align="left" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">RETURN</b></td><td align="left" style="scroll-behavior: unset;">Hit RETURN to repeat the last command</td></tr>
+
+<tr style="scroll-behavior: unset;"><td class="rightpad" align="left" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">backtrace</b></td><td align="left" style="scroll-behavior: unset;">Show the current stack</td></tr>
+
+<tr style="scroll-behavior: unset;"><td class="rightpad" align="left" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">bt</b></td><td align="left" style="scroll-behavior: unset;">Alias for <b class="userinput" style="scroll-behavior: unset;">backtrace</b></td></tr>
+
+<tr style="scroll-behavior: unset;"><td class="rightpad" align="left" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">attach <i style="scroll-behavior: unset;">pid</i></b></td><td align="left" style="scroll-behavior: unset;">Attach to an already-running process by its PID</td></tr>
+
+<tr style="scroll-behavior: unset;"><td class="rightpad" align="left" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">info registers</b></td><td align="left" style="scroll-behavior: unset;">Dump integer registers to screen</td></tr>
+
+<tr style="scroll-behavior: unset;"><td class="rightpad" align="left" style="scroll-behavior: unset;"><b class="userinput" style="scroll-behavior: unset;">info all-registers</b></td><td align="left" style="scroll-behavior: unset;">Dump all registers to screen</td></tr>
+
+<!--
+<tr><td align="left" colspan="2"><b class="tableheader"></b></td></tr>
+<tr><td class="rightpad" align="left"><b class="userinput"></b></td><td align="left"></td></tr>
+-->
+</tbody></table></center>
+
+<hr style="scroll-behavior: unset;">
+
+<p class="smalltext" s__="12" style="scroll-behavior: unset;">Copyright 2009 Brian "Beej Jorgensen" Hall 
+&lt;<a href="mailto:beej@beej.us" s__="14" d__="" style="scroll-behavior: unset;">beej@beej.us</a>&gt;</p>
+
+
+
+
+</body></html>

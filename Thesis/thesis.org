@@ -1,36 +1,26 @@
 #+LATEX_CLASS: report
 #+LATEX_COMPILER: xelatex
+Time: Mon Dec 16 08:15:20 PM CST 2024
+Plan to Complete: Before 2025
+E-Ink MP3 Player (STM32 in Rust)
+ANC Headphones
 
 * ProjectHunt-选题
 ** My Personal Taste
 - Dislike :: AI stuff(Unpredictable/Python Stuff)/Bio Relate(Unpredictable/Bio Expriment)/Only Hardware(Unstable/Lack Experience and Equipment)
 - Goals :: Simplicity and Fun/General Purpose/Job Relate(linux, low-level, controlable, reproducible)
-  *GPT Gives Decent Some Projects*
-  + Eink-Phone :: PCB, LinuxDriver, ProjectBase, Hardware
-  + eBPF-Monitor :: LinuxKernel, Network, Simple
-  + Minimalist Home Server :: Linux Server Management, Nginx, Docker, Bash Scripting
-  + Custom Linux Kernel with Performance Monitoring :: Kernel Development, eBPF, Performance Optimization
-  + CLI-Based Personal Assistant :: Shell Scripting, Python/Rust/Go, Text Processing
-  + Network Traffic Analyzer using eBPF :: eBPF, Network Protocols, Linux Kernel Internals
-  + Custom Linux Distro (Minimalist) :: Linux Kernel, Packaging, Distribution Building (Yocto, Buildroot)
-  + Raspberry Pi Security System :: Linux Driver Development, IoT, Video Streaming, Python/C
-  + Filesystem Benchmarking Tool :: Linux, System Programming, File Systems, Performance Analysis
-  + USB Device Monitoring Tool using eBPF :: eBPF, Kernel Modules, Device Drivers, USB Protocols
-  + Lightweight and Privacy-Focused Web Browser :: C/C++, Rust, Web Protocols, Security
-  + Custom IoT Device with Linux and eBPF :: IoT, eBPF, Linux, Networking, Sensors
-
-I'd like to try *eink-phone* which looks pretty cool and trains my skills.
-Although making a smartphone is hard, it can help me to understand the whole process which connecting my knowledge dots and can be some useful thing, if I making it come true, carry out with a diy phone should be a AMAZED.
-
 ** Layer of This Project
 
-small-simplicity-stupid
+3s:small-simplicity-stupid
 against
-sport-social media-sex
-
-App: mp3 player, +texting, phone call+, time schedule, +ai ask+,  payment, PPG 
-OS: nixos
-Lang: Zig
+3s:sport-social media-sex
+耳机 主动
+Device: FPC ANS headphone + zeInK 
+App: Mp3 Player, +Texting, Phone Call+, Time Schedule, +Ai Ask+,  payment, PPG
+OS:+ZRO-Zig Real-time Operation-system+ Rust
+Lang: +Zig+ Rust, .... bbecause rust have more wheels already built.
+Mcu: +rp2040+  stm32f103c8t6..... Qemu... no choice, sorry
+Five modules: Eink, ???some gpio, SD card, Mirco 麦克？, PPG  
 
 * Essential Env & Anlysis- 环境与分析
 ** reproducible enviroment setup
@@ -42,22 +32,10 @@ Lang: Zig
 + C++ :: too above
 + Bash :: write a Script for fasting test
 *** Build  System
-[[https://github.com/mobile-nixos/mobile-nixos][mobile-nixos]]
-[[https://github.com/nix-community/nixos-anywhere][nixos-anywhere]]
 
-
-** Step by Step
-*** Time Agenda
-- When Begin?
-  After Mastering Emacs Todo.
-
-
-
-** Other
-s People's Work
+** Other People's Work
 + [[https://oshwhub.com/lovelessing/d133-mobile-phone-development-bo][基于D133的智能手机]]
 + [[https://oshwhub.com/honglin/First_CRT_SmartPhone][【很新但很旧】如何用最古老的技术造一台现代手机？]]
-+ [[https://oshwhub.com/qzc13457/qpad][模块化平板电脑-QPad]]
 + [[https://oshwhub.com/zwxb/based-on-rk3566-taishan-pie-dolp][泰山派通话智能手机设计]]
 + [[https://oshwhub.com/li-chuang-kai-fa-ban/tai-shan-pai-pang-niu-shou-ji-kuo-zhan-ban][【胖妞手机】泰山派RK3566开发板]]
 + [[https://oshwhub.com/ludas/mo-shui-ping-qu-dong][墨水屏Eink通用驱动板【验证通过】 - 立创开源硬件平台]]
@@ -69,226 +47,115 @@ s People's Work
 * Impletation-实现过程
 ** Project Steps 
 
-*** Step 1: Understand the Basics
-*Goals: Learn the fundamentals of hardware, Linux systems, and drivers.*
-- *Learn Embedded Systems*: Understand how microcontrollers and processors work.
-  - *Start Point*: Study ARM-based SoCs or RISC-V boards.
-  - *Tools*: Raspberry Pi or ESP32 for prototyping.
-- *Understand NixOS Basics*: Learn how NixOS configurations work, especially for embedded systems.
-  - *Resources*: [NixOS manual](https://nixos.org/).
+*** Cross Compileing
+*** Qemu Virtual Machine
+*** Learn Zig
+*** Learn to write a Rtos
 
-*** Step 2: Hardware Selection
-*Goals: Choose hardware components for your phone.*
-1. *Processor*: Start with something well-documented, like Raspberry Pi Compute Module or Pine64 SoCs.
-2. *Screen*: Use a 1.54-inch e-ink display module (check [Waveshare e-ink modules](https://www.waveshare.com/)).
-3. *Buttons*: Choose simple GPIO-connected buttons.
-4. *Audio*: Look into I2S-based DACs for audio output.
-5. *Communication Modules*: GSM/4G modules for calls and SMS (e.g., SIM800 or SIM7600).
-6. *Battery*: Incorporate a LiPo battery and charging ICs (e.g., TP4056).
-
-
-**Goals: Write and understand drivers for hardware components.**
-1. **Start with Simple Drivers**:
-   - Use an e-ink display as your first driver project.
-   - **Steps**: Read its datasheet, understand the communication protocol (SPI/I2C), and write a driver.
-   - **Resources**: 
-     - [Linux Device Drivers book](https://lwn.net/Kernel/LDD3/) (focus on basic driver examples).
-     - Tutorials like [Eudyptula Challenge](https://eudyptula-challenge.org/).
-2. **Progress to GSM Modules**:
-   - Learn AT commands to control GSM modules.
-   - Write a driver to interface with your SoC.
-
-*** Step 4: Prototype and Test Software
-*Goals: Build essential apps on a minimal NixOS setup.*
-1. *Minimal NixOS Setup*:
-   - Configure NixOS to boot on your chosen hardware.
-   - Use the [Mobile NixOS project](https://mobile.nixos.org/) as a reference.
-2. *Write Simple Applications*:
-   - *Phone Dialer*: Use a terminal or simple UI (e.g., GTK, SDL).
-   - *Text Messaging*: Implement SMS send/receive using GSM module libraries.
-   - *Music Player*: Parse and play MP3 files using libraries like [libmpg123](https://www.mpg123.de/).
-   - *AI Assistant*: Start with lightweight offline tools like [OpenAI Whisper](https://github.com/openai/whisper) or other TTS/voice command solutions.
-
-
-*** Step 5: Iterate the Design
-*Goals: Integrate components into a polished prototype.*
-1. *PCB Design*:
-   - Use software like KiCad to design and produce a custom PCB for your components.
-   - Include GPIOs for buttons and connectors for the screen and GSM module.
-2. *Integrate Software and Hardware*:
-   - Debug drivers and apps as you integrate components.
-
-
-*** Step 6: Documentation and Optimization
-*Goals: Create a streamlined, reproducible setup.*
-1. *Optimize Apps*:
-   - Use Rust or Zig for efficient and secure programming.
-   - Ensure apps are lightweight to match the hardware.
-2. *Document Your Work*:
-   - Write detailed build instructions and share your design for feedback.
-
-
-*** 5-Month Learning and Implementation Plan
-1. *Month 1*: Learn NixOS basics, Linux drivers, and embedded systems fundamentals.
-2. *Month 2*: Choose hardware and write drivers for the e-ink display and buttons.
-3. *Month 3*: Implement GSM module integration and basic call/SMS apps.
-4. *Month 4*: Develop additional apps (music player, AI assistant, planner) and integrate.
-5. *Month 5*: Finalize hardware design, debug, and document.
-
-
-*** ShouldYou Replicate Existing Work?
-Yes, start by replicating simple open-source projects like:
-1. *Waveshare E-Ink Projects*: Learn how others interface with e-ink displays.
-2. *PinePhone Software*: Study the existing open-source drivers and apps for inspiration.
 
 *** Key Skills to Focus On
-1. *Linux Kernel Programming* (for drivers).
-2. *Embedded C/C++*, Rust, or Zig.
-3. *PCB Design* (KiCad).
-4. *NixOS Embedded Configuration*.
-
-This step-by-step approach will help you stay focused while learning the essential skills to build your own Linux phone. Let me know if you'd like detailed guidance on any of these steps!
+1. *Eink Refresh Algorithm*(目前不知，1.54寸应该不怎么需要).
+2. *PPG Predict Info Algorithm*(之前做过的，再实现一遍).
++3. *Embedded Zig & RtOs*(创新性(第一个闲得用zig写rtos 的人)).+
+4. *ANS FPC & Device PCB Design* (JLC)(现有产品与ieee论文背书).
+5. *Simple 3D Model*(Onshape)(就是个方壳).
+   
 
 *** 最最最重要的参考资料
-[[https://oshwhub.com/li-chuang-kai-fa-ban/tai-shan-pai-pang-niu-shou-ji-kuo-zhan-ban][【胖妞手机】泰山派RK3566开发板]]＋ [[https://oshwhub.com/qwqoffice/pulse-wave-and-heart-rate-display-based-on-ppg][基于PPG的脉搏波及心率显示]] ＋ [[https://oshwhub.com/ludas/mo-shui-ping-qu-dong][墨水屏Eink通用驱动板]]+ [[https://oshwhub.com/jie326513988/esp32c3-154-ink-screen-multi-function][ESP32C3-1.54墨水屏-多功能]]  = [[http://norvig.com/21-days.html][轻松毕业]]
+ [[https://oshwhub.com/qwqoffice/pulse-wave-and-heart-rate-display-based-on-ppg][基于PPG的脉搏波及心率显示]] ＋ [[https://oshwhub.com/ludas/mo-shui-ping-qu-dong][墨水屏Eink通用驱动板]]+ [[https://oshwhub.com/jie326513988/esp32c3-154-ink-screen-multi-function][ESP32C3-1.54墨水屏-多功能]]  = [[http://norvig.com/21-days.html][轻松毕业]]
 
-* Thesis-基于电子墨水屏的极简智能手机：面向健康监测与数字生活的创新探索
+e
+* Thesis-基于墨水屏的 +手机+ 极简掌机与降噪耳机设计：面向健康监测与数字生活的创新探索
 
 ** 摘要
-本论文致力于设计一款极简、节能的智能手机，采用电子墨水屏和开源技术，旨在降低数字生活中的过度依赖，同时为用户提供健康监测功能。通过集成光电容积脉搏波（PPG）传感器，该设备能够实现心率、血压、疲劳指数、步数以及冥想状态的实时监测。本文核心贡献包括：基于Linux内核的驱动开发、Rust语言实现的高效应用程序设计、电子墨水屏刷新优化算法，以及健康监测算法在嵌入式系统中的应用。
+
+本项目旨在设计一款简约高效的MP3播放器，集成主动噪声取消（ANC）与健康监测功能。随着智能设备的普及，音频设备不仅要满足高质量的音频播放需求，还应结合健康监测功能，提供更加全面的用户体验。通过结合现代嵌入式技术与PPG传感器，这款设备能够实时监测心率、血氧等健康数据，并提供高保真的音频播放体验。项目的核心贡献包括基于STM32平台的硬件设计、Rust语言开发的驱动程序和任务调度系统，以及优化的低功耗算法。本研究为开发创新型音频设备与健康监控系统提供了技术路径，并展示了嵌入式开发中的多方面应用。
+
+** 引言
+
+*** 研究背景与意义
+
+随着智能设备的普及，尤其是耳机和MP3播放器的智能化，现代用户的需求逐渐多元化。传统音频设备虽然能够提供音质和基本功能，但往往依赖于智能手机，导致用户体验分散并且功能不集成。与此同时，健康管理的需求不断增长，特别是在运动和日常生活中，如何方便、实时地监测心率、血氧等健康数据已成为用户关注的热点。因此，开发一款简约的MP3播放器，不仅满足音频需求，同时能够提供健康数据监测，是本项目的出发点。
+
+通过采用电子墨水显示屏（EPD）作为显示界面，本设备能够有效减少能耗，并提供清晰的显示效果。与传统液晶显示屏相比，电子墨水屏的低功耗和可视角度优势使其成为便携式设备的理想选择。结合PPG传感器监测健康数据，可以为用户提供精准的生理参数反馈，增强健康管理的便捷性。
+
+*** 研究目标与创新点
+
+本项目的目标是开发一款简洁、高效、集成健康监测与音频播放的MP3播放器，具备主动噪声取消功能。通过使用PPG传感器实时检测用户的心率、血氧饱和度（SpO2）等健康数据，设备能够在播放音乐的同时，提供健康数据监控与反馈。该设备的创新点在于通过简化的UI设计提升用户体验，同时采用Rust语言进行系统开发，充分利用其安全性和性能优势，从而实现硬件与软件的高效协同。此设计的另一创新点是将ANC电路集成到播放器中，减少外界噪音的干扰，使用户能够享受高质量的音频播放。
+
+** 理论基础
+
+*** 电子墨水屏技术
+
+电子墨水屏（E Ink）技术以其低功耗、高对比度、宽视角等特点，在便携设备中被广泛应用。其工作原理基于电子纸的微胶囊技术，可以在无需电力支持的情况下维持图像显示，从而大大延长设备的使用时间。在本项目中，电子墨水屏用于显示健康监测数据和音乐播放信息，使得用户在长时间使用过程中不会因屏幕耗电而频繁充电。
+
+*** PPG传感器技术
+
+光电容积脉搏波（PPG）传感器是一种利用光吸收变化原理，监测血流波动的传感器。它通过发射光并测量反射光的变化，进而计算出与心脏跳动相关的生理参数，如心率和血氧饱和度。随着技术的进步，PPG传感器的精度和稳定性得到大幅提升，并逐步应用于智能健康监测设备。本文所选用的MAX30102传感器具备高精度的光学测量能力，适用于实时监控心率和血氧。
+
+*** 嵌入式系统与Rust语言
+
+嵌入式系统通常运行在资源有限的环境中，面对实时性要求和硬件性能限制的挑战。传统的嵌入式开发多依赖C语言，但其指针操作和内存管理容易导致程序错误。而Rust语言凭借其内存安全、并发控制和高效的性能，成为一种理想的选择。Rust特别适合用在硬件接口驱动开发中，不仅能够保证程序的安全性，还能在性能上与C语言竞争。
+
+** 硬件设计
+
+*** 系统架构
+
+本系统采用STM32F103C8T6微控制器，具备较高的处理能力和丰富的外设接口，适合用于音频播放与实时健康监控。系统包括PPG传感器、电子墨水显示屏、PCM5102A DAC、TPA3136放大器和ANC模块。各组件通过SPI、I2C和I2S接口进行通信与数据传输，确保系统的高效协同工作。通过集成TPA3136放大器与ANC电路，系统能够输出高质量音频并有效减少外界噪音干扰。
+
+*** PCB设计与硬件实现
+
+在硬件设计中，重点考虑了电路的功耗优化和信号稳定性。各模块之间的连接通过高质量的PCB布局实现，以避免信号干扰和电源不稳定问题。针对不同的模块需求，硬件设计采用了模块化接口，使得未来扩展更加灵活。特别是在音频与健康数据的处理模块之间，信号传输必须保持高精度，以保证音频输出质量与健康监测的准确性。
+
+*** 外壳与集成设计
+
+外壳设计采用3D打印技术，不仅能够有效测试与优化设计，还具备较好的结构强度和成本效益。为了保证设备的便携性与美观，外壳设计简约而具有现代感，符合用户对智能硬件的审美要求。此外，外壳材料选择注重环保与可持续性，符合绿色设计理念。
+
+** 软件开发
+
+*** 驱动与任务调度
+
+本项目的软件开发主要采用Rust语言，利用RTIC实现实时中断驱动并发任务调度。驱动程序支持各个硬件模块的有效运行，包括PPG传感器、电子墨水显示屏、音频输出模块等。RTIC调度器确保了任务的高效分配与执行，使得系统可以在处理多项任务时不会出现延迟或资源竞争。
+
+*** 健康监测与音频播放
+
+健康数据如心率和血氧通过PPG传感器实时采集，并在电子墨水屏上显示。为了确保显示的实时性和准确性，系统每隔一定时间更新显示数据。音频数据则通过SD卡读取，并通过I2S接口流式传输到PCM5102A DAC，最后通过TPA3136放大器驱动耳机播放高质量音频。
+
+*** 用户界面与控制
+
+用户界面设计强调简约与高效，确保用户能够在最少的操作下完成常用功能的控制。电子墨水显示屏不仅显示健康数据和曲目信息，还提供直观的UI元素，如图标、按钮和进度条。旋转编码器用于音量控制和菜单导航，而按钮映射则支持播放/暂停、曲目切换、ANC开关等功能。
+
+** 实验与测试
+
+*** 系统验证与性能测试
+
+本章将通过一系列的实验与测试，验证设备在实际使用中的性能。测试将包括音频播放质量、ANC效果以及健康监测功能的准确性评估。此外，电子墨水屏的刷新速度、显示效果以及系统在不同环境下的稳定性也将成为测试的重点。
+
+*** 用户体验评估
+
+通过收集用户的反馈，本章将对设备的舒适度、操作便捷性和性能进行评估。特别是在长期使用过程中，用户对设备的舒适性、操作界面的响应速度和健康数据准确性的评价将是衡量产品成功的重要标准。
+
+** 结论与展望
+
+*** 主要研究成果
+
+本项目成功设计并实现了一款集成音频播放与健康监测功能的简约MP3播放器。通过创新性地结合PPG技术和实时反馈，本设备能够提供高效、准确的健康监控功能，并且通过优化的音频输出系统和ANC电路，提升了用户的音频体验。
+
+*** 存在的局限性
+
+尽管本系统在多项功能上实现了创新，但电子墨水屏的刷新速度可能会对某些实时显示的流畅度产生一定影响，尤其是在显示快速更新的健康数据时。此外，在极端运动环境下，传感器可能会受到一定的干扰，从而影响数据的准确性。
+
+*** 未来工作
+
+未来的工作将集中在优化ANC电路的性能，提升噪声消除的效果和精度。此外，随着传感器技术的发展，未来可以考虑引入更高效的传感器和算法，从而提升健康监测功能的精度与范围，进一步拓宽设备的应用场景。
+
+** 附录
+
+- 硬件手册：包括电子墨水显示屏、PPG传感器和MCU的技术规格。
+- 软件代码：包括核心驱动程序与应用程序代码。
+- 测试数据：关于功耗、健康监测精度及用户体验的详细数据。
 
 
-
-** 第一章引言
- 1.1 研究背景与意义
-- 数字生活与互联网滥用的现状
-  - 随着智能手机和社交媒体的普及，用户花费大量时间在屏幕前，带来情绪焦虑、生产力下降以及健康问题。
-  - 学术研究表明，电子设备过度使用与眼部疲劳、睡眠质量下降以及心理健康问题密切相关。
-- 健康监测的需求
-  - 在后疫情时代，个人健康监测需求快速增长，基于可穿戴设备的便捷、实时健康监测成为新趋势。
-- 极简设计理念
-  - 极简设计倡导“功能至上、减少干扰”的原则，通过减少设备功能和提升用户体验，帮助用户专注于生活本身。
-- 电子墨水屏的潜力
-  - 电子墨水屏具有低功耗、高可读性等优势，是实现节能和护眼设备的理想选择。
-
- 1.2 研究目标与创新点
-- 打造一款基于电子墨水屏的极简智能手机，兼具基本通信和健康监测功能。
-- 实现PPG信号处理算法，以提供血压、心率及其他健康数据的高精度监测。
-- 在嵌入式Linux系统中，通过Rust和Zig优化应用性能，探索高效的软件与硬件协同设计。
-
-
-
-** 第二章 理论基础
- 2.1 电子墨水屏技术
-- 电子墨水屏的工作原理及刷新优化策略。
-- 相较传统LCD/OLED屏幕的优势，如低功耗、健康护眼和高对比度。
-
- 2.2 光电容积脉搏波（PPG）
-- 基本原理：通过光吸收变化检测血流量变化。
-- 扩展应用：
-  - 心率测量：从PPG波形提取心跳频率。
-  - 血压估算：基于PPG与脉搏波传导时间（PWTT）。
-  - 疲劳指数分析：通过心率变异性（HRV）评估用户疲劳状态。
-  - 步数监测：结合运动传感器的健康追踪。
-  - 冥想辅助：通过HRV变化评估冥想效果。
-
- 2.3 Linux内核与嵌入式系统
-- Linux在嵌入式设备中的优势：开源灵活、可定制化。
-- 驱动开发基础：设备树配置、用户空间与内核空间通信。
-
- 2.4 Rust与Zig在嵌入式开发中的应用
-- Rust：
-  - 内存安全和性能的平衡，适合资源受限的嵌入式系统。
-  - 强类型系统和所有权模型在驱动开发中的优势。
-- Zig：
-  - 极简设计和直接内存控制，适合高性能嵌入式算法。
-
-
-
-** 第三章 硬件设计
- 3.1 系统架构
-- 选用H616 SoC，整合电子墨水屏、PPG传感器、电池管理芯片等。
-- 高级模块设计：
-  - 主控芯片：适配ARM架构的高效SoC。
-  - 显示模块：1.54英寸电子墨水屏，支持快速刷新。
-  - 传感器模块：高精度PPG传感器。
-  - 通信模块：支持4G LTE网络。
-  - 扩展接口：USB 3.0、GPIO、I2C等。
-
- 3.2 PCB设计与硬件实现
-- PCB设计中的功耗优化与抗干扰设计。
-- 模块化硬件设计以支持未来升级。
-
- 3.3 3D打印外壳
-- 采用环保材料3D打印极简外壳。
-- 结构设计优化，确保设备便携耐用。
-
-
-
-** 第四章 软件开发
- 4.1 驱动开发
-- 定制Linux内核驱动以支持电子墨水屏和PPG传感器。
-- 显示刷新优化：结合DMA和中断机制减少延迟。
-  
- 4.2 应用程序开发
-- 使用Rust和Zig开发以下核心功能：
-  - 通信功能：通话、短信和联系人管理。
-  - 健康监测：
-    - 实时显示心率、血压和疲劳指数。
-    - 健康数据的本地存储与可视化。
-  - 极简日常工具：待办事项、日历和离线音乐播放器。
-
- 4.3 NixOS系统配置
-- 定制轻量化NixOS系统，优化启动速度与资源占用。
-- 利用Nix包管理器实现可靠的配置和依赖管理。
-
-
-
-** 第五章 实验结果与分析
- 5.1 性能测试
-- 测试显示刷新速度、PPG信号采集精度。
-- 基于典型使用场景的功耗分析。
-
- 5.2 健康监测效果
-- 与传统医疗设备对比血压和心率测量精度。
-- HRV计算对冥想效果的量化评估。
-
- 5.3 用户体验反馈
-- 在长时间使用中的护眼效果。
-- 极简设计对用户心理健康的正面影响。
-
-
-
-** 第六章 结论与展望
- 6.1 主要研究成果
-- 成功设计并实现了一款极简智能手机。
-- 提出了创新性的健康监测方法，并验证了其可行性。
-
- 6.2 存在的局限性
-- 电子墨水屏刷新速度的物理限制。
-- PPG传感器在极端运动状态下的误差。
-
- 6.3 未来工作
-- 引入更先进的传感器和算法提高监测精度。
-- 扩展生态系统，支持更多日常应用。
-
-
-
-**   附录
-1. 硬件数据手册：电子墨水屏、PPG传感器、H616芯片。
-2. 软件源码：核心驱动与应用程序代码。
-3. 实验数据：功耗与监测精度的对比结果。
-
-
-
-** 参考文献
-** 作者简介
-*** 基本情况
-*** 教育和工作经历
-** 攻读学位期间的研究成果
-*** 发表的学术论文和著作
-*** 申请（授权）专利
-** 致谢
 
 
 * Presentation-系统实现与挑战
@@ -296,14 +163,17 @@ This step-by-step approach will help you stay focused while learning the essenti
     详细讨论系统需求及其如何在设计过程中得到满足。
     
 ** 开发环境与工具
-    概述用于硬件（PCB设计、SoC配置）、软件（Linux、Android定制）和测试的开发工具。
+    概述用于硬件（PCB设计、SoC配置）、软件（）和测试的开发工具。
 ** 设计与实现挑战
     在硬件设计、PCB布局、驱动开发和软件优化过程中遇到的挑战。
     屏幕刷新算法
+    ppg传感器的运用
+    zig语言的使用
+    
     3d设计
 
 ** 学到的经验
-    从定制硬件、低级软件开发及在嵌入式系统中集成Linux/Android的经验中获得的洞见。
+    从定制硬件、低级软件开发及在嵌入式系统中集成xxx的经验中获得的洞见。
 
 ** 本章小结
     对本章内容进行总结。

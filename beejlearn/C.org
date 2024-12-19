@@ -1,0 +1,35 @@
+* tutorial volume
+#+begin_src C++ :includes <stdio.h>
+  int a=1;
+  int b=1;
+  printf("%d\n", a+b);
+#+end_src
+
+#+RESULTS:
+: 2
+
+#+begin_src C++ :main  :includes <stdio.h> :exports results
+  printf ("Hello World!\n");
+#+end_src
+
+#+RESULTS:
+: Hello World!
+
+
+
+#+begin_src C++ :main :var test=5 :includes '(<iostream> <stdio.h>) :results output
+  std::cout<<"Hello World!\n";
+  printf("%d\n%d\n", 2+2,test);
+#+end_src
+
+#+RESULTS:
+: Hello World!
+: 4
+: 5
+
+
+
+
+
+* reference volume
+
