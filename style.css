@@ -1,0 +1,59 @@
+@font-face {
+    font-family: 'Bookerly';
+    src: url('fonts/Bookerly.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    font-family: 'Bookerly', sans-serif;
+}
+
+
+.figure {
+    float: left;
+    margin-right:40px;
+    width: 120px;
+}
+
+.figure img{
+    width: 100%;
+    height: auto;
+    border-radius: 20%;
+}
+
+
+
+  .part-one {
+      padding: 10px;
+      margin-top: 0.2em;  /* Adjust to make closer to <h2> */
+  }
+
+  .part-two {
+      margin-top: 0.2em;  /* Adjust to make closer to <h2> */
+  }
+
+.outline-text-2 {
+    display: flex;
+    justify-content: space-between;
+    gap: 0%;  /* Optional: Adjust the space between the columns */
+}
+
+.part-three {
+    margin-top: 0.2em;  /* Adjust to make closer to <h2> */
+    float: left;
+    width: 35%;
+    margin-right: 0%;
+}
+
+.part-four {
+    margin-top: 0.2em;  /* Adjust to make closer to <h2> */
+    float: left;
+    width: 65%;
+}
+
+
+h2 {
+    font-size: 1.2em;
+    margin-bottom: 0.2em; /* Adjust as needed */
+}
