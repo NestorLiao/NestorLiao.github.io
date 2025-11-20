@@ -1,0 +1,53 @@
+#+TITLE: 技术时代的生活与工作
+#+OPTIONS: toc:3
+#+LATEX_CLASS: elegantbook
+#+LATEX_HEADER: \subtitle{Tech among Life and Work}
+#+LATEX_HEADER: \title{技术时代的生活与工作}
+#+LATEX_HEADER: \institute{Free Club}
+#+LATEX_HEADER: \bioinfo{邮箱}{llqingsong@qq.com}
+#+LATEX_HEADER: \setcounter{tocdepth}{3}
+#+LATEX_HEADER: \logo{meditate.jpg}
+#+LATEX_HEADER: \cover{gnu-and-penguin.jpg}
+#+LATEX_HEADER: \usepackage{array}
+#+LATEX_HEADER: \usepackage{cprotect}
+#+LATEX_HEADER: \definecolor{customcolor}{RGB}{255,255,255}
+#+LATEX_HEADER: \colorlet{coverlinecolor}{customcolor}
+#+LATEX_HEADER: \addbibresource[location=local]{reference.bib}
+#+keywords: 技术时代的生活与工作, tech among life and work, NestorLiao, 廖青松, 重庆, CQUPT, FSF, Emacs, Linux, ZMK, Eink, Rust, Zig, C, C++, OS
+#+description: 廖青松，Qingsong Liao, NestorLiao, Liaoqingsong, LiaoQingSong, Emacs, Linux, ZMK, Eink, Rust, Zig, C, C++, OS, embedded, tutoria, Chongqing, 重庆, China, 中国
+
+\mainmatter
+
+\chapter*{序章\  技术何为?}
+\markboth{Introduction}{序章\  技术何为?}
+
+\begin{introduction}
+\item 任务编号：以名为“廖青松”的男婴为身份出生在重庆普通家庭
+\item 开始时间：2002-11-04
+\item 结束时间：总有一死
+\item 完成难度：简单到极难，活着也没BOSS啊?
+\item 需要小时：一生，大约三万天
+\item 本章要点：我对于技术与人生的看法
+\end{introduction}
+
+(如果你进入了HTML版本，[[https://nestorliao.github.io/index.pdf][请点此处进入PDF版本。]])
+
+世界嘈杂、瘾品横流、随机与即时构成新的枷锁，而真正的自由来自主动的剥离。当目光离开诱惑、离开广告、离开无意义的瞬息刺激，心才开始变得干净。生活越简，能量越纯；越慢，感受越深；越少，越能看见真正的自己。
+
+身体是意志的第一块土地。空腹的清明、弱光的安静、低温的醒觉、缓慢进食的耐性，都在一点点重塑我们早已被工业习惯磨钝的感官。行走、奔跑、提举、拉起、俯卧撑、壶铃、农夫行走——这些最朴素的动作让人重新理解力量的意义：力量不是爆发，而是日复一日不受伤、不懈怠、让心跳稳、让精神长的那种沉稳。
+
+饮食亦是自律的延伸。避免加工、远离高糖盐油，回到豆果菜、坚果与发酵的本味，让身体习惯真实的能量，而不是被化学甜味与工业脂肪驱使的假饱与假快乐。克制不是苦行，而是温和地恢复本能。
+
+至于技术，真正的价值不在追逐流行，而在深入底层、理解根本。用 Emacs\footnote{本书的牛“图片”均出自于GNU.org的自由艺术。GNU 计划，又称革奴计划，是由Richard Stallman在1983年9月27日公开发起的，目标是创建一套完全自由的操作系统，将牛作为 gnu和emacs 的象征是因为gnu在英文中本身就有“牛羚, 角马”的意思，有趣的是gnu本意为Gnu is Not Unix… 再问里面的 gnu 什么意思? 还是Gnu is Not Unix，就像是中国的俗语“山上有座庙”，无穷尽也。}，不是为了高效，而是为了与世界拉开距离，与自己靠得更近；不随机、不即时、无广告、无噪声，是一种长期的心性训练。读 LFS、LKD 与 SOC 文档，写驱动、调性能、跑 QEMU、玩内核、读源码，是为了获得一种“我真的懂了”的安静感。而这种懂，不是为了炫耀，不是为了沉迷，而是为了让工作成为谋生技能，让生活成为真正的生活。
+
+真正的智慧是：学会技术，然后把技术放下；拥有力量，然后让力量变得温柔。生活是吃饭、睡觉、读书、编程、走路、壶铃；生命是健康、乐观、会意、精进、闲适与稳稳的力量。
+
+世界广袤、事物繁多，而心若清澈，幸福忽然变得极小，也极近——不来自外界，只来自自身安静而坚定的内心。
+
+#+caption: free-your-soul
+#+ATTR_LATEX: :width 0.8\textwidth
+[[file:figure/free-your-soul-wallpaper.jpg]]
+
+* TODO 被技术改变的生活
+待我被裁员了之后再说，我还没工作呢!
+当然我有很多能写的，但是鉴于时间压力与心情不佳，暂时就不写了。

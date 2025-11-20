@@ -1,0 +1,43 @@
+* 开发中遇见的各种问题
+** TODO upload large files into the github repo
+use sed to filter, use what to split into small files.
+** TODO learn how to reference in org
+\cite, org-cite-insert unable to insert problem
+** TODO make [[file:~/Leere/Leetcode/README.org][Leetcode]] fresh tasks list...
+- have already?
+- yes/no, yes, edit that file, no, get the files(testcase/question.md/solution.xxx)
+- edit the files question to include src in end, solution.xxx to have mode line in header.
+- download image to local, turn md in org format, and delete md one.
+- add a allorg, to include all under src dir's question.org
+- 支持无网本地测试，在源代码文件头部中加入mode line，在题目文件尾部中加入include 源代码
+- 根据题号在相同的目录下抓取不同题目和几个指定语言，并下载至本地图片，再转化md为org格式
+- 支持在根目录中得到src的所有org file的include
+- md to org的==问题
+- based on leetgo to creat a leetcode elisp pkg
+- test leetcode emacs pkg instead
+** FIXME How to modify org-mode's #+INCLUDE:, to let it to exclude top and buttom?
+it have:
+top specific line to end specific line
+line to top specific
+top specific line to end
+contribute to the org-mode's include function to let it
+
+exclude from top specific line to end specific line but count from buttom
++ study org-mode, try to contribute to it.
+** KLUDGE pull request to the porn site list project...
+by clone and compare the problem is that "I include a lost non-porn site in to it".
+not just "non-porn" sites, I also get a lot cdn server to block, which fetch from a lot of m3u8 streaming server. it may also block some movies which using the same server as porn sites...
+so, there is only KLUDGE for thing like blocking porn site, first question: what is porn? really?
+to be, the social media like twitter which spread sexual clip? the pornhub teaching mathmatic? the reddit/4chan/zhihu/weibo/... even the taobao can sell sex toys with sexual pictures, so blocking internet is blocking porn really? I don't know, it's a question for everyone.
+** OKAY try to package real-mono-theme to melpa
+minic almost-mono-theme, creat recipe, make pr
+wait for mainter check. I am familaring with github, feeling awesome!
+** OKAY creat new account's github repos for github.io
+have a usrname.github.io public repo, have index.html in it, in [[https://qingsongliao.github.io][url]]
+** OKAY upload Purezen to github
++ description: theme that really monochrome
+  A collection of real monochrome emacs themes in a couple of variants.
++ clone a monochrome and study it
+  https://github.com/cryon/almost-mono-themes
++ minic a theme to creat a repo
+  https://github.com/qingsongliao/real-mono-themes

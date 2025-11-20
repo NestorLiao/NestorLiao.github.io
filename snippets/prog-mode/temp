@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: temp
+# key: temp
+# condition: (not (member major-mode '(sh-mode bash-ts-mode)))
+# --
+`comment-start`TEMP: $0`comment-end`

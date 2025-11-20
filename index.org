@@ -1,0 +1,24 @@
+#+bibliography: "./reference.bib"
+# 技术生活带来的问题，现代生活分析
+#+INCLUDE: "./Abstract.org"  :minlevel 1
+# 怎么通过项目来理解技术，总体计划
+#+INCLUDE: "./Project.org" :minlevel 1
+# 我的操作流介绍，nixos/emacs/zmk
+#+INCLUDE: "./README.org" :minlevel 1
+# 学习 c语言
+#+INCLUDE: "../CPP/fag/README.org" :minlevel 1
+# 刷 leetcode 来学习 c++
+# #+INCLUDE: "../Leetcode/README.org" :minlevel 1
+# 还有 操作系统相关学习
+# 学习进度自检
+#+INCLUDE: "./Version.org" :minlevel 1
+# Todolist
+#+INCLUDE: "./Todo.org" :minlevel 1
+# 找工作相关
+#+INCLUDE: "./Jobs.org" :minlevel 1
+#+begin_src emacs-lisp :tangle yes :exports none :results none
+(org-latex-export-to-pdf)
+(org-html-export-to-html)
+(message "finished update")
+(find-file "index.pdf")
+#+end_src

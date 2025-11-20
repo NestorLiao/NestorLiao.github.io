@@ -1,0 +1,1155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2025-11-20 Thu 03:14 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>技术时代的生活与工作</title>
+<meta name="author" content="Qingsong Liao" />
+<meta name="description" content="廖青松，Qingsong Liao, NestorLiao, Liaoqingsong, LiaoQingSong, Emacs, Linux, ZMK, Eink, Rust, Zig, C, C++, OS, embedded, tutoria, Chongqing, 重庆, China, 中国" />
+<meta name="keywords" content="技术时代的生活与工作, tech among life and work, NestorLiao, 廖青松, 重庆, CQUPT, FSF, Emacs, Linux, ZMK, Eink, Rust, Zig, C, C++, OS" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '85%'
+      },
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
+    },
+    chtml: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    svg: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    output: {
+      font: 'mathjax-modern',
+      displayOverflow: 'overflow'
+    }
+  };
+</script>
+
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">技术时代的生活与工作</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org8b2ac13">1. <span class="todo TODO">TODO</span> 被技术改变的生活</a></li>
+<li><a href="#org4ce3b96">2. 学技术的哲学</a></li>
+<li><a href="#org6180050">3. 本PDF仓库简介</a></li>
+<li><a href="#org84bd74c">4. 编辑器哲学</a></li>
+<li><a href="#orgc1150af">5. 操作系统哲学</a>
+<ul>
+<li><a href="#org3f819a2">5.1. Zeroth, get your config in to position.</a></li>
+</ul>
+</li>
+<li><a href="#orgf59f404">6. 键盘流哲学</a>
+<ul>
+<li><a href="#org45353f4">6.1. nav</a></li>
+<li><a href="#org3718fd0">6.2. num</a></li>
+<li><a href="#org4673418">6.3. mos</a></li>
+<li><a href="#org7223087">6.4. sym</a></li>
+</ul>
+</li>
+<li><a href="#orgbddda04">7. 屏幕哲学</a>
+<ul>
+<li><a href="#orgd84c098">7.1. Feels:</a></li>
+<li><a href="#org4f5f93e">7.2. Features:</a></li>
+<li><a href="#org90a2a5b">7.3. Tips for mono:</a></li>
+</ul>
+</li>
+<li><a href="#org73fd76d">8. <span class="todo TODO">TODO</span> fag.h</a>
+<ul>
+<li><a href="#org394469b">8.1. Quick Start</a></li>
+</ul>
+</li>
+<li><a href="#orgf5c7e4a">9. 版本更新历史</a></li>
+<li><a href="#org87d50cb">10. 开发中遇见的各种问题</a>
+<ul>
+<li><a href="#orgc1763cb">10.1. <span class="todo TODO">TODO</span> upload large files into the github repo</a></li>
+<li><a href="#org865fbc1">10.2. <span class="todo TODO">TODO</span> learn how to reference in org</a></li>
+<li><a href="#org128d0cc">10.3. <span class="todo TODO">TODO</span> make Leetcode fresh tasks list&#x2026;</a></li>
+<li><a href="#orgf3c9f45">10.4. <span class="done FIXME">FIXME</span> How to modify org-mode's #+INCLUDE:, to let it to exclude top and buttom?</a></li>
+<li><a href="#org669fa1d">10.5. <span class="todo KLUDGE">KLUDGE</span> pull request to the porn site list project&#x2026;</a></li>
+<li><a href="#org4c9f10b">10.6. <span class="done OKAY">OKAY</span> try to package real-mono-theme to melpa</a></li>
+<li><a href="#org9983495">10.7. <span class="done OKAY">OKAY</span> creat new account's github repos for github.io</a></li>
+<li><a href="#org269ab8f">10.8. <span class="done OKAY">OKAY</span> upload Purezen to github</a></li>
+</ul>
+</li>
+<li><a href="#org8ab0803">11. 嵌入式软件招聘常见要求</a></li>
+<li><a href="#org6d5188a">12. 嵌入式招聘常见笔试问题</a></li>
+<li><a href="#org957b741">13. 嵌入式招聘常见面试问题</a></li>
+</ul>
+</div>
+</div>
+<p>
+\mainmatter
+</p>
+
+<p>
+\chapter*{序章\  技术何为?}
+\markboth{Introduction}{序章\  技术何为?}
+</p>
+
+\begin{introduction}
+\item 任务编号：以名为“廖青松”的男婴为身份出生在重庆普通家庭
+\item 开始时间：2002-11-04
+\item 结束时间：总有一死
+\item 完成难度：简单到极难，活着也没BOSS啊?
+\item 需要小时：一生，大约三万天
+\item 本章要点：我对于技术与人生的看法
+\end{introduction}
+
+<p>
+(如果你进入了HTML版本，<a href="https://nestorliao.github.io/index.pdf">请点此处进入PDF版本。</a>)
+</p>
+
+<p>
+世界嘈杂、瘾品横流、随机与即时构成新的枷锁，而真正的自由来自主动的剥离。当目光离开诱惑、离开广告、离开无意义的瞬息刺激，心才开始变得干净。生活越简，能量越纯；越慢，感受越深；越少，越能看见真正的自己。
+</p>
+
+<p>
+身体是意志的第一块土地。空腹的清明、弱光的安静、低温的醒觉、缓慢进食的耐性，都在一点点重塑我们早已被工业习惯磨钝的感官。行走、奔跑、提举、拉起、俯卧撑、壶铃、农夫行走——这些最朴素的动作让人重新理解力量的意义：力量不是爆发，而是日复一日不受伤、不懈怠、让心跳稳、让精神长的那种沉稳。
+</p>
+
+<p>
+饮食亦是自律的延伸。避免加工、远离高糖盐油，回到豆果菜、坚果与发酵的本味，让身体习惯真实的能量，而不是被化学甜味与工业脂肪驱使的假饱与假快乐。克制不是苦行，而是温和地恢复本能。
+</p>
+
+<p>
+至于技术，真正的价值不在追逐流行，而在深入底层、理解根本。用 Emacs\footnote{本书的牛“图片”均出自于GNU.org的自由艺术。GNU 计划，又称革奴计划，是由Richard Stallman在1983年9月27日公开发起的，目标是创建一套完全自由的操作系统，将牛作为 gnu和emacs 的象征是因为gnu在英文中本身就有“牛羚, 角马”的意思，有趣的是gnu本意为Gnu is Not Unix… 再问里面的 gnu 什么意思? 还是Gnu is Not Unix，就像是中国的俗语“山上有座庙”，无穷尽也。}，不是为了高效，而是为了与世界拉开距离，与自己靠得更近；不随机、不即时、无广告、无噪声，是一种长期的心性训练。读 LFS、LKD 与 SOC 文档，写驱动、调性能、跑 QEMU、玩内核、读源码，是为了获得一种“我真的懂了”的安静感。而这种懂，不是为了炫耀，不是为了沉迷，而是为了让工作成为谋生技能，让生活成为真正的生活。
+</p>
+
+<p>
+真正的智慧是：学会技术，然后把技术放下；拥有力量，然后让力量变得温柔。生活是吃饭、睡觉、读书、编程、走路、壶铃；生命是健康、乐观、会意、精进、闲适与稳稳的力量。
+</p>
+
+<p>
+世界广袤、事物繁多，而心若清澈，幸福忽然变得极小，也极近——不来自外界，只来自自身安静而坚定的内心。
+</p>
+
+
+<div id="orge797f8d" class="figure">
+<p><img src="figure/free-your-soul-wallpaper.jpg" alt="free-your-soul-wallpaper.jpg" />
+</p>
+<p><span class="figure-number">Figure 1: </span>free-your-soul</p>
+</div>
+<div id="outline-container-org8b2ac13" class="outline-2">
+<h2 id="org8b2ac13"><span class="section-number-2">1.</span> <span class="todo TODO">TODO</span> 被技术改变的生活</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+待我被裁员了之后再说，我还没工作呢!
+当然我有很多能写的，但是鉴于时间压力与心情不佳，暂时就不写了。
+</p>
+</div>
+</div>
+<div id="outline-container-org4ce3b96" class="outline-2">
+<h2 id="org4ce3b96"><span class="section-number-2">2.</span> 学技术的哲学</h2>
+<div class="outline-text-2" id="text-2">
+\begin{quotation}
+  \textbf{\textcolor{red}{没有梦想那和咸鱼有什么区别呢?}}
+\end{quotation}
+\begin{introduction}
+\item 开始时间：2025-11-19
+\item 结束时间:  2026年前
+\item 完成难度：难难难
+\item 需要小时：100+
+\item 本章要点：linux/c/zig/rust/rtos
+\end{introduction}
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption class="t-above"><span class="table-number">Table 1:</span> path-to-know-tech</caption>
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">procress</th>
+<th scope="col" class="org-left">url</th>
+<th scope="col" class="org-left">for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><b>fag</b></td>
+<td class="org-left">flag/cintro</td>
+<td class="org-left">c, pretent iam tsoding</td>
+</tr>
+
+<tr>
+<td class="org-left">embedded C book</td>
+<td class="org-left">read book</td>
+<td class="org-left">c, how compiler/os/c works</td>
+</tr>
+
+<tr>
+<td class="org-left">Yeetcode</td>
+<td class="org-left">leetgo/book</td>
+<td class="org-left">cpp[rust], algo ds, solve task</td>
+</tr>
+
+<tr>
+<td class="org-left">paperlike-c/el</td>
+<td class="org-left">paperlike-go</td>
+<td class="org-left">elisp,paperlike emacs controler</td>
+</tr>
+
+<tr>
+<td class="org-left">ziglings</td>
+<td class="org-left">ziglings</td>
+<td class="org-left">zig, basic ziglangs speed run</td>
+</tr>
+
+<tr>
+<td class="org-left">zag</td>
+<td class="org-left">fag</td>
+<td class="org-left">zig, I have language erotic</td>
+</tr>
+
+<tr>
+<td class="org-left">paperlike-zig</td>
+<td class="org-left">paperlike-el</td>
+<td class="org-left">zig, make cli/tary</td>
+</tr>
+
+<tr>
+<td class="org-left">nixos r2s</td>
+<td class="org-left">github-repos</td>
+<td class="org-left">nix, for network addiction</td>
+</tr>
+
+<tr>
+<td class="org-left">TsurgizOS</td>
+<td class="org-left">os.phil-opp</td>
+<td class="org-left">zig[rust], make general os for cv</td>
+</tr>
+
+<tr>
+<td class="org-left">nixos rasberry-pi</td>
+<td class="org-left">github-repos</td>
+<td class="org-left">nix, for embedded os/screen/driver</td>
+</tr>
+
+<tr>
+<td class="org-left">clings</td>
+<td class="org-left">ziglings</td>
+<td class="org-left">c, lings but clang</td>
+</tr>
+
+<tr>
+<td class="org-left">freertos emulator</td>
+<td class="org-left">rtos</td>
+<td class="org-left">c, use general rtos</td>
+</tr>
+
+<tr>
+<td class="org-left">lvgl eink rtos</td>
+<td class="org-left">lvgl</td>
+<td class="org-left">c, embedded ui/driver/sdl</td>
+</tr>
+
+<tr>
+<td class="org-left">lvgl lora loc</td>
+<td class="org-left">graphic</td>
+<td class="org-left">c, embedded openstress/sdl/lvgl</td>
+</tr>
+
+<tr>
+<td class="org-left">RZOS</td>
+<td class="org-left">rtos</td>
+<td class="org-left">zig, make general rtos</td>
+</tr>
+
+<tr>
+<td class="org-left">Celest</td>
+<td class="org-left">game</td>
+<td class="org-left">zig, embedded game/sdl</td>
+</tr>
+
+<tr>
+<td class="org-left">Safephone</td>
+<td class="org-left">electronic</td>
+<td class="org-left">lvgl/eink/openstress/lora/3Dprint</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">stm32/nix/electronic/network</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">nsfw image/text detected</td>
+</tr>
+</tbody>
+</table>
+
+<ol class="org-ol">
+<li>All in all, it's for 技术哲学
+<ol class="org-ol">
+<li>网络/低速/时间/域名/ai过滤/linux内核构建-r2s</li>
+<li>屏幕/护眼/低成瘾/驱动设计/eink屏幕算法-paperlike</li>
+<li>通信/安全/无依赖/去平台/lora远距离通信-safephone</li>
+<li>交通/电工/电子电路/openstress-去五佰\footnote{我父亲那边的车行亲戚}那里学修车</li>
+</ol></li>
+
+<li>第一阶段：打基础（C / Linux / GCC / Emacs）
+<ul class="org-ul">
+<li>C 语言：学会指针、内存管理、结构体、函数指针；刷一些小项目，比如实现
+malloc、shell、http server。</li>
+<li>Linux 基础：熟悉命令行、文件系统、进程/线程、信号、管道、套接字。</li>
+<li>GCC：学会编译流程 gcc -E/-S/-c/-o，理解预处理、汇编、链接，玩一下
+objdump 和 nm。</li>
+<li>Emacs：把它当IDE来用，掌握基本编辑、调试、补全、LSP支持。</li>
+</ul></li>
+
+<li>第二阶段：系统调试与逆向（GDB / QEMU）
+<ul class="org-ul">
+<li>GDB：练习断点、单步、查看寄存器/内存、调试多线程/远程调试。</li>
+<li>QEMU：
+<ul class="org-ul">
+<li>用它运行 Linux kernel 或裸机程序。</li>
+<li>学会 qemu -S -s + gdb remote 调试，体验调试内核的感觉。</li>
+<li>研究 QEMU 的设备模拟（比如 VirtIO、PCI），理解虚拟化和硬件抽象。</li>
+</ul></li>
+</ul></li>
+
+<li>第三阶段：进阶编程语言与系统（C++ / Zig / RTOS）
+<ul class="org-ul">
+<li>Zig：Zig 是现代系统编程语言，学习它的构建系统、内存模型，可以和
+C/C++ 混合编程。</li>
+<li>RTOS：从 FreeRTOS
+入手，学任务调度、中断、任务间通信（队列/信号量）。可以用 QEMU 模拟
+Cortex-M 板子跑 RTOS。</li>
+</ul></li>
+
+<li>第四阶段：融会贯通（大型项目 / 内核 / 编译器）
+<ul class="org-ul">
+<li>QEMU + GDB：调试内核启动、写内核模块。</li>
+<li>编译器开发：研究 GCC 或 Clang 的前端/后端；或者用 Zig
+写一个简化编译器。</li>
+<li>个人项目：比如写一个简易 RTOS，或者在 QEMU 里跑自己写的内核。</li>
+</ul></li>
+
+<li>操作系统构建与升级（Yocto/Android/内核）
+在树莓派上交叉编译 Linux 内核，修改驱动或设备树（Device Tree）进行硬件适配。
+尝试用 Yocto 或 Buildroot 构建自定义 Linux 镜像，加入自己编写或修改的驱动模块。
+安装和编译 LineageOS（Android for Pi）或类似 Android 系统，修改系统服务或 HAL 层。
+实践 OTA（Over-The-Air）升级机制，模拟系统升级和回滚操作。
+硬件 Bringup（CPU/GPU/Memory/Peripherals）
+利用树莓派的 GPIO、SPI、I2C、CAN、PWM 等接口，练习外设 Bringup 和驱动调试。
+连接摄像头模块、显示屏（LCD 或 E-Ink）或音频模块，编写驱动和控制程序。
+使用 perf/ftrace/gprof 分析 CPU/GPU 性能瓶颈，优化程序调度。</li>
+<li>系统稳定性与性能优化
+构建多线程/多进程网络服务，使用 socket 编程实现客户端/服务器通信，模拟并发场景。
+在树莓派上测试高负载条件下的系统稳定性，分析内核日志、内存占用和 CPU/GPU 使用率。
+实践内核参数调优，如调节调度器、内存缓存策略，观察性能变化。</li>
+<li>客户功能定制与基线升级
+自己设计一个树莓派应用（如小型智能家居控制器或信息显示终端），从硬件 Bringup 到应用功能定制完整流程。
+模拟不同版本的系统镜像管理，练习分支合并、基线升级和版本回退。</li>
+<li>加分技能训练
+<ol class="org-ol">
+<li>低功耗优化：通过关闭不必要的外设、调节 CPU/GPU 频率或使用 E-Ink 显示屏练习功耗控制。</li>
+<li>虚拟化/容器：在树莓派上安装 QEMU/KVM 或 Docker，运行多系统虚拟环境，模拟嵌入式应用部署。</li>
+<li>芯片平台经验：如果有 MTK 或其他 ARM 板卡，可以对比树莓派练习移植和平台适配经验。</li>
+</ol></li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org6180050" class="outline-2">
+<h2 id="org6180050"><span class="section-number-2">3.</span> 本PDF仓库简介</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+This is my blog and p(pdf)log, and emacs/nixos config, code snippest and even more, all in just one repo.
+</p>
+</div>
+</div>
+<div id="outline-container-org84bd74c" class="outline-2">
+<h2 id="org84bd74c"><span class="section-number-2">4.</span> 编辑器哲学</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<ol class="org-ol">
+<li><a id="orgfbba58c"></a>如果人生还有一次，我还选emacs<br />
+<div class="outline-text-5" id="text-4-0-0-1">
+<dl class="org-dl">
+<dt>minimal</dt><dd>based on the clean and  fast minimal-emacs.</dd>
+<dt>purezen</dt><dd>pure white and black theme written by me called "purezen".</dd>
+<dt>reproducible</dt><dd>package manager is using <b>nixos</b>.</dd>
+<dt>simple</dt><dd>just a 1500+ lines of  post-init.el.</dd>
+<dt>keyboard </dt><dd>for my <b>ZMK</b> conifg, the only one soul.</dd>
+<dt>effcient</dt><dd>selecting elegantly like queen and editting fastly like king.</dd>
+<dt>zen</dt><dd>the world is tremendously large, the items are enormously rich, only me along writting with leere feeling, true happiness come from nothing but within.</dd>
+</dl>
+</div>
+</li>
+<li><a id="org69d1f6a"></a>我的编辑器邪教之旅:<br />
+<div class="outline-text-5" id="text-4-0-0-2">
+<p>
+浏览器里的vimium C，因为wsl学习的neovim，因为换上nixos后抄的helix配置，因为大四没找工作太闲学的emacs。我每用一个就大呼“我草，早知道，还得是xx!”，然后给同学老师家人都安利安利，给同学说“我有一宝”，给老师说“看我操作”，给家人嘻嘻傻笑像是捡到五百钱。虽然这代表着我非常的闲，但是折腾emacs确实让我不是很闲到以至于抑郁，我还是在用Vimium C和emacs，赋予我闪电切换页面的神奇体验，当然，代价是它们也让我得了一种名为“换页面换buffer”的ADHD，再者，其实不用vim/emacs也会得，只不过叫作“懒得换页面就直接玩手机”ADHD，“懒得折腾电脑就去玩CSgo成了换弹癌”的ADHD。在这个时代，玩csgo和玩emacs有什么区别呢? 一个能炒皮肤，另一个能折腾皮肤，如是而矣。
+</p>
+</div>
+</li>
+<li><a id="org890dfe0"></a>我使用emacs没有太多原因就只是:<br />
+<div class="outline-text-5" id="text-4-0-0-3">
+<ol class="org-ol">
+<li>依赖少，之前用vim，我就要关心vim键位的app适合用来看pdf，看epub看文档，整vimium和vim一个键位/什么lazygit/tmux/fcitx/alacritty，还生怕它们之间有什么矛盾，关键vimscript也不适合作为灵活的语言，整天很困扰很憋屈，我还折腾colemak、虎码和nixos，我的天，对于任何一个大脑快定型的成年人来说，这简直是噩梦! 幸好有emacs解救我于快捷键地狱中，装包能list-package再一点就安装了，pyim配置虎码就一行的事，那里还要fcitx5怎么怎么样! 自从用了emacs，我再也没有折改过firefox，一是我没时间，二是我就只用emacs的eww，我也就不再在乎什么vimium的键位和vim不一样了， <b>能用就行</b> 才是真理! 再说用上了elisp，那才叫美梦成真，想写一个工具简直就比玩手机打游等更有意思多了。什么tmux/lazygit/nixos，现在我只想笑笑，我用vterm/magit/任何平台都能跑emacs不是爽多了吗? 只要给我emacs/编译器，写代码就是轻轻松松的事! emacs改好了我的强迫症和极多主义，现在我心宽又极简，感谢emacs!</li>
+<li>功能多，之前用helix，虽是开箱即用但是很明显它的功能只限于写代码，快是快但是对我这样的学习困难型人来说，快和慢没有多大的区别，只会让我再难受于“我好慢它好快，我是不是x痿了”，helix是个自带丰富功能工具，但是对于习惯homerow的人来说其实用vim mode没有什么增益，只会让我更迷茫“我能直接不动手就能上下了，干啥还要这个hjkl??”。有插件和服务器模式这点就足以胜过helix了。当然我从helix的文档也学到了很多编辑知识，如果没有它的emacs主题和打算用scheme写插件系统，和让我折腾很久的helix eink主题，我也不会有潜移默化现在的编辑技术和极简主题审美了。</li>
+<li>分心小，之前用vimium那就是一个换换换的感觉，总是想去换页面，看看新闻看看新工具，上下跳转，左右腾挪，helix功能太少不能在里面呆太久，而vimium是个浏览器插件在里面呆着又太容易去娱乐， <del>用vim主要是去youtube参加编辑器神战</del> ，helix也好vimium也好。其实我学习emacs，到能快速掌握avy靠得是之前用过vimium，学习surrond/expand靠的是helix，能熟悉info/man/tldr靠得是之前在终端里学习vim。总之emacs必然是编辑技术的一个终点站。</li>
+<li>定制化，没有一个term emulator支持比例字体的，只有emacs，没有一个editor的主题是可以自己完全定制的，vscode那样的使用javascript还难以控制还过于复杂资源又大的就算了。elisp/fsf/clean/simple，学emacs之前根本不能理解这话! 有些事情得是自己做了才能得之心而应之于手!</li>
+<li>历史，50年历史的编辑器，计算机史的一页，还能写100年左右。</li>
+<li>装b，(linus/stallman)开源巨人们/(rust/python/java/ruby/curl/各种函数式…)之父们钦定编辑器。</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+<div id="outline-container-orgc1150af" class="outline-2">
+<h2 id="orgc1150af"><span class="section-number-2">5.</span> 操作系统哲学</h2>
+<div class="outline-text-2" id="text-5">
+<ol class="org-ol">
+<li>network, 471mb hosts to block internet out of my pc with dnsmasq and  dae proxy tool based on epbf&#x2026; you know I am ill about internet? because I am in china, and the nsfw/trump/4chan dudes, I love they so much, so I add they into my hosts.</li>
+<li>emacs editor, + nixos, they both ruin my early adult life.</li>
+<li>wm: sway, minimal config, pure white look, although miku cursor.</li>
+<li>shell: fish+foot, with all I need in, direnv/many alias/zoxide/git/and thefxxk or thefxxk updated to "chatgpt"'s codex nowadays?</li>
+<li>browser: firefox [default uninstall], I use eww because I hate browser.</li>
+<li>fully reproducible, even with dict/font/anime wallpaper!</li>
+<li>zig/linux/ccpp doc  in ngnix, all kind texinfo can read in emacs.</li>
+<li>with sops, to store my 0.1 dollar's deepseek account apikey, and chat with my ai girlfriend with my payment passward.</li>
+<li>I am tired of nixos, but I can't leave it, because after using nixos eveything is hard to do in other distor, like show off to other distor users "BTW, I use NixOS".</li>
+</ol>
+
+<p>
+论我怎么戒色?答:nixos。
+</p>
+</div>
+<div id="outline-container-org3f819a2" class="outline-3">
+<h3 id="org3f819a2"><span class="section-number-3">5.1.</span> Zeroth, get your config in to position.</h3>
+<div class="outline-text-3" id="text-5-1">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp" id="orgcfc0c34">(org-babel-do-load-languages
+'org-babel-load-languages '((emacs-lisp . t)(shell . t)))
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-sh" id="orgaa07c81">mkdir -p   $HOME/Leere/
+cp -r $PWD $HOME/Leere/
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-sh" id="orge9a43bc">sudo cp /etc/hardware-configuration.nix $PWD/nixos/device/desktop/hardware-configuration.nix
+chmod 777 $PWD/nixos/device/desktop/hardware-configuration.nix
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-sh" id="org98e0b72">mkdir -p ~/.config/spos/age/
+ln -sf $PWD/nixos  ~/.config/
+ln -sf $PWD/emacs.d   ~/.emacs.d
+ln -sf $PWD/resource/keys.txt ~/.config/spos/age/keys.txt
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-sh">sudo nix-channel --add https://nixos.org/channels/nixos-unstable
+sudo nix-channel --update
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-sh">sudo nixos-rebuild switch --flake /home/leeao/.config/nixos#nixos  --option substituters 'https://mirrors.ustc.edu.cn/nix-channels/store  https://cache.nixos.org' --cores 6 -j 12 --option experimental-features "nix-command flakes"
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orgf59f404" class="outline-2">
+<h2 id="orgf59f404"><span class="section-number-2">6.</span> 键盘流哲学</h2>
+<div class="outline-text-2" id="text-6">
+<ul class="org-ul">
+<li>与原生相合 (win)</li>
+<li>不冲突 (special prefix)</li>
+<li>合乎习惯 (stay base)</li>
+<li>home row效率 (home row effiction)</li>
+<li>general in os(browser, editor)</li>
+</ul>
+</div>
+<div id="outline-container-org45353f4" class="outline-3">
+<h3 id="org45353f4"><span class="section-number-3">6.1.</span> nav</h3>
+<div class="outline-text-3" id="text-6-1">
+<div class="org-src-container">
+<pre class="src src-nil">(q[mark-sexp]w[mark-word]f[mark_defun]p[mark-whole-buffer]b[quick-sdcv-search-at-point])
+                (g[er/expand-region])(m[toggle-truncate-lines])
+(z[kill-current-buffer]x[delete-other-windows]c[split-window-below]d[switch_other]v[switch-to-buffer-other-window])
+(enter[previous-error]/delete[next-error])
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-nil">(q[C-M-@]w[M-@]f[C-M-h]p[C-x h]b[c-c c-~ b])
+                (g[c-c c-~ g])(m[c-c c-~ m])
+(z[c-x 0]x[c-x 1]c[c-x 2]d[c-x o]v[c-c c-~ v])
+(enter[M-g p]/delete[M-g n])
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org3718fd0" class="outline-3">
+<h3 id="org3718fd0"><span class="section-number-3">6.2.</span> num</h3>
+<div class="outline-text-3" id="text-6-2">
+<div class="org-src-container">
+<pre class="src src-nil">(j[pause]/l[full]/u[down]/y[leftright]/'[open-app]/)
+(m[eink])
+(k[kill-win]/h[full]/,[down]/.[leftright]//[rotate])
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-nil">(j[s-shift-j]/l[s-shift-l]/u[s-shift-u]/y[s-shift-y]/'[s-shift-'])
+(m[s-shift-m])
+(k[s-shift-k]/h[s-shift-h]/,[s-shift-s]/.[s-shift-.]//[s-shift-/])
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org4673418" class="outline-3">
+<h3 id="org4673418"><span class="section-number-3">6.3.</span> mos</h3>
+<div class="outline-text-3" id="text-6-3">
+<div class="org-src-container">
+<pre class="src src-nil">(q[gptel-menu]/w[consult-gh]/f[rg-dwim]/p[disproject-dispatch]/b[ibuffer])(j[font-lock-mode]/l[tldr]/u[delete-all-space]/y[global-hide-mode-line-mode]/'[vertico-flat-mode])
+(a[comment]/r[quit]/s[find-file]/t[consult-buffer]/g[magit-status])(m[man])
+(z[search-at-point]/x[query-replace-regexp]/c[disproject-compile]/d[dired]/v[multi-vterm-project])(k[kill-buffer])
+(space[indent-rigidly])
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-nil">(q[c-c c-; q]/w[c-c c-; w]/f[c-c c-; f]/p[c-c c-; p]/b[c-x c-b])(j[c-c c-; j]/l[c-c c-; l]/u[c-c c-; u]/y[c-c c-; y]/'[c-c c-; '])
+(a[c-x c-;]/r[c-g]/s[c-x c-f]/t[c-x b]/g[c-x g])(m[c-c c-; m])
+(z[M-s .]/x[C-M-%]/c[c-c c-; c]/d[c-x d]/v[c-c c-; v])(k[c-x k])
+(space[C-X tab])
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org7223087" class="outline-3">
+<h3 id="org7223087"><span class="section-number-3">6.4.</span> sym</h3>
+<div class="outline-text-3" id="text-6-4">
+<div class="org-src-container">
+<pre class="src src-nil">(prompt1[just_give_me_he_code]/prompt2[explain_in_chinese]/prompt3[Think_longer]/prompt4[Search_The_Web]/prompt5[error_fix_it])
+(m[switch-to-gptel])
+(password/id/qq/email/phone)
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-nil">(prompt1[just_give_me_he_code]/prompt2[explain_in_chinese]/prompt3[Think_longer]/prompt4[Search_The_Web]/prompt5[error_fix_it])
+(m[s-m])
+(password/id/qq/email/phone)
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orgbddda04" class="outline-2">
+<h2 id="orgbddda04"><span class="section-number-2">7.</span> 屏幕哲学</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+Real Mono Theme, two colors are enough for emacs.
+</p>
+</div>
+<div id="outline-container-orgd84c098" class="outline-3">
+<h3 id="orgd84c098"><span class="section-number-3">7.1.</span> Feels:</h3>
+<div class="outline-text-3" id="text-7-1">
+<p>
+A collection of real monochrome emacs themes in a couple of variants.
+</p>
+
+<p>
+<img src="./figure/real-mono-eink.png" alt="real-mono-eink.png" />
+<img src="./figure/real-mono-dark.png" alt="real-mono-dark.png" />
+<img src="./figure/real-mono-girl.png" alt="real-mono-girl.png" />
+<img src="./figure/real-mono-old.png" alt="real-mono-old.png" />
+<img src="./figure/real-mono-sea.png" alt="real-mono-sea.png" />
+</p>
+
+<p>
+pictures's font list: bookerly, ubuntumono, firacode, terminess,
+bookerly blod ltalic.
+</p>
+</div>
+</div>
+<div id="outline-container-org4f5f93e" class="outline-3">
+<h3 id="org4f5f93e"><span class="section-number-3">7.2.</span> Features:</h3>
+<div class="outline-text-3" id="text-7-2">
+<ol class="org-ol">
+<li><b>Not Greyscale</b>, no blur anymore, it's much better to use eink screen
+for pure black and white!</li>
+<li><b>Easy</b> to customize, can set the only two colors by config the
+default face's foreground/background color.</li>
+<li><b>Distraction-free</b>, no extra info-overwhelming causing by font-lock,
+only few font diversity in magit/dired etc for better function
+recognize.</li>
+<li><b>Full</b>, configed 370+ faces, I didn't see any monochrome theme can
+reach that much, as my daily driver, it's good enough.</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org90a2a5b" class="outline-3">
+<h3 id="org90a2a5b"><span class="section-number-3">7.3.</span> Tips for mono:</h3>
+<div class="outline-text-3" id="text-7-3">
+<ul class="org-ul">
+<li>(global-hide-mode-line-mode 1), build your own brain memory</li>
+<li>(no-emoji 1), alter emacs to be "text editor" instead of discord</li>
+<li>(show-paren-mode -1), build your own eye insight</li>
+<li>(window-divider-mode -1), too, build your memory</li>
+<li>(display-line-numbers-mode -1), too, build your own eye insight</li>
+</ul>
+
+<p>
+(defvar my-alternate-font "-DAMA-UbuntuMono Nerd Font-regular-normal-normal-<b>-13-</b>-<b>-</b>-m-0-iso10646-1")
+(defvar my-default-font "bookerly")
+(defvar fontfont 1)
+(defun my-toggle-font ()
+  "Toggle between UbuntuMono and bookerly fonts."
+  (interactive)
+  (if (= fontfont 1)
+      (progn (set-face-attribute 'default nil :font my-default-font :height 160) (setq fontfont 0))
+    (progn (set-face-attribute 'default nil :font my-alternate-font :height 210) (setq fontfont 1))))
+#+end<sub>src</sub>
+</p>
+
+<ul class="org-ul">
+<li>fringe specific mode auto hide</li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(defun my-set-fringe-face ()
+  "auto hide fringe face depending on major mode."
+  (if (derived-mode-p '(occur-mode gud-mode))
+      (set-face-attribute 'fringe nil
+                          :background (face-attribute 'default :background)
+                          :foreground (face-attribute 'default :foreground))
+    (set-face-attribute 'fringe nil
+                        :background (face-attribute 'default :background)
+                        :foreground (face-attribute 'default :background))))
+(add-hook 'after-change-major-mode-hook #'my-set-fringe-face)
+
+- elisp for toggling paperlike-hd to swtich between read and watch.
+``` elisp
+(defvar monitor-state 0
+  "Current monitor state, either 0 for read or  1 for watch.")
+(defun monitor ()
+  "swtich monitor from read mode to watch mode"
+  (interactive)
+  (let((monitorpath "-i2c  /dev/i2c-4")
+       (monitorcli "paperlike-cli ")
+       (monitorarg '(" -contrast " " -speed " " -mode " " -clear"))
+       (mode-state '(("9" "5" "1")  ("2" "1" "3"))))
+    (split-window-below)
+    (other-window 1)
+    (switch-to-buffer "*Shell Command Output*")
+    (split-window-below)
+    (other-window 1)
+    (switch-to-buffer "*Async Shell Command*")
+    (progn
+      (dotimes (number 3)
+        (shell-command (concat
+                        monitorcli
+                        monitorpath
+                        (car (nthcdr number monitorarg))
+                        (car (nthcdr number (car (nthcdr monitor-state  mode-state)))))
+                       ))
+      (sleep-for 1))
+    (setq monitor-state  (if (= 0 monitor-state) 1 0 ))
+    (sleep-for 1.5)
+    (sleep-for 0.5)
+    (async-shell-command (concat monitorcli monitorpath " -clear"))
+    (let ((async (get-buffer-window "*Async Shell Command*"))
+          (shell (get-buffer-window "*Shell Command Output*")))
+      (when async (delete-window async))
+      (when shell  (delete-window shell)))
+    (sleep-for 0.5)
+    (kill-buffer "*Async Shell Command*")
+    (kill-buffer "*Shell Command Output*")
+    (donothing)))
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org73fd76d" class="outline-2">
+<h2 id="org73fd76d"><span class="section-number-2">8.</span> <span class="todo TODO">TODO</span> fag.h</h2>
+<div class="outline-text-2" id="text-8">
+<p>
+Copied from tsoding's flag module: <a href="https://github.com/tsoding/flag.h">https://github.com/tsoding/flag.h</a>
+</p>
+</div>
+<div id="outline-container-org394469b" class="outline-3">
+<h3 id="org394469b"><span class="section-number-3">8.1.</span> Quick Start</h3>
+<div class="outline-text-3" id="text-8-1">
+<p>
+Check <a href="../CPP/fag/example.c">example.c</a>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">cc -o example example.c
+./example -help
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orgf5c7e4a" class="outline-2">
+<h2 id="orgf5c7e4a"><span class="section-number-2">9.</span> 版本更新历史</h2>
+<div class="outline-text-2" id="text-9">
+<p>
+\datechange{2025-11-19}{晴}
+</p>
+\begin{change}
+  \item \textbf{天气好，玩了一下午} 结果踩在沥水槽腿掉下去了
+  \item \textbf{leetcode} 让chatgpt写leetgo的elisp工具，写到最后凌晨没网了!
+  \item \textbf{后悔的一天} reddit里的china\_irl我常常去看，实在是没意思，但总有一种引力让我去刷，莫名的又想看片，于是乎又成了看片加键政，什么高市什么献忠，吃瓜吃到10年的兽兽门，再看现在的其他事件，感觉10年代清新多了，那时候的主角还是87年“小妹”，现在则是0几年的“小妹”，真是世风日下，历史重是重复又重复，技术重是加强又如强啊，献忠机器人，何时到来? 假韩炳哲的话改下: “互联网让道德世风内涵成了空气，一切除了炫/爽/性没有他用”。
+  \item \textbf{折腾nixos/emacs} 精简所有文件到博客这一个仓库
+nixos只用一个flake.nix和secrets.yaml再把一串key放到一个位置就能用了，简直是极简完了。
+emacs只用一个post-init.init，再git clone下minimal-emacs到位，org再src运行一下，就能用了。
+这两都是2000行的配置。总之我有了一个blog/pdf/emacs/nixos/snippest/hosts集于一体的仓库。完全可重现，从配置到经历，其它的代码也可以从其它repo里clone下来，但总之目前这些就是我大学大概折腾的所有玩具了吧。
+\end{change}
+
+<p>
+\datechange{2025-11-18}{阴}
+</p>
+\begin{change}
+  \item \textbf{沉迷看书\footnote{把什么现代诗选和中国皇帝传都丢了吧，再看下去这辈子就毁了! 只留下两本书，互联网浅薄与雅思7天词汇，一是提醒我互联网对大脑的“伤害”另一个是提升下我的大脑，最近几年或十年特别是高考后，感觉自己的脑子雾雾的。}} 错过了我设定的上网时间二点到五点\footnote{我有点网瘾，所以通过家里的路由器限制一下。速度200kps，限制热门社交媒体的域名，时间上只有下午二点到五点能用。每次无限制上网都有一种沉迷的感觉，看黄片刷新闻作为瘾症生意在互联网真是完美载体，总之，戒断的痛苦真是难受啊!!!}… 明天再测试吧\footnote{晚上又用母亲的手机上网了，怎么试都发现这个github.io是404, 下载下来好像是html本身的问题。切换了一下账号发现看不了那个号了，问了下chatgpt发现github有新号防bot功能，没法只能重新用回我的NestorLiao账号https://github.com/orgs/community/discussions/55609?utm_source=chatgpt.com。}。
+  \item \textbf{C语言} 刷一遍flag代码，发现自己还是不太懂C语言。今天又没刷力扣，感觉自己很废，就这样还想搞什么?
+\end{change}
+
+<p>
+\datechange{2025/11/17}{雨}
+</p>
+\begin{change}
+  \item \textbf{开始刷Leetcode} 完成0题，折腾leetgo去了，使用async-shell-command与emacs不全好用，两者的时间不一致问题，shell-command又卡emacs本身，两者同样不能管理弹出的shell输出。只能用完整的shell命令和在async里eval emacs function套娃看看。
+  \item \textbf{将本“博客”的html和pdf上传了github.io} 只是不只为何几十分钟了 qingsongliao.github.io 还没有，明天再看吧。
+  \item \textbf{完成了real-mono-themes的emac主题包} 从此emacs又多了个别具一格的主题，不过也许70年代的emacs就长这样吧，oldfasion never die。
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.3\linewidth]{figure/real-mono-old.png}
+\caption{real-mono-old}
+\end{figure}
+\end{change}
+
+<p>
+\datechange{2025/11/16}{阴}
+</p>
+\begin{change}
+  \item \textbf{开始写作}
+  \item \textbf{使用elegent模板} 搭建自己博客? 写书还是写博客? 干脆一起写吧。
+\end{change}
+
+<p>
+\datechange{2025-11-19}{晴}
+</p>
+\begin{change}
+  \item \textbf{天气好，玩了一下午} 结果踩在沥水槽腿掉下去了
+  \item \textbf{leetcode} 让chatgpt写leetgo的elisp工具，写到最后凌晨没网了!
+  \item \textbf{后悔的一天} reddit里的china\_irl我常常去看，实在是没意思，但总有一种引力让我去刷，莫名的又想看片，于是乎又成了看片加键政，什么高市什么献忠，吃瓜吃到10年的兽兽门，再看现在的其他事件，感觉10年代清新多了，那时候的主角还是87年“小妹”，现在则是0几年的“小妹”，真是世风日下，历史重是重复又重复，技术重是加强又如强啊，献忠机器人，何时到来? 假韩炳哲的话改下: “互联网让道德世风内涵成了空气，一切除了炫/爽/性没有他用”。
+  \item \textbf{折腾nixos/emacs} 精简所有文件到博客这一个仓库
+nixos只用一个flake.nix和secrets.yaml再把一串key放到一个位置就能用了，简直是极简完了。
+emacs只用一个post-init.init，再git clone下minimal-emacs到位，org再src运行一下，就能用了。
+这两都是2000行的配置。总之我有了一个blog/pdf/emacs/nixos/snippest/hosts集于一体的仓库。完全可重现，从配置到经历，其它的代码也可以从其它repo里clone下来，但总之目前这些就是我大学大概折腾的所有玩具了吧。
+\end{change}
+
+<p>
+\datechange{2025-11-18}{阴}
+</p>
+\begin{change}
+  \item \textbf{沉迷看书\footnote{把什么现代诗选和中国皇帝传都丢了吧，再看下去这辈子就毁了! 只留下两本书，互联网浅薄与雅思7天词汇，一是提醒我互联网对大脑的“伤害”另一个是提升下我的大脑，最近几年或十年特别是高考后，感觉自己的脑子雾雾的。}} 错过了我设定的上网时间二点到五点\footnote{我有点网瘾，所以通过家里的路由器限制一下。速度200kps，限制热门社交媒体的域名，时间上只有下午二点到五点能用。每次无限制上网都有一种沉迷的感觉，看黄片刷新闻作为瘾症生意在互联网真是完美载体，总之，戒断的痛苦真是难受啊!!!}… 明天再测试吧\footnote{晚上又用母亲的手机上网了，怎么试都发现这个github.io是404, 下载下来好像是html本身的问题。切换了一下账号发现看不了那个号了，问了下chatgpt发现github有新号防bot功能，没法只能重新用回我的NestorLiao账号https://github.com/orgs/community/discussions/55609?utm_source=chatgpt.com。}。
+  \item \textbf{C语言} 刷一遍flag代码，发现自己还是不太懂C语言。今天又没刷力扣，感觉自己很废，就这样还想搞什么?
+\end{change}
+
+<p>
+\datechange{2025/11/17}{雨}
+</p>
+\begin{change}
+  \item \textbf{开始刷Leetcode} 完成0题，折腾leetgo去了，使用async-shell-command与emacs不全好用，两者的时间不一致问题，shell-command又卡emacs本身，两者同样不能管理弹出的shell输出。只能用完整的shell命令和在async里eval emacs function套娃看看。
+  \item \textbf{将本“博客”的html和pdf上传了github.io} 只是不只为何几十分钟了 qingsongliao.github.io 还没有，明天再看吧。
+  \item \textbf{完成了real-mono-themes的emac主题包} 从此emacs又多了个别具一格的主题，不过也许70年代的emacs就长这样吧，oldfasion never die。
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.3\linewidth]{figure/real-mono-old.png}
+\caption{real-mono-old}
+\end{figure}
+\end{change}
+
+<p>
+\datechange{2025/11/16}{阴}
+</p>
+\begin{change}
+  \item \textbf{开始写作}
+  \item \textbf{使用elegent模板} 搭建自己博客? 写书还是写博客? 干脆一起写吧。
+\end{change}
+
+<p>
+\nocite{*}
+\printbibliography[heading=bibintoc, title=\ebibname]
+\appendix
+</p>
+</div>
+</div>
+<div id="outline-container-org87d50cb" class="outline-2">
+<h2 id="org87d50cb"><span class="section-number-2">10.</span> 开发中遇见的各种问题</h2>
+<div class="outline-text-2" id="text-10">
+</div>
+<div id="outline-container-orgc1763cb" class="outline-3">
+<h3 id="orgc1763cb"><span class="section-number-3">10.1.</span> <span class="todo TODO">TODO</span> upload large files into the github repo</h3>
+<div class="outline-text-3" id="text-10-1">
+<p>
+use sed to filter, use what to split into small files.
+</p>
+</div>
+</div>
+<div id="outline-container-org865fbc1" class="outline-3">
+<h3 id="org865fbc1"><span class="section-number-3">10.2.</span> <span class="todo TODO">TODO</span> learn how to reference in org</h3>
+<div class="outline-text-3" id="text-10-2">
+<p>
+\cite, org-cite-insert unable to insert problem
+</p>
+</div>
+</div>
+<div id="outline-container-org128d0cc" class="outline-3">
+<h3 id="org128d0cc"><span class="section-number-3">10.3.</span> <span class="todo TODO">TODO</span> make <a href="file:///home/leeao/Leere/Leetcode/README.html">Leetcode</a> fresh tasks list&#x2026;</h3>
+<div class="outline-text-3" id="text-10-3">
+<ul class="org-ul">
+<li>have already?</li>
+<li>yes/no, yes, edit that file, no, get the files(testcase/question.md/solution.xxx)</li>
+<li>edit the files question to include src in end, solution.xxx to have mode line in header.</li>
+<li>download image to local, turn md in org format, and delete md one.</li>
+<li>add a allorg, to include all under src dir's question.org</li>
+<li>支持无网本地测试，在源代码文件头部中加入mode line，在题目文件尾部中加入include 源代码</li>
+<li>根据题号在相同的目录下抓取不同题目和几个指定语言，并下载至本地图片，再转化md为org格式</li>
+<li>支持在根目录中得到src的所有org file的include</li>
+<li>md to org的==问题</li>
+<li>based on leetgo to creat a leetcode elisp pkg</li>
+<li>test leetcode emacs pkg instead</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgf3c9f45" class="outline-3">
+<h3 id="orgf3c9f45"><span class="section-number-3">10.4.</span> <span class="done FIXME">FIXME</span> How to modify org-mode's #+INCLUDE:, to let it to exclude top and buttom?</h3>
+<div class="outline-text-3" id="text-10-4">
+<p>
+it have:
+top specific line to end specific line
+line to top specific
+top specific line to end
+contribute to the org-mode's include function to let it
+</p>
+
+<p>
+exclude from top specific line to end specific line but count from buttom
+</p>
+<ul class="org-ul">
+<li>study org-mode, try to contribute to it.</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org669fa1d" class="outline-3">
+<h3 id="org669fa1d"><span class="section-number-3">10.5.</span> <span class="todo KLUDGE">KLUDGE</span> pull request to the porn site list project&#x2026;</h3>
+<div class="outline-text-3" id="text-10-5">
+<p>
+by clone and compare the problem is that "I include a lost non-porn site in to it".
+not just "non-porn" sites, I also get a lot cdn server to block, which fetch from a lot of m3u8 streaming server. it may also block some movies which using the same server as porn sites&#x2026;
+so, there is only KLUDGE for thing like blocking porn site, first question: what is porn? really?
+to be, the social media like twitter which spread sexual clip? the pornhub teaching mathmatic? the reddit/4chan/zhihu/weibo/&#x2026; even the taobao can sell sex toys with sexual pictures, so blocking internet is blocking porn really? I don't know, it's a question for everyone.
+</p>
+</div>
+</div>
+<div id="outline-container-org4c9f10b" class="outline-3">
+<h3 id="org4c9f10b"><span class="section-number-3">10.6.</span> <span class="done OKAY">OKAY</span> try to package real-mono-theme to melpa</h3>
+<div class="outline-text-3" id="text-10-6">
+<p>
+minic almost-mono-theme, creat recipe, make pr
+wait for mainter check. I am familaring with github, feeling awesome!
+</p>
+</div>
+</div>
+<div id="outline-container-org9983495" class="outline-3">
+<h3 id="org9983495"><span class="section-number-3">10.7.</span> <span class="done OKAY">OKAY</span> creat new account's github repos for github.io</h3>
+<div class="outline-text-3" id="text-10-7">
+<p>
+have a usrname.github.io public repo, have index.html in it, in <a href="https://qingsongliao.github.io">url</a>
+</p>
+</div>
+</div>
+<div id="outline-container-org269ab8f" class="outline-3">
+<h3 id="org269ab8f"><span class="section-number-3">10.8.</span> <span class="done OKAY">OKAY</span> upload Purezen to github</h3>
+<div class="outline-text-3" id="text-10-8">
+<ul class="org-ul">
+<li>description: theme that really monochrome
+A collection of real monochrome emacs themes in a couple of variants.</li>
+<li>clone a monochrome and study it
+<a href="https://github.com/cryon/almost-mono-themes">https://github.com/cryon/almost-mono-themes</a></li>
+<li>minic a theme to creat a repo
+<a href="https://github.com/qingsongliao/real-mono-themes">https://github.com/qingsongliao/real-mono-themes</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-org8ab0803" class="outline-2">
+<h2 id="org8ab0803"><span class="section-number-2">11.</span> 嵌入式软件招聘常见要求</h2>
+<div class="outline-text-2" id="text-11">
+<ul class="org-ul">
+<li>本科及以上学历，嵌入式软件工作经验，电子、通信或计算机相关专业；</li>
+<li>有ARM Linux软件的开发经验，熟练使用C++和C语言；</li>
+<li>熟悉Linux常用设备操作，有spi、can、WiFi、audio、video相关驱动开发经验优先；</li>
+<li>熟悉多线程、多进程和socket网络编程，有并发程序开发经验和良好的设计思路；</li>
+<li>有机器人相关嵌入式设计或者实时系统经验优先。</li>
+</ul>
+
+
+<ul class="org-ul">
+<li>负责yocto &amp; android 的构建（Build）与升级（OS Upgrade），确保系统的稳定性和兼容性。</li>
+<li>参与新硬件平台的 Bringup，包括 CPU、GPU、Memory 等核心组件的初始化和调试。</li>
+<li>分析和解决系统稳定性问题，优化系统架构设计，提升整体性能和可靠性。</li>
+<li>研究客户系统功能需求，定制和优化系统功能，满足客户特定场景的需求。</li>
+<li>解决系统性能问题，包括 CPU、GPU、Memory 等资源的优化与调度。</li>
+<li>主导基线升级（Baseline Upgrade），确保系统与最新技术和安全标准同步。</li>
+</ul>
+
+
+<ul class="org-ul">
+<li>具备操作系统（如 Android、Linux）的构建与升级经验，熟悉系统启动流程和内核开发。</li>
+<li>有硬件平台 Bringup 经验，熟悉 CPU、GPU、Memory 等核心组件的初始化和调试。</li>
+<li>具备系统架构设计能力，能够优化系统性能并解决稳定性问题。</li>
+<li>有基线升级经验，熟悉版本管理和代码合并流程。</li>
+<li>具备客户需求分析和功能定制能力，能够根据客户需求优化系统功能。</li>
+<li>熟悉性能优化工具（如 perf, ftrace, gprof 等），能够解决 CPU、GPU、Memory 相关的性能问题。</li>
+<li>有嵌入式系统开发经验，熟悉低功耗设计和优化。</li>
+<li>熟悉虚拟化技术（如 KVM, QEMU）和容器化技术（如 Docker, Kubernetes）。</li>
+<li>有MTK芯片平台开发经验</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org6d5188a" class="outline-2">
+<h2 id="org6d5188a"><span class="section-number-2">12.</span> 嵌入式招聘常见笔试问题</h2>
+</div>
+<div id="outline-container-org957b741" class="outline-2">
+<h2 id="org957b741"><span class="section-number-2">13.</span> 嵌入式招聘常见面试问题</h2>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Qingsong Liao</p>
+<p class="date">Created: 2025-11-20 Thu 03:14</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
