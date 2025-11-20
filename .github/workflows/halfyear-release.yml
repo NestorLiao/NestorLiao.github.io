@@ -1,0 +1,36 @@
+name: Semiannual Release
+
+on:
+  schedule:
+    - cron: "0 0 1 1,7 *"   # 每半年一次：1 月 1 日 + 7 月 1 日
+  workflow_dispatch:
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build PDF
+        run: |
+          cp index.pdf release.pdf
+
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: semiannual-$(date +'%Y-%m')
+          name: "Semiannual Release $(date +'%Y-%m')"
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload PDF
+        uses: softprops/action-gh-release@v2
+        with:
+          files: release.pdf
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
