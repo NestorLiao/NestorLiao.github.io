@@ -1,16 +1,20 @@
 * 学技术的哲学
-\begin{quotation}
-  \textbf{\textcolor{red}{没有梦想那和咸鱼有什么区别呢?}}
-\end{quotation}
-\begin{introduction}
-\item 开始时间：2025-11-19
-\item 结束时间:  2026年前
-\item 完成难度：难难难
-\item 需要小时：100+
-\item 本章要点：linux/c/zig/rust/rtos
-\end{introduction}
+#+ATTR_LATEX: :environment introduction
+- 开始时间：2025-11-19
+- 结束时间:  2026年前
+- 完成难度：难难难
+- 需要小时：100+
+- 本章要点：linux/c/zig/rust/rtos
+
+#+ATTR_LATEX: :environment quotation
+#+BEGIN_QUOTE
+人没有梦想那和咸鱼有什么区别呢? ——周星驰
+#+END_QUOTE
+
+** 学习什么技术
 
 #+caption: path-to-know-tech
+|-------------------+--------------+------------------------------------|
 | procress          | url          | for                                |
 |-------------------+--------------+------------------------------------|
 | *fag*             | flag/cintro  | c, pretent iam tsoding             |
@@ -32,14 +36,17 @@
 | Safephone         | electronic   | lvgl/eink/openstress/lora/3Dprint  |
 |                   |              | stm32/nix/electronic/network       |
 |                   |              | nsfw image/text detected           |
+|-------------------+--------------+------------------------------------|
 
 1. All in all, it's for 技术哲学
    1. 网络/低速/时间/域名/ai过滤/linux内核构建-r2s
    2. 屏幕/护眼/低成瘾/驱动设计/eink屏幕算法-paperlike
    3. 通信/安全/无依赖/去平台/lora远距离通信-safephone
-   4. 交通/电工/电子电路/openstress-去五佰\footnote{我父亲那边的车行亲戚}那里学修车
+   4. 交通/电工/电子电路/openstress-去五佰[fn:: 我父亲那边的车行亲戚]那里学修车
 
-2. 第一阶段：打基础（C / Linux / GCC / Emacs）
+** 怎么学习底层技术
+
+1. 第一阶段：打基础（C / Linux / GCC / Emacs）
    - C 语言：学会指针、内存管理、结构体、函数指针；刷一些小项目，比如实现
      malloc、shell、http server。
    - Linux 基础：熟悉命令行、文件系统、进程/线程、信号、管道、套接字。
@@ -47,27 +54,27 @@
      objdump 和 nm。
    - Emacs：把它当IDE来用，掌握基本编辑、调试、补全、LSP支持。
 
-3. 第二阶段：系统调试与逆向（GDB / QEMU）
+2. 第二阶段：系统调试与逆向（GDB / QEMU）
    - GDB：练习断点、单步、查看寄存器/内存、调试多线程/远程调试。
    - QEMU：
      - 用它运行 Linux kernel 或裸机程序。
      - 学会 qemu -S -s + gdb remote 调试，体验调试内核的感觉。
      - 研究 QEMU 的设备模拟（比如 VirtIO、PCI），理解虚拟化和硬件抽象。
 
-4. 第三阶段：进阶编程语言与系统（C++ / Zig / RTOS）
+3. 第三阶段：进阶编程语言与系统（C++ / Zig / RTOS）
    - Zig：Zig 是现代系统编程语言，学习它的构建系统、内存模型，可以和
      C/C++ 混合编程。
    - RTOS：从 FreeRTOS
      入手，学任务调度、中断、任务间通信（队列/信号量）。可以用 QEMU 模拟
      Cortex-M 板子跑 RTOS。
 
-5. 第四阶段：融会贯通（大型项目 / 内核 / 编译器）
+4. 第四阶段：融会贯通（大型项目 / 内核 / 编译器）
    - QEMU + GDB：调试内核启动、写内核模块。
    - 编译器开发：研究 GCC 或 Clang 的前端/后端；或者用 Zig
      写一个简化编译器。
    - 个人项目：比如写一个简易 RTOS，或者在 QEMU 里跑自己写的内核。
 
-6. 操作系统构建与升级（Yocto/Android/内核）
+5. 操作系统构建与升级（Yocto/Android/内核）
    在树莓派上交叉编译 Linux 内核，修改驱动或设备树（Device Tree）进行硬件适配。
    尝试用 Yocto 或 Buildroot 构建自定义 Linux 镜像，加入自己编写或修改的驱动模块。
    安装和编译 LineageOS（Android for Pi）或类似 Android 系统，修改系统服务或 HAL 层。
@@ -76,14 +83,14 @@
    利用树莓派的 GPIO、SPI、I2C、CAN、PWM 等接口，练习外设 Bringup 和驱动调试。
    连接摄像头模块、显示屏（LCD 或 E-Ink）或音频模块，编写驱动和控制程序。
    使用 perf/ftrace/gprof 分析 CPU/GPU 性能瓶颈，优化程序调度。
-7. 系统稳定性与性能优化
+6. 系统稳定性与性能优化
    构建多线程/多进程网络服务，使用 socket 编程实现客户端/服务器通信，模拟并发场景。
    在树莓派上测试高负载条件下的系统稳定性，分析内核日志、内存占用和 CPU/GPU 使用率。
    实践内核参数调优，如调节调度器、内存缓存策略，观察性能变化。
-8. 客户功能定制与基线升级
+7. 客户功能定制与基线升级
    自己设计一个树莓派应用（如小型智能家居控制器或信息显示终端），从硬件 Bringup 到应用功能定制完整流程。
    模拟不同版本的系统镜像管理，练习分支合并、基线升级和版本回退。
-9. 加分技能训练
+8. 加分技能训练
    1. 低功耗优化：通过关闭不必要的外设、调节 CPU/GPU 频率或使用 E-Ink 显示屏练习功耗控制。
    2. 虚拟化/容器：在树莓派上安装 QEMU/KVM 或 Docker，运行多系统虚拟环境，模拟嵌入式应用部署。
    3. 芯片平台经验：如果有 MTK 或其他 ARM 板卡，可以对比树莓派练习移植和平台适配经验。

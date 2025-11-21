@@ -2,10 +2,9 @@
 # name: introduction
 # key: <intro
 # --
-\begin{introduction}
-\item 开始时间：${1:`(format-time-string "%Y-%m-%d")`}
-\item 结束时间：${2:end}
-\item 完成难度：${3:difficulty}
-\item 需要小时：${4:hours}
-\item 本章要点：${5:about}
-\end{introduction}
+#+ATTR_LATEX: :environment introduction
+- 开始时间：${1:`(format-time-string "%Y-%m-%d")`}
+- 结束时间：${2:end}
+- 完成难度：${3:difficulty}
+- 需要小时：${4:hours}
+- 本章要点：${5:about}

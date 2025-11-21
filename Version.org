@@ -1,46 +1,46 @@
 * 版本更新历史
+
+\datechange{2025-11-21}{晴}
+#+ATTR_LATEX: :environment change
+- *C语言*: 完成了对c语言的复习。
+- *域名*: 为 columndeeply/hosts 提交了17868行新域名，这个 hosts 是我最近在网上看到的最大的 host 文件，达到了近410mb ，共12.576.671 行，专门用于 Porn ，今天比较闲就把之前使用 tempermonkey 写的自动根据关键词用 ublacklist 自动 block 和从 fackads/和 github u3m8 collection 提出来的 cdn 网站和以前又闲又愤青时期屏蔽的各种网站，进行比较有二万三千行的不同 host ，用后缀比如 gov/org/cn 过滤了一些自己动手又删了些，发现像很多云很多热门网站像 cloud.tencent.com./taobao/nvidia/xx.gov.cn 但用了这么久好像没有任何冲突，可能是我实在是没有怎么上网，只是用用 github 就够了。看起来很多，17868行，几天检查不完，但是也就只是它的703分之一，我看了下很多是 blogspot/tumblr ，互联网的域名真得是故意弄成这样难管? 如果说 porn 的域名长成这样: 028b2c9ad2a24433ab97b8e5dbf69597.mediatailor.us-east-1.amazonaws.com(这还真是 porn)，这能管? 设立 whitelist 比 blacklist 更容易，但网络的架构(tcp/ip-dns-domain)就不允许这种事，我也好久没有更新我的host了，用ai比用搜索引索好用多了，ai的用处就是过滤黄色网站，当然openai要开放成人内容这事说明: 其实也没什么一定得搜的事。用emacs看文档，把记忆留在自己的脑子里，比起什么网页要重要的多。
+
 \datechange{2025-11-20}{晴}
-\begin{change}
-  \item \textbf{leetcode} 完成对 leetgo工具的elisp改造。chatgpt真得非常给力。
-  \item \textbf{c} 完成了对
-  \item \textbf{real-mono-themes} 完成pr与maintiner的检查，可以使用melpa安装自己的主题了。
-\end{change}
+#+ATTR_LATEX: :environment change
+- *leetcode*: 完成对 leetgo工具的elisp改造。chatgpt很给力。明天一定刷leecode。
+- *real-mono-themes*: 今日maintiner还没有动，看来工作很忙啊。
+- *博客/pdf*: 加入了新的org snippest，更深入学习了org转入latex更多方法，更完美的使用了本latex模板。
 
 \datechange{2025-11-19}{晴}
-\begin{change}
-  \item \textbf{天气好，玩了一下午} 结果踩在沥水槽腿掉下去了，还好只是擦伤。
-  \item \textbf{leetcode} 让chatgpt写leetgo的elisp工具，写到最后凌晨没网了!
-  \item \textbf{后悔的一天} reddit里的china\_irl我常常去看，实在是没意思，但总有一种引力让我去刷，莫名的又想看片，于是乎又成了看片加键政，什么高市什么献忠，吃瓜吃到10年的兽兽门，再看现在的其他事件，感觉10年代清新多了，那时候的主角还是87年“小妹”，现在则是0几年的“小妹”，真是世风日下，历史重是重复又重复，技术重是加强又如强啊，献忠机器人，何时到来? 假韩炳哲的话改下: “互联网让道德世风内涵成了空气，一切除了炫/爽/性没有他用”。
-  \item \textbf{折腾nixos/emacs} 精简所有文件到博客这一个仓库。
+#+ATTR_LATEX: :environment change
+- *天气好，玩了一下午*: 结果踩在沥水槽腿掉下去了，还好只是擦伤。
+- *leetcode*: 让chatgpt写leetgo的elisp工具，写到最后凌晨没网了!
+- *后悔的一天*: reddit里的china\_irl我常常去看，实在是没意思，但总有一种引力让我去刷，莫名的又想看片，于是乎又成了看片加键政，什么高市什么献忠，吃瓜吃到10年的兽兽门，再看现在的其他事件，感觉10年代清新多了，那时候的主角还是87年“小妹”，现在则是0几年的“小妹”，真是世风日下，历史重是重复又重复，技术重是加强又如强啊，献忠机器人，何时到来? 假韩炳哲的话改下: “互联网让道德世风内涵成了空气，一切除了炫/爽/性没有他用”。
+- *折腾nixos/emacs*: 精简所有文件到博客这一个仓库。
 nixos只用一个flake.nix和secrets.yaml再把一串key放到一个位置就能用了，简直是极简完了。
 emacs只用一个post-init.init，再git clone下minimal-emacs到位，org再src运行一下，就能用了。
 这两都是2000行的配置。总之我有了一个blog/pdf/emacs/nixos/snippest/hosts集于一体的仓库。完全可重现，从配置到经历，其它的代码也可以从其它repo里clone下来，但总之目前这些就是我大学大概折腾的所有玩具了吧。越说越感自己的脑残了，明明有女生喜欢我，我只有折腾这些sb玩意去了! 现在想起了，后悔得我都成了反科技主义了。
-  \item \textbf{越说越后悔} 总之，刷题刷项目，早点找工作，早点重新联系她。别再做reddit上的支人了… 别再看什么瓜片了… 反技术的后果就是“深山老林里的怪人”!!! 第一，你还有家人要养，第二，你也没生存能力，第三，我还是渴望家庭，第四，你都花了二十多年在技术上，现在去深山，那你学的拼音/加法/英文/编程都是屁吗?
-\end{change}
+- *越说越后悔*: 总之，刷题刷项目，早点找工作，早点重新联系她。别再做reddit上的支人了… 别再看什么瓜片了… 反技术的后果就是“深山老林里的怪人”!!! 第一，你还有家人要养，第二，你也没生存能力，第三，我还是渴望家庭，第四，你都花了二十多年在技术上，现在去深山，那你学的拼音/加法/英文/编程都是屁吗?
 
 \datechange{2025-11-18}{阴}
-\begin{change}
-  \item \textbf{沉迷看书\footnote{把什么现代诗选和中国皇帝传都丢了吧，再看下去这辈子就毁了! 只留下两本书，互联网浅薄与雅思7天词汇，一是提醒我互联网对大脑的“伤害”另一个是提升下我的大脑，最近几年或十年特别是高考后，感觉自己的脑子雾雾的。}} 错过了我设定的上网时间二点到五点\footnote{我有点网瘾，所以通过家里的路由器限制一下。速度200kps，限制热门社交媒体的域名，时间上只有下午二点到五点能用。每次无限制上网都有一种沉迷的感觉，看黄片刷新闻作为瘾症生意在互联网真是完美载体，总之，戒断的痛苦真是难受啊!!!}… 明天再测试吧\footnote{晚上又用母亲的手机上网了，怎么试都发现这个github.io是404, 下载下来好像是html本身的问题。切换了一下账号发现看不了那个号了，问了下chatgpt发现github有新号防bot功能，没法只能重新用回我的NestorLiao账号https://github.com/orgs/community/discussions/55609?utm_source=chatgpt.com。}。
-  \item \textbf{C语言} 刷一遍flag代码，发现自己还是不太懂C语言。今天又没刷力扣，感觉自己很废，就这样还想搞什么?
-\end{change}
+#+ATTR_LATEX: :environment change
+-  *沉迷看书*[fn:: 把什么现代诗选和中国皇帝传都丢了吧，再看下去这辈子就毁了! 只留下两本书，互联网浅薄与雅思7天词汇，一是提醒我互联网对大脑的“伤害”另一个是提升下我的大脑，最近几年或十年特别是高考后，感觉自己的脑子雾雾的。] 错过了我设定的上网时间二点到五点[fn:: 我有点网瘾，所以通过家里的路由器限制一下。速度200kps，限制热门社交媒体的域名，时间上只有下午二点到五点能用。每次无限制上网都有一种沉迷的感觉，看黄片刷新闻作为瘾症生意在互联网真是完美载体，总之，戒断的痛苦真是难受啊!!!]… 明天再测试吧[fn::晚上又用母亲的手机上网了，怎么试都发现这个github.io是404, 下载下来好像是html本身的问题。切换了一下账号发现看不了那个号了，问了下chatgpt发现github有新号防bot功能，没法只能重新用回我的NestorLiao账号https://github.com/orgs/community/discussions/55609?utm_source=chatgpt.com。]
+-  *C语言*: 刷一遍flag代码，发现自己还是不太懂C语言。今天又没刷力扣，感觉自己很废，就这样还想搞什么?
 
 \datechange{2025/11/17}{雨}
-\begin{change}
-  \item \textbf{开始刷Leetcode} 完成0题，折腾leetgo去了，使用async-shell-command与emacs不全好用，两者的时间不一致问题，shell-command又卡emacs本身，两者同样不能管理弹出的shell输出。只能用完整的shell命令和在async里eval emacs function套娃看看。
-  \item \textbf{将本“博客”的html和pdf上传了github.io} 只是不只为何几十分钟了 qingsongliao.github.io 还没有，明天再看吧。
-  \item \textbf{完成了real-mono-themes的emac主题包} 从此emacs又多了个别具一格的主题，不过也许70年代的emacs就长这样吧，oldfasion never die。
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=.3\linewidth]{figure/real-mono-old.png}
-\caption{real-mono-old}
-\end{figure}
-\end{change}
+#+ATTR_LATEX: :environment change
+- *开始刷Leetcode*: 完成0题，折腾leetgo去了，使用async-shell-command与emacs不全好用，两者的时间不一致问题，shell-command又卡emacs本身，两者同样不能管理弹出的shell输出。只能用完整的shell命令和在async里eval emacs function套娃看看。
+- *将本“博客”的html和pdf上传了github.io*: 只是不只为何几十分钟了 qingsongliao.github.io 还没有，明天再看吧。
+- *完成了real-mono-themes的emac主题包*: 从此emacs又多了个别具一格的主题，不过也许70年代的emacs就长这样吧，oldfasion never die。
+
+#+CAPTION: real-mono-old
+#+ATTR_LATEX: :width 0.3\linewidth
+[[./figure/real-mono-old.png]]
 
 \datechange{2025/11/16}{阴}
-\begin{change}
-  \item \textbf{开始写作}
-  \item \textbf{使用elegent模板} 搭建自己博客? 写书还是写博客? 干脆一起写吧。
-\end{change}
+#+ATTR_LATEX: :width 0.3\linewidth
+- *开始写作*
+- *使用elegent模板*: 搭建自己博客? 写书还是写博客? 干脆一起写吧。
 
 \nocite{*}
 \printbibliography[heading=bibintoc, title=\ebibname]

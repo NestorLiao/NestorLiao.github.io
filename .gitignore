@@ -1,3 +1,8 @@
 index.bbl
 index.tex
+index.log
+index.aux
+index.fls
+index-blx.bib
+index.fdb_latexmk
 .keys.txt

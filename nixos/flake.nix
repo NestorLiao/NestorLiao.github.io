@@ -1,6 +1,5 @@
 {
   description = "My Config";
-
   nixConfig = {
     builders-use-substitutes = true;
     experimental-features = [ "nix-command" "flakes" ];
@@ -11,7 +10,6 @@
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
     ];
   };
-
   outputs = { self, nixpkgs, home-manager, sops-nix, ... }@inputs:
     let
       inherit (self) outputs;
@@ -28,43 +26,7 @@
         ${userSetting.hostname} = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs outputs userSetting; };
           modules = [
-            ({ config, lib, pkgs, modulesPath, ... }: {
-              imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
-
-              boot.initrd.availableKernelModules =
-                [ "xhci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod" ];
-              boot.initrd.kernelModules = [ ];
-              boot.kernelModules = [ "kvm-intel" ];
-              boot.extraModulePackages = [ ];
-
-              fileSystems."/" = {
-                device =
-                  "/dev/disk/by-uuid/514ef2b6-e488-4fb7-8e75-050dba518dd3";
-                fsType = "ext4";
-              };
-
-              fileSystems."/boot" = {
-                device = "/dev/disk/by-uuid/9A5B-F507";
-                fsType = "vfat";
-                options = [ "fmask=0077" "dmask=0077" ];
-              };
-
-              swapDevices = [{
-                device =
-                  "/dev/disk/by-uuid/38362089-68ee-4f89-9e3b-3db83786fc5e";
-              }];
-
-              # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
-              # (the default) this is the recommended approach. When using systemd-networkd it's
-              # still possible to use this option, but it's recommended to use it in conjunction
-              # with explicit per-interface declarations with `networking.interfaces.<interface>.useDHCP`.
-              networking.useDHCP = lib.mkDefault true;
-              # networking.interfaces.enp2s0.useDHCP = lib.mkDefault true;
-
-              nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-              hardware.cpu.intel.updateMicrocode =
-                lib.mkDefault config.hardware.enableRedistributableFirmware;
-            })
+            ./hardware-configuration.nix
             ({ pkgs, config, userSetting, sops, inputs, lib, outputs, ... }:
               let
                 stardictDictionaries = pkgs.stdenv.mkDerivation {
@@ -87,7 +49,6 @@
                   sha256 =
                     "sha256-uyZcPv7jPv96KovMKFdp/qDv0/6b3x0We/vx7eIU6O4=";
                 };
-
                 dictRepo = pkgs.fetchFromGitHub {
                   owner = "NestorLiao";
                   repo = "dict";
@@ -95,15 +56,6 @@
                   sha256 =
                     "sha256-dd9dMrhPa4QeJ58uiLBNhoQy8EfSJrmLj0lpwtygR2U=";
                 };
-
-                hmdzRepo = pkgs.fetchFromGitHub {
-                  owner = "welandx";
-                  repo = "huma-danzi.pyim";
-                  rev = "master";
-                  sha256 =
-                    "sha256-aykE79mIDtM0xAO78ruuzlWr6v0RWlY2tlx5d+8MUPg=";
-                };
-
                 bookerlyRepo = pkgs.fetchFromGitHub {
                   owner = "NestorLiao";
                   repo = "boboly";
@@ -116,18 +68,15 @@
                     withNativeCompilation = true;
                     withSQLite3 = true;
                   };
-
                 emacsWithPackages =
                   (pkgs.unstable.emacsPackagesFor myEmacs).emacsWithPackages;
                 switchframeScript = ''
                   #!/usr/bin/env bash
-
                   if [ $# -ne 1 ]; then
                       echo "Usage: $0 <direction>"
                       echo "Directions: 1=up, 2=down, 3=left, 4=right"
                       exit 1
                   fi
-
                   case $1 in
                       1) direction="up" ;;
                       2) direction="down" ;;
@@ -139,7 +88,6 @@
                           exit 1
                           ;;
                   esac
-
                   # Check if focused window is in fullscreen mode
                   if swaymsg -t get_tree | jq -e '.. | select(.focused? == true and .fullscreen_mode == 1)' >/dev/null; then
                       # If in fullscreen: exit fullscreen, focus in direction, then re-enter fullscreen
@@ -151,20 +99,15 @@
                       swaymsg focus "$direction"
                   fi
                 '';
-
                 onlyemacsScript = ''
                   #!/usr/bin/env bash
                   swaymsg workspace number 5
-
                   EMACS_SERVER=server
                   TIMEOUT=10  # seconds to wait for server
-
                   if ! emacsclient -s "$EMACS_SERVER" -e '(emacs-pid)' &>/dev/null; then
                       echo "Emacs server not running. Restarting..."
                       notify-send -t 5000 "booting emacs"
-
                       systemctl --user restart emacs.service
-
                       # Wait for server to be ready, with timeout
                       waited=0
                       interval=0.5
@@ -177,36 +120,29 @@
                               exit 1
                           fi
                       done
-
                       notify-send -t 5000 "emacs rebooted"
                       echo "Emacs server started."
                   else
                       echo "Emacs server already running."
                       notify-send -t 5000 "事实是劳动者所知的最美的梦。"
                   fi
-
                   # Connect to Emacs
                   bash -c "emacsclient -n -c -s $EMACS_SERVER"
-
                   sleep 1.0
                   swaymsg fullscreen
                   sleep 0.5
                 '';
                 toggleWorkspaceScript = ''
                   #!/usr/bin/env bash
-
                   # Ensure exactly two arguments are provided
                   if [ "$#" -ne 2 ]; then
                       echo "Usage: $0 <workspace1> <workspace2>"
                       exit 1
                   fi
-
                   workspace1="$1"
                   workspace2="$2"
-
                   # Get the current workspace name
                   current_workspace=$(swaymsg -t get_workspaces | jq -r '.[] | select(.focused==true) | .name')
-
                   # Toggle between the provided workspaces
                   if [ "$current_workspace" = "$workspace2" ]; then
                       swaymsg workspace number "$workspace1"
@@ -220,7 +156,6 @@
                 #   template= ''
                 #     #!/usr/bin/env bash
                 # '';
-
                 zig-doc = pkgs.stdenv.mkDerivation {
                   name = "zig-documentation";
                   src = pkgs.fetchurl {
@@ -257,7 +192,6 @@
                   libnotify
                   wf-recorder
                   wl-color-picker
-
                   c-intro-and-ref
                   glibcInfo
                   libtool
@@ -265,25 +199,20 @@
                   nil
                   nixfmt-classic
                   poppler-utils
-
                   ccls
                   cmake # C/C++ 构建系统（部分依赖可能需要）
                   ninja # 现代构建系统（可加速 CMake 编译）
                   flex
                   bc
-
                   ### 🔹 **代码质量**
                   codespell # 拼写检查工具（用于检查拼写错误）
                   cppcheck # C/C++ 静态分析工具（检查潜在错误）
                   doxygen # 生成代码文档（用于 C/C++ 文档生成）
-
                   ### 🔹 **测试和覆盖率**
                   gtest # Google Test 单元测试框架
                   lcov # 代码覆盖率工具（用于 GCov）
-
                   ### 🔹 **调试工具**
                   rr # 录制和重放调试（类似 `gdb`，用于更好的调试体验）
-
                   ### 🔹 **Linux 内核编译相关**
                   cpio # 内核打包工具（生成 initramfs 时使用）
                   pahole # `dwarves` 工具集，用于 BTF（BPF Type Format）
@@ -292,12 +221,10 @@
                   usbutils # USB 设备管理工具（`lsusb`）
                   util-linux # `lsblk`、`fdisk` 等基本 Linux 工具
                   bpftrace # BPF 追踪工具（用于调试 Linux 内核）
-
                   ### 🔹 **C++ 依赖管理**
                   conan # C++ 包管理工具（用于管理依赖）
                   vcpkg # C++ 包管理工具（微软开发的）
                   vcpkg-tool # `vcpkg` 相关工具
-
                   (pkgs.buildFHSEnv {
                     name = "kernel-env";
                     targetPkgs = pkgs:
@@ -319,25 +246,19 @@
                         kmod
                       ];
                   })
-
                   pkg-config
-
                   # SDL for emulation
                   SDL2
                   SDL2.dev
-
                   # Optional but useful
                   cmake
                   meson
                   ninja
-
                   # ARM cross-compilation tools
                   gcc-arm-embedded
-
                   qemu
                   # For full system emulation:
                   qemu-utils # qemu-img, etc.
-
                   age
                   alsa-utils
                   bear
@@ -391,7 +312,6 @@
                     "x-directory/normal" = [ "thunar.desktop" ];
                   };
                 };
-
                 environment.etc = {
                   "xdg/user-dirs.defaults".text = ''
                     DESKTOP=.save
@@ -404,7 +324,6 @@
                     VIDEOS=.save
                   '';
                 };
-
                 environment.shellAliases = {
                   np =
                     "nix-shell -p  --option substituters 'https://mirrors.ustc.edu.cn/nix-channels/store  https://cache.nixos.org'";
@@ -470,33 +389,26 @@
                   bc = "bc -ql";
                   mkd = "mkdir -pv";
                 };
-
                 programs.bash.interactiveShellInit = ''
                   eval "$(zoxide init bash)"
                 '';
-
                 home-manager = {
                   extraSpecialArgs = { inherit inputs outputs userSetting; };
                   useUserPackages = true;
                   users = {
                     ${userSetting.username} = {
-
                       home.pointerCursor = {
                         gtk.enable = true;
                         package = pkgs.bibata-cursors;
                         name = "Bibata-Modern-Ice";
                         size = 24;
                       };
-
                       services.cliphist.enable = true;
-
                       home.file.".local/share/fonts/bookerly".source =
                         "${bookerlyRepo}";
                       home.file.".local/share/fonts/sourcehan".source =
                         "${sourcehanRepo}";
                       home.file.".stardict/dic".source = stardictDictionaries;
-                      home.file.".config/hmdz".source = "${hmdzRepo}";
-
                       home.file.".config/sway/white.jpg" = {
                         source = pkgs.fetchurl {
                           url =
@@ -518,7 +430,6 @@
                           colors = {
                             foreground = "000000";
                             background = "FFFFFF";
-
                             # Normal colors
                             regular0 = "000000"; # black
                             regular1 = "0C322F"; # red
@@ -528,7 +439,6 @@
                             regular5 = "033682"; # magenta
                             regular6 = "CAA198"; # cyan
                             regular7 = "FFFFFF"; # white
-
                             # Bright colors
                             bright0 = "000000"; # bright black
                             bright1 = "0C322F"; # bright red
@@ -541,7 +451,6 @@
                           };
                         };
                       };
-
                       programs.gh = {
                         enable = true;
                         gitCredentialHelper = {
@@ -554,7 +463,6 @@
                           prompt = "enabled";
                         };
                       };
-
                       programs.git = {
                         ignores =
                           [ "*~" "*.swp" "*result*" ".direnv" "node_modules" ];
@@ -570,13 +478,11 @@
                         };
                         enable = true;
                       };
-
                       programs.nix-index = {
                         enable = true;
                         enableFishIntegration = true;
                         enableBashIntegration = true;
                       };
-
                       programs.direnv = {
                         enable = true;
                         enableBashIntegration = true;
@@ -584,18 +490,15 @@
                         nix-direnv.enable = true;
                         silent = true;
                       };
-
                       programs.zoxide = {
                         enable = true;
                         enableBashIntegration = true;
                         enableFishIntegration = true;
                       };
-
                       home.file.".config/fish/functions/rcdir.fish".text = ''
                         function rcdir
                             while true
                                 read -l -P 'Do you want to continue? [y/N] ' confirm
-
                                 switch $confirm
                                     case Y y
                                         rm -rf (pwd)
@@ -607,18 +510,15 @@
                             end
                         end
                       '';
-
                       home.file.".config/fish/functions/mcdir.fish".text = ''
                         function mcdir
                         command mkdir $argv[1]
                         and cd $argv[1]
                         end
                       '';
-
                       home.file.".config/nixpkgs/config.nix".text = ''
                         { allowUnfree = true; }
                       '';
-
                       home.file.".config/mako/config".text = ''
                         font=Bookerly 14
                         background-color=#ffffff
@@ -629,7 +529,6 @@
                         default-timeout=8888
                         layer=overlay
                       '';
-
                       home.file.".cargo/config.toml".text = ''
                         [source.crates-io]
                         replace-with = 'rsproxy-sparse'
@@ -642,26 +541,20 @@
                         [net]
                         git-fetch-with-cli = true
                       '';
-
                       programs.command-not-found.enable = false;
-
                       home.packages = with pkgs; [ git-credential-manager ];
-
                       home.enableNixpkgsReleaseCheck = false;
-
                       nixpkgs = {
                         overlays = [
                           # Add overlays your own flake exports (from overlays and pkgs dir):
                           # outputs.overlays.additions
                           outputs.overlays.modifications
                           outputs.overlays.unstable-packages
-
                           # You can also add overlays exported from other flakes:
                           # neovim-nightly-overlay.overlays.default
                           # (final: prev: {
                           #   blender = prev.blender.override {cudaSupport = true;};
                           # })
-
                           # Or define it inline, for example:
                           # (final: prev: {
                           #   hi = final.hello.overrideAttrs (oldAttrs: {
@@ -677,7 +570,6 @@
                           allowUnfreePredicate = _: true;
                         };
                       };
-
                       gtk = {
                         enable = true;
                         theme = {
@@ -693,21 +585,17 @@
                           size = 16;
                         };
                       };
-
                       qt = {
                         platformTheme.name = "gtk";
                         enable = true;
                         style.name = "adwaita-highcontrast";
                         style.package = pkgs.adwaita-qt6;
                       };
-
                       home = {
                         username = "${userSetting.username}";
                         homeDirectory = "/home/${userSetting.username}";
                       };
-
                       systemd.user.startServices = "sd-switch";
-
                       programs.firefox = {
                         enable = false;
                         policies = {
@@ -758,7 +646,6 @@
                             Cryptomining = true;
                             Fingerprinting = true;
                           };
-
                           DisableFeedbackCommands = true;
                           SearchEngines.Default = "Google";
                           DisableFormHistory = true;
@@ -766,7 +653,6 @@
                           DisableAppUpdate = true;
                           BlockAboutAddons = false;
                         };
-
                         profiles.firefox = {
                           userChrome = ''
                                           @-moz-document url(chrome://browser/content/browser.xhtml) {
@@ -780,20 +666,16 @@
                                                 #sidebar-header {
                                                   display: none;
                                           }
-
                                                 #statuspanel { display: none !important; }
                                                 :root[tabsintitlebar] #titlebar:-moz-window-inactive {
                                                   opacity: 1 !important;
                                         }
-
                                                 #TabsToolbar {
                                                 	display: none !important;
                                       }
-
                                                 #navigator-toolbox[fullscreenShouldAnimate] {
                                                     transition: none !important;
                                     }
-
                                                 #contentAreaContextMenu #context-openlinkincurrent,
                                                 #contentAreaContextMenu #context-openlinkinusercontext-menu,
                                                 #contentAreaContextMenu #context-bookmarklink,
@@ -805,36 +687,29 @@
                                                 #contentAreaContextMenu #context-viewpartialsource-selection {
                                                 	display: none !important;
                                   }
-
                                                 :root {
                                                 	scrollbar-color: #ffffff #FFFFFF;
                                                 	scrollbar-width: none;
                                                 }
                                                 *{ scrollbar-width: none !important; } }
-
                                                 *{ scrollbar-width: none }
                                                 #navigator-toolbox,
                                                 #TabsToolbar,
                                                 #tabbrowser-tabs {
                                                   background-color: #FFFFFFF !important;
                             }
-
                                                 :root{
                                                   --uc-autohide-toolbox-delay: 200ms; /* Wait 0.1s before hiding toolbars */
                                                   --uc-toolbox-rotation: 82deg;  /* This may need to be lower on mac - like 75 or so */
                                                 }
-
                                                 :root[sizemode="maximized"]{
                                                   --uc-toolbox-rotation: 88.5deg;
                                                       }
-
                                                 @media  (-moz-platform: windows){
                                                   :root:not([lwtheme]) #navigator-toolbox{ background-color: -moz-dialog !important; }
                                                 }
-
                                                 :root[sizemode="fullscreen"],
                                                 :root[sizemode="fullscreen"] #navigator-toolbox{ margin-top: 0 !important; }
-
                                                 #navigator-toolbox{
                                                   --browser-area-z-index-toolbox: 3;
                                                   position: fixed !important;
@@ -884,34 +759,26 @@
                                                         }
                                                 }
                                                 }
-
                                                 #navigator-toolbox > *{ line-height: normal; pointer-events: auto }
-
                                                 #navigator-toolbox,
                                                 #navigator-toolbox > *{
                                                   width: 100vw;
                                                   -moz-appearance: none !important;
                                                 }
-
                                                 /* These two exist for oneliner compatibility */
                                                 #nav-bar{ width: var(--uc-navigationbar-width,100vw) }
                                                 #TabsToolbar{ width: calc(100vw - var(--uc-navigationbar-width,0px)) }
-
                                                 /* Don't apply transform before window has been fully created */
                                                 :root:not([sessionrestored]) #navigator-toolbox{ transform:none !important }
-
                                                 :root[customizing] #navigator-toolbox{
                                                   position: relative !important;
                                                   transform: none !important;
                                                   opacity: 1 !important;
                                                 }
-
                                                 #navigator-toolbox[inFullscreen] > #PersonalToolbar,
                                                 #PersonalToolbar[collapsed="true"]{ display: none }
-
                                                 /* Uncomment this if tabs toolbar is hidden with hide_tabs_toolbar.css */
                                                  /*#titlebar{ margin-bottom: -9px }*/
-
                                                 /* Uncomment the following for compatibility with tabs_on_bottom.css - this isn't well tested though */
                                                 /*
                                                 #navigator-toolbox{ flex-direction: column; display: flex; }
@@ -1032,17 +899,14 @@
                           };
                         };
                       };
-
                       programs.chromium = {
                         enable = false;
                         package = pkgs.ungoogled-chromium;
                       };
-
                       home.stateVersion = "25.05";
                     };
                   };
                 };
-
                 users.users = {
                   ${userSetting.username} = {
                     initialPassword = "t";
@@ -1054,20 +918,15 @@
                     extraGroups = [ "wheel" "networkmanager" ];
                   };
                 };
-
                 users.defaultUserShell = pkgs.fish;
-
                 security.sudo.wheelNeedsPassword = false;
-
                 programs.thunar.enable = true;
                 programs.thunar.plugins = with pkgs.xfce; [
                   thunar-archive-plugin
                   thunar-volman
                 ];
-
                 nix.settings.cores = 10;
                 nix.settings.max-jobs = lib.mkDefault 10;
-
                 environment.variables = {
                   EDITOR = "emacsclient -n -s 'server'";
                   RUSTUP_DIST_SERVER = "https://rsproxy.cn";
@@ -1076,10 +935,8 @@
                   XAPIAN_CJK_NGRAM = "true";
                   GTK_IM_MODULE = lib.mkForce "";
                 };
-
                 #  fc-cache -fv
                 fonts.fontDir.enable = true;
-
                 fonts.packages = with pkgs;
                   lib.mkForce [
                     nerd-fonts.fira-code
@@ -1090,7 +947,6 @@
                     nerd-fonts.ubuntu-mono
                     noto-fonts-emoji-blob-bin
                   ];
-
                 fonts.fontconfig = let
                   sansFallback = [
                     "Fira Code Nerd Font"
@@ -1118,7 +974,6 @@
                       ++ emoji ++ sansFallback;
                   };
                 };
-
                 i18n = {
                   defaultLocale = "en_US.UTF-8";
                   extraLocaleSettings = {
@@ -1138,7 +993,6 @@
                   };
                   supportedLocales = [ "en_US.UTF-8/UTF-8" ];
                 };
-
                 sops.defaultSopsFile = ./secrets.yaml;
                 sops.defaultSopsFormat = "yaml";
                 sops.age.keyFile =
@@ -1160,7 +1014,6 @@
                   owner = userSetting.username;
                   path = "/home/${userSetting.username}/.git-credential";
                 };
-
                 sops.secrets.deepseek_apikey = {
                   owner = userSetting.username;
                 };
@@ -1169,7 +1022,6 @@
                 sops.secrets.mojie = { owner = userSetting.username; };
                 sops.secrets.oney = { owner = userSetting.username; };
                 sops.secrets.ouo = { owner = userSetting.username; };
-
                 networking.extraHosts = ''
                   # 想想jjr吧
                    ${builtins.readFile ./nosurf/hosts00}
@@ -1194,7 +1046,6 @@
                    0.0.0.0 reddit.com
                    0.0.0.0 old.reddit.com
                 '';
-
                 services = {
                   nscd.enable = false;
                   irqbalance.enable = false;
@@ -1326,12 +1177,10 @@
                     package = emacsWithPackages (epkgs:
                       (with epkgs.melpaStablePackages; [ ])
                       ++ (with epkgs.melpaPackages; [
-
                         ### fast MAGIC for jumping everwhere
                         rg
                         dired-subtree
                         ztree
-
                         ## expand & edit
                         move-text
                         surround
@@ -1339,13 +1188,11 @@
                         multiple-cursors
                         avy
                         yasnippet
-
                         ### project manager
                         magit
                         magit-todos
                         disproject
                         forge
-
                         ### do anything in emacs
                         consult-gh-embark
                         consult-gh-forge
@@ -1360,7 +1207,6 @@
                         pyim
                         syslog-mode
                         journalctl-mode
-
                         ### read log/manual/dict/gpt/... in emacs
                         quick-sdcv
                         tldr
@@ -1369,7 +1215,6 @@
                         sicp
                         posix-manual
                         devdocs-browser
-
                         ### the you-know-who guy created a huge list of amazing pkgs
                         consult
                         embark
@@ -1379,7 +1224,6 @@
                         corfu
                         orderless
                         embark-consult
-
                         ### for language fans
                         zig-mode
                         nix-mode
@@ -1387,12 +1231,10 @@
                         markdown-mode
                         go-mode
                         racket-mode
-
                         ### save and format
                         aggressive-indent
                         elisp-autofmt
                         super-save
-
                         ### emacs look and feel
                         hide-mode-line
                         shift-number
@@ -1401,7 +1243,6 @@
                         compile-angel
                         buffer-terminator
                         envrc
-
                         ### feel even better than drug
                         alert
                         trashed
@@ -1409,12 +1250,10 @@
                         easysession
                         undo-fu
                         undo-fu-session
-
                       ]) ++ (with epkgs.elpaPackages; [ plz ])
                       ++ (with pkgs; [ ]));
                   };
                 };
-
                 programs.nix-ld = {
                   enable = true;
                   package = pkgs.unstable.nix-ld;
@@ -1527,7 +1366,6 @@
                     ncurses
                   ];
                 };
-
                 console = {
                   font = "latarcyrheb-sun32";
                   keyMap = "us";
@@ -1550,13 +1388,11 @@
                     "2A2A2A" # Bright White → Almost Black
                   ];
                 };
-
                 programs.sway = {
                   package = pkgs.unstable.sway;
                   enable = true;
                   wrapperFeatures.gtk = true;
                 };
-
                 systemd.services."getdaeconfig" = {
                   script = ''
                     mkdir -p "/home/${userSetting.username}/.config/dae"
@@ -1571,13 +1407,11 @@
                       allow_insecure: true
                       auto_config_kernel_parameter: true
                     }
-
                     subscription {
                                 sub_airport_1: '$(cat ${config.sops.secrets.mojie.path})'
                                 # sub_airport_2: '$(cat ${config.sops.secrets.ouo.path})'
                                 # sub_airport_3: '$(cat ${config.sops.secrets.oney.path})'
                                 }
-
                     dns {
                       upstream {
                         alidns: 'udp://dns.alidns.com:53'
@@ -1595,14 +1429,12 @@
                         }
                       }
                     }
-
                     group {
                         proxy {
                               filter: name(keyword:'香港')
                               policy: min_moving_avg
                         }
                     }
-
                     routing {
                         pname(dnsmasq, dropbear) -> must_direct
                         dip(8.8.8.8) -> must_direct
@@ -1611,7 +1443,6 @@
                         domain(dns.google) -> must_direct
                         domain(cloudflare-dns.com) -> must_direct
                         dip(224.0.0.0/3, 'ff00::/8') -> direct
-
                     domain(
                         geosite:category-social-media-!cn,
                         geosite:category-social-media-cn,
@@ -1620,7 +1451,6 @@
                         geosite:category-entertainment,
                         geosite:category-entertainment-cn,
                         geosite:category-porn) -> block
-
                         domain(geosite:cn,api.tavily.com,ziggit.dev,api.deepseek.com) -> direct
                         fallback: proxy
                     }
@@ -1632,7 +1462,6 @@
                   restartIfChanged = true;
                   after = [ "hibernate.target" ];
                 };
-
                 systemd.services."getswayconfig" = {
                   script = ''
                                         mkdir -p "/home/${userSetting.username}/.config/sway"
@@ -1642,59 +1471,43 @@
                     # -*- mode: conf-space -*-
                     # Logo key. Use Mod1 for Alt.
                     set \$mod Mod4
-
                     # Preferred terminal and launcher
                     set \$term foot
                     set \$menu wmenu-run -N '#ffffff' -n '#000000' -M '#000000' -m '#ffffff' -S '#000000' -s '#ffffff' -f 'monospace 16' -b -i
                     # Background and output configuration
                     output * bg  ~/.config/sway/white.jpg fill
                     output * transform 270
-
                     # Screenshots and screen recording
                     bindsym Print exec grim -g '\$(slurp)' - | wl-copy && wl-paste > ~/save/.media/recordings/pic/Screenshot-\$(date +%F%T).png | dunstify 'Screenshot of the region taken' -t 1000
                     bindsym Shift+Print exec grim -g '\$(slurp -o -r -c '#ff0000ff')' -t ppm - | satty --filename - --fullscreen --output-filename ~/save/.media/recordings/pic/satty-\$(date '+%Y%m%d-%H:%M:%S').png
                     bindsym Mod1+Shift+Print exec wf-recorder
-
                     bindsym \$mod+Shift+j exec bash -c 'paperlike-cli -i2c /dev/i2c-4 -clear;swaylock -i ~/.config/sway/white.jpg;'
-                    exec swayidle -w \
-                             timeout 300 'swaylock -i ~/.config/sway/white.jpg;' \
-                             timeout 600 'systemctl hibernate' \
-                             before-sleep 'swaylock -i ~/.config/sway/white.jpg;'
 
                     # Exit sway (logs you out of your Wayland session)
                     bindsym \$mod+Shift+q exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
                     bindsym \$mod+Shift+comma exec switchframe 2
                     bindsym \$mod+Shift+period  exec toggle-workspace 4 5
-
                     # Basic window management
                     bindsym \$mod+Shift+w kill
                     bindsym \$mod+Return exec myterm
-
                     # Application launcher and clipboard history
                     # bindsym \$mod+Shift+apostrophe exec \$menu -show drun
                     bindsym \$mod+Shift+apostrophe exec \$menu
                     bindsym \$mod+Shift+y exec cliphist list | wmenu -N '#ffffff' -n '#000000' -M '#000000' -m '#ffffff' -S '#000000' -s '#ffffff' -f 'monospace 16' -b -i -l 16  | cliphist decode | wl-copy
                     bindsym \$mod+Shift+d exec cliphist list | wmenu -N '#ffffff' -n '#000000' -M '#000000' -m '#ffffff' -S '#000000' -s '#ffffff' -f 'monospace 16' -b -i -l 10  | cliphist delete
-
                     floating_modifier \$mod normal
-
                     # Reload config
                     bindsym \$mod+Shift+r reload
-
                     bindsym \$mod+Shift+h fullscreen
-
                     bindsym \$mod+Shift+slash layout toggle split
                     bindsym \$mod+Shift+space floating toggle
                     bindsym \$mod+space focus mode_toggle
-
                     # Hide cursor after 1 second of inactivity
                     seat * hide_cursor 888
-
                     # Gaps
                     gaps top 0
                     gaps outer 0
                     gaps inner 0
-
                     # Bar configuration
                     bar {
                         position bottom
@@ -1717,7 +1530,6 @@
                         }
                     }
                     bindsym \$mod+Shift+b exec swaymsg bar mode toggle
-
                     # Client window styles
                     client.focused #ffffff  #ffffff  #000000  #ffffff  #ffffff
                     client.focused_inactive  #ffffff  #000000  #ffffff  #ffffff  #ffffff
@@ -1726,14 +1538,11 @@
                     client.urgent #ffffff  #ffffff  #000000  #ffffff  #ffffff
                     client.placeholder       #ffffff  #ffffff  #000000  #ffffff  #ffffff
                     client.background        #ffffff
-
                     # UI styling
                     font pango:Bookerly 1
                     titlebar_padding 1
                     titlebar_border_thickness 0
-
                     exec swaymsg workspace number 5
-
                     # Workspace bindings (keypad)
                     bindsym KP_1 workspace 1
                     bindsym KP_2 workspace 2
@@ -1745,37 +1554,29 @@
                     bindsym KP_8 workspace 8
                     bindsym KP_9 workspace 9
                     bindsym KP_0 workspace next
-
                     bindsym \$mod+Shift+e exec  emacs
                     bindsym \$mod+e exec  emacsclient -n -c -s server
-
 for_window [app_id='emacs'] border none
 for_window [app_id='emacs'] titlebar_padding 0
 for_window [app_id='emacs'] titlebar_border_thickness 0
-
 for_window [app_id='emacsclient'] border none
 for_window [app_id='emacsclient'] titlebar_padding 0
 for_window [app_id='emacsclient'] titlebar_border_thickness 0
-
 # Foot terminal styling
 for_window [app_id='foot'] border none
 for_window [app_id='foot'] titlebar_padding 0
 for_window [app_id='foot'] titlebar_border_thickness 0
-
 # Firefox beta styling
 for_window [app_id='firefox'] border none
 for_window [app_id='firefox'] titlebar_padding 0
 for_window [app_id='firefox'] titlebar_border_thickness 0
-
 # Firefox beta styling
 for_window [app_id='firefox-beta'] border none
 for_window [app_id='firefox-beta'] titlebar_padding 0
 for_window [app_id='firefox-beta'] titlebar_border_thickness 0
-
 for_window [app_id='xdg-desktop-portal-gtk'] floating enable
 for_window [app_id='xdg-desktop-portal-gtk'] resize set 800 600
 for_window [app_id='xdg-desktop-portal-gtk'] move position center
-
                     # Include additional config files
                     include /etc/sway/config.d/*
                                         " > "$config_file"
@@ -1787,7 +1588,6 @@ for_window [app_id='xdg-desktop-portal-gtk'] move position center
                   restartIfChanged = true;
                   after = [ "hibernate.target" ];
                 };
-
                 systemd.services.adjustPaperLight = {
                   enable = true;
                   description = "no light";
@@ -1797,25 +1597,18 @@ for_window [app_id='xdg-desktop-portal-gtk'] move position center
                   wantedBy = [ "hibernate.target" "multi-user.target" ];
                   path = [ "/nix/store" ];
                 };
-
                 networking = {
                   hostName = userSetting.hostname;
                   nameservers = [ "127.0.0.1" ];
                   networkmanager.enable = true;
                   firewall.enable = true;
                 };
-
                 system.nssModules = lib.mkForce [ ];
-
                 hardware.i2c.enable = true;
-
                 boot.kernelModules = [ "i2c-dev" "i915" "spi-ch341" ];
-
                 boot.extraModulePackages = [ ];
-
                 boot.binfmt.emulatedSystems =
                   [ "aarch64-linux" "riscv64-linux" "i686-linux" ];
-
                 boot = {
                   kernel = {
                     sysctl = {
@@ -1827,20 +1620,15 @@ for_window [app_id='xdg-desktop-portal-gtk'] move position center
                     };
                   };
                 };
-
                 boot.kernelPackages = pkgs.linuxPackages;
-
                 # Bootloader
                 boot.loader.timeout = 5;
                 boot.loader.systemd-boot.enable = true;
                 boot.loader.systemd-boot.configurationLimit = 5;
-
                 boot.loader.efi.canTouchEfiVariables = true;
                 boot.loader.efi.efiSysMountPoint = "/boot";
-
                 boot.loader.grub.theme =
                   "${pkgs.libsForQt5.breeze-grub}/grub/themes/breeze";
-
                 documentation = {
                   enable = true;
                   doc.enable = true;
@@ -1851,7 +1639,6 @@ for_window [app_id='xdg-desktop-portal-gtk'] move position center
                   };
                   dev.enable = true;
                 };
-
                 hardware = {
                   bluetooth.enable = true;
                   bluetooth.powerOnBoot = true;
@@ -1866,27 +1653,20 @@ for_window [app_id='xdg-desktop-portal-gtk'] move position center
                   };
                 };
                 hardware.enableAllFirmware = true;
-
                 time.timeZone = "Asia/Shanghai";
-
                 programs.bash.undistractMe.playSound = true;
-
                 programs.soundmodem.enable = true;
-
                 security.rtkit.enable = true;
                 xdg.sounds.enable = true;
-
                 environment.etc = {
                   "wireplumber/main.lua.d/90-suspend-timeout.lua".text = ''
                     apply_properties = {
                       ["session.suspend-timeout-seconds"] = 0;};
                   '';
                 };
-
                 boot.extraModprobeConfig = ''
                   options snd-hda-intel power_save=0 power_save_controller=N
                 '';
-
                 programs.fish = {
                   package = pkgs.fish;
                   enable = true;
@@ -1916,7 +1696,6 @@ for_window [app_id='xdg-desktop-portal-gtk'] move position center
                              printf "\e]%s\e\\" "$argv"
                          end
                      end
-
                      if [ "$INSIDE_EMACS" = 'vterm' ]
                          function clear
                              vterm_printf "51;Evterm-clear-scrollback";
@@ -1936,13 +1715,11 @@ for_window [app_id='xdg-desktop-portal-gtk'] move position center
                   # This will add each flake input as a registry
                   # To make nix3 commands consistent with your flake
                   registry = lib.mapAttrs (_: value: { flake = value; }) inputs;
-
                   # This will additionally add your inputs to the system's legacy channels
                   # Making legacy nix commands consistent as well, awesome!
                   nixPath =
                     lib.mapAttrsToList (key: value: "${key}=${value.to.path}")
                     config.nix.registry;
-
                   settings = {
                     substituters = [
                       "https://cache.nixos.org/"
@@ -1957,37 +1734,31 @@ for_window [app_id='xdg-desktop-portal-gtk'] move position center
                       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
                       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
                     ];
-
                     # Enable flakes and new 'nix' command
                     experimental-features = "nix-command flakes";
                     # Deduplicate and optimize nix store
                     auto-optimise-store = true;
                     trusted-users = [ userSetting.username ];
                   };
-
                   gc = {
                     automatic = true;
                     dates = "daily";
                     options = "--delete-older-than 7d";
                   };
                 };
-
                 nixpkgs = {
                   # You can add overlays here
                   overlays = [
                     # Add overlays your own flake exports (from overlays and pkgs dir):
                     # outputs.overlays.additions
-
                     # (import (builtins.fetchTarball {
                     #   url = "https://github.com/nix-community/emacs-overlay/archive/master.tar.gz";
                     # }))
                     outputs.overlays.modifications
                     outputs.overlays.unstable-packages
                     outputs.overlays.old-packages
-
                     # You can also add overlays exported from other flakes:
                     # neovim-nightly-overlay.overlays.default
-
                     # Or define it inline, for example:
                     # (final: prev: {
                     #   hi = final.hello.overrideAttrs (oldAttrs: {
@@ -2009,10 +1780,8 @@ for_window [app_id='xdg-desktop-portal-gtk'] move position center
           ];
         };
       };
-
       overlays = {
         modifications = final: prev: { };
-
         unstable-packages = final: _prev: {
           unstable = import inputs.nixpkgs-unstable {
             system = final.system;
@@ -2022,7 +1791,6 @@ for_window [app_id='xdg-desktop-portal-gtk'] move position center
             };
           };
         };
-
         old-packages = final: _prev: {
           oldw = import inputs.nixpkgs-old {
             system = final.system;
@@ -2031,17 +1799,14 @@ for_window [app_id='xdg-desktop-portal-gtk'] move position center
         };
       };
     };
-
   inputs = {
     emacs-overlay = {
       url = "github:nix-community/emacs-overlay/master";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
       inputs.nixpkgs-stable.follows = "nixpkgs";
     };
-
     nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
-
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";

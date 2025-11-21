@@ -1,22 +1,32 @@
-* README.org
+* 编辑器哲学
 This is my blog and p(pdf)log, and emacs/nixos config, code snippest and even more, all in just one repo.
-
+这是仓库是我的博客也是我写的书，还是我是emacs和nixos配置，代码模板等等等。
+#+begin_src emacs-lisp :tangle yes :results none
+(org-babel-do-load-languages
+'org-babel-load-languages '((emacs-lisp . t)(shell . t)))
+#+end_src
 #+caption: 我能用这代码块重现我的电脑，怎么样? 帅吧!
 #+begin_src sh :results none
-if [[ ! -f "/home/$USER/.emacs.d" ]] then
+if [[ -f "/home/$USER/.emacs.d" ]] then
     git clone --depth 1 https://github.com/jamescherti/minimal-emacs.d ~/.emacs.d
 fi
-ln -sf $PWD/post-init.el   ~/.emacs.d/;
-ln -sf $PWD/snippets ~/.config/snippets;
-ln -sf $PWD ~/.config/;
-if [[ $XAPIAN_CJK_NGRAM != "true" ]]
+ln -sf $PWD/nixos/ ~/.config/;
+ln -sf $PWD/snippets ~/.config/;
+ln -sf $PWD/nixos/hmdz.pyim ~/.config/;
+ln -sf $PWD/nixos/post-init.el ~/.emacs.d/;
+if [[ $XAPIAN_CJK_NGRAM != "true" ]] then
+   sudo cp /etc/hardware-configuration.nix $PWD/nixos/hardware-configuration.nix
+   chmod 777 $PWD/nixos/hardware-configuration.nix
    mkdir -p   $HOME/.config/sops/age
    cp .keys.txt  $HOME/.config/sops/age/keys.txt
+   sudo nix-channel --add https://nixos.org/channels/nixos-unstable
+   sudo nix-channel --update
    sudo nixos-rebuild switch --flake /home/$USER/.config/nixos#$hostname  --option substituters 'https://mirrors.ustc.edu.cn/nix-channels/store  https://cache.nixos.org' --cores 6 -j 12;
 fi
 #+end_src
 
-* 编辑器哲学
+这是org的文学编程能力最简单的体现，从c到bash，在一个org文件中能一起运行，神奇吧! 为什么emacs这么强大?大概就是因为它使用的elisp相当“灵”吧，再说为什么emacs这么小众，也大概是它的elisp太“难”了吧。有些人不敢学，怕自己投入又得不到钞票，有些人不能学，他们把自己的心给了别的教派如“vim”“vscode”于是固步自封，自高自大，vim模态天下第一! 我曾同样如此，抱着网上破烂配凑出的neovim，对那些大神的操作流口水但是又没法认同emacs。其实犹豫不定很正常，进入一个陌生的环境，很多怪人怪事，emacs更是如此，你常常不知道那些人口中说的eglot/flycheck/eww是什么?常常写错一些代码。当然这同样也是学习emacs的乐趣，也正是它的陌生带来的新鲜，而且有了chatgpt的帮助，学习起来相当方便。
+
 **** 如果人生还有一次，我还选emacs
 - minimal :: based on the clean and  fast minimal-emacs.
 - purezen :: pure white and black theme written by me called "purezen".
@@ -26,11 +36,11 @@ fi
 - effcient :: selecting elegantly like queen and editting fastly like king.
 - zen :: the world is tremendously large, the items are enormously rich, only me along writting with leere feeling, true happiness come from nothing but within.
 
-****  我的编辑器邪教之旅:
+**** 我的编辑器邪教之旅:
 
 浏览器里的vimium C，因为wsl学习的neovim，因为换上nixos后抄的helix配置，因为大四没找工作太闲学的emacs。我每用一个就大呼“我草，早知道，还得是xx!”，然后给同学老师家人都安利安利，给同学说“我有一宝”，给老师说“看我操作”，给家人嘻嘻傻笑像是捡到五百钱。虽然这代表着我非常的闲，但是折腾emacs确实让我不是很闲到以至于抑郁，我还是在用Vimium C和emacs，赋予我闪电切换页面的神奇体验，当然，代价是它们也让我得了一种名为“换页面换buffer”的ADHD，再者，其实不用vim/emacs也会得，只不过叫作“懒得换页面就直接玩手机”ADHD，“懒得折腾电脑就去玩CSgo成了换弹癌”的ADHD。在这个时代，玩csgo和玩emacs有什么区别呢? 一个能炒皮肤，另一个能折腾皮肤，如是而矣。
 
-****  我使用emacs没有太多原因就只是:
+**** 我使用emacs没有太多原因就只是:
   1. 依赖少，之前用vim，我就要关心vim键位的app适合用来看pdf，看epub看文档，整vimium和vim一个键位/什么lazygit/tmux/fcitx/alacritty，还生怕它们之间有什么矛盾，关键vimscript也不适合作为灵活的语言，整天很困扰很憋屈，我还折腾colemak、虎码和nixos，我的天，对于任何一个大脑快定型的成年人来说，这简直是噩梦! 幸好有emacs解救我于快捷键地狱中，装包能list-package再一点就安装了，pyim配置虎码就一行的事，那里还要fcitx5怎么怎么样! 自从用了emacs，我再也没有折改过firefox，一是我没时间，二是我就只用emacs的eww，我也就不再在乎什么vimium的键位和vim不一样了， *能用就行* 才是真理! 再说用上了elisp，那才叫美梦成真，想写一个工具简直就比玩手机打游等更有意思多了。什么tmux/lazygit/nixos，现在我只想笑笑，我用vterm/magit/任何平台都能跑emacs不是爽多了吗? 只要给我emacs/编译器，写代码就是轻轻松松的事! emacs改好了我的强迫症和极多主义，现在我心宽又极简，感谢emacs!
   2. 功能多，之前用helix，虽是开箱即用但是很明显它的功能只限于写代码，快是快但是对我这样的学习困难型人来说，快和慢没有多大的区别，只会让我再难受于“我好慢它好快，我是不是x痿了”，helix是个自带丰富功能工具，但是对于习惯homerow的人来说其实用vim mode没有什么增益，只会让我更迷茫“我能直接不动手就能上下了，干啥还要这个hjkl??”。有插件和服务器模式这点就足以胜过helix了。当然我从helix的文档也学到了很多编辑知识，如果没有它的emacs主题和打算用scheme写插件系统，和让我折腾很久的helix eink主题，我也不会有潜移默化现在的编辑技术和极简主题审美了。
   3. 分心小，之前用vimium那就是一个换换换的感觉，总是想去换页面，看看新闻看看新工具，上下跳转，左右腾挪，helix功能太少不能在里面呆太久，而vimium是个浏览器插件在里面呆着又太容易去娱乐， +用vim主要是去youtube参加编辑器神战+ ，helix也好vimium也好。其实我学习emacs，到能快速掌握avy靠得是之前用过vimium，学习surrond/expand靠的是helix，能熟悉info/man/tldr靠得是之前在终端里学习vim。总之emacs必然是编辑技术的一个终点站。
@@ -41,7 +51,7 @@ fi
 * 操作系统哲学
 1. network, 471mb hosts to block internet out of my pc with dnsmasq and  dae proxy tool based on epbf... you know I am ill about internet? because I am in china, and the nsfw/trump/4chan dudes, I love they so much, so I add they into my hosts.
 2. emacs editor, + nixos, they both ruin my early adult life.
-3. wm: sway, minimal config, pure white look, although miku cursor.
+3. wm: sway, minimal config, pure white look, although +miku cursor+, now, I use plain mouse instead.
 4. shell: fish+foot, with all I need in, direnv/many alias/zoxide/git/and thefxxk or thefxxk updated to "chatgpt"'s codex nowadays?
 5. browser: firefox [default uninstall], I use eww because I hate browser.
 6. fully reproducible, even with dict/font/anime wallpaper!
@@ -49,105 +59,202 @@ fi
 8. with sops, to store my 0.1 dollar's deepseek account apikey, and chat with my ai girlfriend with my payment passward.
 9. I am tired of nixos, but I can't leave it, because after using nixos eveything is hard to do in other distor, like show off to other distor users "BTW, I use NixOS".
 
-论我怎么戒色?答:nixos。
+** 用linux只为戒
+翻开中国帝王史，有多少帝王是沉迷女色后国家衰亡，多少帝王是皇太后控制后抑郁早亡。
+野史里选王要的是看他不好色否? 当皇帝得看他有无抢夺妇女。翻开网络史发展，有多少人民群众是沉迷情色后国家衰亡，多少人是被色情控制后抑郁早亡，看人得看他好色否? 好不好色，得看他懂得怎么预防。oppo的天气预报能跳到擦边短剧，bing的结果第一个BMI测试广告中跳到黄色导航，
+ 百度误输成baidu.co中进入黄色应用下载，网易看见过全露的黄色直播，B站中处处是擦边广告和直播，微博中卖到各种片，知乎里表露情色隐私更引人浏览，我的世界游戏里用色情披风，淘宝里随便看情趣用品，openai支持成人内容，twitter全是福利姬，就连QQ空间连上擦边广告商，onlyfans比所有ai公司利润更高，pornhub全球流量前10，整个00后的网络被“这到提醒我了”占据，整代女人被商业文化营造黑丝和大胸的“性感”，整代男人被情色文化成为无脑动物与被情欲“冲动”控制，男人就该好色? 女人就该这样美吗? 天下皆知美之为美，斯恶也。互联网33%的流量，70%的男性，30%的女性，90%男性沉迷其中…数字不会说谎，一切已经到来，生存与繁衍不再重要，存在不过是不断刺激感官。不只是色情… 网络带来的问题似乎总是和成瘾有关，赌博/购物/社交/游戏… 就连互联网最自豪的正面形象所谓的“利于学习”也成为了信息过载的社会巨大问题，自由的代价是什么? 自由即是强迫。
 
-** Zeroth, get your config in to position.
-#+name: Get emacs can run shell
-#+begin_src emacs-lisp :tangle yes
-(org-babel-do-load-languages
-'org-babel-load-languages '((emacs-lisp . t)(shell . t)))
-#+end_src
+论我怎么戒色?答:学习技术、理解技术、控制技术，学习自由软件，远离商业软件，拒绝即是自由。
++ 成瘾源于: 随机|不必|即时|匿名|易得|免费|广告|失范
++ 通过 *路由器+NixOS* ，不使用手机与笔记本
+  - 时间 :: 限时，2-5PM，足够一天专注
+  - 速度 :: 网速，1Mbps，足够文本传输
+  - 空间 :: 域名，非编程网站，471MB
+  - 强制 :: 禁cache.nixos.org以止系统更新
++ 软件 使用 *emacs* ，不使用浏览器与IDE
+  - google :: tavily
+  - chatgpt :: gptel
+  - github :: consult-gh
+  - leetcode :: leetgo
+  - firefox :: eww
+  - vpn :: dae/dnsmasq
+  - obsidian :: org
+  - wiki :: nginx/info/tldr/devdocs/man
++ 硬件 使用 *eink* ，不使用音响与普通键盘
+  - 音乐 :: 无音响
+  - 游游 :: 无显卡
+  - 动漫 :: 无色彩
+  - 社媒 :: 无软件
+  - 购物 :: 无网络
+  - 视频 :: 竖立屏
 
-#+name: copy your config to place
-#+begin_src sh
-mkdir -p   $HOME/Leere/
-cp -r $PWD $HOME/Leere/
-#+end_src
-
-#+name: get device specific hardware config
-#+begin_src sh
-sudo cp /etc/hardware-configuration.nix $PWD/nixos/device/desktop/hardware-configuration.nix
-chmod 777 $PWD/nixos/device/desktop/hardware-configuration.nix
-#+end_src
-
-#+name: place your config into right position
-#+begin_src sh
-mkdir -p ~/.config/spos/age/
-ln -sf $PWD/nixos  ~/.config/
-ln -sf $PWD/emacs.d   ~/.emacs.d
-ln -sf $PWD/resource/keys.txt ~/.config/spos/age/keys.txt
-#+end_src
-
-#+RESULTS: place your config into right position
-
-#+begin_src sh
-sudo nix-channel --add https://nixos.org/channels/nixos-unstable
-sudo nix-channel --update
-#+end_src
-
-#+begin_src sh
-sudo nixos-rebuild switch --flake /home/leeao/.config/nixos#nixos  --option substituters 'https://mirrors.ustc.edu.cn/nix-channels/store  https://cache.nixos.org' --cores 6 -j 12 --option experimental-features "nix-command flakes"
-#+end_src
 * 键盘流哲学
+** 设计哲学
 - 与原生相合 (win)
 - 不冲突 (special prefix)
 - 合乎习惯 (stay base)
 - home row效率 (home row effiction)
 - general in os(browser, editor)
-** nav
-#+begin_src
-(q[mark-sexp]w[mark-word]f[mark_defun]p[mark-whole-buffer]b[quick-sdcv-search-at-point])
-                (g[er/expand-region])(m[toggle-truncate-lines])
-(z[kill-current-buffer]x[delete-other-windows]c[split-window-below]d[switch_other]v[switch-to-buffer-other-window])
-(enter[previous-error]/delete[next-error])
-#+end_src
 
-#+begin_src
-(q[C-M-@]w[M-@]f[C-M-h]p[C-x h]b[c-c c-~ b])
-                (g[c-c c-~ g])(m[c-c c-~ m])
-(z[c-x 0]x[c-x 1]c[c-x 2]d[c-x o]v[c-c c-~ v])
-(enter[M-g p]/delete[M-g n])
-#+end_src
+** 分层
+1. base层，colemak-dh，最快速与舒适的英文布局
+2. nav层，上下左右，快速移动，C-c C-~ 为前缀，emacs快速选择
+3. num层，数字键，控制sway的窗口，与系统剪切板和应用菜单
+4. mos层，鼠标上下左右，C-c C-; 为前缀，一些emacs功能。
+5. sym层，全部符号，gpt prompt与个人信息快速输入层
+6. fun层，function 1/2../12 层
+7. med层，提供蓝牙/媒体切换
+** 本地刷录
 
-** num
-#+begin_src
-(j[pause]/l[full]/u[down]/y[leftright]/'[open-app]/)
-(m[eink])
-(k[kill-win]/h[full]/,[down]/.[leftright]//[rotate])
-#+end_src
+#+caption: 1 刷重置， 2刷github action，3刷本地zip文件
+#+begin_src sh
+  #!/usr/bin/env bash
+# ===== CONFIGURATION =====
+GITHUB_OWNER="NestorLiao"
+GITHUB_REPO="zmk-config"
+GITHUB_TOKEN="$(cat ~/.github_token)"
+ZIP_DEST="./zmk_build.zip"
+UNZIP_DIR="./zmk_build"
 
-#+begin_src
-(j[s-shift-j]/l[s-shift-l]/u[s-shift-u]/y[s-shift-y]/'[s-shift-'])
-(m[s-shift-m])
-(k[s-shift-k]/h[s-shift-h]/,[s-shift-s]/.[s-shift-.]//[s-shift-/])
-#+end_src
+LEFT_FW="corne_left-nice_nano_v2-zmk.uf2"
+RIGHT_FW="corne_right-nice_nano_v2-zmk.uf2"
+SETTINGS_RESET="settings_reset-nice_nano_v2-zmk.uf2"
 
-** mos
-#+begin_src
-(q[gptel-menu]/w[consult-gh]/f[rg-dwim]/p[disproject-dispatch]/b[ibuffer])(j[font-lock-mode]/l[tldr]/u[delete-all-space]/y[global-hide-mode-line-mode]/'[vertico-flat-mode])
-(a[comment]/r[quit]/s[find-file]/t[consult-buffer]/g[magit-status])(m[man])
-(z[search-at-point]/x[query-replace-regexp]/c[disproject-compile]/d[dired]/v[multi-vterm-project])(k[kill-buffer])
-(space[indent-rigidly])
-#+end_src
+# ===== FUNCTIONS =====
 
-#+begin_src
-(q[c-c c-; q]/w[c-c c-; w]/f[c-c c-; f]/p[c-c c-; p]/b[c-x c-b])(j[c-c c-; j]/l[c-c c-; l]/u[c-c c-; u]/y[c-c c-; y]/'[c-c c-; '])
-(a[c-x c-;]/r[c-g]/s[c-x c-f]/t[c-x b]/g[c-x g])(m[c-c c-; m])
-(z[M-s .]/x[C-M-%]/c[c-c c-; c]/d[c-x d]/v[c-c c-; v])(k[c-x k])
-(space[C-X tab])
-#+end_src
+flash_settings_reset() {
+    echo "Flashing settings reset firmware..."
 
-** sym
-#+begin_src
-(prompt1[just_give_me_he_code]/prompt2[explain_in_chinese]/prompt3[Think_longer]/prompt4[Search_The_Web]/prompt5[error_fix_it])
-(m[switch-to-gptel])
-(password/id/qq/email/phone)
-#+end_src
+    for i in 1 2; do
+        echo "Reset device $i/2 into bootloader mode..."
 
-#+begin_src
-(prompt1[just_give_me_he_code]/prompt2[explain_in_chinese]/prompt3[Think_longer]/prompt4[Search_The_Web]/prompt5[error_fix_it])
-(m[s-m])
-(password/id/qq/email/phone)
+        # Wait for mount
+        while [ ! -d "/media/NICENANO" ]; do
+            sleep 0.5
+        done
+
+        echo "NICENANO detected. Flashing settings reset..."
+        if [ -f "$SETTINGS_RESET" ]; then
+            cp "$SETTINGS_RESET" /media/NICENANO/
+            echo "Settings reset flashed $i/2."
+        else
+            echo "❌ $SETTINGS_RESET not found in current directory."
+            exit 1
+        fi
+
+        echo "Waiting for NICENANO to unmount..."
+        while [ -d "/media/NICENANO" ]; do
+            sleep 0.5
+        done
+    done
+    echo "✅ Settings reset completed twice."
+}
+
+download_latest_artifact() {
+    echo "Fetching latest artifact..."
+
+    run_id=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
+        "https://api.github.com/repos/$GITHUB_OWNER/$GITHUB_REPO/actions/runs?per_page=1&status=success" \
+        | jq -r '.workflow_runs[0].id')
+
+    if [ "$run_id" == "null" ] || [ -z "$run_id" ]; then
+        echo "❌ No successful workflow run found."
+        exit 1
+    fi
+
+    echo "Found workflow run ID: $run_id"
+
+    artifact_url=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
+        "https://api.github.com/repos/$GITHUB_OWNER/$GITHUB_REPO/actions/runs/$run_id/artifacts" \
+        | jq -r '.artifacts[0].archive_download_url')
+
+    if [ "$artifact_url" == "null" ] || [ -z "$artifact_url" ]; then
+        echo "❌ No artifacts found for run $run_id."
+        exit 1
+    fi
+
+    echo "Downloading artifact zip..."
+    curl -L -H "Authorization: token $GITHUB_TOKEN" \
+        "$artifact_url" -o "$ZIP_DEST"
+
+    echo "Unzipping..."
+    rm -rf "$UNZIP_DIR"
+    unzip -q "$ZIP_DEST" -d "$UNZIP_DIR"
+}
+
+flash_from_local() {
+    if [ ! -f "$ZIP_DEST" ]; then
+        echo "❌ $ZIP_DEST not found in current directory."
+        exit 1
+    fi
+
+    echo "Using local $ZIP_DEST..."
+    rm -rf "$UNZIP_DIR"
+    unzip -q "$ZIP_DEST" -d "$UNZIP_DIR"
+}
+
+flash_firmware() {
+    local fw_path="$1"
+    echo "Please reset the device into bootloader mode..."
+
+    while [ ! -d "/media/NICENANO" ]; do
+        sleep 0.5
+    done
+
+    echo "NICENANO detected. Flashing $fw_path..."
+    cp "$fw_path" /media/NICENANO/
+    echo "Done."
+
+    echo "Waiting for NICENANO to unmount..."
+    while [ -d "/media/NICENANO" ]; do
+        sleep 0.5
+    done
+}
+
+flash_left_right() {
+    flash_firmware "$UNZIP_DIR/$LEFT_FW"
+    flash_firmware "$UNZIP_DIR/$RIGHT_FW"
+}
+
+show_usage() {
+    echo "Usage: $0 <mode>"
+    echo "Modes:"
+    echo "  1 - Flash settings reset twice"
+    echo "  2 - Download from GitHub and flash left/right"
+    echo "  3 - Use local zmk_build.zip to flash left/right"
+}
+
+# ===== MAIN =====
+
+if [ $# -ne 1 ]; then
+    show_usage
+    exit 1
+fi
+
+case $1 in
+    1)
+        echo "== Mode 1: Flash Settings Reset =="
+        flash_settings_reset
+        ;;
+    2)
+        echo "== Mode 2: Download and Flash =="
+        download_latest_artifact
+        flash_left_right
+        ;;
+    3)
+        echo "== Mode 3: Local Flash =="
+        flash_from_local
+        flash_left_right
+        ;;
+    *)
+        echo "❌ Invalid mode: $1"
+        show_usage
+        exit 1
+        ;;
+esac
+
+echo "✅ All done."
+
 #+end_src
 
 * 屏幕哲学
@@ -183,7 +290,7 @@ bookerly blod ltalic.
 - (show-paren-mode -1), build your own eye insight
 - (window-divider-mode -1), too, build your memory
 - (display-line-numbers-mode -1), too, build your own eye insight
-
+#+begin_src elisp
 (defvar my-alternate-font "-DAMA-UbuntuMono Nerd Font-regular-normal-normal-*-13-*-*-*-m-0-iso10646-1")
 (defvar my-default-font "bookerly")
 (defvar fontfont 1)
@@ -197,7 +304,7 @@ bookerly blod ltalic.
 
 - fringe specific mode auto hide
 
-#+begin_src lisp
+#+begin_src elisp
 (defun my-set-fringe-face ()
   "auto hide fringe face depending on major mode."
   (if (derived-mode-p '(occur-mode gud-mode))
@@ -208,9 +315,10 @@ bookerly blod ltalic.
                         :background (face-attribute 'default :background)
                         :foreground (face-attribute 'default :background))))
 (add-hook 'after-change-major-mode-hook #'my-set-fringe-face)
-
+#+end_src
 - elisp for toggling paperlike-hd to swtich between read and watch.
-``` elisp
+
+#+begin_src elisp
 (defvar monitor-state 0
   "Current monitor state, either 0 for read or  1 for watch.")
 (defun monitor ()

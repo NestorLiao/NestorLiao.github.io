@@ -195,7 +195,7 @@
   (dired-omit-files
    (rx (or (seq bol ".")                      ; dotfiles
            (seq ".js" (? ".meta") eos)        ; .js.meta
-           (seq "." (or "elc" "a" "bbl" "o" "pyc" "pyo" "swp" "class") eos)
+           (seq "." (or "elc" "cls" "fls" "bib" "fdb_latexmk" "log" "aux" "a" "bbl" "o" "pyc" "pyo" "swp" "class") eos)
            (seq bol ".DS_Store")
            (seq bol "." (or "svn" "git") eos)
            (seq bol ".ccls-cach" eos)
@@ -266,7 +266,7 @@
   ;; (org-agenda-files '("~/Leere/oooo.org"))
   (org-agenda-files (directory-files-recursively "~/Leere/" "\\.org$"))
   (org-todo-keywords ;; t要做的，f要修的，e暂时的，a失败的，k有缺陷的，o完成的
-   '((sequence  "TODO(t)" "|" "FIXME(f)")
+   '((sequence  "TODO(t)" "DONE(d)" "|" "FIXME(f)")
      (sequence "TEMP(e)" "FAIL(a)" "KLUDGE(k)"    "|" "OKAY(o)")))
   :bind (( "C-c a" . org-agenda) ( "C-c l" . org-store-link))
   :config
@@ -1044,7 +1044,7 @@ set to ~/note."
     (let ((old (current-buffer))
           (exsist 0))
       (save-excursion
-        (find-file "~/.config/hmdz/hmdz.pyim")
+        (find-file "~/.config/hmdz.pyim")
         (beginning-of-buffer)
         (search-forward char nil (setq exsist 1))
         (when (= exsist 1)
@@ -1073,7 +1073,7 @@ set to ~/note."
   (setq pyim-candidates-search-buffer-p nil)
   (setq pyim-enable-shortcode nil)
   (setq pyim-punctuation-dict '(("^" "…")("\\" "、")("." "。")("," "，")("'" "‘" "’") ("\"" "“" "”")))
-  (add-to-list 'pyim-dicts '(:name "hmdz" :file "~/.config/hmdz/hmdz.pyim")))
+  (add-to-list 'pyim-dicts '(:name "hmdz" :file "~/.config/hmdz.pyim")))
 (keymap-global-set "M-o" (lambda () (interactive)(other-window -1)))
 (keymap-global-set "M-i" 'imenu)
 (keymap-global-set "ESC <f5>" 'hibernatecall)
@@ -1244,7 +1244,7 @@ set to ~/note."
 (with-eval-after-load 'ox-latex
   (add-to-list 'org-latex-classes
                '("elegantbook"
-                 "\\documentclass[lang=cn,math=cm,10pt,scheme=chinese,toc=twocol]{elegantbook}"
+                 "\\documentclass[lang=cn,math=cm,10pt,scheme=chinese,toc=twocol,bibend=bibtex]{elegantbook}"
                  ("\\chapter{%s}" . "\\chapter*{%s}")
                  ("\\section{%s}" . "\\section*{%s}")
                  ("\\subsection{%s}" . "\\subsection*{%s}")
@@ -1438,67 +1438,69 @@ set to ~/note."
  tooltip-short-delay 0.08
  org-latex-compiler "xelatex")
 (load-theme 'real-mono-eink t)
-(defvar my/leetcode-root "~/leetcode/src/"
-  "Root directory of leetgo-generated problems.")
 
+(defvar my/leetcode-root "~/Leere/Leetcode/src/"
+  "Root directory of leetgo-generated problems.")
 (defun my/leetcode-format-number (n)
   "Return N formatted like 1 → \"0001\"."
   (format "%04d" n))
-
 (defun my/leetcode--find-problem-dir (n)
   "Return directory path for problem number N."
   (let* ((prefix (my/leetcode-format-number n))
          (dirs (directory-files my/leetcode-root t
                                 (concat "^" prefix "\\."))))
     (car dirs)))
+(defun my/leetcode--ensure-compile-header (cpp-file)
+  "Ensure compile-command header exists exactly once in CPP-FILE."
+  (when (file-exists-p cpp-file)
+    (with-temp-buffer
+      (insert-file-contents cpp-file)
+      (goto-char (point-min))
+      ;; If ANY occurrence exists, do nothing
+      (if (re-search-forward "-*- compile-command:" nil t)
+          nil
+        ;; Otherwise insert at beginning
+        (goto-char (point-min))
+        (insert "// -*- compile-command: \"make -f ../Makefile submit\" -*-\n"))
+      ;; Save back
+      (write-region (point-min) (point-max) cpp-file nil 'quiet))))
 
 (defun my/leetcode--pandoc-md-to-org (md-file org-file)
   "Convert MD-FILE → ORG-FILE using pandoc."
   (call-process "pandoc" nil nil nil md-file "-o" org-file "--wrap=none"))
-
 (defun my/leetcode--download-image (url dest)
   "Download image URL to DEST file path."
   (url-copy-file url dest t))
-
 (defun my/leetcode--process-org-images (org-file problem-dir)
   "Download remote images using wget and replace links with local filenames."
   (with-temp-buffer
     (insert-file-contents org-file)
     (goto-char (point-min))
-
     ;; 匹配所有 http 图片链接
     (while (re-search-forward "\\[\\[\\(https?://[^]]+\\.\\(png\\|jpg\\|jpeg\\|gif\\)\\)\\]\\]" nil t)
       (let* ((url (match-string 1))
              (filename (file-name-nondirectory url))  ;; 保留原始图片名
              (local-path (expand-file-name filename problem-dir)))
-
         ;; 如果图片不存在 -> 用 wget 下载
         (unless (file-exists-p local-path)
           (message "Downloading image via wget: %s" url)
           (call-process "wget" nil nil nil "-q" "-O" local-path url))
-
         ;; 替换 org 链接为相对路径
         (replace-match (format "[[./%s]]" filename) t t)))
-
     (write-region (point-min) (point-max) org-file nil 'quiet)))
-
 (defun my/leetcode-open (n)
   "Open Leetcode problem N. If not found, auto-fetch using `leetgo pick -l cpp N`."
   (interactive "nProblem number: ")
   (let* ((dir (my/leetcode--find-problem-dir n)))
-
-    ;; If not found → auto call: leetgo pick -l cpp n
     (unless dir
       (message "Problem %d not found. Fetching via `leetgo pick -l cpp %d`..." n n)
       (let ((default-directory (expand-file-name "../" my/leetcode-root)))
         (call-process "leetgo" nil "*leetgo-pick*" t
                       "pick" "-l" "cpp" (number-to-string n)))
-      ;; Re-scan after fetch
       (setq dir (my/leetcode--find-problem-dir n))
       (unless dir
-        (error "After running `leetgo pick`, problem %d still not found. Check leetgo login." n)))
+        (error "After running `leetgo pick`, problem %d still not found." n)))
 
-    ;; ---- If directory exists, continue normal code ----
     (let* ((md (expand-file-name "question.md" dir))
            (org (expand-file-name "question.org" dir))
            (cpp (expand-file-name "solution.cpp" dir)))
@@ -1506,25 +1508,20 @@ set to ~/note."
       ;; 1. Convert MD → ORG
       (my/leetcode--pandoc-md-to-org md org)
 
-      ;; 2. Replace remote images → local images
+      ;; 2. Replace remote images → local
       (my/leetcode--process-org-images org dir)
 
-      ;; 3. Add include block to org
+      ;; 3. Add include block to org (idempotent optional)
       (with-temp-buffer
         (insert-file-contents org)
         (goto-char (point-max))
-        (insert "\n* Solution\n#+INCLUDE: \"./solution.cpp\" src cpp\n")
+        (insert "\n\\newpage \n *题解如下:* \n#+INCLUDE: \"./solution.cpp\" src cpp \\newpage")
         (write-region (point-min) (point-max) org nil 'quiet))
 
-      ;; 4. Add compile-command to solution.cpp
-      (with-temp-buffer
-        (insert-file-contents cpp)
-        (goto-char (point-min))
-        (unless (looking-at "// -*- compile-command:")
-          (insert "// -*- compile-command: \"make -f ../Makefile submit\" -*-\n"))
-        (write-region (point-min) (point-max) cpp nil 'quiet))
+      ;; 4. Fix: add compile header exactly once
+      (my/leetcode--ensure-compile-header cpp)
 
-      ;; 5. Open org and cpp buffers
+      ;; 5. Open buffers
       (find-file org)
       (save-window-excursion
         (find-file cpp))
@@ -1541,18 +1538,16 @@ set to ~/note."
           (push (format "#+INCLUDE: \"%s\" :minlevel 1"
                         (file-relative-name q default-directory))
                 results))))))
-
 (defun my/leetcode-fetch-one-silent (n)
   "Fetch problem N silently (no opening buffers), generating question.org and downloading images."
   (let* ((dir (my/leetcode--find-problem-dir n)))
-
     ;; pick if missing
     (unless dir
       (message "Fetching %d via leetgo pick ..." n)
       (let ((default-directory (expand-file-name "../" my/leetcode-root)))
-        (call-process "leetgo" nil nil nil "pick" "-l" "cpp" (number-to-string n)))
+        (call-process "leetgo" nil nil nil
+                      "pick" "-l" "cpp" (number-to-string n)))
       (setq dir (my/leetcode--find-problem-dir n)))
-
     (unless dir
       (message "Failed to fetch problem %d" n)
       (cl-return-from my/leetcode-fetch-one-silent nil))
@@ -1561,24 +1556,19 @@ set to ~/note."
            (org (expand-file-name "question.org" dir))
            (cpp (expand-file-name "solution.cpp" dir)))
 
-      ;; convert
+      ;; convert md → org
       (my/leetcode--pandoc-md-to-org md org)
       (my/leetcode--process-org-images org dir)
 
-      ;; add include to org
+      ;; include solution block
       (with-temp-buffer
         (insert-file-contents org)
         (goto-char (point-max))
-        (insert "\n**** Solution\n#+INCLUDE: \"./solution.cpp\" src cpp\n")
+        (insert "\n\\newpage \n *题解如下:* \n#+INCLUDE: \"./solution.cpp\" src cpp \\newpage")
         (write-region (point-min) (point-max) org nil 'quiet))
 
-      ;; add compile-command
-      (with-temp-buffer
-        (insert-file-contents cpp)
-        (goto-char (point-min))
-        (unless (looking-at "// -*- compile-command:")
-          (insert "// -*- compile-command: \"make -f ../Makefile submit\" -*-\n"))
-        (write-region (point-min) (point-max) cpp nil 'quiet)))
+      ;; FIX: ensure compile header only once
+      (my/leetcode--ensure-compile-header cpp))
 
     (message "Fetched %d OK" n)))
 
@@ -1591,26 +1581,22 @@ NUMBERS is a string like \"1 2 3 11 17 19\"."
       (ignore-errors
         (my/leetcode-fetch-one-silent n))))
   (message "Batch fetch done."))
-
 (defun my/leetcode-update-includes ()
-  "Find marker '## begin of leetcode include', erase old includes, insert new ones."
+  "Find marker '# begin of leetcode include', erase old includes, insert new ones."
   (interactive)
   (save-excursion
     (goto-char (point-min))
     ;; 找到标记行
-    (if (search-forward "## begin of leetcode include" nil t)
+    (if (search-forward "# begin of leetcode include" nil t)
         (progn
           ;; 到下一行（开始删除旧的内容）
           (forward-line 1)
-
           ;; 记录起点
           (let ((start (point)))
-
             ;; 删除所有旧的 #+INCLUDE 行
             (while (looking-at "^#\\+INCLUDE:")
               (forward-line 1))
             (delete-region start (point))
-
             ;; 生成新的 include 内容
             (let* ((root (expand-file-name "src" default-directory))
                    (dirs (directory-files root t "^[0-9]+\\..+")))
@@ -1618,9 +1604,71 @@ NUMBERS is a string like \"1 2 3 11 17 19\"."
                 (let ((q (expand-file-name "question.org" d)))
                   (when (file-exists-p q)
                     (insert
-                     (format "#+INCLUDE: \"%s\" :minlevel 1\n"
+                     (format "#+INCLUDE: \"%s\" :minlevel 2\n"
                              (file-relative-name q default-directory)))))))))
-      (message "Marker '## begin of leetcode include' not found!"))))
+      (message "Marker '# begin of leetcode include' not found!"))))
 
 (global-set-key (kbd "M-+") 'shift-number-up)
 (global-set-key (kbd "M-_") 'shift-number-down)
+(use-package xref :config
+  (defun xref-go-back ()
+  "Go back to the previous position in xref history.
+To undo, use \\[xref-go-forward]."
+  (interactive)
+  (let ((history (xref--get-history)))
+    (if (null (car history))
+        (previous-buffer)
+        (user-error "At start of xref history, back to previous buffer")
+      (let ((marker (pop (car history))))
+        (xref--push-forward (point-marker))
+        (switch-to-buffer (or (marker-buffer marker)
+                              (user-error "The marked buffer has been deleted")))
+        (goto-char (marker-position marker))
+        (set-marker marker nil nil)
+        (run-hooks 'xref-after-return-hook))))))
+
+(defun my/delete-line-and-append-to-hhh ()
+  "Delete the current line and append it to a file named 'hhh' in the current directory."
+  (interactive)
+  (let* ((current-file (buffer-file-name))
+         (dir (if current-file
+                  (file-name-directory current-file)
+                default-directory))     ;; fallback when buffer has no file
+         (target-file (expand-file-name "hhh" dir))
+         (line (thing-at-point 'line t)))
+    ;; Append line to file
+    (with-temp-buffer
+      (insert line)
+      (write-region (point-min) (point-max) target-file t))
+    ;; Delete the current line in original buffer
+    (delete-region (line-beginning-position)
+                   (line-beginning-position 2))))
+(global-set-key (kbd "C-p") #'my/delete-line-and-append-to-hhh)
+(defun my/delete-all-duplicate-lines ()
+  "Delete all lines in the buffer that appear more than once."
+  (interactive)
+  (let ((seen (make-hash-table :test 'equal))
+        (dups (make-hash-table :test 'equal)))
+    ;; 第一次遍历：找重复行
+    (save-excursion
+      (goto-char (point-min))
+      (while (not (eobp))
+        (let ((line (string-trim-right
+                     (buffer-substring-no-properties
+                      (line-beginning-position)
+                      (line-end-position)))))
+          (if (gethash line seen)
+              (puthash line t dups)
+            (puthash line t seen)))
+        (forward-line 1)))
+    ;; 第二次遍历：删掉所有出现过多次的行
+    (save-excursion
+      (goto-char (point-min))
+      (while (not (eobp))
+        (let* ((beg (line-beginning-position))
+               (end (line-end-position))
+               (line (string-trim-right
+                      (buffer-substring-no-properties beg end))))
+          (if (gethash line dups)
+              (delete-region beg (1+ end)) ;; 删除整行
+            (forward-line 1)))))))

@@ -1,9 +1,143 @@
-* 开发中遇见的各种问题
-** TODO upload large files into the github repo
-use sed to filter, use what to split into small files.
-** TODO learn how to reference in org
-\cite, org-cite-insert unable to insert problem
-** TODO make [[file:~/Leere/Leetcode/README.org][Leetcode]] fresh tasks list...
+* 开发中遇见的各种软件问题
+*** General Contributions
+#+ATTR_LATEX: :environment introduction
+- [ ] org-mode，提交pr增加INCLUDE的行末倒数行数的行为代码
+- [ ] melpa，提交pr增加自己的leetgo
+- [X] consult-gh ，提交pr修改readme中的consult-gh-search-code的使用
+- [X] melpa，提交pr增加自己的real-mono-themes
+- [X] nixpkg，提交issue增加biospy等nix生理信号包
+- [X] columndeeply/hosts，提交pr增加17868行新域名,修改脚本为0.0.0.0
+- [X] pyim，提交issue修改%报错行为
+*** TODO package leego elisp package as emacs package
+- description: do leetcode in emacs with leetgo
+- require: wget/pandoc/leetgo/
+- wget for fetch image
+- pandoc for markdown to org
+- leetgo for pick/commit questions
+- simple init, use leetgo
+- batch fetch, (leetcode-fetch-batch "1 2 3") to fetch 1/2/3 questions
+- also you can fetch contest,
+- auto detected browser cookie, no need to fill cookies by yourself
+- offline test, use pre fetched testcase/makefile/awk to local test tasks.
+- org format, local image, and generally you can easily export all questions.
+*** FIXME pyim % 字符触发 Not enough arguments for format string
+使用虎码码表https://github.com/welandx/huma-danzi.pyim，同样使用其readme中的配置
+发现输入l时报错:
+Debugger entered--Lisp error: (error "Not enough arguments for format string")
+  message("[l              ]: 1.而 2.% (1/1) $ ")
+  #f(compiled-function (string position tooltip) "使用 minibuffer 来显示 STRING。" #<bytecode -0x26f1e7f81176ed3>)("[l              ]: 1.而 2.% (1/1) $ " 620 minibuffer)
+  apply(#f(compiled-function (string position tooltip) "使用 minibuffer 来显示 STRING。" #<bytecode -0x26f1e7f81176ed3>) "[l              ]: 1.而 2.% (1/1) $ " 620 minibuffer nil)
+  pyim-page-show("[l              ]: 1.而 2.% (1/1) $ " 620 minibuffer)
+  pyim-page--refresh(nil)
+  pyim-process-ui-refresh()
+  pyim-process-run()
+  pyim-self-insert-command()
+  funcall-interactively(pyim-self-insert-command)
+  call-interactively(pyim-self-insert-command)
+  pyim-process-input-method(108)
+  pyim-input-method(108)
+
+删除hmdz.pyim中的%或使用中文的％使用时不会报错，发现pyim 有 %  就报错:
+Debugger entered--Lisp error: (error "Not enough arguments for format string")
+  message("[l              ]: 1.% (1/1) $ ")
+  #f(compiled-function (string position tooltip) "使用 minibuffer 来显示 STRING。" #<bytecode 0x1d8cdaf8ba1c112a>)("[l              ]: 1.% (1/1) $ " 624 minibuffer)
+  apply(#f(compiled-function (string position tooltip) "使用 minibuffer 来显示 STRING。" #<bytecode 0x1d8cdaf8ba1c112a>) "[l              ]: 1.% (1/1) $ " 624 minibuffer nil)
+  pyim-page-show("[l              ]: 1.% (1/1) $ " 624 minibuffer)
+  pyim-page--refresh(nil)
+  pyim-process-ui-refresh()
+  pyim-process-run()
+  pyim-self-insert-command()
+  funcall-interactively(pyim-self-insert-command)
+  call-interactively(pyim-self-insert-command)
+  pyim-process-input-method(108)
+  pyim-input-method(108)
+
+*** FIXME How to modify org-mode's #+INCLUDE:                            :pr:
+to let it to exclude top and buttom?
+it have:
+top specific line to end specific line
+line to top specific
+top specific line to end
+contribute to the org-mode's include function to let it
+
+exclude from top specific line to end specific line but count from buttom
++ study org-mode, try to *contribute* to it.
+*** DONE pull request to the porn site list project                      :pr:
+fix the columndeeply/hosts 's 127.0.0.0 to 0.0.0.0
+
+by clone and compare the problem is that "I include a lost non-porn site in to it".
+not just "non-porn" sites, I also get a lot cdn server to block, which fetch from a lot of m3u8 streaming server. it may also block some movies which using the same server as porn sites...
+so, there is only KLUDGE for thing like blocking porn site, first question: what is porn? really?
+to be, the social media like twitter which spread sexual clip? the pornhub teaching mathmatic? the reddit/4chan/zhihu/weibo/... even the taobao can sell sex toys with sexual pictures, so blocking internet is blocking porn really? I don't know, it's a question for everyone.
+
+finished, by
+
+#+begin_src sh
+  #!/usr/bin/env bash
+set -euo pipefail
+
+HOST_URLS=(
+  "https://raw.githubusercontent.com/columndeeply/hosts/main/hosts00"
+  "https://raw.githubusercontent.com/columndeeply/hosts/main/hosts01"
+  "https://raw.githubusercontent.com/columndeeply/hosts/main/hosts02"
+  "https://raw.githubusercontent.com/columndeeply/hosts/main/hosts03"
+  "https://raw.githubusercontent.com/columndeeply/hosts/main/hosts04"
+  "https://raw.githubusercontent.com/columndeeply/hosts/main/hosts05"
+)
+
+TMPDIR="$(mktemp -d)"
+REMOTE_DOMAINS="$TMPDIR/remote_domains"
+YOUR_DOMAINS="$TMPDIR/your_domains"
+OUTPUT="hosts6"
+
+echo "[*] Downloading hostlists..."
+> "$REMOTE_DOMAINS"
+for url in "${HOST_URLS[@]}"; do
+    echo "    -> $url"
+    curl -sL "$url" \
+        | grep -E "^[0-9:\.]+" \
+        | awk '{print $2}' \
+        >> "$REMOTE_DOMAINS"
+done
+
+echo "[*] Normalizing remote domains..."
+sort -u "$REMOTE_DOMAINS" > "$TMPDIR/remote_sorted"
+
+echo "[*] Extracting your domains..."
+grep -E "^[0-9:\.]+" /etc/hosts \
+    | awk '{print $2}' \
+    | sort -u \
+    > "$YOUR_DOMAINS"
+
+echo "[*] Generating unique domains (hosts6)..."
+comm -23 "$YOUR_DOMAINS" "$TMPDIR/remote_sorted" \
+    | awk '{print "0.0.0.0", $1}' \
+    > "$OUTPUT"
+
+echo "[+] Done. Unique domains saved in $OUTPUT"
+echo "    Total: $(wc -l < "$OUTPUT")"
+
+#+end_src
+
+#+RESULTS:
+| [*] | Downloading                                                       | hostlists... |
+| -> | https://raw.githubusercontent.com/columndeeply/hosts/main/hosts00 |            |
+
+get uniq hosts, and update to github. it's I only get 23240 unique lines.
+
+add 17868 new hosts
+
+Used to maintain my hostslist, write a tempermonkey script with ublacklist addon to block chinese keyword search result automatically.
+
+mainly it blocked sexual model gallary sites/Pirate JAV/and chinese porn m3u8 CDN which I filter from a github m3u8 collection repos/or anything non-programming like socialmedia/news/shopping..., occationally the script blocks org/edu/gov sites too.
+
+I remove duplicate hosts in yours and delete non-porn sites, but there still too many which I can't checkout they all.
+
+BTW, I didn't update my hostslist for a long time, because I just find blocking search engine and "hot" social-media instead porn sites is way more easier, I now use tavily/chatgpt/github in emacs only.
+
+BTW, seems like use 0.0.0.0 instaed of 127.0.0.1 is faster.
+
+*** DONE make [[file:~/Leere/Leetcode/README.org][Leetcode]] fresh tasks list
 - have already?
 - yes/no, yes, edit that file, no, get the files(testcase/question.md/solution.xxx)
 - edit the files question to include src in end, solution.xxx to have mode line in header.
@@ -15,26 +149,17 @@ use sed to filter, use what to split into small files.
 - md to org的==问题
 - based on leetgo to creat a leetcode elisp pkg
 - test leetcode emacs pkg instead
-** FIXME How to modify org-mode's #+INCLUDE:, to let it to exclude top and buttom?
-it have:
-top specific line to end specific line
-line to top specific
-top specific line to end
-contribute to the org-mode's include function to let it
-
-exclude from top specific line to end specific line but count from buttom
-+ study org-mode, try to contribute to it.
-** KLUDGE pull request to the porn site list project...
-by clone and compare the problem is that "I include a lost non-porn site in to it".
-not just "non-porn" sites, I also get a lot cdn server to block, which fetch from a lot of m3u8 streaming server. it may also block some movies which using the same server as porn sites...
-so, there is only KLUDGE for thing like blocking porn site, first question: what is porn? really?
-to be, the social media like twitter which spread sexual clip? the pornhub teaching mathmatic? the reddit/4chan/zhihu/weibo/... even the taobao can sell sex toys with sexual pictures, so blocking internet is blocking porn really? I don't know, it's a question for everyone.
-** OKAY try to package real-mono-theme to melpa
+*** DONE learn how to reference in org
+\cite, org-cite-insert unable to insert problem
+*M-RET* to enter cite list.
+*** DONE upload large files into the github repo
+use sed to filter, use what to split into small files.
+*** DONE try to package real-mono-theme to melpa                         :pr:
 minic almost-mono-theme, creat recipe, make pr
 wait for mainter check. I am familaring with github, feeling awesome!
-** OKAY creat new account's github repos for github.io
+*** DONE creat new account's github repos for github.io
 have a usrname.github.io public repo, have index.html in it, in [[https://qingsongliao.github.io][url]]
-** OKAY upload Purezen to github
+*** DONE upload Purezen to github
 + description: theme that really monochrome
   A collection of real monochrome emacs themes in a couple of variants.
 + clone a monochrome and study it

@@ -3,8 +3,5 @@
 # key: <change
 # --
 \datechange{`(format-time-string "%Y-%m-%d")`}{${1:晴}}
-\begin{change}
-  \item \textbf{$2}
-  \item \textbf{$3}
-  \item \textbf{$4}
-\end{change}
+#+ATTR_LATEX: :environment change
+- *${2}*: ${3}
