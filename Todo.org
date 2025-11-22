@@ -1,13 +1,17 @@
 * 开发中遇见的各种软件问题
 *** General Contributions
 #+ATTR_LATEX: :environment introduction
-- [ ] org-mode，提交pr增加INCLUDE的行末倒数行数的行为代码
+- [ ] org-mode，提交pr增加INCLUDE的行末倒数行数的行为代码x, 加入mailing-list提出FR
 - [ ] melpa，提交pr增加自己的leetgo
 - [X] consult-gh ，提交pr修改readme中的consult-gh-search-code的使用
 - [X] melpa，提交pr增加自己的real-mono-themes
 - [X] nixpkg，提交issue增加biospy等nix生理信号包
 - [X] columndeeply/hosts，提交pr增加17868行新域名,修改脚本为0.0.0.0
 - [X] pyim，提交issue修改%报错行为
+- [X] eink，https://addons.mozilla.org
+
+*** TODO recentf moving file persisnt
+every time I move my file and the path changed but the recentf didn't follow, causing production and memory lost.
 *** TODO package leego elisp package as emacs package
 - description: do leetcode in emacs with leetgo
 - require: wget/pandoc/leetgo/
@@ -52,16 +56,39 @@ Debugger entered--Lisp error: (error "Not enough arguments for format string")
   pyim-process-input-method(108)
   pyim-input-method(108)
 
-*** FIXME How to modify org-mode's #+INCLUDE:                            :pr:
-to let it to exclude top and buttom?
-it have:
-top specific line to end specific line
-line to top specific
-top specific line to end
-contribute to the org-mode's include function to let it
+*** FIXME How to modify org-mode's #+INCLUDE:                            :pr:mailinglist:
+**** how to contribute to org
+https://orgmode.org/worg/org-contribute.html
+https://orgmode.org/worg/org-mailing-list.html
+**** explain FR
+**Subject:** [FR] Add support for reverse (negative) line ranges in `#+INCLUDE:` `:lines`
 
-exclude from top specific line to end specific line but count from buttom
-+ study org-mode, try to *contribute* to it.
+Hi all,
+
+Org’s current `#+INCLUDE:` keyword supports selecting lines using the `:lines` parameter, e.g.:
+
+- `5-10` — lines 5 to 10
+- `-10` — lines 1 to 10
+- `10-` — line 10 to EOF
+
+However, Org currently does **not** support selecting lines counted from the end of the file.
+
+I would like to propose extending the syntax to support “reverse line numbers”, similar to how many tools allow negative indexing. Examples:
+
+```
+#+INCLUDE: "x.txt" :lines "~5-"      ; last 5 lines to EOF
+#+INCLUDE: "x.txt" :lines "~5-~1"   ; last 5 lines to last 1 line
+#+INCLUDE: "x.txt" :lines "-~5"     ; from beginning to last 5 lines
+#+INCLUDE: "x.txt" :lines "10-~1"   ; from line 10 to last 1 line
+```
+
+This would make it much easier to include “the last N lines” of logs, datasets, generated files, etc., without needing to preprocess the file externally.
+
+If there is interest, I would be happy to help test or contribute patches.
+
+Thanks!
+—Qingsong
+
 *** DONE pull request to the porn site list project                      :pr:
 fix the columndeeply/hosts 's 127.0.0.0 to 0.0.0.0
 

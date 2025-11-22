@@ -597,7 +597,7 @@
                       };
                       systemd.user.startServices = "sd-switch";
                       programs.firefox = {
-                        enable = false;
+                        enable = true;
                         policies = {
                           DisableFirefoxStudies = true;
                           DisablePocket = true;
@@ -850,6 +850,24 @@
                             "privacy.resistFingerprinting.block_mozAddonManager" =
                               true;
                             "extensions.webextensions.restrictedDomains" = "";
+                            "extensions.webextensions.ExtensionStorageIDB.migrated.@firefoxinvertcolors" =	true	;
+                            "extensions.webextensions.ExtensionStorageIDB.migrated.authenticator@mymindstorm" =	true	;
+                            "extensions.webextensions.ExtensionStorageIDB.migrated.bar-breaker@ris58h" =	true	;
+                            "extensions.webextensions.ExtensionStorageIDB.migrated.chatgpt-ctrl-enter-sender@chatgpt-extension.io" =	true	;
+                            "extensions.webextensions.ExtensionStorageIDB.migrated.idcac-pub@guus.ninja" =	true	;
+                            "extensions.webextensions.ExtensionStorageIDB.migrated.jid1-BoFifL9Vbdl2zQ@jetpack" =	true	;
+                            "extensions.webextensions.ExtensionStorageIDB.migrated.myallychou@gmail.com" =	true	;
+                            "extensions.webextensions.ExtensionStorageIDB.migrated.no-emoji@erikdesjardins.io" =	true	;
+                            "extensions.webextensions.ExtensionStorageIDB.migrated.uBlock0@raymondhill.net" =	true	;
+                            "extensions.webextensions.ExtensionStorageIDB.migrated.vimium-c@gdh1995.cn" =	true	;
+                            "extensions.webextensions.ExtensionStorageIDB.migrated.{2ce7df96-558d-4c2c-8d88-68606ebbe8db}" =	true	;
+                            "extensions.webextensions.ExtensionStorageIDB.migrated.{74145f27-f039-47ce-a470-a662b129930a}" =	true	;
+                            "extensions.webextensions.ExtensionStorageIDB.migrated.{80f6f2e4-eda1-417f-bf54-9645e1e20f5d}" =	true	;
+                            "extensions.webextensions.ExtensionStorageIDB.migrated.{88ebde3a-4581-4c6b-8019-2a05a9e3e938}" =	true	;
+                            "extensions.webextensions.ExtensionStorageIDB.migrated.{9350bc42-47fb-4598-ae0f-825e3dd9ceba}" =	true	;
+                            "extensions.webextensions.ExtensionStorageIDB.migrated.{9b8ce341-744f-4f5d-9ff7-b5d7078a7b34}" =	true	;
+                            "extensions.webextensions.ExtensionStorageIDB.migrated.{b52acdad-e4a6-44da-afc9-9bd22572db99}" =	true	;
+                            "extensions.webextensions.ExtensionStorageIDB.migrated.{b6840179-45a1-4a2d-a4ef-e2815c1faa28}" = true;
                             "general.smoothScroll" = false;
                             "privacy.trackingprotection.enabled" =
                               true; # Enhanced Tracking Protection
@@ -1030,11 +1048,13 @@
                    ${builtins.readFile ./nosurf/hosts03}
                    ${builtins.readFile ./nosurf/hosts04}
                    ${builtins.readFile ./nosurf/hosts05}
+                   ${builtins.readFile ./nosurf/hosts06}
                    # 消费主义让我们沉迷于物质/精神消费中，
                    # 通过让我们接触各种光怪陆离的东西来丰富我们的身份认同感，
                    # 这也是当今时代互联网正在加速实现的事情…
                    # 但这是以牺牲掌握任何技能为代价换来的，
                    0.0.0.0 google.com
+                   0.0.0.0 www.google.com
                    0.0.0.0 z-library.sk
                    0.0.0.0 emacs-china.org
                    # 0.0.0.0 chatgpt.com
@@ -1250,6 +1270,7 @@
                         easysession
                         undo-fu
                         undo-fu-session
+                        iedit
                       ]) ++ (with epkgs.elpaPackages; [ plz ])
                       ++ (with pkgs; [ ]));
                   };

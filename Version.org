@@ -1,9 +1,15 @@
 * 版本更新历史
+\datechange{2025-11-22}{晴}
+#+ATTR_LATEX: :environment change
+- *C语言*: 完成了对c语言的复习。
+- *leetcode*: 完成了10题。
 
 \datechange{2025-11-21}{晴}
 #+ATTR_LATEX: :environment change
-- *C语言*: 完成了对c语言的复习。
 - *域名*: 为 columndeeply/hosts 提交了17868行新域名，这个 hosts 是我最近在网上看到的最大的 host 文件，达到了近410mb ，共12.576.671 行，专门用于 Porn ，今天比较闲就把之前使用 tempermonkey 写的自动根据关键词用 ublacklist 自动 block 和从 fackads/和 github u3m8 collection 提出来的 cdn 网站和以前又闲又愤青时期屏蔽的各种网站，进行比较有二万三千行的不同 host ，用后缀比如 gov/org/cn 过滤了一些自己动手又删了些，发现像很多云很多热门网站像 cloud.tencent.com./taobao/nvidia/xx.gov.cn 但用了这么久好像没有任何冲突，可能是我实在是没有怎么上网，只是用用 github 就够了。看起来很多，17868行，几天检查不完，但是也就只是它的703分之一，我看了下很多是 blogspot/tumblr ，互联网的域名真得是故意弄成这样难管? 如果说 porn 的域名长成这样: 028b2c9ad2a24433ab97b8e5dbf69597.mediatailor.us-east-1.amazonaws.com(这还真是 porn)，这能管? 设立 whitelist 比 blacklist 更容易，但网络的架构(tcp/ip-dns-domain)就不允许这种事，我也好久没有更新我的host了，用ai比用搜索引索好用多了，ai的用处就是过滤黄色网站，当然openai要开放成人内容这事说明: 其实也没什么一定得搜的事。用emacs看文档，把记忆留在自己的脑子里，比起什么网页要重要的多。
+- *折腾emacs*: iedit/embark-next-symbol/forge。
+- *弄完了leetgo*: 明天绝对开始刷题。
+- *研究了github热门trending*: 发现中文代码质量之差，全是卖课/卖舆论分析/卖盗版书pdf/卖前端ai的… fork外国大神后各种引流的，ruanyifeng周刊是可以的，但评论和想让他在issue里引流的项目也一言难尽的，看看nixpkg几千人才22k星，中文的一个openwrt教程就有30k星几百个人contribute，看看openai也才几十k星，deepseek上百k的星，看看各自的issues，openai很正常，deepseek就好似精神病的故乡，冷清又时不时出来几个弱智问题，外国人看了怕是会笑掉大牙。
 
 \datechange{2025-11-20}{晴}
 #+ATTR_LATEX: :environment change

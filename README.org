@@ -1,6 +1,6 @@
 * 编辑器哲学
-This is my blog and p(pdf)log, and emacs/nixos config, code snippest and even more, all in just one repo.
-这是仓库是我的博客也是我写的书，还是我是emacs和nixos配置，代码模板等等等。
+This is my blog and p(pdf)log which written in org and \LaTeX{}, and emacs/nixos config, code snippest and even more, all in just one repo.
+这是仓库是我的博客也是我用\LaTeX{}写的书，还是我是emacs和nixos配置，代码模板等等等。
 #+begin_src emacs-lisp :tangle yes :results none
 (org-babel-do-load-languages
 'org-babel-load-languages '((emacs-lisp . t)(shell . t)))
@@ -95,7 +95,8 @@ fi
 - 合乎习惯 (stay base)
 - home row效率 (home row effiction)
 - general in os(browser, editor)
-
+#+caption: keymap of my keyboard
+[[file:./figure/keymap.png]]
 ** 分层
 1. base层，colemak-dh，最快速与舒适的英文布局
 2. nav层，上下左右，快速移动，C-c C-~ 为前缀，emacs快速选择
@@ -256,6 +257,33 @@ esac
 echo "✅ All done."
 
 #+end_src
+
+** 不只键盘
+- Absolute Enable Right Click & Copy :: Force Enable Right Click & Copy.
+- Authenticator :: Authenticator generates two-factor authentication codes in your browser.
+- Bar Breaker :: Hides fixed headers and footers on pages you visit.
+- ChatGPT Ctrl+Enter Sender :: Use 'Ctrl+Enter' for sending messages in AI chat services like ChatGPT. Prevents accidental sends and allows line breaks with Enter.
+- ChatGPT Disable Auto Scroll - FREE :: Stop annonying scrolling in ChatGPT. Prevent jerky animation of appearing text.
+- ClearURLs :: Remove tracking elements from URLs.
+- Decentraleyes :: Protects you against tracking through "free", centralized, content delivery.
+- Default links not to be underlined :: Restores non-underlined hyperlinks by default (setting text-decoration: none).
+- Disconnect :: Make the web faster, more private, and more secure.
+- Enforce Safe Search (=Adult Filter) :: Toggles the built-in filter on many search engines (see
+- Focus On Left Tab After Closing :: When a current tab is closed, the left tab (or the right tab on RTL
+- Font Contrast :: Improves webpage readability.
+- FuckCSDN :: Clean CSDN's limitation scripts
+- Google Search Ad Remover And Customizer :: This extension gives you the ability to customize how your Google search results
+- Hide shorts for Youtube™ :: Hides shorts from YouTube™ from home page, subscriptions and search results.
+- hide-scrollbars :: Hides page scrollbars!
+- I still don't care about cookies :: Community version of the popular extension "I don't care about cookies"
+- Invert Colors :: A simple add-on that inverts the page colors.
+- No Emoji :: Browser extension to remove emoji.
+- Shut Up: Comment Blocker :: Blocks comment sections on many popular websites.
+- Stack Copy Button :: A copy button for Stack Overflow code boxes
+- Tab Sidebar :: Adds a sidebar with foldable tabs.
+- uBlock Origin :: Finally, an efficient blocker. Easy on CPU and memory.
+- Unhook - Remove YouTube Recommended & Shorts :: Hide YouTube related videos, shorts, comments, suggestions wall, homepage
+- Vimium C - All by Keyboard :: A keyboard shortcut tool for keyboard-based page navigation and browser tab
 
 * 屏幕哲学
 

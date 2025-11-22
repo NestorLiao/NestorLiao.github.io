@@ -1672,3 +1672,8 @@ To undo, use \\[xref-go-forward]."
           (if (gethash line dups)
               (delete-region beg (1+ end)) ;; 删除整行
             (forward-line 1)))))))
+(use-package forge
+  :after magit)
+(global-set-key (kbd "M-n") #'embark-next-symbol)
+(global-set-key (kbd "M-p") #'embark-previous-symbol)
+(global-set-key (kbd "C-;") #'iedit-mode)
