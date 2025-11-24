@@ -2,16 +2,20 @@
 *** General Contributions
 #+ATTR_LATEX: :environment introduction
 - [ ] org-mode，提交pr增加INCLUDE的行末倒数行数的行为代码x, 加入mailing-list提出FR
-- [ ] melpa，提交pr增加自己的leetgo
+- [ ] melpa，提交pr增加自己的leetgo package
 - [X] consult-gh ，提交pr修改readme中的consult-gh-search-code的使用
 - [X] melpa，提交pr增加自己的real-mono-themes
 - [X] nixpkg，提交issue增加biospy等nix生理信号包
 - [X] columndeeply/hosts，提交pr增加17868行新域名,修改脚本为0.0.0.0
 - [X] pyim，提交issue修改%报错行为
-- [X] eink，https://addons.mozilla.org
+- [X] addons.mozilla，eink插件
 
-*** TODO recentf moving file persisnt
-every time I move my file and the path changed but the recentf didn't follow, causing production and memory lost.
+*** TODO how to emacs overlay in nixos to config not to have somepackage natively exclude
+how to disable gomoku, I am getting addiction to that game...
+*** TODO using consult-gh-notifications, and I just type wrong pass as my own pc's pass, not github token
+it used to pop a dialog box at first time, then I input my linux user's password, then it just disappered.
+why? I want to reinput, but it just no dialog anymore and it just show me:
+ghub--handle-response-error: HTTP Error: 403, "Forbidden", "https://api.github.com/graphql", ((message . "Request forbidden by administrative rules. Please make sure your request has a User-Agent header (https://docs.github.com/en/rest/overview/resources-in-the-rest-api#user-agent-required). Check https://developer.github.com for other possible causes.") (documentation_url . "https://github.com/magit/ghub/wiki/Github-Errors"))
 *** TODO package leego elisp package as emacs package
 - description: do leetcode in emacs with leetgo
 - require: wget/pandoc/leetgo/
@@ -24,6 +28,40 @@ every time I move my file and the path changed but the recentf didn't follow, ca
 - auto detected browser cookie, no need to fill cookies by yourself
 - offline test, use pre fetched testcase/makefile/awk to local test tasks.
 - org format, local image, and generally you can easily export all questions.
+- wait I finished doing leetcode
+*** FIXME How to modify org-mode's #+INCLUDE:                :pr:mailinglist:
+**** how to contribute to org
+https://orgmode.org/worg/org-contribute.html
+https://orgmode.org/worg/org-mailing-list.html
+**** explain FR
+**Subject:** [FR] Add support for reverse (negative) line ranges in `#+INCLUDE:` `:lines`
+
+Hi all,
+
+Org’s current `#+INCLUDE:` keyword supports selecting lines using the `:lines` parameter, e.g.:
+
+- `5-10` — lines 5 to 10
+- `-10` — lines 1 to 10
+- `10-` — line 10 to EOF
+
+However, Org currently does **not** support selecting lines counted from the end of the file.
+
+I would like to propose extending the syntax to support “reverse line numbers”, similar to how many tools allow negative indexing. Examples:
+
+#+begin_example
+#+INCLUDE: "x.txt" :lines "~5-"      ; last 5 lines to EOF
+#+INCLUDE: "x.txt" :lines "~5-~1"   ; last 5 lines to last 1 line
+#+INCLUDE: "x.txt" :lines "-~5"     ; from beginning to last 5 lines
+#+INCLUDE: "x.txt" :lines "10-~1"   ; from line 10 to last 1 line
+#+end_example
+
+This would make it much easier to include “the last N lines” of logs, datasets, generated files, etc., without needing to preprocess the file externally.
+
+If there is interest, I would be happy to help test or contribute patches.
+
+Thanks!
+—Qingsong
+
 *** FIXME pyim % 字符触发 Not enough arguments for format string
 使用虎码码表https://github.com/welandx/huma-danzi.pyim，同样使用其readme中的配置
 发现输入l时报错:
@@ -56,39 +94,27 @@ Debugger entered--Lisp error: (error "Not enough arguments for format string")
   pyim-process-input-method(108)
   pyim-input-method(108)
 
-*** FIXME How to modify org-mode's #+INCLUDE:                            :pr:mailinglist:
-**** how to contribute to org
-https://orgmode.org/worg/org-contribute.html
-https://orgmode.org/worg/org-mailing-list.html
-**** explain FR
-**Subject:** [FR] Add support for reverse (negative) line ranges in `#+INCLUDE:` `:lines`
+*** DONE how the  ~/.mozilla/firefox/profiles.ini looks like?
+the profiles name is set in nix as " profiles.firefox = {", I want you to write the default looks of that file.
+#+caption: ~/.mozilla/firefox/profiles.ini
+#+begin_verse
+[General]
+StartWithLastProfile=1
 
-Hi all,
+[Profile0]
+Name=firefox
+IsRelative=1
+Path=firefox
+Default=1
+#+end_verse
 
-Org’s current `#+INCLUDE:` keyword supports selecting lines using the `:lines` parameter, e.g.:
-
-- `5-10` — lines 5 to 10
-- `-10` — lines 1 to 10
-- `10-` — line 10 to EOF
-
-However, Org currently does **not** support selecting lines counted from the end of the file.
-
-I would like to propose extending the syntax to support “reverse line numbers”, similar to how many tools allow negative indexing. Examples:
-
-```
-#+INCLUDE: "x.txt" :lines "~5-"      ; last 5 lines to EOF
-#+INCLUDE: "x.txt" :lines "~5-~1"   ; last 5 lines to last 1 line
-#+INCLUDE: "x.txt" :lines "-~5"     ; from beginning to last 5 lines
-#+INCLUDE: "x.txt" :lines "10-~1"   ; from line 10 to last 1 line
-```
-
-This would make it much easier to include “the last N lines” of logs, datasets, generated files, etc., without needing to preprocess the file externally.
-
-If there is interest, I would be happy to help test or contribute patches.
-
-Thanks!
-—Qingsong
-
+*** DONE add sway emacs pkg?                                         :noneed:
+*** DONE how to make rm safer?                                       :noneed:
+let rm delete file to trash
+just don't use term+shell directly, use dired/magit...
+*** DONE recentf moving file persisnt
+every time I move my file and the path changed but the recentf didn't follow, causing production and memory lost.
+just maintin my own recentf list.
 *** DONE pull request to the porn site list project                      :pr:
 fix the columndeeply/hosts 's 127.0.0.0 to 0.0.0.0
 
@@ -184,6 +210,106 @@ use sed to filter, use what to split into small files.
 *** DONE try to package real-mono-theme to melpa                         :pr:
 minic almost-mono-theme, creat recipe, make pr
 wait for mainter check. I am familaring with github, feeling awesome!
+**** reply from melpa maintiner
+
+Thanks for this. I'm encouraged that you looked at other monochrome themes and went with a comprehensive approach here.
+
+Typically themes are not byte compiled but you still want to maintain conventions across these "stub" files -
+
+⸺ real-mono-sea-theme.el with byte-compile using Emacs 30.1:
+
+real-mono-sea-theme.el:1:1: Warning: file has no `lexical-binding' directive on its first line
+
+⸺ real-mono-old-theme.el with byte-compile using Emacs 30.1:
+
+real-mono-old-theme.el:1:1: Warning: file has no `lexical-binding' directive on its first line
+
+⸺ real-mono-girl-theme.el with byte-compile using Emacs 30.1:
+
+real-mono-girl-theme.el:1:1: Warning: file has no `lexical-binding' directive on its first line
+
+⸺ real-mono-eink-theme.el with byte-compile using Emacs 30.1:
+
+real-mono-eink-theme.el:1:1: Warning: file has no `lexical-binding' directive on its first line
+
+⸺ real-mono-dark-theme.el with byte-compile using Emacs 30.1:
+
+real-mono-dark-theme.el:1:1: Warning: file has no `lexical-binding' directive on its first line
+
+⸺ real-mono-sea-theme.el with package-lint 20250828.1506 and package-lint-main-file = "real-mono-themes.el":
+
+1 issue found:
+1:0: error: There is no `provide' form.
+
+⸺ real-mono-old-theme.el with package-lint 20250828.1506 and package-lint-main-file = "real-mono-themes.el":
+
+1 issue found:
+1:0: error: There is no `provide' form.
+
+⸺ real-mono-girl-theme.el with package-lint 20250828.1506 and package-lint-main-file = "real-mono-themes.el":
+
+1 issue found:
+1:0: error: There is no `provide' form.
+
+⸺ real-mono-eink-theme.el with package-lint 20250828.1506 and package-lint-main-file = "real-mono-themes.el":
+
+1 issue found:
+1:0: error: There is no `provide' form.
+
+⸺ real-mono-dark-theme.el with package-lint 20250828.1506 and package-lint-main-file = "real-mono-themes.el":
+
+1 issue found:
+1:0: error: There is no `provide' form.
+
+⸺ real-mono-themes.el with melpazoid:
+
+- real-mono-themes.el#L469: It's safer to sharp-quote function names; use `#'`
+
+⸺ real-mono-sea-theme.el with checkdoc 0.6.2 (fix within reason):
+
+real-mono-sea-theme.el:0: The first line should be of the form: ";;; package --- Summary"
+real-mono-sea-theme.el:0: You should have a section marked ";;; Commentary:"
+real-mono-sea-theme.el:2: You should have a section marked ";;; Code:"
+real-mono-sea-theme.el:2: The footer should be: (provide 'real-mono-sea-theme)\n;;; real-mono-sea-theme.el ends here
+
+⸺ real-mono-old-theme.el with checkdoc 0.6.2 (fix within reason):
+
+real-mono-old-theme.el:0: The first line should be of the form: ";;; package --- Summary"
+real-mono-old-theme.el:0: You should have a section marked ";;; Commentary:"
+real-mono-old-theme.el:2: You should have a section marked ";;; Code:"
+real-mono-old-theme.el:2: The footer should be: (provide 'real-mono-old-theme)\n;;; real-mono-old-theme.el ends here
+
+⸺ real-mono-girl-theme.el with checkdoc 0.6.2 (fix within reason):
+
+real-mono-girl-theme.el:0: The first line should be of the form: ";;; package --- Summary"
+real-mono-girl-theme.el:0: You should have a section marked ";;; Commentary:"
+real-mono-girl-theme.el:2: You should have a section marked ";;; Code:"
+real-mono-girl-theme.el:2: The footer should be: (provide 'real-mono-girl-theme)\n;;; real-mono-girl-theme.el ends here
+
+⸺ real-mono-eink-theme.el with checkdoc 0.6.2 (fix within reason):
+
+real-mono-eink-theme.el:0: The first line should be of the form: ";;; package --- Summary"
+real-mono-eink-theme.el:0: You should have a section marked ";;; Commentary:"
+real-mono-eink-theme.el:2: You should have a section marked ";;; Code:"
+real-mono-eink-theme.el:2: The footer should be: (provide 'real-mono-eink-theme)\n;;; real-mono-eink-theme.el ends here
+
+⸺ real-mono-dark-theme.el with checkdoc 0.6.2 (fix within reason):
+
+real-mono-dark-theme.el:0: The first line should be of the form: ";;; package --- Summary"
+real-mono-dark-theme.el:0: You should have a section marked ";;; Commentary:"
+real-mono-dark-theme.el:2: You should have a section marked ";;; Code:"
+real-mono-dark-theme.el:2: The footer should be: (provide 'real-mono-dark-theme)\n;;; real-mono-dark-theme.el ends here
+
+⸺ Package and license:
+
+    Please specify :fetcher before :repo in your recipe
+    real-mono-dark-theme.el needs formal license boilerplate and/or an SPDX-License-Identifier
+    real-mono-eink-theme.el needs formal license boilerplate and/or an SPDX-License-Identifier
+    real-mono-girl-theme.el needs formal license boilerplate and/or an SPDX-License-Identifier
+    real-mono-old-theme.el needs formal license boilerplate and/or an SPDX-License-Identifier
+    real-mono-sea-theme.el needs formal lic
+
+    ense boilerplate and/or an SPDX-License-Identifier
 *** DONE creat new account's github repos for github.io
 have a usrname.github.io public repo, have index.html in it, in [[https://qingsongliao.github.io][url]]
 *** DONE upload Purezen to github

@@ -7,7 +7,7 @@
 # 学习 c语言
 #+INCLUDE: "../CPP/fag/README.org" :minlevel 1
 # 刷 leetcode 来学习 c++
-#+INCLUDE: "../Leetcode/README.org" :minlevel 1
+# #+INCLUDE: "../Leetcode/README.org" :minlevel 1
 # 还有 操作系统相关学习
 # 学习进度自检
 #+INCLUDE: "./Version.org" :minlevel 1

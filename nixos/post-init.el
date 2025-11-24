@@ -1,7 +1,115 @@
 ;;; -*- lexical-binding: t -*-
-(require 'use-package)
 (setq debug-on-error t)
-(add-to-list 'load-path "~/.emacs.d/elisp")
+(setq-default ;; Use setq-default to define global default
+ ;; Who I am
+ user-mail-address "llqingsong@qq.com"
+ user-full-name "Qingsong Liao"
+ ;; Enable all disabled commands
+ disabled-command-function nil
+ word-wrap-by-category t
+ ;; unsafe theme
+ custom-safe-themes t
+ ;; Enable recursive minibuffer edit
+ enable-recursive-minibuffers t
+ ;; Don't show scratch message, and use fundamental-mode for *scratch*
+ ;; Remove splash screen and the echo area message
+ inhibit-startup-message t
+ inhibit-startup-echo-area-message t
+ initial-scratch-message 'nil
+ initial-major-mode 'fundamental-mode
+ ;; Emacs modes typically provide a standard means to change the
+ ;; indentation width -- eg. c-basic-offset: use that to adjust your
+ ;; personal indentation width, while maintaining the style (and
+ ;; meaning) of any files you load.
+ indent-tabs-mode nil ; don't use tabs to indent
+ tab-width 4 ; but maintain correct appearance
+ ;; Use one space as sentence end
+ sentence-end-double-space 'nil
+ ;; Newline at end of file
+ require-final-newline t
+ ;; Don't adjust window-vscroll to view tall lines.
+ auto-window-vscroll nil
+ ;; Don't create lockfiles.
+ ;; recentf frequently prompts for confirmation.
+ create-lockfiles nil
+ ;; Leave some rooms when recentering to top, useful in emacs ipython notebook.
+ recenter-positions '(middle 1 bottom)
+ ;; Move files to trash when deleting
+ delete-by-moving-to-trash t
+ ;; Show column number
+ column-number-mode t
+ ;; Don't break lines for me, please
+ truncate-lines t
+ ;; More message logs
+ message-log-max 16384
+ ;; Don't prompt up file dialog when click with mouse
+ use-file-dialog nil
+ ;; Place all auto-save files in one directory.
+ backup-directory-alist `(("." . ,(concat user-emacs-directory "backups")))
+ ;; more useful frame title, that show either a file or a
+ ;; buffer name (if the buffer isn't visiting a file)
+ frame-title-format '((:eval (if (buffer-file-name)
+                                 (abbreviate-file-name (buffer-file-name))
+                               "%b")))
+ ;; warn when opening files bigger than 100MB
+ large-file-warning-threshold 100000000
+ ;; Don't create backup files
+ make-backup-files nil ; stop creating backup~ files
+ ;; Remember my location when the file is last opened
+ ;; activate it for all buffers
+ save-place-file (expand-file-name "saveplace" user-emacs-directory)
+ ;; turn off the bell
+ ring-bell-function 'ignore
+ ;; Smoother scrolling
+ mouse-wheel-scroll-amount '(1 ((shift) . 1)) ;; one line at a time
+ mouse-wheel-progressive-speed nil ;; don't accelerate scrolling
+ mouse-wheel-follow-mouse 't ;; scroll window under mouse
+ scroll-step 1 ;; keyboard scroll one line at a time
+ view-read-only t ;; make read-only buffers in view mode
+ ;; Native comp
+ package-native-compile t
+ comp-async-report-warnings-errors nil
+ ;; Ignore 'ad-handle-definition' redefined warnings
+ ad-redefinition-action 'accept
+ ;; mouse auto follow
+ mouse-autoselect-window t
+ focus-follow-mouse 'auto-raise
+ ;; Hide warnings and display only errors
+ warning-minimum-level :error
+ ;; Display of line numbers in the buffer:
+ ;; Track changes in the window configuration, allowing undoing actions such as
+ ;; closing windows.
+ ;; Configure Emacs to ask for confirmation before exiting
+ confirm-kill-emacs 'y-or-n-p
+ dictionary-server "localhost"
+ browse-url-firefox-program "firefox-beta"
+ dired-movement-style 'cycle
+ line-number-mode t
+ column-number-mode t
+ mode-line-position-column-line-format '("%l:%C")
+ isearch-allow-scroll t
+ package-install-upgrade-built-in t
+ ;;; to the of the compilation
+ compilation-scroll-output t
+ ;;; no message of revert buffer
+ auto-revert-verbose nil
+ ;;; no fringe bookmark
+ bookmark-fringe-mark t
+ ;;; wdired
+ wdired-allow-to-change-permissions t
+ wdired-create-parent-directories t
+ ;;;  scroll
+ scroll-preserve-screen-position t
+ scroll-conservatively 1 ; affects scroll-step'
+ scroll-margin 0
+ next-screen-context-lines 0
+ tooltip-hide-delay 20
+ tooltip-delay 0.4
+ tooltip-short-delay 0.08
+ org-latex-compiler "xelatex")
+(require 'use-package)
+(set-face-attribute 'default nil
+                    :height 150)
 (setq minimal-emacs-user-directory user-emacs-directory)
 (setq minimal-emacs-var-dir
       (expand-file-name "var/" minimal-emacs-user-directory))
@@ -12,10 +120,7 @@
 (define-key key-translation-map (kbd "M-x") (kbd "M-n"))
 (define-key key-translation-map (kbd "M-N") (kbd "M-X"))
 (define-key key-translation-map (kbd "M-X") (kbd "M-N"))
-(set-face-attribute 'default nil
-                    ;; :background "#FFFFFF"
-                    ;; :foreground "black"
-                    :height 160)
+;; (use-package real-mono-themes :config (load-theme 'real-mono-eink t))
 (use-package compile-angel
   :ensure t
   :demand t
@@ -26,7 +131,6 @@
   (add-hook 'emacs-lisp-mode-hook #'compile-angel-on-save-local-mode)
   (compile-angel-on-load-mode))
 (use-package savehist
-  :ensure nil
   :commands (savehist-mode savehist-save)
   :hook
   (after-init . savehist-mode)
@@ -49,12 +153,13 @@
   :ensure t
   :defer t
   :commands vertico-mode
+  :config
+  (use-package vertico-flat
+    :after vertico
+    :ensure nil
+    :init
+    (vertico-flat-mode))
   :hook (after-init . vertico-mode))
-(use-package vertico-flat
-  :after vertico
-  :ensure nil
-  :init
-  (vertico-flat-mode))
 (use-package marginalia :ensure t :defer t
   :commands (marginalia-mode marginalia-cycle)
   :hook (after-init . marginalia-mode))
@@ -360,6 +465,13 @@
   (diff-default-read-only t)
   (diff-font-lock-syntax 'hunk-also)
   (diff-font-lock-prettify t))
+(use-package buffer-terminator
+  :ensure t
+  :custom
+  (buffer-terminator-verbose nil)
+  (buffer-terminator-interval 3600)
+  :config
+  (buffer-terminator-mode 1))
 (use-package magit
   :config
   (setq magit-bury-buffer-function 'magit-restore-window-configuration)
@@ -485,28 +597,11 @@
   :config
   (consult-gh-embark-mode +1)
   (setq consult-gh-forge-timeout-seconds 20))
-(use-package buffer-terminator
-  :ensure t
-  :custom
-  (buffer-terminator-verbose nil)
-  (buffer-terminator-interval 3600)
-  :config
-  (buffer-terminator-mode 1))
 (use-package no-emoji
   :ensure t
   :config
   (setq no-emoji-display-table (make-display-table))
   (global-no-emoji-minor-mode 1))
-(use-package cc-mode
-  :ensure nil
-  :config
-  (setq c-backslash-column 99)
-  (setq c-backslash-max-column 99)
-  (setq c-basic-offset 4)
-  (setq c-indent-level 4)
-  (add-hook 'c-mode-hook #'eglot-ensure)
-  (add-hook 'c++-mode-hook #'eglot-ensure))
-
 (keymap-global-set "s-m" #'switch-to-gptel)
 (keymap-global-set "<Tools>" #'tavily-search)
 (defun switch-to-gptel()
@@ -538,10 +633,10 @@ Optional MAX-RESULTS is the maximum number of results (default 5)."
             ("exclude_domains" . ,exclude_domains)
             ("max_results" . ,max-results))))
     (plz 'post url
-      :headers '(("Content-Type" . "application/json"))
-      :body (json-encode request-data)
-      :as 'string
-      :then (lambda (result) (funcall callback result)))))
+         :headers '(("Content-Type" . "application/json"))
+         :body (json-encode request-data)
+         :as 'string
+         :then (lambda (result) (funcall callback result)))))
 (defun tavily-search (query)
   (interactive "sQuery: ")
   (tavily-search-async
@@ -833,7 +928,6 @@ set to ~/note."
   :bind (:map nov-mode-map
               ("p" . 'scroll-down-command)
               ("n" . 'scroll-up-command)
-              ("b" . (lambda () (interactive) (toggle-monitor)))
               ("ESC <prior>" . (lambda () (interactive) (bookmark-set "epub")))
               ("C-M-i" .              (lambda () (interactive) (bookmark-jump "epub")))
               ("<prior>" . nov-scroll-down)
@@ -847,114 +941,27 @@ set to ~/note."
   :bind (:map pdf-view-mode-map
               ("n" . pdf-view-next-page)
               ("p" . pdf-view-previous-page)
-              ("b" . (lambda () (interactive) (toggle-monitor)))
               ("C-M-i" . donothing)
               ("RET" . donothing)
               ("TAB" . donothing)
-              ("<prior>" . pdf-view-previous-page-record)
-              ("<next>" . pdf-view-next-page-record))
-  :config (add-to-list 'revert-without-query ".pdf")
-  (defun pdf-view-previous-page-record()
-    (interactive)
-    (bookmark-set (buffer-name))
-    (pdf-view-previous-page))
-  (defun pdf-view-next-page-record()
-    (interactive)
-    (bookmark-set (buffer-name))
-    (pdf-view-next-page)))
+              ("M-v" . pdf-view-scroll-down-or-previous-page)
+              ("C-v" . pdf-view-scroll-up-or-next-page)
+              ("<prior>" . pdf-view-previous-page)
+              ("<next>" . pdf-view-next-page))
+  :config (add-to-list 'revert-without-query ".pdf"))
 (use-package info
   :bind (:map Info-mode-map
               ("<mouse-8>" . scroll-up-record)
               ("<mouse-9>" . scroll-down-record)
-              ("<right-fringe><mouse-8>" . scroll-up-record)
-              ("<right-fringe><mouse-9>" . scroll-down-record)
               ("C-M-i" . Info-history-back)
               ("<prior>" . scroll-down-record)
               ("<next>" . scroll-up-record)
-              ("b" . Info-next-preorder)
-              )
-  :config
-  (with-eval-after-load 'info
-    (defun Info-save (&optional arg)
-      (interactive "P" Info-mode)
-      (unless Info-current-node
-        (user-error "No current Info node"))
-      (let ((node (if (stringp Info-current-file)
-		              (concat (file-name-sans-extension
-			                   (file-name-nondirectory Info-current-file))
-			                  ))))
-        (bookmark-set node)))
-    (defun scroll-up-record()
-      "record info place to bookmark"
-      (interactive)
-      (Info-scroll-up)
-      (Info-save))
-    (defun scroll-down-record()
-      "record info place to bookmark"
-      (interactive)
-      (Info-scroll-down)
-      (Info-save))))
-(defun switchepubinfo ()
-  "Switch between *info* buffer and a specific EPUB file in nov-mode."
-  (interactive)
-  (let ((epub-file "/home/leeao/codebase/books/c.epub"))
-    (cond
-     ((derived-mode-p 'nov-mode)
-      (if (get-buffer "*info*")
-          (switch-to-buffer "*info*")
-        (info)))
-     ((derived-mode-p 'Info-mode)
-      (if (file-exists-p epub-file)
-          (find-file epub-file)
-        (message "EPUB file not found: %s" epub-file)))
-     (t
-      (if (file-exists-p epub-file)
-          (find-file epub-file)
-        (message "EPUB file not found: %s" epub-file))))))
-(setq gdb-many-windows nil)
-(setq gdb-show-main t)
+              ("b" . Info-next-preorder)))
 (setq enable-dir-local-variables nil)
 (setq shell-command-switch "-c")
-;; (setq resize-mini-windows nil)
 (global-eldoc-mode -1)
 (set-buffer-file-coding-system 'utf-8-unix)
 (setq face-font-rescale-alist '(("Source Han" . 0.9)))
-(defvar monitor-state 0
-  "Current monitor state, either 0 for read or  1 for watch.")
-(defun monitor ()
-  "swtich monitor from read mode to watch mode"
-  (interactive)
-  (let((monitorpath "-i2c  /dev/i2c-4")
-       (monitorcli "paperlike-cli ")
-       (monitorarg '(" -contrast " " -speed " " -mode " " -clear"))
-       (mode-state '(("9" "5" "1")  ("2" "5" "3"))))
-    (split-window-below)
-    (other-window 1)
-    (switch-to-buffer "*Shell Command Output*")
-    (split-window-below)
-    (other-window 1)
-    (switch-to-buffer "*Async Shell Command*")
-    (progn
-      (dotimes (number 3)
-        (shell-command (concat
-                        monitorcli
-                        monitorpath
-                        (car (nthcdr number monitorarg))
-                        (car (nthcdr number (car (nthcdr monitor-state  mode-state)))))
-                       ))
-      (sleep-for 1))
-    (setq monitor-state  (if (= 0 monitor-state) 1 0 ))
-    (sleep-for 1.5)
-    (sleep-for 0.5)
-    (async-shell-command (concat monitorcli monitorpath " -clear"))
-    (let ((async (get-buffer-window "*Async Shell Command*"))
-          (shell (get-buffer-window "*Shell Command Output*")))
-      (when async (delete-window async))
-      (when shell  (delete-window shell)))
-    (sleep-for 0.5)
-    (kill-buffer "*Async Shell Command*")
-    (kill-buffer "*Shell Command Output*")
-    (donothing)))
 (defvar my-alternate-font "-DAMA-UbuntuMono Nerd Font-regular-normal-normal-*-13-*-*-*-m-0-iso10646-1")
 (defvar my-default-font "bookerly")
 (defvar fontfont 1)
@@ -962,8 +969,8 @@ set to ~/note."
   "Toggle between UbuntuMono and bookerly fonts."
   (interactive)
   (if (= fontfont 1)
-      (progn (set-face-attribute 'default nil :font my-default-font :height 160) (setq fontfont 0))
-    (progn (set-face-attribute 'default nil :font my-alternate-font :height 210) (setq fontfont 1))))
+      (progn (set-face-attribute 'default nil :font my-default-font :height 150) (setq fontfont 0))
+    (progn (set-face-attribute 'default nil :font my-alternate-font :height 200) (setq fontfont 1))))
 (set-face-attribute 'default nil :font my-default-font)
 (defun my/nix-store-shorten-paths ()
   "Replace long /nix/store paths with shortened ...-pkg-version."
@@ -981,7 +988,6 @@ set to ~/note."
   (goto-char (point-max))  (beginning-of-line)
   (insert (message "Good Bey! The PC Hibernate At %S\n" (current-time-string)))
   (setq hibernatetime (current-time))
-  (setq monitor-state 0)
   (setq duwake t)
   (shell-command "systemctl hibernate"))
 (defvar justonebookonetimelessismore "index.org")
@@ -995,13 +1001,12 @@ set to ~/note."
                  (beginning-of-line)
                  (insert (message "Sleep For %S Hour, Have A Nice Day!\n"
                                   (/ (time-to-seconds (time-since hibernatetime) ) 3600)))
-                 ;; (alert "The fact is the sweetest dream that labor knows.")
-                 ;; (run-at-time "05:00pm" nil 'alert "断网了。" )
-                 ;; (run-at-time "23:59pm" nil 'alert "凌晨了。" )
+                 (alert "The fact is the sweetest dream that labor knows.")
                  (shell-command "paperlike-cli -i2c /dev/i2c-4 -clear")
                  (delete-other-windows)
                  (sleep-for 1)
                  (newday)
+                 (donothing)
                  (clear-minibuffer-message))))
 (defun xah-clean-whitespace ()
   (interactive)
@@ -1032,6 +1037,7 @@ set to ~/note."
                                                       (plist-get page-info :current-page))) "[\)]+" ))
   (setq pyim-indicator-list (list #'my-pyim-indicator-with-cursor-color #'pyim-indicator-with-modeline))
   ;; (setq pyim-english-input-switch-functions '(pyim-probe-program-mode))
+  (setq pyim-english-input-switch-functions nil)
   (defun hd()
     "Show hmdz for the word at point."
     (interactive)
@@ -1074,10 +1080,6 @@ set to ~/note."
   (setq pyim-enable-shortcode nil)
   (setq pyim-punctuation-dict '(("^" "…")("\\" "、")("." "。")("," "，")("'" "‘" "’") ("\"" "“" "”")))
   (add-to-list 'pyim-dicts '(:name "hmdz" :file "~/.config/hmdz.pyim")))
-(keymap-global-set "M-o" (lambda () (interactive)(other-window -1)))
-(keymap-global-set "M-i" 'imenu)
-(keymap-global-set "ESC <f5>" 'hibernatecall)
-(keymap-global-set "<WakeUp>" 'wakeupcall)
 (add-hook 'shell-mode-hook  'with-editor-export-editor)
 (add-hook 'eshell-mode-hook 'with-editor-export-editor)
 (add-hook 'term-exec-hook   'with-editor-export-editor)
@@ -1108,7 +1110,7 @@ set to ~/note."
   :bind (("C-<backspace>" . avy-goto-word-0)
          ([remap imenu] . consult-imenu)
          ([remap Info-search] . consult-info)
-         ([remap kill-buffer] . kill-current-buffer)
+         ([remap kill-buffer] . kill-buffer-and-window)
          ([remap list-buffers] . ibuffer)
          ([remap project-switch-to-buffer] . consult-project-buffer)
          ([remap switch-to-buffer] . consult-buffer)
@@ -1154,7 +1156,7 @@ set to ~/note."
          ("M-w". transient-copy-menu-text)))
 (tooltip-mode 1)(delete-selection-mode 1)
 (global-font-lock-mode 1)(global-hide-mode-line-mode 1)
-(show-paren-mode -1)(window-divider-mode -1)(winner-mode -1)
+(show-paren-mode -1)(window-divider-mode 1)(winner-mode -1)
 (repeat-mode -1)(display-time-mode -1)(display-line-numbers-mode -1)
 (use-package face-remap :config (defun text-scale-adjust (inc) (interactive "p") (let ((ev last-command-event) (echo-keystrokes nil) (message-log-max nil)) (let* ((base (event-basic-type ev)) (step (pcase base ((or ?+ ?=) inc) (?- (- inc)) (?0 0) (_ inc)))) (text-scale-increase step) (set-transient-map (let ((map (make-sparse-keymap))) (dolist (mods '(() (control))) (dolist (key '(?+ ?= ?- ?0)) (define-key map (vector (append mods (list key))) (lambda () (interactive) (text-scale-adjust (abs inc)))))) map) nil nil nil)))))
 (use-package easysession
@@ -1169,12 +1171,6 @@ set to ~/note."
   (add-hook 'emacs-startup-hook #'easysession-load-including-geometry 102)
   (add-hook 'emacs-startup-hook #'easysession-save-mode 103))
 (setq savehist-file (expand-file-name "history" user-emacs-directory))
-;; (use-package eshell-toggle
-;;   :custom
-;;   (eshell-toggle-size-fraction 3)
-;;   (eshell-toggle-use-projectile-root 'project)
-;;   :bind
-;;   ("C-c C-; v" . eshell-toggle))
 (defun my-set-fringe-face ()
   "auto hide fringe face depending on major mode."
   (if (derived-mode-p '(occur-mode gud-mode))
@@ -1211,17 +1207,18 @@ set to ~/note."
     (newline)
     (previous-line)
     (insert
-    (format "// -*- compile-command: \"gcc -Wall -o %s %s;./%s\" -*-"
-            (c-get-current-file)
-            (concat (c-get-current-file) ".c")
-            (c-get-current-file)))(save-buffer)(revert-buffer)))
+     (format "// -*- compile-command: \"gcc -Wall -o %s %s;./%s\" -*-"
+             (c-get-current-file)
+             (concat (c-get-current-file) ".c")
+             (c-get-current-file)))(save-buffer)(revert-buffer)))
 ;; stop addiction of configing emacs here.
-;; (defun list-packages()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
-;; (defun org-agenda()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
-;; (defun package-list-packages()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
-;; (defun package-show-package-list()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
-;; (defun customize-create-theme()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
-;; (defun customize-themes()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
+(defun list-packages()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
+(defun org-agenda()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
+(defun package-list-packages()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
+(defun package-show-package-list()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
+(defun customize-create-theme()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
+(defun customize-themes()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
+(defun gomoku()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
 (use-package vterm :ensure t :defer t
   :commands (vterm--internal)
   :bind (:map vterm-mode-map
@@ -1240,7 +1237,7 @@ set to ~/note."
                   (with-current-buffer buf
                     (set-process-query-on-exit-flag
                      (get-buffer-process (current-buffer)) nil))))))
-(add-hook 'vterm-mode-hook (lambda () (compilation-shell-minor-mode 1) (define-key vterm-copy-mode-map (kbd "C-<return>") 'compile-goto-error)))
+;; (add-hook 'vterm-mode-hook (lambda () (compilation-shell-minor-mode 1) (define-key vterm-copy-mode-map (kbd "C-<return>") 'compile-goto-error))
 (with-eval-after-load 'ox-latex
   (add-to-list 'org-latex-classes
                '("elegantbook"
@@ -1329,116 +1326,6 @@ set to ~/note."
                     :background (face-attribute 'default :background)
                     :foreground (face-attribute 'default :background)
                     :height 0.1)
-
-(setq-default ;; Use setq-default to define global default
- ;; Who I am
- user-mail-address "llqingsong@qq.com"
- user-full-name "Qingsong Liao"
- ;; Enable all disabled commands
- disabled-command-function nil
- word-wrap-by-category t
- ;; unsafe theme
- custom-safe-themes t
- ;; Enable recursive minibuffer edit
- enable-recursive-minibuffers t
- ;; Don't show scratch message, and use fundamental-mode for *scratch*
- ;; Remove splash screen and the echo area message
- inhibit-startup-message t
- inhibit-startup-echo-area-message t
- initial-scratch-message 'nil
- initial-major-mode 'fundamental-mode
- ;; Emacs modes typically provide a standard means to change the
- ;; indentation width -- eg. c-basic-offset: use that to adjust your
- ;; personal indentation width, while maintaining the style (and
- ;; meaning) of any files you load.
- indent-tabs-mode nil ; don't use tabs to indent
- tab-width 4 ; but maintain correct appearance
- ;; Use one space as sentence end
- sentence-end-double-space 'nil
- ;; Newline at end of file
- require-final-newline t
- ;; Don't adjust window-vscroll to view tall lines.
- auto-window-vscroll nil
- ;; Don't create lockfiles.
- ;; recentf frequently prompts for confirmation.
- create-lockfiles nil
- ;; Leave some rooms when recentering to top, useful in emacs ipython notebook.
- recenter-positions '(middle 1 bottom)
- ;; Move files to trash when deleting
- delete-by-moving-to-trash t
- ;; Show column number
- column-number-mode t
- ;; Don't break lines for me, please
- truncate-lines t
- ;; More message logs
- message-log-max 16384
- ;; Don't prompt up file dialog when click with mouse
- use-file-dialog nil
- ;; Place all auto-save files in one directory.
- backup-directory-alist `(("." . ,(concat user-emacs-directory "backups")))
- ;; more useful frame title, that show either a file or a
- ;; buffer name (if the buffer isn't visiting a file)
- frame-title-format '((:eval (if (buffer-file-name)
-                                 (abbreviate-file-name (buffer-file-name))
-                               "%b")))
- ;; warn when opening files bigger than 100MB
- large-file-warning-threshold 100000000
- ;; Don't create backup files
- make-backup-files nil ; stop creating backup~ files
- ;; Remember my location when the file is last opened
- ;; activate it for all buffers
- save-place-file (expand-file-name "saveplace" user-emacs-directory)
- ;; turn off the bell
- ring-bell-function 'ignore
- ;; Smoother scrolling
- mouse-wheel-scroll-amount '(1 ((shift) . 1)) ;; one line at a time
- mouse-wheel-progressive-speed nil ;; don't accelerate scrolling
- mouse-wheel-follow-mouse 't ;; scroll window under mouse
- scroll-step 1 ;; keyboard scroll one line at a time
- view-read-only t ;; make read-only buffers in view mode
- ;; Native comp
- package-native-compile t
- comp-async-report-warnings-errors nil
- ;; Ignore 'ad-handle-definition' redefined warnings
- ad-redefinition-action 'accept
- ;; mouse auto follow
- mouse-autoselect-window t
- focus-follow-mouse 'auto-raise
- ;; Hide warnings and display only errors
- warning-minimum-level :error
- ;; Display of line numbers in the buffer:
- ;; Track changes in the window configuration, allowing undoing actions such as
- ;; closing windows.
- ;; Configure Emacs to ask for confirmation before exiting
- confirm-kill-emacs 'y-or-n-p
- dictionary-server "localhost"
- browse-url-firefox-program "firefox-beta"
- dired-movement-style 'cycle
- line-number-mode t
- column-number-mode t
- mode-line-position-column-line-format '("%l:%C")
- isearch-allow-scroll t
- package-install-upgrade-built-in t
- ;;; to the of the compilation
- compilation-scroll-output t
- ;;; no message of revert buffer
- auto-revert-verbose nil
- ;;; no fringe bookmark
- bookmark-fringe-mark t
- ;;; wdired
- wdired-allow-to-change-permissions t
- wdired-create-parent-directories t
- ;;;  scroll
- scroll-preserve-screen-position t
- scroll-conservatively 1 ; affects scroll-step'
- scroll-margin 0
- next-screen-context-lines 0
- tooltip-hide-delay 20
- tooltip-delay 0.4
- tooltip-short-delay 0.08
- org-latex-compiler "xelatex")
-(load-theme 'real-mono-eink t)
-
 (defvar my/leetcode-root "~/Leere/Leetcode/src/"
   "Root directory of leetgo-generated problems.")
 (defun my/leetcode-format-number (n)
@@ -1461,10 +1348,11 @@ set to ~/note."
           nil
         ;; Otherwise insert at beginning
         (goto-char (point-min))
+        (kill-whole-line)
+        (kill-whole-line)
         (insert "// -*- compile-command: \"make -f ../Makefile submit\" -*-\n"))
       ;; Save back
       (write-region (point-min) (point-max) cpp-file nil 'quiet))))
-
 (defun my/leetcode--pandoc-md-to-org (md-file org-file)
   "Convert MD-FILE → ORG-FILE using pandoc."
   (call-process "pandoc" nil nil nil md-file "-o" org-file "--wrap=none"))
@@ -1500,33 +1388,26 @@ set to ~/note."
       (setq dir (my/leetcode--find-problem-dir n))
       (unless dir
         (error "After running `leetgo pick`, problem %d still not found." n)))
-
     (let* ((md (expand-file-name "question.md" dir))
            (org (expand-file-name "question.org" dir))
            (cpp (expand-file-name "solution.cpp" dir)))
-
       ;; 1. Convert MD → ORG
       (my/leetcode--pandoc-md-to-org md org)
-
       ;; 2. Replace remote images → local
       (my/leetcode--process-org-images org dir)
-
       ;; 3. Add include block to org (idempotent optional)
       (with-temp-buffer
         (insert-file-contents org)
         (goto-char (point-max))
-        (insert "\n\\newpage \n *题解如下:* \n#+INCLUDE: \"./solution.cpp\" src cpp \\newpage")
+        (insert "\n\\newpage \n *题解如下:* \n#+INCLUDE: \"./solution.cpp\" src C++ \n \\newpage")
         (write-region (point-min) (point-max) org nil 'quiet))
-
       ;; 4. Fix: add compile header exactly once
       (my/leetcode--ensure-compile-header cpp)
-
       ;; 5. Open buffers
       (find-file org)
       (save-window-excursion
         (find-file cpp))
       (message "Loaded LeetCode %d from %s" n dir))))
-
 (defun my/leetcode-generate-includes ()
   "Generate #+INCLUDE lines for all LeetCode question org files."
   (let* ((root (expand-file-name "src" default-directory))
@@ -1551,27 +1432,21 @@ set to ~/note."
     (unless dir
       (message "Failed to fetch problem %d" n)
       (cl-return-from my/leetcode-fetch-one-silent nil))
-
     (let* ((md (expand-file-name "question.md" dir))
            (org (expand-file-name "question.org" dir))
            (cpp (expand-file-name "solution.cpp" dir)))
-
       ;; convert md → org
       (my/leetcode--pandoc-md-to-org md org)
       (my/leetcode--process-org-images org dir)
-
       ;; include solution block
       (with-temp-buffer
         (insert-file-contents org)
         (goto-char (point-max))
-        (insert "\n\\newpage \n *题解如下:* \n#+INCLUDE: \"./solution.cpp\" src cpp \\newpage")
+        (insert "\n\\newpage \n *题解如下:* \n#+INCLUDE: \"./solution.cpp\" src C++ \n \\newpage")
         (write-region (point-min) (point-max) org nil 'quiet))
-
       ;; FIX: ensure compile header only once
       (my/leetcode--ensure-compile-header cpp))
-
     (message "Fetched %d OK" n)))
-
 (defun my/leetcode-fetch-batch (numbers)
   "Fetch multiple problems silently.
 NUMBERS is a string like \"1 2 3 11 17 19\"."
@@ -1607,26 +1482,24 @@ NUMBERS is a string like \"1 2 3 11 17 19\"."
                      (format "#+INCLUDE: \"%s\" :minlevel 2\n"
                              (file-relative-name q default-directory)))))))))
       (message "Marker '# begin of leetcode include' not found!"))))
-
 (global-set-key (kbd "M-+") 'shift-number-up)
 (global-set-key (kbd "M-_") 'shift-number-down)
 (use-package xref :config
   (defun xref-go-back ()
-  "Go back to the previous position in xref history.
+    "Go back to the previous position in xref history.
 To undo, use \\[xref-go-forward]."
-  (interactive)
-  (let ((history (xref--get-history)))
-    (if (null (car history))
-        (previous-buffer)
+    (interactive)
+    (let ((history (xref--get-history)))
+      (if (null (car history))
+          (previous-buffer)
         (user-error "At start of xref history, back to previous buffer")
-      (let ((marker (pop (car history))))
-        (xref--push-forward (point-marker))
-        (switch-to-buffer (or (marker-buffer marker)
-                              (user-error "The marked buffer has been deleted")))
-        (goto-char (marker-position marker))
-        (set-marker marker nil nil)
-        (run-hooks 'xref-after-return-hook))))))
-
+        (let ((marker (pop (car history))))
+          (xref--push-forward (point-marker))
+          (switch-to-buffer (or (marker-buffer marker)
+                                (user-error "The marked buffer has been deleted")))
+          (goto-char (marker-position marker))
+          (set-marker marker nil nil)
+          (run-hooks 'xref-after-return-hook))))))
 (defun my/delete-line-and-append-to-hhh ()
   "Delete the current line and append it to a file named 'hhh' in the current directory."
   (interactive)
@@ -1643,7 +1516,6 @@ To undo, use \\[xref-go-forward]."
     ;; Delete the current line in original buffer
     (delete-region (line-beginning-position)
                    (line-beginning-position 2))))
-(global-set-key (kbd "C-p") #'my/delete-line-and-append-to-hhh)
 (defun my/delete-all-duplicate-lines ()
   "Delete all lines in the buffer that appear more than once."
   (interactive)
@@ -1674,6 +1546,142 @@ To undo, use \\[xref-go-forward]."
             (forward-line 1)))))))
 (use-package forge
   :after magit)
-(global-set-key (kbd "M-n") #'embark-next-symbol)
-(global-set-key (kbd "M-p") #'embark-previous-symbol)
-(global-set-key (kbd "C-;") #'iedit-mode)
+(keymap-global-set "M-n" 'embark-next-symbol)
+(keymap-global-set "M-p" 'embark-previous-symbol)
+(keymap-global-set "M-*" (lambda () (interactive) (my/leetcode-open (string-to-number(current-word)))))
+(keymap-global-set "M-o" (lambda () (interactive)(other-window -1)))
+(keymap-global-set "M-i" 'imenu)
+(keymap-global-set "C-;" 'iedit-mode)
+(define-key org-mode-map (kbd "C-,") nil)
+(keymap-global-set "C-," 'toggle-solution-question)
+(keymap-global-set "ESC <f5>" 'hibernatecall)
+(keymap-global-set "<WakeUp>" 'wakeupcall)
+(defun toggle-solution-question ()
+  "Toggle between solution.cpp and question.org in the same directory."
+  (interactive)
+  (let* ((current-file (buffer-file-name))
+         (dir (file-name-directory current-file))
+         (target-file (cond
+                       ((string-match "solution\\.cpp$" current-file)
+                        (expand-file-name "question.org" dir))
+                       ((string-match "question\\.org$" current-file)
+                        (expand-file-name "solution.cpp" dir))
+                       (t nil))))
+    (if target-file
+        (if (file-exists-p target-file)
+            (find-file target-file)
+          (message "Target file %s does not exist" target-file))
+      (message "Not in solution.cpp or question.org"))))
+(use-package cc-mode
+  :mode (("\\.\\(cc\\|hh\\)\\'" . c++-mode)
+         ("\\.[ch]\\(pp\\|xx\\|\\+\\+\\)\\'" . c++-mode)
+         ("\\.\\(CC?\\|HH?\\)\\'" . c++-mode)
+         ("\\.[ch]\\'" . c-mode)
+         ("\\.y\\(acc\\)?\\'" . c-mode)
+         ("\\.lex\\'" . c-mode)
+         ("\\.i\\'" . c-mode)
+         ("\\.ii\\'" . c++-mode))
+  :config
+  (defconst Qingsong-style '((c-basic-offset . 8)
+                             (c-tab-always-indent . t)
+                             (c-comment-only-line-offset . (0 . 0))
+                             (c-indent-comments-syntactically-p . t)
+                             (c-block-comments-indent-p . nil)
+                             ;;(comment-style . 'multi-line)
+                             (comment-start . "// ")
+                             (comment-end . "")
+                             (c-cleanup-list . '((defun-close-semi) (list-close-comma) (scope-operator)))
+                             (c-backslash-column . 88)
+                             (c-backslash-max-column . 88)
+                             (c-auto-align-backslashes . t)
+                             (c-toggle-auto-state . 1)
+                             (c-toggle-auto-hungry-state . 1)
+                             (c-offsets-alist
+                              ;;(c . +)                     ;; inside a multi-line C style block comment
+                              (defun-open . 0)            ;; brace that opens a function definition
+                              (defun-close . 0)           ;; brace that closes a function definition
+                              (defun-block-intro . +)     ;; the first line in a top-level defun
+                              (class-open . 0)            ;; brace that opens a class definition
+                              (class-close . 0)           ;; brace that closes a class definition
+                              (inline-open . 0)           ;; brace that opens an in-class inline method
+                              (inline-close . 0)          ;; brace that closes an in-class inline method
+                              (topmost-intro . 0)         ;; the first line in a topmost construct
+                              ;; definition
+                              (topmost-intro-cont . 0)    ;; topmost definition continuation lines
+                              (member-init-intro . +)     ;; first line in a member initialization list
+                              (member-init-cont . 0)      ;; subsequent member initialization list lines
+                              (inher-intro . 0)           ;; first line of a multiple inheritance list
+                              (inher-cont . +)            ;; subsequent multiple inheritance lines
+                              (block-open . 0)            ;; statement block open brace
+                              (block-close . 0)           ;; statement block close brace
+                              (brace-list-open . 0)       ;; open brace of an enum or static array list
+                              (brace-list-close . 0)      ;; open brace of an enum or static array list
+                              (brace-list-intro . +)      ;; first line in an enum or static array list
+                              (brace-list-entry . 0)      ;; subsequent lines in an enum or static array
+                              ;; list
+                              (statement . 0)             ;; a C/C++/ObjC statement
+                              (statement-cont . 0)        ;; a continuation of a C/C++/ObjC statement
+                              (statement-block-intro . +) ;; the first line in a new statement block
+                              (statement-case-intro . +)  ;; the first line in a case `block'
+                              (statement-case-open . +)   ;; the first line in a case `block'
+                              ;; starting with brace
+                              (substatement . +)          ;; the first line after an if/while/for/do/else
+                              (substatement-open . 0)     ;; the brace that opens a substatement block
+                              (case-label . +)            ;; a case or default label
+                              (access-label . -)          ;; C++ private/protected/public access label
+                              (label . -)                 ;; any non-special C/C++/ObjC label
+                              (do-while-closure . 0)      ;; the `while' that ends a do/while construct
+                              (else-clause . 0)           ;; the `else' of an if/else construct
+                              (comment-intro . 0)         ;; line containing only a comment introduction
+                              (arglist-intro . +)         ;; the first line in an argument list
+                              (arglist-cont . 0)          ;; subsequent argument list lines when no
+                              ;; subsequent argument list lines when no the
+                              ;; arglist opening paren
+                              (arglist-cont-nonempty . 0) ;; subsequent argument list lines when at
+                              ;; subsequent argument list lines when at line
+                              ;; as the arglist opening paren
+                              (arglist-close . 0)         ;; line as the arglist opening paren
+                              (stream-op . +)             ;; lines continuing a stream operator construct
+                              (inclass . +)               ;; the construct is nested inside a class
+                              ;; definition
+                              (cpp-macro . 0)             ;; the construct is nested inside a class
+                              ;; definition
+                              (friend . 0)                ;; a C++ friend declaration
+                              ))
+    "Qingsong C/C++ Programming Style"
+    )
+  (c-add-style "Qingsong" Qingsong-style)
+
+  (setq c-default-style "Qingsong")
+
+  (advice-add 'c-update-modeline :override #'ignore)
+  (defun c-compile-current-file ()
+    (interactive)
+    (unless (file-exists-p "Makefile")
+      (let ((file (file-name-nondirectory buffer-file-name)))
+        (compile (format "%s -o %s.out %s %s %s"
+                         (or (getenv "CC") "gcc")
+                         (file-name-sans-extension file)
+                         (or (getenv "CPPFLAGS") "")
+                         (or (getenv "CFLAGS") "-Wall -g")
+                         file)))))
+  (dolist (hook '(c-mode-hook c++-mode-hook asm-mode-hook))
+    (add-hook hook (lambda ()
+                     (define-key c-mode-base-map (kbd "C-c C-c") 'c-compile-current-file)
+                     (define-key c-mode-base-map (kbd "C-c C-M-c") (lambda () (interactive)
+                                                                     (setq-local compilation-read-command nil)
+                                                                     (call-interactively 'compile)))
+                     (define-key c-mode-base-map (kbd "C-M-q") nil)
+                     (define-key c-mode-base-map (kbd "(") nil)
+                     (define-key c-mode-base-map (kbd "{") nil)))))
+(setq confirm-kill-processes nil)
+(defun thunar-open-default-directory ()
+  (interactive)
+  (let ((curr-dir (if-let ((curr-line (dired-get-filename nil t)))
+                      (file-name-directory curr-line)
+                    default-directory)))
+    (start-process-shell-command
+     "thunar" "*thunar*"
+     (concat "thunar " curr-dir))))
+(add-to-list 'load-path "~/.emacs.d/elisp")
+(load-theme 'real-mono-eink t)

@@ -29,40 +29,6 @@
             ./hardware-configuration.nix
             ({ pkgs, config, userSetting, sops, inputs, lib, outputs, ... }:
               let
-                stardictDictionaries = pkgs.stdenv.mkDerivation {
-                  pname = "stardict-dictionaries";
-                  version =
-                    "2.4.2"; # adjust the version based on the zip contents
-                  src = dictRepo;
-                  buildInputs = [ pkgs.unzip ]; # Add unzip as a build input
-                  unpackPhase = ''
-                    # Unzip each dictionary zip file
-                    unzip $src/stardict-ghycyzzd-2.4.2.zip -d $out
-                    unzip $src/stardict-langdao-ce-gb-2.4.2.zip -d $out
-                    unzip $src/stardict-ecdict-2.4.2.zip -d $out
-                  '';
-                };
-                sourcehanRepo = pkgs.fetchFromGitHub {
-                  owner = "NestorLiao";
-                  repo = "sourcehan";
-                  rev = "master";
-                  sha256 =
-                    "sha256-uyZcPv7jPv96KovMKFdp/qDv0/6b3x0We/vx7eIU6O4=";
-                };
-                dictRepo = pkgs.fetchFromGitHub {
-                  owner = "NestorLiao";
-                  repo = "dict";
-                  rev = "master";
-                  sha256 =
-                    "sha256-dd9dMrhPa4QeJ58uiLBNhoQy8EfSJrmLj0lpwtygR2U=";
-                };
-                bookerlyRepo = pkgs.fetchFromGitHub {
-                  owner = "NestorLiao";
-                  repo = "boboly";
-                  rev = "master";
-                  sha256 =
-                    "sha256-boN16BYYFY5MWhbLhaqIpumqsi583fIrMp+2Hz3pzqQ=";
-                };
                 myEmacs =
                   inputs.emacs-overlay.packages.${pkgs.system}.emacs-git-pgtk.override {
                     withNativeCompilation = true;
@@ -404,15 +370,48 @@
                         size = 24;
                       };
                       services.cliphist.enable = true;
-                      home.file.".local/share/fonts/bookerly".source =
-                        "${bookerlyRepo}";
-                      home.file.".local/share/fonts/sourcehan".source =
-                        "${sourcehanRepo}";
-                      home.file.".stardict/dic".source = stardictDictionaries;
+                      home.file.".local/share/fonts/bookerly"={
+                        source = pkgs.fetchFromGitHub {
+                          owner = "NestorLiao";
+                          repo = "boboly";
+                          rev = "master";
+                          sha256 =
+                            "sha256-boN16BYYFY5MWhbLhaqIpumqsi583fIrMp+2Hz3pzqQ=";
+                        };
+                      };
+                      home.file.".local/share/fonts/sourcehan" ={
+                        source= pkgs.fetchFromGitHub {
+                          owner = "NestorLiao";
+                          repo = "sourcehan";
+                          rev = "master";
+                          sha256 = "sha256-uyZcPv7jPv96KovMKFdp/qDv0/6b3x0We/vx7eIU6O4=";
+                        };
+                      };
+                      home.file.".stardict/dic" = {
+                        source= pkgs.stdenv.mkDerivation {
+                          pname = "stardict-dictionaries";
+                          version =
+                            "2.4.2"; # adjust the version based on the zip contents
+                          src = pkgs.fetchFromGitHub {
+                            owner = "NestorLiao";
+                            repo = "dict";
+                            rev = "master";
+                            sha256 =
+                              "sha256-dd9dMrhPa4QeJ58uiLBNhoQy8EfSJrmLj0lpwtygR2U=";
+                          };
+                          buildInputs = [ pkgs.unzip ]; # Add unzip as a build input
+                          unpackPhase = ''
+                    # Unzip each dictionary zip file
+                    unzip $src/stardict-ghycyzzd-2.4.2.zip -d $out
+                    unzip $src/stardict-langdao-ce-gb-2.4.2.zip -d $out
+                    unzip $src/stardict-ecdict-2.4.2.zip -d $out
+                  '';
+                        };
+                      };
                       home.file.".config/sway/white.jpg" = {
                         source = pkgs.fetchurl {
                           url =
-                            "https://avatars.githubusercontent.com/u/159541500?v=4";
+                            "https://raw.githubusercontent.com/NestorLiao/NestorLiao.github.io/main/figure/gerwinski-gnu-head.png";
                           sha256 =
                             "sha256-bG6VGf8tWP2jugWMsiXNcMNAOXN+UvAyNKl2kvXBoFM=";
                         };
@@ -597,7 +596,7 @@
                       };
                       systemd.user.startServices = "sd-switch";
                       programs.firefox = {
-                        enable = true;
+                        enable = false;
                         policies = {
                           DisableFirefoxStudies = true;
                           DisablePocket = true;
@@ -1040,31 +1039,31 @@
                 sops.secrets.mojie = { owner = userSetting.username; };
                 sops.secrets.oney = { owner = userSetting.username; };
                 sops.secrets.ouo = { owner = userSetting.username; };
-                networking.extraHosts = ''
-                  # 想想jjr吧
-                   ${builtins.readFile ./nosurf/hosts00}
-                   ${builtins.readFile ./nosurf/hosts01}
-                   ${builtins.readFile ./nosurf/hosts02}
-                   ${builtins.readFile ./nosurf/hosts03}
-                   ${builtins.readFile ./nosurf/hosts04}
-                   ${builtins.readFile ./nosurf/hosts05}
-                   ${builtins.readFile ./nosurf/hosts06}
+                networking.extraHosts = '' # 想想jjr吧
+                # 工业革命及其后果，己经成为了廖青松的灾难。
+                   ${builtins.readFile ./nosurf/hosts00} # 眼-色
+                   ${builtins.readFile ./nosurf/hosts01} # 耳-音
+                   ${builtins.readFile ./nosurf/hosts02} # 身-欲
+                   ${builtins.readFile ./nosurf/hosts03} # 鼻-香
+                   ${builtins.readFile ./nosurf/hosts04} # 口-味
+                   ${builtins.readFile ./nosurf/hosts05} # 脑-靡
+                   ${builtins.readFile ./nosurf/hosts06} # 人-弱
                    # 消费主义让我们沉迷于物质/精神消费中，
                    # 通过让我们接触各种光怪陆离的东西来丰富我们的身份认同感，
                    # 这也是当今时代互联网正在加速实现的事情…
                    # 但这是以牺牲掌握任何技能为代价换来的，
                    0.0.0.0 google.com
                    0.0.0.0 www.google.com
+                   0.0.0.0 reddit.com
+                   0.0.0.0 old.reddit.com
                    0.0.0.0 z-library.sk
                    0.0.0.0 emacs-china.org
-                   # 0.0.0.0 chatgpt.com
+                   0.0.0.0 chatgpt.com
                    # 我们沉迷得越深，想要掌握一项技能的愿望就会越来越淡化。
                    127.0.0.1 linux.doc
                    127.0.0.1 cpp.doc
                    127.0.0.1 c.doc
                    127.0.0.1 zig.doc
-                   0.0.0.0 reddit.com
-                   0.0.0.0 old.reddit.com
                 '';
                 services = {
                   nscd.enable = false;
@@ -1217,7 +1216,11 @@
                         consult-gh-embark
                         consult-gh-forge
                         consult-gh-with-pr-review
-                        eshell-toggle
+                        docker
+                        kubernetes
+                        doxymacs
+                        git-link
+                        git-timemachine
                         vterm
                         multi-vterm
                         with-editor
@@ -1245,19 +1248,21 @@
                         orderless
                         embark-consult
                         ### for language fans
-                        zig-mode
-                        nix-mode
-                        rust-mode
-                        markdown-mode
+                        cmake-mode
+                        dockerfile-mode
                         go-mode
+                        haskell-mode
+                        markdown-mode
+                        nix-mode
                         racket-mode
+                        rust-mode
+                        zig-mode
                         ### save and format
                         aggressive-indent
                         elisp-autofmt
                         super-save
                         ### emacs look and feel
                         hide-mode-line
-                        shift-number
                         no-emoji
                         ligature
                         compile-angel
@@ -1271,6 +1276,7 @@
                         undo-fu
                         undo-fu-session
                         iedit
+                        shift-number
                       ]) ++ (with epkgs.elpaPackages; [ plz ])
                       ++ (with pkgs; [ ]));
                   };

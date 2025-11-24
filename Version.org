@@ -1,8 +1,16 @@
 * 版本更新历史
+
+\datechange{2025-11-23}{阴}
+#+ATTR_LATEX: :environment change
+- *leetcode*: 把题都抓完了，这还不开刷开学，想后半生吃草?
+- *配emacs*:  翻了半天别人的配置，就找两包git-link，git-timemachine感觉不错。
+
 \datechange{2025-11-22}{晴}
 #+ATTR_LATEX: :environment change
-- *C语言*: 完成了对c语言的复习。
-- *leetcode*: 完成了10题。
+- *C语言*: 对C语言的复习还没开始。*妈的，互联网*
+- *leetcode*: 完成了0题。*妈的，互联网*
+- *又后悔了*: 本地有chromium，hosts06忘了加，想用chromium看一下翻墙网站的兼容性，莫名发现谷歌搜索能用，又看起片来!
+- *从今天起*: 能只用emacs就只用emacs，能只用eww就只用eww，能问gptel就只问gptel。eww不能访问也别去试firefox，firefox不能访问也别去试chromium。
 
 \datechange{2025-11-21}{晴}
 #+ATTR_LATEX: :environment change

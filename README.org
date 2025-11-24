@@ -44,9 +44,25 @@ fi
   1. 依赖少，之前用vim，我就要关心vim键位的app适合用来看pdf，看epub看文档，整vimium和vim一个键位/什么lazygit/tmux/fcitx/alacritty，还生怕它们之间有什么矛盾，关键vimscript也不适合作为灵活的语言，整天很困扰很憋屈，我还折腾colemak、虎码和nixos，我的天，对于任何一个大脑快定型的成年人来说，这简直是噩梦! 幸好有emacs解救我于快捷键地狱中，装包能list-package再一点就安装了，pyim配置虎码就一行的事，那里还要fcitx5怎么怎么样! 自从用了emacs，我再也没有折改过firefox，一是我没时间，二是我就只用emacs的eww，我也就不再在乎什么vimium的键位和vim不一样了， *能用就行* 才是真理! 再说用上了elisp，那才叫美梦成真，想写一个工具简直就比玩手机打游等更有意思多了。什么tmux/lazygit/nixos，现在我只想笑笑，我用vterm/magit/任何平台都能跑emacs不是爽多了吗? 只要给我emacs/编译器，写代码就是轻轻松松的事! emacs改好了我的强迫症和极多主义，现在我心宽又极简，感谢emacs!
   2. 功能多，之前用helix，虽是开箱即用但是很明显它的功能只限于写代码，快是快但是对我这样的学习困难型人来说，快和慢没有多大的区别，只会让我再难受于“我好慢它好快，我是不是x痿了”，helix是个自带丰富功能工具，但是对于习惯homerow的人来说其实用vim mode没有什么增益，只会让我更迷茫“我能直接不动手就能上下了，干啥还要这个hjkl??”。有插件和服务器模式这点就足以胜过helix了。当然我从helix的文档也学到了很多编辑知识，如果没有它的emacs主题和打算用scheme写插件系统，和让我折腾很久的helix eink主题，我也不会有潜移默化现在的编辑技术和极简主题审美了。
   3. 分心小，之前用vimium那就是一个换换换的感觉，总是想去换页面，看看新闻看看新工具，上下跳转，左右腾挪，helix功能太少不能在里面呆太久，而vimium是个浏览器插件在里面呆着又太容易去娱乐， +用vim主要是去youtube参加编辑器神战+ ，helix也好vimium也好。其实我学习emacs，到能快速掌握avy靠得是之前用过vimium，学习surrond/expand靠的是helix，能熟悉info/man/tldr靠得是之前在终端里学习vim。总之emacs必然是编辑技术的一个终点站。
-  4. 定制化，没有一个term emulator支持比例字体的，只有emacs，没有一个editor的主题是可以自己完全定制的，vscode那样的使用javascript还难以控制还过于复杂资源又大的就算了。elisp/fsf/clean/simple，学emacs之前根本不能理解这话! 有些事情得是自己做了才能得之心而应之于手!
+  4. 定制化，没有一个term emulator支持比例字体的，只有emacs，也有人说了为什么用bookerly，就用vscode的什么ubuntumono/nerdfont不好吗? 这我得确实说:“非等宽字绝对好用”，为什么空格得道M一样宽，为什么l和W一样宽? 现在编程/终端处处都是等宽字体，很多人在根本就没用过的情况下痴迷在各种nerdfont间切换并坚持自己的“信仰”，这种信仰只有在用了一个优美的非等宽字体才会破灭。多显示1.45内容? 还是只有0.6896551724137931的丑恶巨大空格? 要用非等宽得到emacs看看，因为没有一个editor的主题是可以自己完全定制的，vscode那样的使用javascript还难以控制还过于复杂资源又大的就算了。elisp/fsf/clean/simple，学emacs之前根本不能理解这话! 有些事情得是自己做了才能得之心而应之于手!
   5. 历史，50年历史的编辑器，计算机史的一页，还能写100年左右。
   6. 装b，(linus/stallman)开源巨人们/(rust/python/java/ruby/curl/各种函数式…)之父们钦定编辑器。
+
+#+caption: mono显示80个字符
+#+ATTR_LATEX: :width 0.8\textwidth
+[[file:figure/monostring.png]]
+
+#+caption: 等高下非等宽显示116个字符
+#+ATTR_LATEX: :width 0.8\textwidth
+[[file:figure/unmonostring.png]]
+
+#+caption: 明显可以看出等宽不符合人的阅读习惯，只有在多行修改(mc)或跳转(avy)中需要字符不变才“稍显有益”。
+#+ATTR_LATEX: :width 0.8\textwidth
+[[file:figure/monocode.png]]
+
+#+caption: 非等宽下，英文字符清晰区别明显，字符间隔小，更优美自然连续
+#+ATTR_LATEX: :width 0.8\textwidth
+[[file:figure/unmonocode.png]]
 
 * 操作系统哲学
 1. network, 471mb hosts to block internet out of my pc with dnsmasq and  dae proxy tool based on epbf... you know I am ill about internet? because I am in china, and the nsfw/trump/4chan dudes, I love they so much, so I add they into my hosts.
@@ -96,14 +112,14 @@ fi
 - home row效率 (home row effiction)
 - general in os(browser, editor)
 #+caption: keymap of my keyboard
-[[file:./figure/keymap.png]]
+[[file:figure/keymap.png]]
 ** 分层
 1. base层，colemak-dh，最快速与舒适的英文布局
 2. nav层，上下左右，快速移动，C-c C-~ 为前缀，emacs快速选择
 3. num层，数字键，控制sway的窗口，与系统剪切板和应用菜单
 4. mos层，鼠标上下左右，C-c C-; 为前缀，一些emacs功能。
 5. sym层，全部符号，gpt prompt与个人信息快速输入层
-6. fun层，function 1/2../12 层
+6. fun层，function 1/2.12 层
 7. med层，提供蓝牙/媒体切换
 ** 本地刷录
 
@@ -114,8 +130,8 @@ fi
 GITHUB_OWNER="NestorLiao"
 GITHUB_REPO="zmk-config"
 GITHUB_TOKEN="$(cat ~/.github_token)"
-ZIP_DEST="./zmk_build.zip"
-UNZIP_DIR="./zmk_build"
+ZIP_DEST="zmk_build.zip"
+UNZIP_DIR="zmk_build"
 
 LEFT_FW="corne_left-nice_nano_v2-zmk.uf2"
 RIGHT_FW="corne_right-nice_nano_v2-zmk.uf2"
@@ -292,11 +308,20 @@ Real Mono Theme, two colors are enough for emacs.
 ** Feels:
 A collection of real monochrome emacs themes in a couple of variants.
 
-[[./figure/real-mono-eink.png]]
-[[./figure/real-mono-dark.png]]
-[[./figure/real-mono-girl.png]]
-[[./figure/real-mono-old.png]]
-[[./figure/real-mono-sea.png]]
+#+ATTR_LATEX: :width 0.2\textwidth
+[[file:figure/real-mono-eink.png]]
+
+#+ATTR_LATEX: :width 0.2\textwidth
+[[file:figure/real-mono-dark.png]]
+
+#+ATTR_LATEX: :width 0.2\textwidth
+[[file:figure/real-mono-girl.png]]
+
+#+ATTR_LATEX: :width 0.2\textwidth
+[[file:figure/real-mono-old.png]]
+
+#+ATTR_LATEX: :width 0.2\textwidth
+[[file:figure/real-mono-sea.png]]
 
 pictures's font list: bookerly, ubuntumono, firacode, terminess,
 bookerly blod ltalic.
@@ -319,6 +344,23 @@ bookerly blod ltalic.
 - (window-divider-mode -1), too, build your memory
 - (display-line-numbers-mode -1), too, build your own eye insight
 #+begin_src elisp
+  (setq hl-todo-keyword-faces
+        '(("HOLD"   . "#000000")
+          ("TODO"   . "#000000")
+          ("NEXT"   . "#000000")
+          ("THEM"   . "#000000")
+          ("PROG"   . "#000000")
+          ("OKAY"   . "#000000")
+          ("DONT"   . "#000000")
+          ("FAIL"   . "#000000")
+          ("DONE"   . "#000000")
+          ("NOTE"   . "#000000")
+          ("MAYBE"  . "#000000")
+          ("KLUDGE" . "#000000")
+          ("HACK"   . "#000000")
+          ("TEMP"   . "#000000")
+          ("FIXME"  . "#000000")
+          ("XXXX*"  . "#000000")))
 (defvar my-alternate-font "-DAMA-UbuntuMono Nerd Font-regular-normal-normal-*-13-*-*-*-m-0-iso10646-1")
 (defvar my-default-font "bookerly")
 (defvar fontfont 1)
