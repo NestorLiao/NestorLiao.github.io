@@ -1,5 +1,7 @@
 ;;; -*- lexical-binding: t -*-
 (setq debug-on-error t)
+(add-to-list 'load-path "~/.emacs.d/elisp")
+(load-theme 'real-mono-eink t)
 (setq-default ;; Use setq-default to define global default
  ;; Who I am
  user-mail-address "llqingsong@qq.com"
@@ -373,8 +375,13 @@
   (org-todo-keywords ;; t要做的，f要修的，e暂时的，a失败的，k有缺陷的，o完成的
    '((sequence  "TODO(t)" "DONE(d)" "|" "FIXME(f)")
      (sequence "TEMP(e)" "FAIL(a)" "KLUDGE(k)"    "|" "OKAY(o)")))
-  :bind (( "C-c a" . org-agenda) ( "C-c l" . org-store-link))
+  :bind (( "C-c a" . org-agenda)
+         ( "C-c l" . org-store-link))
   :config
+  (with-eval-after-load 'org
+    (define-key org-mode-map (kbd "C-,") nil)
+    (define-key org-mode-map (kbd "C-<return>") nil)
+    (define-key org-mode-map (kbd "C-S-<return>") #'org-insert-heading-respect-content))
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((C . t)
@@ -469,6 +476,7 @@
   :ensure t
   :custom
   (buffer-terminator-verbose nil)
+  (buffer-terminator-inactivity-timeout 7200)
   (buffer-terminator-interval 3600)
   :config
   (buffer-terminator-mode 1))
@@ -496,8 +504,6 @@
           ("FIXME"  . "#000000")
           ("XXXX*"  . "#000000"))))
 (use-package quick-sdcv
-  :vc (:url "https://github.com/jamescherti/quick-sdcv.el"
-            :rev :newest)
   :custom
   (quick-sdcv-dictionary-prefix-symbol "►")
   (quick-sdcv-ellipsis " ▼ ")
@@ -561,285 +567,17 @@
   (after-init . save-place-mode)
   :custom
   (save-place-limit 400))
-(use-package yasnippet
-  :ensure t
-  :vc (:url "https://github.com/joaotavora/yasnippet"
-            :rev :newest)
-  :config
+(use-package yasnippet  :config
   (setq yas-snippet-dirs '("~/.config/snippets"))
   (yas-global-mode 1))
-(use-package consult-gh
-  :after consult
-  :custom
-  (consult-gh-confirm-before-clone nil)
-  (consult-gh-default-clone-directory "~/codebase")
-  (consult-gh-ask-for-path-before-save nil)
-  (consult-gh-default-save-directory "~/codebase")
-  (consult-gh-show-preview t)
-  (consult-gh-preview-key "C-o")
-  (consult-gh-repo-action #'consult-gh--repo-browse-files-action)
-  (consult-gh-large-file-warning-threshold 2500000)
-  (consult-gh-confirm-name-before-fork nil)
-  (consult-gh-notifications-show-unread-only nil)
-  (consult-gh-default-interactive-command)
-  (consult-gh-prioritize-local-folder nil)
-  (consult-gh-issues-state-to-show "all") ; show readmes in their original format
-  (consult-gh-group-dashboard-by :reason)
-  (consult-gh-repo-preview-major-mode nil) ; show readmes in their original format
-  (consult-gh-preview-major-mode 'org-mode) ; use 'org-mode for editing comments, commit messages, ...
-  :config(consult-gh-enable-default-keybindings))
-(use-package consult-gh-forge
-  :after consult-gh
-  :config
-  (consult-gh-forge-mode +1))
-(use-package consult-gh-embark
-  :after consult-gh
-  :config
-  (consult-gh-embark-mode +1)
-  (setq consult-gh-forge-timeout-seconds 20))
 (use-package no-emoji
-  :ensure t
   :config
   (setq no-emoji-display-table (make-display-table))
+  (set-face-attribute 'no-emoji nil
+                      :background (face-attribute 'default :background)
+                      :foreground (face-attribute 'default :background)
+                      :height 0.1)
   (global-no-emoji-minor-mode 1))
-(keymap-global-set "s-m" #'switch-to-gptel)
-(keymap-global-set "<Tools>" #'tavily-search)
-(defun switch-to-gptel()
-  (interactive)
-  (if (equal  (current-buffer) (gptel "*deepseek*"))
-      (previous-buffer)
-    (switch-to-buffer "*deepseek*" )))
-(defun tavily-search-async (callback query &optional search-depth max-results exclude_domains country include_domains)
-  "Perform a search using the Tavily API and return results as JSON string.
-API-KEY is your Tavily API key.
-QUERY is the search query string.
-Optional SEARCH-DEPTH is either \"basic\" (default) or \"advanced\".
-Optional MAX-RESULTS is the maximum number of results (default 5)."
-  (require 'plz)
-  (let* ((plz-curl-default-args (cons "-k" plz-curl-default-args))
-         (url "https://api.tavily.com/search")
-         (search-depth (or search-depth "advanced"))
-         (max-results (or max-results 1))
-         (include_anwser  t)
-         (country (or country "united states"))
-         (include_domains (or include_domains '("nixos.org" "freertos.org" "zephyrproject.org" "contiki-ng.org" "riot-os.org" "nuttx.apache.org" "mynewt.apache.org" "ziglang.org" "python.org" "lua.org" "elixir-lang.org" "erlang.org" "haskell.org" "cmake.org" "gnu.org" "llvm.org" "gcc.gnu.org" "qt.io" "gtk.org" "sdl.org" "libsdl.org" "qemu-project.org" "cppreference.com" "opensource.org" "ietf.org" "w3.org" "ansi.org" "iso.org" "ieee.org" "man7.org" "discourse.nixos.org" "ziggit.dev" "emacs-china.org" "lwn.net" "kernel.org" "sourceware.org" "debian.org" "archlinux.org" "github.com" "osdev.org" "opencores.org" "riscv.org" "musl-libc.org" "newlib.sourceware.org" "uclibc-ng.org" "hackaday.com" "raspberrypi.org" "arduino.cc" "espressif.com" "gentoo.org")))
-         (request-data
-          `(("api_key" . ,tavily-api-key)
-            ("query" . ,query)
-            ("search_depth" . ,search-depth)
-            ("country" . ,country)
-            ("include_domains" . ,include_domains)
-            ("include_anwser" . ,include_anwser)
-            ("exclude_domains" . ,exclude_domains)
-            ("max_results" . ,max-results))))
-    (plz 'post url
-         :headers '(("Content-Type" . "application/json"))
-         :body (json-encode request-data)
-         :as 'string
-         :then (lambda (result) (funcall callback result)))))
-(defun tavily-search (query)
-  (interactive "sQuery: ")
-  (tavily-search-async
-   (lambda (result)
-     (let ((buf (get-buffer-create "*tavily-search-result*")))
-       (switch-to-buffer buf)
-       (read-only-mode 0)
-       (erase-buffer)
-       (org-mode)
-       (insert (tavily-result-to-org result))
-       (goto-char (point-min))
-       (read-only-mode 1)
-       (setq-local truncate-lines nil)
-       ))
-   query))
-(defun tavily-result-to-org (json-result)
-  (let* ((data (json-read-from-string json-result))
-         (results (alist-get 'results data)))
-    (mapconcat (lambda (item)
-                 (format "* [[%s][%s]]\n  %s"
-                         (alist-get 'url item)
-                         (alist-get 'title item)
-                         (alist-get 'content item)))
-               results
-               "\n\n")))
-(setq tavily-api-key
-      (with-temp-buffer
-        (insert-file-contents "/run/secrets/tavily_apikey")
-        (buffer-string)))
-(use-package gptel
-  :init
-  (require 'gptel-org)
-  :config
-  (with-eval-after-load 'gptel
-    (gptel-make-tool
-     :category "web"
-     :name "search"
-     :async t
-     :function (lambda (cb keyword)
-                 (tavily-search-async cb keyword "basic" 5 nil nil nil))
-     :description "Search the Internet; If you used any search results, be sure to include the references in your response."
-     :args (list '(:name "keyword"
-                         :type string
-                         :description "The keyword to search")))
-    (gptel-make-tool
-     :name "create_python_repl"
-     :function (lambda ()
-                 (run-python nil t)
-                 (pop-to-buffer (python-shell-get-buffer)))
-     :description "Create a new python repl for this session"
-     :args nil
-     :category "emacs")
-    (gptel-make-tool
-     :name "send_python_to_repl"
-     :function (lambda (code)
-                 (python-shell-send-string code))
-     :args (list '(:name "code"
-                         :type string
-                         :description "python code to execute"))
-     :description "Send some python code to the python repl for this session and execute it"
-     :category "emacs")
-    (gptel-make-tool
-     :function (lambda (url)
-                 (with-current-buffer (url-retrieve-synchronously url)
-                   (goto-char (point-min)) (forward-paragraph)
-                   (let ((dom (libxml-parse-html-region (point) (point-max))))
-                     (run-at-time 0 nil #'kill-buffer (current-buffer))
-                     (with-temp-buffer
-                       (shr-insert-document dom)
-                       (buffer-substring-no-properties (point-min) (point-max))))))
-     :name "read_url"
-     :description "Fetch and read the contents of a URL"
-     :args (list '(:name "url"
-                         :type "string"
-                         :description "The URL to read"))
-     :category "web")
-    (gptel-make-tool
-     :function (lambda (buffer text)
-                 (with-current-buffer (get-buffer-create buffer)
-                   (save-excursion
-                     (goto-char (point-max))
-                     (insert text)))
-                 (format "Appended text to buffer %s" buffer))
-     :name "append_to_buffer"
-     :description "Append text to the an Emacs buffer.  If the buffer does not exist, it will be created."
-     :args (list '(:name "buffer"
-                         :type "string"
-                         :description "The name of the buffer to append text to.")
-                 '(:name "text"
-                         :type "string"
-                         :description "The text to append to the buffer."))
-     :category "emacs")
-    (gptel-make-tool
-     :function (lambda (text)
-                 (message "%s" text)
-                 (format "Message sent: %s" text))
-     :name "echo_message"
-     :description "Send a message to the *Messages* buffer"
-     :args (list '(:name "text"
-                         :type "string"
-                         :description "The text to send to the messages buffer"))
-     :category "emacs")
-    (gptel-make-tool
-     :function (lambda (buffer)
-                 (unless (buffer-live-p (get-buffer buffer))
-                   (error "Error: buffer %s is not live." buffer))
-                 (with-current-buffer  buffer
-                   (buffer-substring-no-properties (point-min) (point-max))))
-     :name "read_buffer"
-     :description "Return the contents of an Emacs buffer"
-     :args (list '(:name "buffer"
-                         :type "string"
-                         :description "The name of the buffer whose contents are to be retrieved"))
-     :category "emacs")
-    (gptel-make-tool
-     :function (lambda (directory)
-                 (mapconcat #'identity
-                            (directory-files directory)
-                            "\n"))
-     :name "list_directory"
-     :description "List the contents of a given directory"
-     :args (list '(:name "directory"
-                         :type "string"
-                         :description "The path to the directory to list"))
-     :category "filesystem")
-    (gptel-make-tool
-     :function (lambda (parent name)
-                 (condition-case nil
-                     (progn
-                       (make-directory (expand-file-name name parent) t)
-                       (format "Directory %s created/verified in %s" name parent))
-                   (error (format "Error creating directory %s in %s" name parent))))
-     :name "make_directory"
-     :description "Create a new directory with the given name in the specified parent directory"
-     :args (list '(:name "parent"
-                         :type "string"
-                         :description "The parent directory where the new directory should be created, e.g. /tmp")
-                 '(:name "name"
-                         :type "string"
-                         :description "The name of the new directory to create, e.g. testdir"))
-     :category "filesystem")
-    (gptel-make-tool
-     :function (lambda (path filename content)
-                 (let ((full-path (expand-file-name filename path)))
-                   (with-temp-buffer
-                     (insert content)
-                     (write-file full-path))
-                   (format "Created file %s in %s" filename path)))
-     :name "create_file"
-     :description "Create a new file with the specified content"
-     :args (list '(:name "path"
-                         :type "string"
-                         :description "The directory where to create the file")
-                 '(:name "filename"
-                         :type "string"
-                         :description "The name of the file to create")
-                 '(:name "content"
-                         :type "string"
-                         :description "The content to write to the file"))
-     :category "filesystem")
-    (gptel-make-tool
-     :function (lambda (filepath)
-                 (with-temp-buffer
-                   (insert-file-contents (expand-file-name filepath))
-                   (buffer-string)))
-     :name "read_file"
-     :description "Read and display the contents of a file"
-     :args (list '(:name "filepath"
-                         :type "string"
-                         :description "Path to the file to read.  Supports relative paths and ~."))
-     :category "filesystem"))
-  (defun ant/gptel-save-buffer ()
-    "Save the current GPTEL buffer with the default directory
-set to ~/note."
-    (interactive)
-    (let ((default-directory "~/Leere/qingsongliao.github.io/"))
-      (call-interactively #'save-buffer)))
-  (defun ant/gptel-load-session ()
-    "Load a gptel session from ~/notes directory."
-    (interactive)
-    (let ((default-directory "~/.leetcode/code/"))
-      (let* ((files (directory-files default-directory t ".+\\.org$"))
-             (file (completing-read "Select session file: " files nil t)))
-        (when file
-          (find-file file)
-          (gptel-mode)))))
-  (setq  gptel-default-mode 'org-mode)
-  (setq deepseek-api-key
-        (with-temp-buffer
-          (insert-file-contents "/run/secrets/deepseek_apikey")
-          (buffer-string)))
-  (setq gptel-model   'deepseek-chat
-        gptel-backend (gptel-make-deepseek "deepseek"
-                        :stream t
-                        :key deepseek-api-key))
-  (require 'url-util)
-  (setq gptel-directives
-        '((default . "You are a large language model living in Emacs and a helpful assistant.")
-          (programming . "You are a large language model and a careful programmer. Provide code and only code as output without any additional text, prompt or note.")
-          (writing . "You are a large language model and a writing assistant. Respond concisely.")
-          (chat . "You are a large language model and a conversation partner. Respond concisely.")
-          (bug . "You are a large language model and a careful programmer. The supplied code doesn't work, or contains bugs. Describe each problem using only one sentence. Provide fixes without changing the old behavior.")))
-  (setq  gptel-stream nil))
 (use-package eww
   :ensure nil
   :config
@@ -852,15 +590,14 @@ set to ~/note."
         shr-inhibit-images t
         shr-width 80
         eww-search-prefix nil
-        url-privacy-level '(email agent cookies lastloc)
+        url-privacy-level 'none
         eww-auto-rename-buffer 'url
         eww-prompt-history '(
                              "http://zig.doc:3003/" ; "https://ziglang.org/documentation/master/"
                              "http://c.doc:3001/" ; "https://en.cppreference.com/w/c"
                              "http://cpp.doc:3002/" ; "https://en.cppreference.com/w/cpp"
-                             "https://ziggit.dev"
                              "http://linux.doc:3000/" ;"https://www.kernel.org/doc/html/latest/"
-                                        ; C-h I "https://www.gnu.org/software/emacs/manual/"
+                             ;; C-h I "https://www.gnu.org/software/emacs/manual/"
                              ))
   (defun my-eww-edit-url ()
     "Edit the current EWW URL and reload the page."
@@ -871,7 +608,7 @@ set to ~/note."
       (setq eww-data (plist-put eww-data :url
                                 (read-string "Edit URL: " current-url)))
       (eww-reload)))
-  (add-hook 'eww-after-render-hook 'eww-readable)
+  (remove-hook 'eww-after-render-hook 'eww-readable)
   :bind (:map eww-mode-map
               ("e" . my-eww-edit-url)))
 (defun extract-base-urls ()
@@ -885,18 +622,6 @@ set to ~/note."
       (with-output-to-temp-buffer "*Base URLs*"
         (dolist (url (delete-dups (nreverse urls)))
           (princ url)
-          (princ "\n"))))))
-(defun extract-html-hrefs ()
-  "Extract all href links from the current HTML buffer, printing them line by line."
-  (interactive)
-  (save-excursion
-    (goto-char (point-min))
-    (let ((links '()))
-      (while (re-search-forward "href=[\"']\\([^\"']+\\)[\"']" nil t)
-        (push (match-string 1) links))
-      (with-output-to-temp-buffer "*HTML Links*"
-        (dolist (link (nreverse links))
-          (princ link)
           (princ "\n"))))))
 (defun url-to-hosts-line ()
   "Convert a URL on the current line to '    0.0.0.0 hostname' format."
@@ -958,8 +683,10 @@ set to ~/note."
               ("<next>" . scroll-up-record)
               ("b" . Info-next-preorder)))
 (setq enable-dir-local-variables nil)
+(setq shell-file-name "bash")
+(setq vterm-shell "fish")
+;; (setq shell-command-switch "-ic")
 (setq shell-command-switch "-c")
-(global-eldoc-mode -1)
 (set-buffer-file-coding-system 'utf-8-unix)
 (setq face-font-rescale-alist '(("Source Han" . 0.9)))
 (defvar my-alternate-font "-DAMA-UbuntuMono Nerd Font-regular-normal-normal-*-13-*-*-*-m-0-iso10646-1")
@@ -984,30 +711,10 @@ set to ~/note."
 (add-hook 'compilation-filter-hook #'my/compilation-filter-hook)
 (defun hibernatecall()
   (interactive)
-  (find-file "~/.hibernate")
-  (goto-char (point-max))  (beginning-of-line)
-  (insert (message "Good Bey! The PC Hibernate At %S\n" (current-time-string)))
-  (setq hibernatetime (current-time))
-  (setq duwake t)
-  (shell-command "systemctl hibernate"))
+  (about-emacs)
+  (call-process "systemctl" nil nil nil "hibernate"))
 (defvar justonebookonetimelessismore "index.org")
 (setq alert-default-style 'libnotify)
-(defun wakeupcall()
-  (interactive)
-  (setq duwake (not duwake))
-  (when duwake (progn
-                 (find-file "~/.hibernate")
-                 (goto-char (point-max))
-                 (beginning-of-line)
-                 (insert (message "Sleep For %S Hour, Have A Nice Day!\n"
-                                  (/ (time-to-seconds (time-since hibernatetime) ) 3600)))
-                 (alert "The fact is the sweetest dream that labor knows.")
-                 (shell-command "paperlike-cli -i2c /dev/i2c-4 -clear")
-                 (delete-other-windows)
-                 (sleep-for 1)
-                 (newday)
-                 (donothing)
-                 (clear-minibuffer-message))))
 (defun xah-clean-whitespace ()
   (interactive)
   (let (xbegin xend)
@@ -1031,12 +738,12 @@ set to ~/note."
   (default-input-method "pyim")
   :config
   (cl-defmethod pyim-page-info-format ((_style (eql minibuffer)) page-info)
-    (string-trim-right (string-replace "(" "" (format "%s %s"
-                                                      (if (plist-get page-info :assistant-enable) " P|" "")
-                                                      (plist-get page-info :candidates)
-                                                      (plist-get page-info :current-page))) "[\)]+" ))
+    (string-replace ")" ""
+     (string-replace "(" "" (format "%s %s"
+                                                      ;; (if (plist-get page-info :assistant-enable) " P|" "")
+                                                      (if (plist-get page-info :assistant-enable)  (plist-get page-info :candidates) "")
+                                                      (if (plist-get page-info :assistant-enable)  (plist-get page-info :current-page) "")))))
   (setq pyim-indicator-list (list #'my-pyim-indicator-with-cursor-color #'pyim-indicator-with-modeline))
-  ;; (setq pyim-english-input-switch-functions '(pyim-probe-program-mode))
   (setq pyim-english-input-switch-functions nil)
   (defun hd()
     "Show hmdz for the word at point."
@@ -1084,10 +791,14 @@ set to ~/note."
 (add-hook 'eshell-mode-hook 'with-editor-export-editor)
 (add-hook 'term-exec-hook   'with-editor-export-editor)
 (add-hook 'vterm-mode-hook  #'with-editor-export-editor)
-(add-hook 'before-save-hook #'xah-clean-whitespace)
+;; (remove-hook 'before-save-hook #'xah-clean-whitespace)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (use-package surround
   :ensure t
+  :bind
+  (("C-<iso-lefttab>" . surround-insert)
+   ("C-M-<tab>" . surround-delete)
+   ("C-s-<tab>" . surround-change))
   :bind-keymap ("C-<tab>" . surround-keymap))
 (use-package consult
   :ensure t
@@ -1114,11 +825,14 @@ set to ~/note."
          ([remap list-buffers] . ibuffer)
          ([remap project-switch-to-buffer] . consult-project-buffer)
          ([remap switch-to-buffer] . consult-buffer)
+         ([remap comment-line] . comment-or-uncomment-region-or-line)
+         ([remap kill-region] . kill-line-or-region)
          ([remap dabbrev-expand] . hippie-expand)
          ([remap yank-pop] . consult-yank-pop)
+         ([remap indent-rigidly] . smart-shift-right)
          ("C-x C-s" . (lambda () (interactive) (save-buffer)(donothing)))
          ("C-<return>" . (lambda () (interactive) (duplicate-dwim)(next-line)))
-         ("C-c C-; q" . disproject-dispatch) ;;; mos
+         ("C-c C-; q" . disproject-dispatch) ;;; MOS
          ("C-c C-; w" . replace-string)
          ("C-c C-; v" . multi-vterm-project)
          ("C-c C-; f" . rg)
@@ -1129,19 +843,17 @@ set to ~/note."
          ("C-c C-; y" . global-hide-mode-line-mode)
          ("C-c C-; '" . gptel-menu)
          ("C-c C-; m" . devdocs-browser-open)
-         ("C-c C-; z" . search-at-point)
          ("C-c C-; c" . compile)
-         ("C-c C-; d" . dired)
-         ("C-c C-; SPC" . indent-rigidly)
-         ("C-c C-~ g" .  er/expand-region) ;;; nav
+         ("C-c C-~ g" .  er/expand-region) ;;; NAV
          ("C-c C-~ m" . toggle-truncate-lines)
          ("C-c C-~ v" .  vertico-flat-mode)
-         ("C-c C-~ b" .  downcase-region)
-         ("C-c C-~ j" .  upcase-initials-region)
+         ("C-c C-~ b" .  donothing)
+         ("C-c C-~ j" .  donothing)
          ("C-c C-~ l" .  recompile)
          ("C-c C-~ u" .  consult-mark)
          ("C-c C-~ y" .  quick-sdcv-search-at-point)
-         ("C-c C-~ '" .  upcase-region)
+         ("C-c C-~ '" .  donothing)
+         ("s-u" .  toggle-letter-case) ;;; NUM
          ;; minor
          ("M-#" . consult-register-load)
          ("M-$" . consult-register-store)
@@ -1154,9 +866,9 @@ set to ~/note."
          ("M-r" . consult-history)
          :map transient-map
          ("M-w". transient-copy-menu-text)))
-(tooltip-mode 1)(delete-selection-mode 1)
-(global-font-lock-mode 1)(global-hide-mode-line-mode 1)
-(show-paren-mode -1)(window-divider-mode 1)(winner-mode -1)
+(tooltip-mode -1)(delete-selection-mode 1)
+(global-font-lock-mode 1)(global-hide-mode-line-mode 1)(global-eldoc-mode -1)
+(show-paren-mode -1)(window-divider-mode -1)(winner-mode -1)
 (repeat-mode -1)(display-time-mode -1)(display-line-numbers-mode -1)
 (use-package face-remap :config (defun text-scale-adjust (inc) (interactive "p") (let ((ev last-command-event) (echo-keystrokes nil) (message-log-max nil)) (let* ((base (event-basic-type ev)) (step (pcase base ((or ?+ ?=) inc) (?- (- inc)) (?0 0) (_ inc)))) (text-scale-increase step) (set-transient-map (let ((map (make-sparse-keymap))) (dolist (mods '(() (control))) (dolist (key '(?+ ?= ?- ?0)) (define-key map (vector (append mods (list key))) (lambda () (interactive) (text-scale-adjust (abs inc)))))) map) nil nil nil)))))
 (use-package easysession
@@ -1250,82 +962,47 @@ set to ~/note."
   (interactive)
   (switch-to-buffer "*New Day, Same Wish*")
   (erase-buffer)
-  (animate-string "- 眼不见生物本能与工业革命驱动的越发泛滥的瘾品失范世界，心为净极简自然身心|黑白断网编程" 0 0)
+  (insert
+   "- 眼不见生物本能与工业革命驱动的越发泛滥的瘾品失范世界，心为净极简自然身心|黑白断网编程
+  远离这几点：随机、即时、不必、匿名、免费、易得、广告、失范
+  做到这几点：多做事、乐观心、吃饭慢、心跳缓、有手劲、走路快、体重适、无三高、
+  衣着素、清淡食、租房住、乡间息、温度低、睡眠香、独处思、归自然、无名言、无社媒
+- 空腹光弱放松|整理计划|静暗凉累|精力充沛|恢复身体|提升大脑|增强免疫|调节激素|健康长寿
+- 避免受伤|养成运动习惯|兼顾力量有氧平衡柔韧|全天保持活动
+  走路|跑步|抡锤|俯卧撑|引体向上
+  摇摆|高拉|相扑|深蹲|拉起|侧拉|划船|起立|绕头|绕身|绕腿|风车
+  拉举|抓举|挺举|弯举|军推|实心推|借力推|单双手|单流水|双抓举|农夫行走
+- 少糖盐油脂加工食品，多绿豆果菜自然有机
+  [大豆|氢化|玉米|芥花]油|反式脂肪
+  [口香糖|高果糖|苏氯胺|阿斯巴甜]糖
+  [油炸|垃圾|高度加工]食品|面[包|条|饼]|奶酒咖
+  番茄|红薯|菜花|香菇|小萝卜|鹰嘴豆|牛油果|夏威夷果
+  肌酸|苹果醋|坚果奶|红曲米|发酵食品|胶原蛋白粉|墨西哥辣椒粉
+  蓝莓|葡萄|柠檬|香菜|大蒜|孜然|菊粉|可可粉|鱼油|特级初榨橄榄油
+- emacs = Evenings, Mornings, And a Couple of Saturdays
+  不随机(c-h/info，全部文档代码给你，你不服就改)
+  不即时(忍住上古体验需是延迟满足高手，编辑器挑人)
+  生存感(人生不过吃睡动和一颗极简又折腾的emacs心)
+  不匿名(写包/做实名贡献，代码为万人所用，成就感拉满)
+  不免费(自由不是免费，自由无私人文精神残存无限计算世界)
+  不易得(当今难得的有难度还有生活具体用处的编程素养积累感)
+  无广告(完全可控纯文本，空无至虚感宇宙计算禅意与人类崇高理想)
+  不失范(极具宗教感，去传教需冥想自省、禁欲克己来数十年如一日修道)
+- 刷leetgo|写project，无色无味不闻不问无欲无求禁游戏戒手机卸浏览器罢搜索恨视频
+  通过阅读lfs/lkd等相关英文文档和kernel最佳编程实践
+  在emacs中使用[c++|c|zig|rust|makefile|bash]-mode和compilation|magit开发:
+  基于多种SOC的linux|rtos的spi、can、wifi、audio、video相关驱动程序和
+  有良好的低功耗设计和稳定性优化的高性能|高并发|多线程|多进程|socket网络程序
+  然后在qemu|docker|k8s|nix环境中使用perf|ftrace|gprof|gdb工具调试程序
+  真实的技术哲学是亲身学会技术底层、真正的人生智慧是用技术找工作然后回到生活远离技术
+  生活是吃饭、睡觉、读书、编程、走路、壶铃，生命是健康、乐观、会意、精进、闲适、力量
+- While the world is tremendously large, the items are anomalously rich,
+  only me writting with leere feeling, ture happiness come from nothing but
+  within.")
+  (beginning-of-buffer)
   (sit-for 1)
-  (animate-string "  远离这几点：随机、即时、不必、匿名、免费、易得、广告、失范" 1 0)
-  (sit-for 1)
-  (animate-string "  做到这几点：多做事、乐观心、吃饭慢、心跳缓、有手劲、走路快、体重适、无三高、" 2 0)
-  (sit-for 1)
-  (animate-string "  衣着素、清淡食、租房住、乡间息、温度低、睡眠香、独处思、归自然、无名言、无社媒" 3 0)
-  (sit-for 1)
-  (animate-string "- 空腹光弱放松|整理计划|静暗凉累|精力充沛|恢复身体|提升大脑|增强免疫|调节激素|健康长寿" 4 0)
-  (sit-for 1)
-  (animate-string "- 避免受伤|养成运动习惯|兼顾力量有氧平衡柔韧|全天保持活动" 5 0)
-  (sit-for 1)
-  (animate-string "  走路|跑步|抡锤|俯卧撑|引体向上" 6 0)
-  (sit-for 1)
-  (animate-string "  摇摆|高拉|相扑|深蹲|拉起|侧拉|划船|起立|绕头|绕身|绕腿|风车" 7 0)
-  (sit-for 1)
-  (animate-string "  拉举|抓举|挺举|弯举|军推|实心推|借力推|单双手|单流水|双抓举|农夫行走" 8 0)
-  (sit-for 1)
-  (animate-string "- 少糖盐油脂加工食品，多绿豆果菜自然有机" 9 0)
-  (sit-for 1)
-  (animate-string "  [大豆|氢化|玉米|芥花]油|反式脂肪" 10 0)
-  (sit-for 1)
-  (animate-string "  [口香糖|高果糖|苏氯胺|阿斯巴甜]糖" 11 0)
-  (sit-for 1)
-  (animate-string "  [油炸|垃圾|高度加工]食品|面[包|条|饼]|奶酒咖" 12 0)
-  (sit-for 1)
-  (animate-string "  番茄|红薯|菜花|香菇|小萝卜|鹰嘴豆|牛油果|夏威夷果" 13 0)
-  (sit-for 1)
-  (animate-string "  肌酸|苹果醋|坚果奶|红曲米|发酵食品|胶原蛋白粉|墨西哥辣椒粉" 14 0)
-  (sit-for 1)
-  (animate-string "  蓝莓|葡萄|柠檬|香菜|大蒜|孜然|菊粉|可可粉|鱼油|特级初榨橄榄油" 15 0)
-  (sit-for 1)
-  (animate-string "- emacs = Eight Mornings And Couple of Saturday" 16 0)
-  (sit-for 1)
-  (animate-string "  不随机(c-h/info，全部文档代码给你，你不服就改)" 17 0)
-  (sit-for 1)
-  (animate-string "  不即时(忍住上古体验需是延迟满足高手，编辑器挑人)" 18 0)
-  (sit-for 1)
-  (animate-string "  生存感(人生不过吃睡动和一颗极简又折腾的emacs心)" 19 0)
-  (sit-for 1)
-  (animate-string "  不匿名(写包/做实名贡献，代码为万人所用，成就感拉满)" 20 0)
-  (sit-for 1)
-  (animate-string "  不免费(自由不是免费，自由无私人文精神残存无限计算世界)" 21 0)
-  (sit-for 1)
-  (animate-string "  不易得(当今难得的有难度还有生活具体用处的编程素养积累感)" 22 0)
-  (sit-for 1)
-  (animate-string "  无广告(完全可控纯文本，空无至虚感宇宙计算禅意与人类崇高理想)" 23 0)
-  (sit-for 1)
-  (animate-string "  不失范(极具宗教感，去传教需冥想自省、禁欲克己来数十年如一日修道)" 24 0)
-  (sit-for 1)
-  (animate-string "- 刷leetgo|写project，无色无味不闻不问无欲无求禁游戏戒手机卸浏览器罢搜索恨视频" 25 0)
-  (sit-for 1)
-  (animate-string "  通过阅读lfs/lkd等相关英文文档和kernel最佳编程实践" 26 0)
-  (sit-for 1)
-  (animate-string "  在emacs中使用[c++|c|zig|rust|makefile|bash]-mode和compilation|magit开发:" 27 0)
-  (sit-for 1)
-  (animate-string "  基于多种SOC的linux|rtos的spi、can、wifi、audio、video相关驱动程序和" 28 0)
-  (sit-for 1)
-  (animate-string "  有良好的低功耗设计和稳定性优化的高性能|高并发|多线程|多进程|socket网络程序" 29 0)
-  (sit-for 1)
-  (animate-string "  然后在qemu|docker|k8s|nix环境中使用perf|ftrace|gprof|gdb工具调试程序" 30 0)
-  (sit-for 1)
-  (animate-string "  真实的技术哲学是亲身学会技术底层、真正的人生智慧是用技术找工作然后回到生活远离技术" 31 0)
-  (sit-for 1)
-  (animate-string "  生活是吃饭、睡觉、读书、编程、走路、壶铃，生命是健康、乐观、会意、精进、闲适、力量" 32 0)
-  (sit-for 1)
-  (animate-string "- While the world is tremendously large, the items are anomalously rich," 33 0)
-  (sit-for 1)
-  (animate-string "  only me writting with leere feeling, ture happiness come from nothing but" 34 0)
-  (sit-for 1)
-  (animate-string "  within." 35 0)
-  (sit-for 1))
-(set-face-attribute 'no-emoji nil
-                    :background (face-attribute 'default :background)
-                    :foreground (face-attribute 'default :background)
-                    :height 0.1)
+  (org-mode)
+  (view-mode))
 (defvar my/leetcode-root "~/Leere/Leetcode/src/"
   "Root directory of leetgo-generated problems.")
 (defun my/leetcode-format-number (n)
@@ -1491,8 +1168,7 @@ To undo, use \\[xref-go-forward]."
     (interactive)
     (let ((history (xref--get-history)))
       (if (null (car history))
-          (previous-buffer)
-        (user-error "At start of xref history, back to previous buffer")
+          (progn (previous-buffer) (user-error "At start of xref history, back to previous buffer"))
         (let ((marker (pop (car history))))
           (xref--push-forward (point-marker))
           (switch-to-buffer (or (marker-buffer marker)
@@ -1547,15 +1223,17 @@ To undo, use \\[xref-go-forward]."
 (use-package forge
   :after magit)
 (keymap-global-set "M-n" 'embark-next-symbol)
+(keymap-global-set "s-m" 'newday)
 (keymap-global-set "M-p" 'embark-previous-symbol)
 (keymap-global-set "M-*" (lambda () (interactive) (my/leetcode-open (string-to-number(current-word)))))
 (keymap-global-set "M-o" (lambda () (interactive)(other-window -1)))
 (keymap-global-set "M-i" 'imenu)
 (keymap-global-set "C-;" 'iedit-mode)
-(define-key org-mode-map (kbd "C-,") nil)
+
 (keymap-global-set "C-," 'toggle-solution-question)
 (keymap-global-set "ESC <f5>" 'hibernatecall)
-(keymap-global-set "<WakeUp>" 'wakeupcall)
+;; (keymap-global-set "<WakeUp>" (lambda () (interactive)(sleep-for 1)(monitor)))
+(keymap-global-set "<WakeUp>" 'donothing)
 (defun toggle-solution-question ()
   "Toggle between solution.cpp and question.org in the same directory."
   (interactive)
@@ -1651,9 +1329,7 @@ To undo, use \\[xref-go-forward]."
     "Qingsong C/C++ Programming Style"
     )
   (c-add-style "Qingsong" Qingsong-style)
-
-  (setq c-default-style "Qingsong")
-
+  (setq c-default-style "stroustrup")
   (advice-add 'c-update-modeline :override #'ignore)
   (defun c-compile-current-file ()
     (interactive)
@@ -1677,11 +1353,202 @@ To undo, use \\[xref-go-forward]."
 (setq confirm-kill-processes nil)
 (defun thunar-open-default-directory ()
   (interactive)
-  (let ((curr-dir (if-let ((curr-line (dired-get-filename nil t)))
+  (let ((curr-dir (if-let* ((curr-line (dired-get-filename nil t)))
                       (file-name-directory curr-line)
                     default-directory)))
     (start-process-shell-command
      "thunar" "*thunar*"
      (concat "thunar " curr-dir))))
-(add-to-list 'load-path "~/.emacs.d/elisp")
-(load-theme 'real-mono-eink t)
+(defun my/get-project-vterm-buffer ()
+  "Return the project vterm buffer, or nil if not exists."
+  (let* ((proj (project-current t))
+         (root (directory-file-name (project-root proj)))
+         (pattern (format "\\*vterminal - %s" (regexp-quote root))))
+    (catch 'found
+      (dolist (buf (buffer-list))
+        (when (string-match pattern (buffer-name buf))
+          (throw 'found buf)))
+      nil)))
+(defun my/ensure-project-vterm ()
+  "Ensure project vterm exists."
+  (let ((buf (my/get-project-vterm-buffer)))
+    (unless buf
+      (multi-vterm-project)
+      (setq buf (my/get-project-vterm-buffer)))
+    buf))
+(defun my/send-to-vterm ()
+  "Send active region or current line to project vterm without touching kill-ring."
+  (interactive)
+  (let* ((text (if (use-region-p)
+                   (buffer-substring-no-properties (region-beginning) (region-end))
+                 (buffer-substring-no-properties (line-beginning-position) (line-end-position))))
+         (vbuf (my/ensure-project-vterm)))
+    (unless vbuf (user-error "No project vterm buffer"))
+    (let ((proc (get-buffer-process vbuf)))
+      (unless proc (user-error "No process for vterm buffer"))
+      (process-send-string proc (concat text "\n")))))
+(defalias 'll 'list-processes)
+(setq epg-pinentry-mode 'loopback)      ;使用minibuffer输入密码
+(defvar wc-regexp-chinese-char-and-punc
+  (rx (category chinese)))
+(defvar wc-regexp-chinese-punc
+  "[。，！？；：「」『』（）、【】《》〈〉※—]")
+(defvar wc-regexp-english-word
+  "[a-zA-Z0-9-]+")
+;;;###autoload
+(defun swint-count-words-region ()
+  (interactive)
+  (let* ((words-to-be-counted (if mark-active
+                                  (buffer-substring-no-properties (region-beginning) (region-end))
+                                (buffer-substring-no-properties (point-min) (point-max)))) ;取全文或mark区域
+         (v-buffer-string
+          (progn
+            (if (eq major-mode 'org-mode) ;去掉org文件的OPTIONS
+                (setq v-buffer-string (replace-regexp-in-string "^#\\+.+" ""
+                                                                words-to-be-counted))
+              (setq v-buffer-string words-to-be-counted))
+            (replace-regexp-in-string (format "^ *%s *.+" comment-start) "" v-buffer-string))) ;把注释行删掉
+         (chinese-char-and-punc 0)
+         (chinese-punc 0)
+         (english-word 0)
+         (chinese-char 0))
+    (with-temp-buffer
+      (insert v-buffer-string)
+      (goto-char (point-min))
+      ;; 中文（含標點、片假名）
+      (while (re-search-forward wc-regexp-chinese-char-and-punc nil :no-error)
+        (setq chinese-char-and-punc (1+ chinese-char-and-punc)))
+      ;; 中文標點符號
+      (goto-char (point-min))
+      (while (re-search-forward wc-regexp-chinese-punc nil :no-error)
+        (setq chinese-punc (1+ chinese-punc)))
+      ;; 英文字數（不含標點）
+      (goto-char (point-min))
+      (while (re-search-forward wc-regexp-english-word nil :no-error)
+        (setq english-word (1+ english-word))))
+    (setq chinese-char (- chinese-char-and-punc chinese-punc))
+    (message
+     (format "中文字数(不含标点)：%s
+中文字数(包含标点)：%s
+英文字数(不含标点)：%s
+========================
+中英文合计(不含标点)：%s
+中英文合计(包含标点)：%s"
+             chinese-char chinese-char-and-punc english-word
+             (+ chinese-char english-word)
+             (+ chinese-char-and-punc english-word)))))
+(defun foot-default-directory (&optional arg)
+  (interactive "P")
+  (let ((curr-dir (if-let* ((curr-line (dired-get-filename nil t)))
+                      (file-name-directory curr-line)
+                    default-directory)))
+    (start-process "Foot" nil shell-file-name shell-command-switch
+                   (concat "foot  -D" "\"" (expand-file-name curr-dir) "\"" ))))
+(defun kill-line-or-region (&optional arg)
+  "Kill the current line, or current text selection."
+  (interactive "p")
+  (if (region-active-p)
+      (kill-region (region-beginning) (region-end))
+    (if arg
+        (kill-region (line-beginning-position) (line-beginning-position (+ arg 1)))
+      (kill-region (line-beginning-position) (line-beginning-position 2)))))
+(defun toggle-letter-case ()
+  "Toggle the letter case of current word or text selection.
+Toggles between: “all lower”, “Init Caps”, “ALL CAPS”."
+  (interactive)
+  (let (p1 p2 (deactivate-mark nil) (case-fold-search nil))
+    (if (region-active-p)
+        (setq p1 (region-beginning) p2 (region-end))
+      (let ((bds (bounds-of-thing-at-point 'word)))
+        (setq p1 (car bds) p2 (cdr bds))))
+    (when (not (eq last-command this-command))
+      (save-excursion
+        (goto-char p1)
+        (cond
+         ((looking-at "[[:lower:]][[:lower:]]") (put this-command 'state "all lower"))
+         ((looking-at "[[:upper:]][[:upper:]]") (put this-command 'state "all caps"))
+         ((looking-at "[[:upper:]][[:lower:]]") (put this-command 'state "init caps"))
+         ((looking-at "[[:lower:]]") (put this-command 'state "all lower"))
+         ((looking-at "[[:upper:]]") (put this-command 'state "all caps"))
+         (t (put this-command 'state "all lower")))))
+    (cond
+     ((string= "all lower" (get this-command 'state))
+      (upcase-initials-region p1 p2) (put this-command 'state "init caps"))
+     ((string= "init caps" (get this-command 'state))
+      (upcase-region p1 p2) (put this-command 'state "all caps"))
+     ((string= "all caps" (get this-command 'state))
+      (downcase-region p1 p2) (put this-command 'state "all lower")))))
+(defun rotate-windows ()
+  "Rotate your windows."
+  (interactive)
+  (cond ((not (> (count-windows)1))
+         (message "You can't rotate a single window!"))
+        (t
+         (setq i 1)
+         (setq numWindows (count-windows))
+         (while  (< i numWindows)
+           (let* (
+                  (w1 (elt (window-list) i))
+                  (w2 (elt (window-list) (+ (% i numWindows) 1)))
+                  (b1 (window-buffer w1))
+                  (b2 (window-buffer w2))
+                  (s1 (window-start w1))
+                  (s2 (window-start w2))
+                  )
+             (set-window-buffer w1 b2)
+             (set-window-buffer w2 b1)
+             (set-window-start w1 s2)
+             (set-window-start w2 s1)
+             (setq i (1+ i)))))))
+(use-package doc-view
+  :defer t
+  :config
+  (setq doc-view-continuous t)
+  :bind (:map doc-view-mode-map
+              ("M-v" . doc-view-scroll-down-or-previous-page)
+              ("C-v" . doc-view-scroll-up-or-next-page)
+              ("C-p" . (lambda () (interactive) (doc-view-previous-line-or-previous-page 3)))
+              ("C-n" . (lambda () (interactive) (doc-view-next-line-or-next-page 3)))))
+(defun cleanup-buffer ()
+  "Perform a bunch of operations on the whitespace content of a buffer.
+Including indent-buffer, which should not be called automatically on save."
+  (interactive)
+  (let ((start (if (region-active-p) (region-beginning) (point-min)))
+        (end (if (region-active-p) (region-end) (point-max))))
+    (untabify start end)
+    (indent-region start end)
+    (xah-clean-whitespace)
+    (call-interactively 'delete-trailing-whitespace)
+    (set-buffer-file-coding-system 'utf-8)))
+(defun comment-or-uncomment-region-or-line ()
+  "Like comment-or-uncomment-region, but if there's no mark \(that means no
+region\) apply comment-or-uncomment to the current line"
+  (interactive)
+  (if (not mark-active)
+      (comment-or-uncomment-region
+       (line-beginning-position) (line-end-position))
+    (if (< (point) (mark))
+        (comment-or-uncomment-region (point) (mark))
+      (comment-or-uncomment-region (mark) (point)))))
+(defvar monitor-state 1
+  "Current monitor state, either 0 for read or  1 for watch.")
+(defun monitor ()
+  "swtich paperlike-hd monitor from read mode to watch mode using paperlike-cli"
+  (interactive)
+  (let ((monitorprotocol "-i2c")
+        (monitorpath "/dev/i2c-4")
+        (monitorcli "paperlike-cli")
+        (monitorarg '("-contrast" "-speed" "-mode" "-clear"))
+        (mode-state '(("9" "5" "1")  ("9" "5" "1"))))
+    (dotimes (number 3)
+      (call-process monitorcli nil nil nil
+                    monitorprotocol
+                    monitorpath
+                    (car (nthcdr number monitorarg))
+                    (car (nthcdr number (car (nthcdr monitor-state  mode-state)))))
+      (sleep-for 1))
+    (setq monitor-state  (if (= 0 monitor-state) 1 0 ))
+    (sleep-for 1)
+    (call-process monitorcli nil nil nil monitorprotocol monitorpath (car (nthcdr 3 monitorarg))))
+  (donothing))
+(global-smart-shift-mode 1)

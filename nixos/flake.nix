@@ -647,7 +647,8 @@
                           };
                           DisableFeedbackCommands = true;
                           SearchEngines.Default = "Google";
-                          DisableFormHistory = true;
+                          # DisableFormHistory = true;
+                          DisableFormHistory = false;
                           AppAutoUpdate = false;
                           DisableAppUpdate = true;
                           BlockAboutAddons = false;
@@ -668,13 +669,13 @@
                                                 #statuspanel { display: none !important; }
                                                 :root[tabsintitlebar] #titlebar:-moz-window-inactive {
                                                   opacity: 1 !important;
-                                        }
+            }
                                                 #TabsToolbar {
                                                 	display: none !important;
-                                      }
+          }
                                                 #navigator-toolbox[fullscreenShouldAnimate] {
                                                     transition: none !important;
-                                    }
+        }
                                                 #contentAreaContextMenu #context-openlinkincurrent,
                                                 #contentAreaContextMenu #context-openlinkinusercontext-menu,
                                                 #contentAreaContextMenu #context-bookmarklink,
@@ -685,7 +686,7 @@
                                                 #contentAreaContextMenu #context-sep-sendpagetodevice,
                                                 #contentAreaContextMenu #context-viewpartialsource-selection {
                                                 	display: none !important;
-                                  }
+      }
                                                 :root {
                                                 	scrollbar-color: #ffffff #FFFFFF;
                                                 	scrollbar-width: none;
@@ -696,7 +697,7 @@
                                                 #TabsToolbar,
                                                 #tabbrowser-tabs {
                                                   background-color: #FFFFFFF !important;
-                            }
+}
                                                 :root{
                                                   --uc-autohide-toolbox-delay: 200ms; /* Wait 0.1s before hiding toolbars */
                                                   --uc-toolbox-rotation: 82deg;  /* This may need to be lower on mac - like 75 or so */
@@ -795,8 +796,10 @@
                             "full-screen-api.warning.delay" = 0;
                             "full-screen-api.warning.timeout" = 0;
                             "browser.tabs.tabClipWidth" = 999;
-                            "places.history.enabled" = false;
-                            "services.sync.engine.history" = false;
+                            # "places.history.enabled" = false;
+                            # "services.sync.engine.history" = false;
+                            "places.history.enabled" = true;
+                            "services.sync.engine.history" = true;
                             "widget.non-native-theme.scrollbar.style" = 3;
                             "ui.key.menuAccessKeyFocuses" = false;
                             "ui.key.menuAccessKey" = 17;
@@ -896,8 +899,8 @@
                               false; # No extension updates
                             "browser.slowStartup.notificationDisabled" =
                               true; # Disable slow startup notifications
-                            "browser.cache.disk.enable" =
-                              false; # Disable disk cache (use memory cache only)
+                            # "browser.cache.disk.enable" =false; # Disable disk cache (use memory cache only)
+                            "browser.cache.disk.enable" =true;
                             "accessibility.force_disabled" =
                               1; # Disable all accessibility features
                             "browser.accessibility.typeaheadfind" =
@@ -983,9 +986,9 @@
                   defaultFonts = rec {
                     emoji = [ "Blobmoji" ];
                     serif = [ "Bookerly" "Source Han Sans SC" "Noto Serif" ]
-                      ++ emoji ++ serifFallback;
+                            ++ emoji ++ serifFallback;
                     sansSerif = [ "Bookerly" "Source Han Sans SC" "Ubuntu" ]
-                      ++ emoji ++ sansFallback;
+                                ++ emoji ++ sansFallback;
                     monospace =
                       [ "Bookerly" "Ubuntu Mono" "Noto Sans Mono CJK SC" ]
                       ++ emoji ++ sansFallback;
@@ -1254,9 +1257,15 @@
                         haskell-mode
                         markdown-mode
                         nix-mode
-                        racket-mode
+                        cargo-mode
                         rust-mode
                         zig-mode
+                        lua-mode
+                        web-mode
+                        racket-mode
+                        python-mode
+                        elixir-mode
+                        erlang
                         ### save and format
                         aggressive-indent
                         elisp-autofmt
@@ -1277,6 +1286,27 @@
                         undo-fu-session
                         iedit
                         shift-number
+                        smart-shift
+                        scala-mode
+                        d-mode
+                        yaml-mode
+                        glsl-mode
+                        tuareg
+                        less-css-mode
+                        graphviz-dot-mode
+                        clojure-mode
+                        csharp-mode
+                        nim-mode
+                        jinja2-mode
+                        purescript-mode
+                        toml-mode
+                        nginx-mode
+                        kotlin-mode
+                        php-mode
+                        qml-mode
+                        typescript-mode
+                        rfc-mode
+                        sml-mode
                       ]) ++ (with epkgs.elpaPackages; [ plz ])
                       ++ (with pkgs; [ ]));
                   };
@@ -1746,7 +1776,7 @@ for_window [app_id='xdg-desktop-portal-gtk'] move position center
                   # Making legacy nix commands consistent as well, awesome!
                   nixPath =
                     lib.mapAttrsToList (key: value: "${key}=${value.to.path}")
-                    config.nix.registry;
+                      config.nix.registry;
                   settings = {
                     substituters = [
                       "https://cache.nixos.org/"

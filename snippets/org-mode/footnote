@@ -2,4 +2,4 @@
 # name: footnote
 # key: <footnote
 # --
-[fn:: {$1}]
+[fn:: ${1}]

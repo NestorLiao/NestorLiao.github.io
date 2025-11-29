@@ -3,50 +3,124 @@ This is my blog and p(pdf)log which written in org and \LaTeX{}, and emacs/nixos
 这是仓库是我的博客也是我用\LaTeX{}写的书，还是我是emacs和nixos配置，代码模板等等等。
 #+begin_src emacs-lisp :tangle yes :results none
 (org-babel-do-load-languages
-'org-babel-load-languages '((emacs-lisp . t)(shell . t)))
+ 'org-babel-load-languages '((emacs-lisp . t)(shell . t)))
 #+end_src
 #+caption: 我能用这代码块重现我的电脑，怎么样? 帅吧!
 #+begin_src sh :results none
 if [[ -f "/home/$USER/.emacs.d" ]] then
-    git clone --depth 1 https://github.com/jamescherti/minimal-emacs.d ~/.emacs.d
+   git clone --depth 1 https://github.com/jamescherti/minimal-emacs.d ~/.emacs.d
 fi
-ln -sf $PWD/nixos/ ~/.config/;
-ln -sf $PWD/snippets ~/.config/;
-ln -sf $PWD/nixos/hmdz.pyim ~/.config/;
-ln -sf $PWD/nixos/post-init.el ~/.emacs.d/;
-if [[ $XAPIAN_CJK_NGRAM != "true" ]] then
-   sudo cp /etc/hardware-configuration.nix $PWD/nixos/hardware-configuration.nix
-   chmod 777 $PWD/nixos/hardware-configuration.nix
-   mkdir -p   $HOME/.config/sops/age
-   cp .keys.txt  $HOME/.config/sops/age/keys.txt
-   sudo nix-channel --add https://nixos.org/channels/nixos-unstable
-   sudo nix-channel --update
-   sudo nixos-rebuild switch --flake /home/$USER/.config/nixos#$hostname  --option substituters 'https://mirrors.ustc.edu.cn/nix-channels/store  https://cache.nixos.org' --cores 6 -j 12;
-fi
+   ln -sf $PWD/nixos/ ~/.config/;
+   ln -sf $PWD/snippets ~/.config/;
+   ln -sf $PWD/nixos/hmdz.pyim ~/.config/;
+   ln -sf $PWD/nixos/post-init.el ~/.emacs.d/;
+   if [[ $XAPIAN_CJK_NGRAM != "true" ]] then
+      sudo cp /etc/hardware-configuration.nix $PWD/nixos/hardware-configuration.nix
+      chmod 777 $PWD/nixos/hardware-configuration.nix
+      mkdir -p   $HOME/.config/sops/age
+      cp .keys.txt  $HOME/.config/sops/age/keys.txt
+      sudo nix-channel --add https://nixos.org/channels/nixos-unstable
+      sudo nix-channel --update
+      sudo nixos-rebuild switch --flake /home/$USER/.config/nixos#$hostname  --option substituters 'https://mirrors.ustc.edu.cn/nix-channels/store  https://cache.nixos.org' --cores 6 -j 12;
+   fi
 #+end_src
 
 这是org的文学编程能力最简单的体现，从c到bash，在一个org文件中能一起运行，神奇吧! 为什么emacs这么强大?大概就是因为它使用的elisp相当“灵”吧，再说为什么emacs这么小众，也大概是它的elisp太“难”了吧。有些人不敢学，怕自己投入又得不到钞票，有些人不能学，他们把自己的心给了别的教派如“vim”“vscode”于是固步自封，自高自大，vim模态天下第一! 我曾同样如此，抱着网上破烂配凑出的neovim，对那些大神的操作流口水但是又没法认同emacs。其实犹豫不定很正常，进入一个陌生的环境，很多怪人怪事，emacs更是如此，你常常不知道那些人口中说的eglot/flycheck/eww是什么?常常写错一些代码。当然这同样也是学习emacs的乐趣，也正是它的陌生带来的新鲜，而且有了chatgpt的帮助，学习起来相当方便。
 
-**** 如果人生还有一次，我还选emacs
-- minimal :: based on the clean and  fast minimal-emacs.
-- purezen :: pure white and black theme written by me called "purezen".
-- reproducible :: package manager is using *nixos*.
-- simple :: just a 1500+ lines of  post-init.el.
-- keyboard  :: for my *ZMK* conifg, the only one soul.
-- effcient :: selecting elegantly like queen and editting fastly like king.
-- zen :: the world is tremendously large, the items are enormously rich, only me along writting with leere feeling, true happiness come from nothing but within.
+** 如果人生还有一次，我还选emacs
+
+我最早听闻Emacs，大概是 2022 年在CSwiki中作者对Emacs的谥美之词“神用编辑器”[fn:: 当然还有大佬们(我)的谥美之词: Python的蛇叔说用Emacs就像是开了几十年的小车/Rust的语言之父(早跑路了)一天60%时间在Emacs中/Ruby作者道“Emacs改变了我的人生”/大概所有函数式语言的作者都得用Emacs… Java的高司今自己写了一个新Emacs，Linus自己维护了MicroEmacs并表示自己安不来那些“有语法高亮”的编辑器。 还别说那些库程序员和知名开发者了，CURL/FFMPEG等作者，FFMPEG的天才程序员也开发了QEMU/先进的Pi算法/用LLM作压缩工具，没错他也写了个Emacs，像是编程Youtuber和游戏开发者们，Tsoding/JonathanBlow/HandMadeHero在直播间用起Emacs是像开了挂。中国前deepin CTO懒猫/小米总监等等也同样的Emacs用户。更别说Richard Stallman了，他开创了GCC/GDB，也开始了Emacs和GNU，开源世界自君开。总之，Emacs是个好玩的计算机历史产物，似乎仍没有过时。]。当时我猎奇心甚为严重，又觉得大家都在用的 VSCode 无法体现我的气质，便先折腾三年Vim/Neovim/Helix后在2024开始自学 Emacs，接触 Emacs先是doom框架后是接近原生的purcell。喜欢换来换去，或许这是年青人的通病。
+
+现在，我已不再年青，却依然喜欢 Emacs就像我曾喜欢一个女生，但她从来不知道。曾经沧海难为水，或许这是人老了之后的通病，而我觉得更可能是因为1978年诞生的 Emacs 依然年青。
+
+** 我告诉你，年轻人啊，学习老掉牙的emacs，就像是金庸小说里的年轻主人公学习失传的武林秘籍一般(只是小说剧情而矣)。
+1) 要我说认为我的Emacs配置有什么特点，大概就是这样几点吧。
+   - minimal: my config based on the clean and  fast minimal-emacs.
+   - zen: a pure white and black theme written by me called "real-mono-theme".
+   - reproducible: package manager is using *NixOS*.
+   - simple: just a post-init.el which less than 2000 lines.
+   - keyboard: for my *ZMK* conifg, only me can use those as flow~
+   - effcient: elegant selecting like queen and fast editting like king.
+
+2) 要我说 *Emacs* 就和与小说里秘传的十八般武林功夫一般，有定身/移形换影/透视经脉/必杀技/念经/修炼/经文/拜师/法宝/女伴/侠义… 甚至武功大概不过如此… 拳脚身头可用的功夫，那里有无限可能的电子计算机的空间大啊?
+   - 动: 插入/切换/输出/笔记/补全/专注/跳转/投修/替换/扩张/行修/选择/整理/重复/变化/比较/潜在
+   - 阅: 简用/单页/全页/源码/图书/用文/说文
+   - 用: 项目/虚拟/日志/中文/终端
+   - 浏: 搜/库/问
+   - 库: Linux/Libc/Posix/C ABI/Network/Algo/Protocols
+
+   - 标题说的有定身/移形换影/透视经脉/必杀技/念经/修炼/经文/拜师/法宝/女伴/侠义，我也确实有的定身view-only/移形换影swtich-buffer/透视经脉describ-function/必杀技kill-emacs/念经read gpl3/修炼rtfm/经文info/拜师rms/法宝list-package/女伴WoMan/侠义contributor。emacs-china 管论坛的用户叫“道友”，似乎就己经点明这点，学习难度大，学习结果虚幻无比，需要气定神闲，天地之间少有人闻，更少有人真正能掌握这一门技术，不叫“道友”怎么说得过去?
+
+3) *Write The Fucking Code*
+   - 心写: org/theme/hide-xx/ligature/no-xx/vertico-flat
+   - 补写: cape/hippie-expand/snippet
+   - 跳写: occur/rg/eglot/imenu/mark/avy/consult/compilation
+   - 横竖: flush/delete/dulicate/sort/move-text  ||  iedit/mc/rectangle
+   - 比缩: diff/ediff/xxx-diff/xxx-merge
+   - 选扩: surround/expand-region/native-mark/mc
+   - 选点: embark/vertico/menu-bar/tooltips/tool-bar
+   - 重复: macro
+   - 切换: dired/find|switch-file/sway/ibuffer/tramp
+   - 替换: replce string|regex
+   - 变换: shift-number/transpose/case-switch/narrow
+   - 内在: save-xxx/xx-mode/envrc/editorconfig/autofmt
+4) *Read The Fridendly Manual*
+   - 源码: eglot/helpful
+   - 用简: tldr
+   - 用文: man/woman
+   - 一页: devdocs
+   - 全页: eww/nginx
+   - 说文: info
+   - 图书: nov/pdf-tool
+5) *Browse The Enshitty Web*
+   - 搜索: tavily
+   - 仓库: consult-gh
+   - 询问: gptel
+   - 交流: gnus/irc/eww
+6) *Use The Minimal Tools*
+   - 工具: magit/git-xx/project/nix/docker/kubernetes
+   - 中文: quicksdcv/pyim
+   - 日志: syslog|journalctl-mode
+   - 终端: vterm/repl/shell
+7) *总之，我试着去思考一下什么是写作与编程，阅读与浏览，内心与外物*
+   - 写作: 需要重复阅读，反复遣词造句，思考上下文人物/事件关系，写作有编辑环节，但那是“编辑”做的事。
+   - 编程: 需要更多更快的查找方式，更多更快的浏览，思考调用/协议的关系，编程需要大量的编辑(indent/上下移动/复制粘贴)。
+   - 阅读: 长文/长时间的专注，资源越少越好，写作应该减少阅读别人的作品。
+   - 浏览: 短文/短时间的专注，资源极多… 想不多都不行… 编程应该大量阅读别人的作品。
+   - 内心: 得之心而应之于手，很多优秀文学作品使用笔和纸写作，计算机都得用键盘，减少了肌肉的使用本身就会带来人的记忆损失。
+   - 外物: 但编程本身就越来越重“外物”，所使用的事物大概都是其他人所写，要依赖上游，依赖工具。写作需要的就只是笔和纸… 相对的 *编程* ，大概没有10个以上的工具是做不完备。
+   - 写作与编程，
+     - 一个大概，一个精确
+     - 一个阅读，一个浏览
+     - 一个重内心，一个重外物
+     - 一个写活人，一个写死物
+     - 现在的人连读书都不愿意了，怎么可以会编程?
+     - 唯一的原因: 写代码来 *钱*
+     - 可钱又带来虚无…
+   - *Emacs* 是让编程更像写作的一件事。
+     - 减少拼音带来的“任务切换占用”，emacs因为全能，完美替代bloate的像搜狗/fcitx那样的系统输入法，再使用五笔之类的输入法，又因为emacs的完全可配置性，使用pyim能只看得到新字不断产生，极大减少了需要选词和弹来弹去的心理负担。
+     - 减少鼠标带来的“肌肉使用减少”，emacs因为按键复杂，替代使用鼠标点击，提高程序员的编辑效率，复杂的使用方式也提高程序员的大脑容量，复杂的按键双手肌肉记忆的交替快速使用提高了程序员的肌肉使用。
+     - 减少依赖，emacs需要的依赖极少，甚至因为emacs的多平台可用性，用好emacs可直接移至更多系统，而不用像用vim之类的软件担心自己shell/term不适配新系统。
+     - 减少控制，越古越好，1978年后，技术很大程序控制了人类，在那个年代，RMS就提出“要么技术控制人类，要么人类控制技术”，这句话放在现在越来越明显，走在街上，走路手机僵尸，看导航的骑车僵尸是越来越多了。
+     - 减少分心，虽然比起写字来说没有那样的一笔一线的专注，但比较VSC那样时不时弹出“M$”提示的软件，emacs可以说是绝对的安静了。
+     - 为emacs写代码不是为钱
+     - 为emacs写代码不是写死物
+     - 为emacs写代码是内心的平静
+     - 为emacs写代码是真诚的阅读
+     - emacs让编程更像是翻页写作
+     - vscode让编程更像是浏览网页
 
 **** 我的编辑器邪教之旅:
 
 浏览器里的vimium C，因为wsl学习的neovim，因为换上nixos后抄的helix配置，因为大四没找工作太闲学的emacs。我每用一个就大呼“我草，早知道，还得是xx!”，然后给同学老师家人都安利安利，给同学说“我有一宝”，给老师说“看我操作”，给家人嘻嘻傻笑像是捡到五百钱。虽然这代表着我非常的闲，但是折腾emacs确实让我不是很闲到以至于抑郁，我还是在用Vimium C和emacs，赋予我闪电切换页面的神奇体验，当然，代价是它们也让我得了一种名为“换页面换buffer”的ADHD，再者，其实不用vim/emacs也会得，只不过叫作“懒得换页面就直接玩手机”ADHD，“懒得折腾电脑就去玩CSgo成了换弹癌”的ADHD。在这个时代，玩csgo和玩emacs有什么区别呢? 一个能炒皮肤，另一个能折腾皮肤，如是而矣。
 
 **** 我使用emacs没有太多原因就只是:
-  1. 依赖少，之前用vim，我就要关心vim键位的app适合用来看pdf，看epub看文档，整vimium和vim一个键位/什么lazygit/tmux/fcitx/alacritty，还生怕它们之间有什么矛盾，关键vimscript也不适合作为灵活的语言，整天很困扰很憋屈，我还折腾colemak、虎码和nixos，我的天，对于任何一个大脑快定型的成年人来说，这简直是噩梦! 幸好有emacs解救我于快捷键地狱中，装包能list-package再一点就安装了，pyim配置虎码就一行的事，那里还要fcitx5怎么怎么样! 自从用了emacs，我再也没有折改过firefox，一是我没时间，二是我就只用emacs的eww，我也就不再在乎什么vimium的键位和vim不一样了， *能用就行* 才是真理! 再说用上了elisp，那才叫美梦成真，想写一个工具简直就比玩手机打游等更有意思多了。什么tmux/lazygit/nixos，现在我只想笑笑，我用vterm/magit/任何平台都能跑emacs不是爽多了吗? 只要给我emacs/编译器，写代码就是轻轻松松的事! emacs改好了我的强迫症和极多主义，现在我心宽又极简，感谢emacs!
-  2. 功能多，之前用helix，虽是开箱即用但是很明显它的功能只限于写代码，快是快但是对我这样的学习困难型人来说，快和慢没有多大的区别，只会让我再难受于“我好慢它好快，我是不是x痿了”，helix是个自带丰富功能工具，但是对于习惯homerow的人来说其实用vim mode没有什么增益，只会让我更迷茫“我能直接不动手就能上下了，干啥还要这个hjkl??”。有插件和服务器模式这点就足以胜过helix了。当然我从helix的文档也学到了很多编辑知识，如果没有它的emacs主题和打算用scheme写插件系统，和让我折腾很久的helix eink主题，我也不会有潜移默化现在的编辑技术和极简主题审美了。
-  3. 分心小，之前用vimium那就是一个换换换的感觉，总是想去换页面，看看新闻看看新工具，上下跳转，左右腾挪，helix功能太少不能在里面呆太久，而vimium是个浏览器插件在里面呆着又太容易去娱乐， +用vim主要是去youtube参加编辑器神战+ ，helix也好vimium也好。其实我学习emacs，到能快速掌握avy靠得是之前用过vimium，学习surrond/expand靠的是helix，能熟悉info/man/tldr靠得是之前在终端里学习vim。总之emacs必然是编辑技术的一个终点站。
-  4. 定制化，没有一个term emulator支持比例字体的，只有emacs，也有人说了为什么用bookerly，就用vscode的什么ubuntumono/nerdfont不好吗? 这我得确实说:“非等宽字绝对好用”，为什么空格得道M一样宽，为什么l和W一样宽? 现在编程/终端处处都是等宽字体，很多人在根本就没用过的情况下痴迷在各种nerdfont间切换并坚持自己的“信仰”，这种信仰只有在用了一个优美的非等宽字体才会破灭。多显示1.45内容? 还是只有0.6896551724137931的丑恶巨大空格? 要用非等宽得到emacs看看，因为没有一个editor的主题是可以自己完全定制的，vscode那样的使用javascript还难以控制还过于复杂资源又大的就算了。elisp/fsf/clean/simple，学emacs之前根本不能理解这话! 有些事情得是自己做了才能得之心而应之于手!
-  5. 历史，50年历史的编辑器，计算机史的一页，还能写100年左右。
-  6. 装b，(linus/stallman)开源巨人们/(rust/python/java/ruby/curl/各种函数式…)之父们钦定编辑器。
+1. 依赖少，之前用vim，我就要关心vim键位的app适合用来看pdf，看epub看文档，整vimium和vim一个键位/什么lazygit/tmux/fcitx/alacritty，还生怕它们之间有什么矛盾，关键vimscript也不适合作为灵活的语言，整天很困扰很憋屈，我还折腾colemak、虎码和nixos，我的天，对于任何一个大脑快定型的成年人来说，这简直是噩梦! 幸好有emacs解救我于快捷键地狱中，装包能list-package再一点就安装了，pyim配置虎码就一行的事，那里还要fcitx5怎么怎么样! 自从用了emacs，我再也没有折改过firefox，一是我没时间，二是我就只用emacs的eww，我也就不再在乎什么vimium的键位和vim不一样了， *能用就行* 才是真理! 再说用上了elisp，那才叫美梦成真，想写一个工具简直就比玩手机打游等更有意思多了。什么tmux/lazygit/nixos，现在我只想笑笑，我用vterm/magit/任何平台都能跑emacs不是爽多了吗? 只要给我emacs/编译器，写代码就是轻轻松松的事! emacs改好了我的强迫症和极多主义，现在我心宽又极简，感谢emacs!
+2. 功能多，之前用helix，虽是开箱即用但是很明显它的功能只限于写代码，快是快但是对我这样的学习困难型人来说，快和慢没有多大的区别，只会让我再难受于“我好慢它好快，我是不是x痿了”，helix是个自带丰富功能工具，但是对于习惯homerow的人来说其实用vim mode没有什么增益，只会让我更迷茫“我能直接不动手就能上下了，干啥还要这个hjkl??”。有插件和服务器模式这点就足以胜过helix了。当然我从helix的文档也学到了很多编辑知识，如果没有它的emacs主题和打算用scheme写插件系统，和让我折腾很久的helix eink主题，我也不会有潜移默化现在的编辑技术和极简主题审美了。
+3. 分心小，之前用vimium那就是一个换换换的感觉，总是想去换页面，看看新闻看看新工具，上下跳转，左右腾挪，helix功能太少不能在里面呆太久，而vimium是个浏览器插件在里面呆着又太容易去娱乐， +用vim主要是去youtube参加编辑器神战+ ，helix也好vimium也好。其实我学习emacs，到能快速掌握avy靠得是之前用过vimium，学习surrond/expand靠的是helix，能熟悉info/man/tldr靠得是之前在终端里学习vim。总之emacs必然是编辑技术的一个终点站。
+4. 定制化，没有一个term emulator支持比例字体的，只有emacs，也有人说了为什么用bookerly，就用vscode的什么ubuntumono/nerdfont不好吗? 这我得确实说:“非等宽字绝对好用”，为什么空格得道M一样宽，为什么l和W一样宽? 现在编程/终端处处都是等宽字体，很多人在根本就没用过的情况下痴迷在各种nerdfont间切换并坚持自己的“信仰”，这种信仰只有在用了一个优美的非等宽字体才会破灭。多显示1.45内容? 还是只有0.6896551724137931的丑恶巨大空格? 要用非等宽得到emacs看看，因为没有一个editor的主题是可以自己完全定制的，vscode那样的使用javascript还难以控制还过于复杂资源又大的就算了。elisp/fsf/clean/simple，学emacs之前根本不能理解这话! 有些事情得是自己做了才能得之心而应之于手!
+5. 历史，50年历史的编辑器，计算机史的一页，还能写100年左右。
+6. 装b，(linus/stallman)开源巨人们/(rust/python/java/ruby/curl/各种函数式…)之父们钦定编辑器。
 
 #+caption: mono显示80个字符
 #+ATTR_LATEX: :width 0.8\textwidth
@@ -64,45 +138,342 @@ fi
 #+ATTR_LATEX: :width 0.8\textwidth
 [[file:figure/unmonocode.png]]
 
+**** 上网必备emacs
+#+caption: the internet capability of me. search/gpt/github and I found they are just trash. use selfhost doc/info/tldr/man/devdocs is way more better.
+#+begin_src emacs-lisp :tangle yes
+(keymap-global-set "s-m" #'switch-to-gptel)
+(keymap-global-set "<Tools>" #'tavily-search)
+(defun switch-to-gptel()
+  (interactive)
+  (if (equal  (current-buffer) (gptel "*deepseek*"))
+      (previous-buffer)
+    (switch-to-buffer "*deepseek*" )))
+
+(defun tavily-search-async (callback query &optional search-depth max-results exclude_domains country include_domains)
+  "Perform a search using the Tavily API and return results as JSON string.
+API-KEY is your Tavily API key.
+QUERY is the search query string.
+Optional SEARCH-DEPTH is either \"basic\" (default) or \"advanced\".
+Optional MAX-RESULTS is the maximum number of results (default 5)."
+  (require 'plz)
+  (let* ((plz-curl-default-args (cons "-k" plz-curl-default-args))
+         (url "https://api.tavily.com/search")
+         (search-depth (or search-depth "advanced"))
+         (max-results (or max-results 1))
+         (include_answer  t)
+         (country (or country "united states"))
+         (include_domains (or include_domains '("nixos.org" "freertos.org" "zephyrproject.org" "contiki-ng.org" "riot-os.org" "nuttx.apache.org" "mynewt.apache.org" "ziglang.org" "python.org" "lua.org" "elixir-lang.org" "erlang.org" "haskell.org" "cmake.org" "gnu.org" "llvm.org" "gcc.gnu.org" "qt.io" "gtk.org" "sdl.org" "libsdl.org" "qemu-project.org" "cppreference.com" "opensource.org" "ietf.org" "w3.org" "ansi.org" "iso.org" "ieee.org" "man7.org" "discourse.nixos.org" "ziggit.dev" "emacs-china.org" "lwn.net" "kernel.org" "sourceware.org" "debian.org" "archlinux.org" "github.com" "osdev.org" "opencores.org" "riscv.org" "musl-libc.org" "newlib.sourceware.org" "uclibc-ng.org" "hackaday.com" "raspberrypi.org" "arduino.cc" "espressif.com" "gentoo.org")))
+         (request-data
+          `(("api_key" . ,tavily-api-key)
+            ("query" . ,query)
+            ("search_depth" . ,search-depth)
+            ("country" . ,country)
+            ("include_domains" . ,include_domains)
+            ("include_answer" . ,include_answer)
+            ("exclude_domains" . ,exclude_domains)
+            ("max_results" . ,max-results))))
+    (plz 'post url
+         :headers '(("Content-Type" . "application/json"))
+         :body (json-encode request-data)
+         :as 'string
+         :then (lambda (result) (funcall callback result)))))
+(defun tavily-search (query)
+  (interactive "sQuery: ")
+  (tavily-search-async
+   (lambda (result)
+     (let ((buf (get-buffer-create "*tavily-search-result*")))
+       (switch-to-buffer buf)
+       (read-only-mode 0)
+       (erase-buffer)
+       (org-mode)
+       (insert result)
+       (insert (tavily-result-to-org result))
+       (goto-char (point-min))
+       (read-only-mode 1)
+       (setq-local truncate-lines nil)
+       ))
+   query))
+(defun tavily-result-to-org (json-result)
+  (let* ((data (json-read-from-string json-result))
+         (results (alist-get 'results data)))
+    (mapconcat (lambda (item)
+                 (format "* [[%s][%s]]\n  %s"
+                         (alist-get 'url item)
+                         (alist-get 'title item)
+                         (alist-get 'content item)))
+               results
+               "\n\n")))
+(setq tavily-api-key
+      (with-temp-buffer
+        (insert-file-contents "/run/secrets/tavily_apikey")
+        (buffer-string)))
+(use-package gptel
+  :init
+  (require 'gptel-org)
+  :config
+  (with-eval-after-load 'gptel
+    (gptel-make-tool
+     :category "web"
+     :name "search"
+     :async t
+     :function (lambda (cb keyword)
+                 (tavily-search-async cb keyword "basic" 5 nil nil nil))
+     :description "Search the Internet; If you used any search results, be sure to include the references in your response."
+     :args (list '(:name "keyword"
+                         :type string
+                         :description "The keyword to search")))
+    (gptel-make-tool
+     :name "create_python_repl"
+     :function (lambda ()
+                 (run-python nil t)
+                 (pop-to-buffer (python-shell-get-buffer)))
+     :description "Create a new python repl for this session"
+     :args nil
+     :category "emacs")
+    (gptel-make-tool
+     :name "send_python_to_repl"
+     :function (lambda (code)
+                 (python-shell-send-string code))
+     :args (list '(:name "code"
+                         :type string
+                         :description "python code to execute"))
+     :description "Send some python code to the python repl for this session and execute it"
+     :category "emacs")
+    (gptel-make-tool
+     :function (lambda (url)
+                 (with-current-buffer (url-retrieve-synchronously url)
+                   (goto-char (point-min)) (forward-paragraph)
+                   (let ((dom (libxml-parse-html-region (point) (point-max))))
+                     (run-at-time 0 nil #'kill-buffer (current-buffer))
+                     (with-temp-buffer
+                       (shr-insert-document dom)
+                       (buffer-substring-no-properties (point-min) (point-max))))))
+     :name "read_url"
+     :description "Fetch and read the contents of a URL"
+     :args (list '(:name "url"
+                         :type "string"
+                         :description "The URL to read"))
+     :category "web")
+    (gptel-make-tool
+     :function (lambda (buffer text)
+                 (with-current-buffer (get-buffer-create buffer)
+                   (save-excursion
+                     (goto-char (point-max))
+                     (insert text)))
+                 (format "Appended text to buffer %s" buffer))
+     :name "append_to_buffer"
+     :description "Append text to the an Emacs buffer.  If the buffer does not exist, it will be created."
+     :args (list '(:name "buffer"
+                         :type "string"
+                         :description "The name of the buffer to append text to.")
+                 '(:name "text"
+                         :type "string"
+                         :description "The text to append to the buffer."))
+     :category "emacs")
+    (gptel-make-tool
+     :function (lambda (text)
+                 (message "%s" text)
+                 (format "Message sent: %s" text))
+     :name "echo_message"
+     :description "Send a message to the *Messages* buffer"
+     :args (list '(:name "text"
+                         :type "string"
+                         :description "The text to send to the messages buffer"))
+     :category "emacs")
+    (gptel-make-tool
+     :function (lambda (buffer)
+                 (unless (buffer-live-p (get-buffer buffer))
+                   (error "Error: buffer %s is not live." buffer))
+                 (with-current-buffer  buffer
+                   (buffer-substring-no-properties (point-min) (point-max))))
+     :name "read_buffer"
+     :description "Return the contents of an Emacs buffer"
+     :args (list '(:name "buffer"
+                         :type "string"
+                         :description "The name of the buffer whose contents are to be retrieved"))
+     :category "emacs")
+    (gptel-make-tool
+     :function (lambda (directory)
+                 (mapconcat #'identity
+                            (directory-files directory)
+                            "\n"))
+     :name "list_directory"
+     :description "List the contents of a given directory"
+     :args (list '(:name "directory"
+                         :type "string"
+                         :description "The path to the directory to list"))
+     :category "filesystem")
+    (gptel-make-tool
+     :function (lambda (parent name)
+                 (condition-case nil
+                     (progn
+                       (make-directory (expand-file-name name parent) t)
+                       (format "Directory %s created/verified in %s" name parent))
+                   (error (format "Error creating directory %s in %s" name parent))))
+     :name "make_directory"
+     :description "Create a new directory with the given name in the specified parent directory"
+     :args (list '(:name "parent"
+                         :type "string"
+                         :description "The parent directory where the new directory should be created, e.g. /tmp")
+                 '(:name "name"
+                         :type "string"
+                         :description "The name of the new directory to create, e.g. testdir"))
+     :category "filesystem")
+    (gptel-make-tool
+     :function (lambda (path filename content)
+                 (let ((full-path (expand-file-name filename path)))
+                   (with-temp-buffer
+                     (insert content)
+                     (write-file full-path))
+                   (format "Created file %s in %s" filename path)))
+     :name "create_file"
+     :description "Create a new file with the specified content"
+     :args (list '(:name "path"
+                         :type "string"
+                         :description "The directory where to create the file")
+                 '(:name "filename"
+                         :type "string"
+                         :description "The name of the file to create")
+                 '(:name "content"
+                         :type "string"
+                         :description "The content to write to the file"))
+     :category "filesystem")
+    (gptel-make-tool
+     :function (lambda (filepath)
+                 (with-temp-buffer
+                   (insert-file-contents (expand-file-name filepath))
+                   (buffer-string)))
+     :name "read_file"
+     :description "Read and display the contents of a file"
+     :args (list '(:name "filepath"
+                         :type "string"
+                         :description "Path to the file to read.  Supports relative paths and ~."))
+     :category "filesystem"))
+  (defun ant/gptel-save-buffer ()
+    "Save the current GPTEL buffer with the default directory
+set to ~/note."
+    (interactive)
+    (let ((default-directory "~/Leere/qingsongliao.github.io/"))
+      (call-interactively #'save-buffer)))
+  (defun ant/gptel-load-session ()
+    "Load a gptel session from ~/notes directory."
+    (interactive)
+    (let ((default-directory "~/.leetcode/code/"))
+      (let* ((files (directory-files default-directory t ".+\\.org$"))
+             (file (completing-read "Select session file: " files nil t)))
+        (when file
+          (find-file file)
+          (gptel-mode)))))
+  (setq  gptel-default-mode 'org-mode)
+  (setq deepseek-api-key
+        (with-temp-buffer
+          (insert-file-contents "/run/secrets/deepseek_apikey")
+          (buffer-string)))
+  (setq gptel-model   'deepseek-chat
+        gptel-backend (gptel-make-deepseek "deepseek"
+                        :stream t
+                        :key deepseek-api-key))
+  (require 'url-util)
+  (setq gptel-directives
+        '((default . "You are a large language model living in Emacs and a helpful assistant.")
+          (programming . "You are a large language model and a careful programmer. Provide code and only code as output without any additional text, prompt or note.")
+          (writing . "You are a large language model and a writing assistant. Respond concisely.")
+          (chat . "You are a large language model and a conversation partner. Respond concisely.")
+          (bug . "You are a large language model and a careful programmer. The supplied code doesn't work, or contains bugs. Describe each problem using only one sentence. Provide fixes without changing the old behavior.")))
+  (setq  gptel-stream nil))
+(use-package consult-gh
+  :after consult
+  :custom
+  (consult-gh-confirm-before-clone nil)
+  (consult-gh-default-clone-directory "~/codebase")
+  (consult-gh-ask-for-path-before-save nil)
+  (consult-gh-default-save-directory "~/codebase")
+  (consult-gh-show-preview t)
+  (consult-gh-preview-key "C-o")
+  (consult-gh-repo-action #'consult-gh--repo-browse-files-action)
+  (consult-gh-large-file-warning-threshold 2500000)
+  (consult-gh-confirm-name-before-fork nil)
+  (consult-gh-notifications-show-unread-only nil)
+  (consult-gh-default-interactive-command)
+  (consult-gh-prioritize-local-folder nil)
+  (consult-gh-issues-state-to-show "all") ; show readmes in their original format
+  (consult-gh-group-dashboard-by :reason)
+  (consult-gh-repo-preview-major-mode nil) ; show readmes in their original format
+  (consult-gh-preview-major-mode 'org-mode) ; use 'org-mode for editing comments, commit messages, ...
+  :config(consult-gh-enable-default-keybindings)
+  (use-package consult-gh-forge
+    :after consult-gh
+    :config
+    (consult-gh-forge-mode +1))
+  (use-package consult-gh-embark
+    :after consult-gh
+    :config
+    (consult-gh-embark-mode +1)
+    (setq consult-gh-forge-timeout-seconds 20))
+  )
+#+end_src
+
 * 操作系统哲学
+
+** 我的操作系统特点
 1. network, 471mb hosts to block internet out of my pc with dnsmasq and  dae proxy tool based on epbf... you know I am ill about internet? because I am in china, and the nsfw/trump/4chan dudes, I love they so much, so I add they into my hosts.
-2. emacs editor, + nixos, they both ruin my early adult life.
-3. wm: sway, minimal config, pure white look, although +miku cursor+, now, I use plain mouse instead.
-4. shell: fish+foot, with all I need in, direnv/many alias/zoxide/git/and thefxxk or thefxxk updated to "chatgpt"'s codex nowadays?
-5. browser: firefox [default uninstall], I use eww because I hate browser.
+2. emacs editor, + nixos, they both ruin my early adult life by distract me away from reality girls.
+3. wm: *sway*, minimal config, pure white look, although +miku cursor+, now, I use plain mouse instead.
+4. shell: *fish+foot* , with all I need in, direnv/many alias/zoxide/git/and thefxxk or thefxxk updated to "chatgpt"'s codex nowadays?
+5. browser: *firefox* [default uninstall], I use eww because I hate browser.
 6. fully reproducible, even with dict/font/anime wallpaper!
 7. zig/linux/ccpp doc  in ngnix, all kind texinfo can read in emacs.
 8. with sops, to store my 0.1 dollar's deepseek account apikey, and chat with my ai girlfriend with my payment passward.
 9. I am tired of nixos, but I can't leave it, because after using nixos eveything is hard to do in other distor, like show off to other distor users "BTW, I use NixOS".
 
-** 用linux只为戒
+** 用linux只为戒色
 翻开中国帝王史，有多少帝王是沉迷女色后国家衰亡，多少帝王是皇太后控制后抑郁早亡。
 野史里选王要的是看他不好色否? 当皇帝得看他有无抢夺妇女。翻开网络史发展，有多少人民群众是沉迷情色后国家衰亡，多少人是被色情控制后抑郁早亡，看人得看他好色否? 好不好色，得看他懂得怎么预防。oppo的天气预报能跳到擦边短剧，bing的结果第一个BMI测试广告中跳到黄色导航，
- 百度误输成baidu.co中进入黄色应用下载，网易看见过全露的黄色直播，B站中处处是擦边广告和直播，微博中卖到各种片，知乎里表露情色隐私更引人浏览，我的世界游戏里用色情披风，淘宝里随便看情趣用品，openai支持成人内容，twitter全是福利姬，就连QQ空间连上擦边广告商，onlyfans比所有ai公司利润更高，pornhub全球流量前10，整个00后的网络被“这到提醒我了”占据，整代女人被商业文化营造黑丝和大胸的“性感”，整代男人被情色文化成为无脑动物与被情欲“冲动”控制，男人就该好色? 女人就该这样美吗? 天下皆知美之为美，斯恶也。互联网33%的流量，70%的男性，30%的女性，90%男性沉迷其中…数字不会说谎，一切已经到来，生存与繁衍不再重要，存在不过是不断刺激感官。不只是色情… 网络带来的问题似乎总是和成瘾有关，赌博/购物/社交/游戏… 就连互联网最自豪的正面形象所谓的“利于学习”也成为了信息过载的社会巨大问题，自由的代价是什么? 自由即是强迫。
+百度误输成baidu.co中进入黄色应用下载，网易看见过全露的黄色直播，B站中处处是擦边广告和直播，微博中卖到各种片，知乎里表露情色隐私更引人浏览，我的世界游戏里用色情披风，淘宝里随便看情趣用品，openai支持成人内容，twitter全是福利姬，就连QQ空间连上擦边广告商，onlyfans比所有ai公司利润更高，pornhub全球流量前10，整个00后的网络被“这到提醒我了”占据，整代女人被商业文化营造黑丝和大胸的“性感”，整代男人被情色文化成为无脑动物与被情欲“冲动”控制，男人就该好色? 女人就该这样美吗? 天下皆知美之为美，斯恶也。互联网33%的流量，70%的男性，30%的女性，90%男性沉迷其中…数字不会说谎，一切已经到来，生存与繁衍不再重要，存在不过是不断刺激感官。不只是色情… 网络带来的问题似乎总是和成瘾有关，赌博/购物/社交/游戏… 就连互联网最自豪的正面形象所谓的“利于学习”也成为了信息过载的社会巨大问题，自由的代价是什么? 自由即是强迫。互联网即是色情。
 
 论我怎么戒色?答:学习技术、理解技术、控制技术，学习自由软件，远离商业软件，拒绝即是自由。
-+ 成瘾源于: 随机|不必|即时|匿名|易得|免费|广告|失范
-+ 通过 *路由器+NixOS* ，不使用手机与笔记本
-  - 时间 :: 限时，2-5PM，足够一天专注
-  - 速度 :: 网速，1Mbps，足够文本传输
-  - 空间 :: 域名，非编程网站，471MB
-  - 强制 :: 禁cache.nixos.org以止系统更新
-+ 软件 使用 *emacs* ，不使用浏览器与IDE
-  - google :: tavily
-  - chatgpt :: gptel
-  - github :: consult-gh
++ 成瘾源于: 随机|不必|即时|匿名|易得|免费|广告|失范，而互联网是完美满足这几点的最佳载体，网络从败坏道德、挠乱法律、刺激心理、久坐身体上来说绝不比烟酒赌淫的伤害少。
++ 通过 *路由器+NixOS* ，一个台式机，不使用手机与笔记本，使用玻璃胶封口，交出手机给他人并禁止其给予手机
+  - 时间 :: 限时，一天三小时，2-5PM，时间甚至过于长了。
+  - 空间 :: 域名，471MB的hosts禁止所有与编程无关或有失范或广告内容的域名。
+  - 速度 :: 网速，1Mbps，足够文本传输。
+  - 强制 :: 禁止，停止cache.nixos.org流量以止系统更新。
+  - 实名 :: 真名，不去键政也不去木马网站，不购物也不怕大数据。
++ 软件 只使用 *Emacs* ，不使用浏览器与IDE，网络浏览有关都减少或禁止使用，它们象征着成瘾
+  - google :: tavily，日常绝不使用，搜索瘾
+  - chatgpt :: gptel，日常绝不使用，询问瘾
+  - firefox :: eww，日常绝不使用，网络瘾
+  - github :: consult-gh，日常绝不使用，偷窥瘾
   - leetcode :: leetgo
-  - firefox :: eww
   - vpn :: dae/dnsmasq
   - obsidian :: org
   - wiki :: nginx/info/tldr/devdocs/man
-+ 硬件 使用 *eink* ，不使用音响与普通键盘
-  - 音乐 :: 无音响
-  - 游游 :: 无显卡
-  - 动漫 :: 无色彩
-  - 社媒 :: 无软件
-  - 购物 :: 无网络
-  - 视频 :: 竖立屏
++ 硬件 只使用 *Eink* 墨水屏，提升对比度至最高到只能浏览文本，不使用音响与普通键盘
+  - 无音乐 :: 无音响，五音令人耳聋
+  - 无游戏 :: 无显卡，驰骋修猎使人心发狂
+  - 无动漫 :: 无色彩，五色令人目盲
+  - 无社媒 :: 无软件，驰骋攸猎使人心发狂
+  - 无购物 :: 无网络，难得之贷使人行妨
+  - 无视频 :: 竖立屏，驰骋攸猎使人心发狂
++ *要么学习技术，要么远离技术*
+  1. 学好一门语言
+  2. 学好数据结构与算法
+  3. 学好一个框架
+  4. 学好magit/github
+  5. 做好一个项目
+  6. 去写一份简历
+  7. 去找一个工作
+
+** 学技术只为戒技术
+没有技术，不会英文，思维局限在资源封闭的中文世界。
+没有技术，不会ADB，改不了手机的成瘾性。你只是应用的奴隶。
+没有技术，不会NixOS，改不了自己电脑操作系统的所有权。你只是M$的奴隶。
+没有技术，不会Emacs，改不了使用Word/Edge/VSCode的痛苦性。你只是M$的奴隶。
+没有技术，不会尝试技术，你怎么会去成长与改变。
+没有技术，不会编程技术，这个时代只有靠别人的脸色吃饭。
+没有技术，不会理解技术，你无法提前预知使用技术带来的后果。
+没有技术，不会反对技术，你将成为社交媒体网络/游戏开发者/色情女主播/新闻贩卖者/购物直播者/焦虑卖课人的奴隶。
+你没有技术，社会不会改变，技术是社会根基，但有了技术心理，怎么会惧怕技术?
 
 * 键盘流哲学
 ** 设计哲学
@@ -125,7 +496,7 @@ fi
 
 #+caption: 1 刷重置， 2刷github action，3刷本地zip文件
 #+begin_src sh
-  #!/usr/bin/env bash
+#!/usr/bin/env bash
 # ===== CONFIGURATION =====
 GITHUB_OWNER="NestorLiao"
 GITHUB_REPO="zmk-config"
@@ -263,7 +634,7 @@ case $1 in
         flash_from_local
         flash_left_right
         ;;
-    *)
+    ,*)
         echo "❌ Invalid mode: $1"
         show_usage
         exit 1
@@ -344,23 +715,23 @@ bookerly blod ltalic.
 - (window-divider-mode -1), too, build your memory
 - (display-line-numbers-mode -1), too, build your own eye insight
 #+begin_src elisp
-  (setq hl-todo-keyword-faces
-        '(("HOLD"   . "#000000")
-          ("TODO"   . "#000000")
-          ("NEXT"   . "#000000")
-          ("THEM"   . "#000000")
-          ("PROG"   . "#000000")
-          ("OKAY"   . "#000000")
-          ("DONT"   . "#000000")
-          ("FAIL"   . "#000000")
-          ("DONE"   . "#000000")
-          ("NOTE"   . "#000000")
-          ("MAYBE"  . "#000000")
-          ("KLUDGE" . "#000000")
-          ("HACK"   . "#000000")
-          ("TEMP"   . "#000000")
-          ("FIXME"  . "#000000")
-          ("XXXX*"  . "#000000")))
+(setq hl-todo-keyword-faces
+      '(("HOLD"   . "#000000")
+        ("TODO"   . "#000000")
+        ("NEXT"   . "#000000")
+        ("THEM"   . "#000000")
+        ("PROG"   . "#000000")
+        ("OKAY"   . "#000000")
+        ("DONT"   . "#000000")
+        ("FAIL"   . "#000000")
+        ("DONE"   . "#000000")
+        ("NOTE"   . "#000000")
+        ("MAYBE"  . "#000000")
+        ("KLUDGE" . "#000000")
+        ("HACK"   . "#000000")
+        ("TEMP"   . "#000000")
+        ("FIXME"  . "#000000")
+        ("XXXX*"  . "#000000")))
 (defvar my-alternate-font "-DAMA-UbuntuMono Nerd Font-regular-normal-normal-*-13-*-*-*-m-0-iso10646-1")
 (defvar my-default-font "bookerly")
 (defvar fontfont 1)
@@ -389,15 +760,16 @@ bookerly blod ltalic.
 - elisp for toggling paperlike-hd to swtich between read and watch.
 
 #+begin_src elisp
-(defvar monitor-state 0
+(defvar monitor-state 1
   "Current monitor state, either 0 for read or  1 for watch.")
 (defun monitor ()
   "swtich monitor from read mode to watch mode"
   (interactive)
-  (let((monitorpath "-i2c  /dev/i2c-4")
-       (monitorcli "paperlike-cli ")
-       (monitorarg '(" -contrast " " -speed " " -mode " " -clear"))
-       (mode-state '(("9" "5" "1")  ("2" "1" "3"))))
+  (let ((monitorprotocol "-i2c")
+        (monitorpath "/dev/i2c-4")
+        (monitorcli "paperlike-cli")
+        (monitorarg '("-contrast" "-speed" "-mode" "-clear"))
+        (mode-state '(("9" "5" "1")  ("9" "5" "1"))))
     (split-window-below)
     (other-window 1)
     (switch-to-buffer "*Shell Command Output*")
@@ -406,23 +778,19 @@ bookerly blod ltalic.
     (switch-to-buffer "*Async Shell Command*")
     (progn
       (dotimes (number 3)
-        (shell-command (concat
-                        monitorcli
-                        monitorpath
-                        (car (nthcdr number monitorarg))
-                        (car (nthcdr number (car (nthcdr monitor-state  mode-state)))))
-                       ))
+        (call-process monitorcli nil nil nil
+                      monitorprotocol
+                      monitorpath
+                      (car (nthcdr number monitorarg))
+                      (car (nthcdr number (car (nthcdr monitor-state  mode-state))))))
       (sleep-for 1))
     (setq monitor-state  (if (= 0 monitor-state) 1 0 ))
     (sleep-for 1.5)
     (sleep-for 0.5)
-    (async-shell-command (concat monitorcli monitorpath " -clear"))
-    (let ((async (get-buffer-window "*Async Shell Command*"))
-          (shell (get-buffer-window "*Shell Command Output*")))
-      (when async (delete-window async))
-      (when shell  (delete-window shell)))
-    (sleep-for 0.5)
-    (kill-buffer "*Async Shell Command*")
-    (kill-buffer "*Shell Command Output*")
-    (donothing)))
+    (call-process monitorcli nil nil nil monitorprotocol monitorpath (car (nthcdr 3 monitorarg))))
+  (sleep-for 0.5)
+  (donothing))
 #+end_src
+
+#+RESULTS:
+: monitor
