@@ -1,4 +1,4 @@
-* 编辑器哲学
+* 编辑器哲学 Editor
 This is my blog and p(pdf)log which written in org and \LaTeX{}, and emacs/nixos config, code snippest and even more, all in just one repo.
 这是仓库是我的博客也是我用\LaTeX{}写的书，还是我是emacs和nixos配置，代码模板等等等。
 #+begin_src emacs-lisp :tangle yes :results none
@@ -29,7 +29,7 @@ fi
 
 ** 如果人生还有一次，我还选emacs
 
-我最早听闻Emacs，大概是 2022 年在CSwiki中作者对Emacs的谥美之词“神用编辑器”[fn:: 当然还有大佬们(我)的谥美之词: Python的蛇叔说用Emacs就像是开了几十年的小车/Rust的语言之父(早跑路了)一天60%时间在Emacs中/Ruby作者道“Emacs改变了我的人生”/大概所有函数式语言的作者都得用Emacs… Java的高司今自己写了一个新Emacs，Linus自己维护了MicroEmacs并表示自己安不来那些“有语法高亮”的编辑器。 还别说那些库程序员和知名开发者了，CURL/FFMPEG等作者，FFMPEG的天才程序员也开发了QEMU/先进的Pi算法/用LLM作压缩工具，没错他也写了个Emacs，像是编程Youtuber和游戏开发者们，Tsoding/JonathanBlow/HandMadeHero在直播间用起Emacs是像开了挂。中国前deepin CTO懒猫/小米总监等等也同样的Emacs用户。更别说Richard Stallman了，他开创了GCC/GDB，也开始了Emacs和GNU，开源世界自君开。总之，Emacs是个好玩的计算机历史产物，似乎仍没有过时。]。当时我猎奇心甚为严重，又觉得大家都在用的 VSCode 无法体现我的气质，便先折腾三年Vim/Neovim/Helix后在2024开始自学 Emacs，接触 Emacs先是doom框架后是接近原生的purcell。喜欢换来换去，或许这是年青人的通病。
+我最早听闻Emacs，大概是 2022 年在CSwiki中作者对Emacs的谥美之词“神用编辑器”[fn:: 当然还有大佬们(我)的谥美之词: Donald Knuth和Python的蛇叔说用Emacs就像是开了几十年的小车/Rust的语言之父(早跑路了)一天60%时间在Emacs中/Ruby作者道“Emacs改变了我的人生”/juila大概所有函数式语言的作者都得用Emacs… Java的高司今自己写了一个新Emacs，Linus自己维护了MicroEmacs并表示自己安不来那些“有语法高亮”的编辑器。 还别说那些库程序员和知名开发者了，CURL/FFMPEG等作者，FFMPEG的天才程序员也开发了QEMU/先进的Pi算法/用LLM作压缩工具，没错他也写了个Emacs，像是编程Youtuber和游戏开发者们，Tsoding/JonathanBlow/HandMadeHero在直播间用起Emacs是像开了挂。中国前deepin CTO懒猫/小米总监等等也同样的Emacs用户。更别说Richard Stallman了，他开创了GCC/GDB，也开始了Emacs和GNU，开源世界自君开。总之，Emacs是个好玩的计算机历史产物，似乎仍没有过时。]。当时我猎奇心甚为严重，又觉得大家都在用的 VSCode 无法体现我的气质，便先折腾三年Vim/Neovim/Helix后在2024开始自学 Emacs，接触 Emacs先是doom框架后是接近原生的purcell。喜欢换来换去，或许这是年青人的通病。
 
 现在，我已不再年青，却依然喜欢 Emacs就像我曾喜欢一个女生，但她从来不知道。曾经沧海难为水，或许这是人老了之后的通病，而我觉得更可能是因为1978年诞生的 Emacs 依然年青。
 
@@ -140,7 +140,7 @@ fi
 
 **** 上网必备emacs
 #+caption: the internet capability of me. search/gpt/github and I found they are just trash. use selfhost doc/info/tldr/man/devdocs is way more better.
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp :tangle yes :results none
 (keymap-global-set "s-m" #'switch-to-gptel)
 (keymap-global-set "<Tools>" #'tavily-search)
 (defun switch-to-gptel()
@@ -409,11 +409,11 @@ set to ~/note."
     :after consult-gh
     :config
     (consult-gh-embark-mode +1)
-    (setq consult-gh-forge-timeout-seconds 20))
-  )
+    (setq consult-gh-forge-timeout-seconds 20)))
 #+end_src
 
-* 操作系统哲学
+
+* 操作系统哲学 Operation System
 
 ** 我的操作系统特点
 1. network, 471mb hosts to block internet out of my pc with dnsmasq and  dae proxy tool based on epbf... you know I am ill about internet? because I am in china, and the nsfw/trump/4chan dudes, I love they so much, so I add they into my hosts.
@@ -475,7 +475,27 @@ set to ~/note."
 没有技术，不会反对技术，你将成为社交媒体网络/游戏开发者/色情女主播/新闻贩卖者/购物直播者/焦虑卖课人的奴隶。
 你没有技术，社会不会改变，技术是社会根基，但有了技术心理，怎么会惧怕技术?
 
-* 键盘流哲学
+* 语言哲学 Language
+** 英文比不上那方块字
+** 什么？编程语言也是语言？
+
+
+- 看一下zig哲学：
+  - Communicate intent precisely.
+  - Edge cases matter.
+  - Favor reading code over writing code.
+  - Only one obvious way to do things.
+  - Runtime crashes are better than bugs.
+  - Compile errors are better than runtime crashes.
+  - Incremental improvements.
+  - Avoid local maximums.
+  - Reduce the amount one must remember.
+  - Focus on code rather than style.
+  - Resource allocation may fail; resource deallocation must succeed.
+  - Memory is a resource.
+  - Together we serve the users.
+
+* 键盘流哲学 Keyboard
 ** 设计哲学
 - 与原生相合 (win)
 - 不冲突 (special prefix)
@@ -672,7 +692,7 @@ echo "✅ All done."
 - Unhook - Remove YouTube Recommended & Shorts :: Hide YouTube related videos, shorts, comments, suggestions wall, homepage
 - Vimium C - All by Keyboard :: A keyboard shortcut tool for keyboard-based page navigation and browser tab
 
-* 屏幕哲学
+* 屏幕哲学 Screen
 
 Real Mono Theme, two colors are enough for emacs.
 

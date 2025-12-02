@@ -2,6 +2,7 @@
 # name: quote
 # key: <q
 # --
-#+begin_quote
+#+ATTR_LATEX: :environment quotation
+#+BEGIN_QUOTE
 $0
-#+end_quote
+#+END_QUOTE

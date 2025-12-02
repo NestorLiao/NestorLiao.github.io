@@ -1,14 +1,25 @@
-* 开发中遇见的各种软件问题
+* 开发中遇见的各种软件问题 TODOList
 *** General Contributions
 #+ATTR_LATEX: :environment introduction
 - [ ] org-mode，提交pr增加INCLUDE的行末倒数行数的行为代码x, 加入mailing-list提出FR
-- [ ] melpa，提交pr增加自己的leetgo package
+- [ ] C-plus-C-plus, 提交leetcode题解
+- [ ] melpa，提交pr增加自己的leetgo package, WIP
 - [X] consult-gh ，提交pr修改readme中的consult-gh-search-code的使用
 - [X] melpa，提交pr增加自己的real-mono-themes
 - [X] nixpkg，提交issue增加biospy等nix生理信号包
-- [X] columndeeply/hosts，提交pr增加17868行新域名,修改脚本为0.0.0.0
+- [X] columndeeply/hosts，提交pr增加17868行新域名, +修改脚本为0.0.0.0+
 - [X] pyim，提交issue修改%报错行为
 - [X] addons.mozilla，eink插件
+
+
+*** TODO write a eww-hook, when I use eww to visit a url, and  if the site(not local file) exsists more than 5 minuts, then download it to a dir I specific.
+*** TODO how to customize face as for specific mode?
+e.g., I want to have default face in calendar or compilation-mode use mono font, but stay my other face use proportional font still...
+I know I can use set-face-attribute but the way of it is do it in globally.
+(set-face-attribute 'no-emoji nil
+                      :background (face-attribute 'default :background)
+                      :foreground (face-attribute 'default :background)
+                      :height 0.1)
 
 *** TODO Advent of code in zig?
 *** TODO package leego elisp package as emacs package
@@ -24,6 +35,8 @@
 - offline test, use pre fetched testcase/makefile/awk to local test tasks.
 - org format, local image, and generally you can easily export all questions.
 - wait I finished doing leetcode
+*** DONE how to have pop out behavior like cape, but for my function's output?
+(completion-in-region (point) (point) (list))
 *** FIXME How to modify org-mode's #+INCLUDE:                :pr:mailinglist:
 **** how to contribute to org
 https://orgmode.org/worg/org-contribute.html

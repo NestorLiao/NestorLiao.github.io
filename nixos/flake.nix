@@ -2,9 +2,11 @@
   description = "My Config";
   nixConfig = {
     builders-use-substitutes = true;
+    # error: unable to download 'https://mirrors.ustc.edu.cn/nix-channels/store/br3nr5ymp1p8k9gn9zljmbnsksikj98l.narinfo': Timeout was reached (28) Resolving timed out after 20281 milliseconds
+    # just plug... usb net or jr45
     experimental-features = [ "nix-command" "flakes" ];
     extra-trusted-substituters =
-      [ "https://cache.nixos.org/" "https://nix-community.cachix.org" ];
+      [ "https://cache.nixos.org" "https://nix-community.cachix.org" ];
     extra-trusted-public-keys = [
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
@@ -30,7 +32,7 @@
             ({ pkgs, config, userSetting, sops, inputs, lib, outputs, ... }:
               let
                 myEmacs =
-                  inputs.emacs-overlay.packages.${pkgs.system}.emacs-git-pgtk.override {
+                  inputs.emacs-overlay.packages.${pkgs.stdenv.hostPlatform.system}.emacs-git-pgtk.override {
                     withNativeCompilation = true;
                     withSQLite3 = true;
                   };
@@ -122,22 +124,6 @@
                 #   template= ''
                 #     #!/usr/bin/env bash
                 # '';
-                zig-doc = pkgs.stdenv.mkDerivation {
-                  name = "zig-documentation";
-                  src = pkgs.fetchurl {
-                    url = "https://ziglang.org/documentation/master/";
-                    # You might want to use fetchzip if it's a zip file, or fetchFromGitHub if available
-                    # For now using fetchurl as placeholder
-                    hash =
-                      "sha256-gtI/hCWfwo4lpp70IXThF9YnfKjP34c9bnJ+TlC/ICk=";
-                  };
-                  dontUnpack = true;
-                  # Add build steps to extract/move files if needed
-                  installPhase = ''
-                    mkdir -p $out
-                    cp $src $out/index.html
-                  '';
-                };
               in {
                 environment.systemPackages = with pkgs; [
                   (writeShellScriptBin "toggle-workspace" toggleWorkspaceScript)
@@ -375,8 +361,7 @@
                           owner = "NestorLiao";
                           repo = "boboly";
                           rev = "master";
-                          sha256 =
-                            "sha256-boN16BYYFY5MWhbLhaqIpumqsi583fIrMp+2Hz3pzqQ=";
+                          sha256 ="sha256-boN16BYYFY5MWhbLhaqIpumqsi583fIrMp+2Hz3pzqQ=";
                         };
                       };
                       home.file.".local/share/fonts/sourcehan" ={
@@ -396,8 +381,7 @@
                             owner = "NestorLiao";
                             repo = "dict";
                             rev = "master";
-                            sha256 =
-                              "sha256-dd9dMrhPa4QeJ58uiLBNhoQy8EfSJrmLj0lpwtygR2U=";
+                            sha256 ="sha256-dd9dMrhPa4QeJ58uiLBNhoQy8EfSJrmLj0lpwtygR2U=";
                           };
                           buildInputs = [ pkgs.unzip ]; # Add unzip as a build input
                           unpackPhase = ''
@@ -408,16 +392,7 @@
                   '';
                         };
                       };
-                      home.file.".config/sway/white.jpg" = {
-                        source = pkgs.fetchurl {
-                          url =
-                            "https://raw.githubusercontent.com/NestorLiao/NestorLiao.github.io/main/figure/gerwinski-gnu-head.png";
-                          sha256 =
-                            "sha256-bG6VGf8tWP2jugWMsiXNcMNAOXN+UvAyNKl2kvXBoFM=";
-                        };
-                      };
                       programs.foot = {
-                        package = pkgs.unstable.foot;
                         server.enable = false;
                         enable = true;
                         settings = {
@@ -595,8 +570,18 @@
                         homeDirectory = "/home/${userSetting.username}";
                       };
                       systemd.user.startServices = "sd-switch";
+                      # [General]
+                      # StartWithLastProfile=1
+                      # Version=2
+                      #
+                      # [Profile0]
+                      # Default=1
+                      # IsRelative=1
+                      # Name=firefox
+                      # Path=firefox
                       programs.firefox = {
                         enable = false;
+                        package= pkgs.firefox-beta;
                         policies = {
                           DisableFirefoxStudies = true;
                           DisablePocket = true;
@@ -1042,31 +1027,26 @@
                 sops.secrets.mojie = { owner = userSetting.username; };
                 sops.secrets.oney = { owner = userSetting.username; };
                 sops.secrets.ouo = { owner = userSetting.username; };
-                networking.extraHosts = '' # 想想jjr吧
-                # 工业革命及其后果，己经成为了廖青松的灾难。
-                   ${builtins.readFile ./nosurf/hosts00} # 眼-色
-                   ${builtins.readFile ./nosurf/hosts01} # 耳-音
-                   ${builtins.readFile ./nosurf/hosts02} # 身-欲
-                   ${builtins.readFile ./nosurf/hosts03} # 鼻-香
-                   ${builtins.readFile ./nosurf/hosts04} # 口-味
-                   ${builtins.readFile ./nosurf/hosts05} # 脑-靡
-                   ${builtins.readFile ./nosurf/hosts06} # 人-弱
+                networking.extraHosts = '' # 其嗜欲深者，其天机浅
+                   ${builtins.readFile ./nosurf/hosts00} # 眼糊
+                   ${builtins.readFile ./nosurf/hosts01} # 耳聋
+                   ${builtins.readFile ./nosurf/hosts02} # 鼻塞
+                   ${builtins.readFile ./nosurf/hosts03} # 舌木
+                   ${builtins.readFile ./nosurf/hosts04} # 触钝
+                   ${builtins.readFile ./nosurf/hosts05} # 心闲
+                   ${builtins.readFile ./nosurf/hosts06} # 为道
                    # 消费主义让我们沉迷于物质/精神消费中，
                    # 通过让我们接触各种光怪陆离的东西来丰富我们的身份认同感，
                    # 这也是当今时代互联网正在加速实现的事情…
                    # 但这是以牺牲掌握任何技能为代价换来的，
                    0.0.0.0 google.com
-                   0.0.0.0 www.google.com
+                   0.0.0.0 www.google.com ＃文灭志，博溺心
                    0.0.0.0 reddit.com
                    0.0.0.0 old.reddit.com
                    0.0.0.0 z-library.sk
                    0.0.0.0 emacs-china.org
                    0.0.0.0 chatgpt.com
                    # 我们沉迷得越深，想要掌握一项技能的愿望就会越来越淡化。
-                   127.0.0.1 linux.doc
-                   127.0.0.1 cpp.doc
-                   127.0.0.1 c.doc
-                   127.0.0.1 zig.doc
                 '';
                 services = {
                   nscd.enable = false;
@@ -1132,7 +1112,7 @@
                     enable = true;
                     settings = {
                       default_session.command =
-                        "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd ${userSetting.windowmanager} --theme 'text=black;container=white;prompt=black;input=black;border=black;title=black;greet=black;action=black;button=black;time=black'";
+                        "${pkgs.tuigreet}/bin/tuigreet --time --cmd ${userSetting.windowmanager} --theme 'text=black;container=white;prompt=black;input=black;border=black;title=black;greet=black;action=black;button=black;time=black'";
                       initial_session = {
                         command = "${userSetting.windowmanager}";
                         user = userSetting.username;
@@ -1170,13 +1150,6 @@
                         root =
                           "${pkgs.cppreference-doc}/share/cppreference/doc/html/en/cpp";
                       };
-                      "zig.doc" = {
-                        listen = [{
-                          addr = "0.0.0.0";
-                          port = 3003;
-                        }];
-                        root = "${zig-doc}";
-                      };
                     };
                   };
                   mysql = {
@@ -1199,7 +1172,8 @@
                     package = emacsWithPackages (epkgs:
                       (with epkgs.melpaStablePackages; [ ])
                       ++ (with epkgs.melpaPackages; [
-                        ### fast MAGIC for jumping everwhere
+
+                        ### black MAGIC to jumping everwhere
                         rg
                         dired-subtree
                         ztree
@@ -1208,32 +1182,39 @@
                         surround
                         expand-region
                         multiple-cursors
+                        iedit
+                        shift-number
+                        smart-shift
                         avy
                         yasnippet
-                        ### project manager
+
+                        ### Do Anything In Emacs©
+                        #### project manager
                         magit
                         magit-todos
                         disproject
                         forge
-                        ### do anything in emacs
                         consult-gh-embark
                         consult-gh-forge
                         consult-gh-with-pr-review
                         docker
                         kubernetes
-                        doxymacs
                         git-link
                         git-timemachine
+                        #### get term
                         vterm
                         multi-vterm
                         with-editor
+                        #### read books
                         nov
                         pdf-tools
                         saveplace-pdf-view
+                        #### chinese input method
                         pyim
+                        #### read log/manual/doc/dict/gpt/... in emacs
+                        doxymacs
                         syslog-mode
                         journalctl-mode
-                        ### read log/manual/dict/gpt/... in emacs
                         quick-sdcv
                         tldr
                         gptel
@@ -1250,22 +1231,42 @@
                         corfu
                         orderless
                         embark-consult
-                        ### for language fans
+                        ### for language fans, and YOU DON'T HAVE TO LEARN THOSE
                         cmake-mode
                         dockerfile-mode
                         go-mode
-                        haskell-mode
                         markdown-mode
                         nix-mode
                         cargo-mode
                         rust-mode
                         zig-mode
-                        lua-mode
-                        web-mode
-                        racket-mode
                         python-mode
-                        elixir-mode
-                        erlang
+                        yaml-mode
+                        ### why I need below mode??? I am no cult dev.
+                        # haskell-mode
+                        # lua-mode
+                        # web-mode
+                        # racket-mode
+                        # elixir-mode
+                        # erlang
+                        # scala-mode
+                        # d-mode
+                        # glsl-mode
+                        # tuareg
+                        # less-css-mode
+                        # graphviz-dot-mode
+                        # clojure-mode
+                        # csharp-mode
+                        # nim-mode
+                        # jinja2-mode
+                        # purescript-mode
+                        # toml-mode
+                        # nginx-mode
+                        # kotlin-mode
+                        # php-mode
+                        # qml-mode
+                        # typescript-mode
+                        # rfc-mode
                         ### save and format
                         aggressive-indent
                         elisp-autofmt
@@ -1284,37 +1285,13 @@
                         easysession
                         undo-fu
                         undo-fu-session
-                        iedit
-                        shift-number
-                        smart-shift
-                        scala-mode
-                        d-mode
-                        yaml-mode
-                        glsl-mode
-                        tuareg
-                        less-css-mode
-                        graphviz-dot-mode
-                        clojure-mode
-                        csharp-mode
-                        nim-mode
-                        jinja2-mode
-                        purescript-mode
-                        toml-mode
-                        nginx-mode
-                        kotlin-mode
-                        php-mode
-                        qml-mode
-                        typescript-mode
-                        rfc-mode
-                        sml-mode
                       ]) ++ (with epkgs.elpaPackages; [ plz ])
                       ++ (with pkgs; [ ]));
                   };
                 };
                 programs.nix-ld = {
                   enable = true;
-                  package = pkgs.unstable.nix-ld;
-                  libraries = with pkgs.unstable; [
+                  libraries = with pkgs; [
                     stdenv.cc.cc
                     openssl.dev
                     pkg-config
@@ -1344,7 +1321,6 @@
                     gtk2
                     gtk3
                     bzip2
-                    libsoup_2_4
                     at-spi2-atk
                     atkmm
                     cairo
@@ -1446,7 +1422,7 @@
                   ];
                 };
                 programs.sway = {
-                  package = pkgs.unstable.sway;
+                  package = pkgs.sway;
                   enable = true;
                   wrapperFeatures.gtk = true;
                 };
@@ -1704,7 +1680,7 @@ for_window [app_id='xdg-desktop-portal-gtk'] move position center
                     enable = true;
                     extraPackages = with pkgs; [
                       intel-media-driver
-                      vaapiIntel # video acceleration on intel inbuilt graphics
+                      intel-vaapi-driver # video acceleration on intel inbuilt graphics
                       vulkan-validation-layers # helps catch and debug vulkan crashes
                     ];
                   };
@@ -1862,7 +1838,7 @@ for_window [app_id='xdg-desktop-portal-gtk'] move position center
       inputs.nixpkgs.follows = "nixpkgs-unstable";
       inputs.nixpkgs-stable.follows = "nixpkgs";
     };
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     home-manager = {
       url = "github:nix-community/home-manager";

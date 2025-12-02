@@ -1,4 +1,4 @@
-* 学技术的哲学
+* 学技术的哲学 Tech Philosophy
 #+ATTR_LATEX: :environment introduction
 - 开始时间：2025-11-19
 - 结束时间:  2026年前
@@ -11,13 +11,13 @@
 人没有梦想那和咸鱼有什么区别呢? ——周星驰
 #+END_QUOTE
 
-** 学习什么技术
+** 学习什么技术 What Tech
 
 #+caption: path-to-know-tech
 |-------------------+--------------+------------------------------------|
 | procress          | url          | for                                |
 |-------------------+--------------+------------------------------------|
-| *fag*             | flag/cintro  | c, pretent iam tsoding             |
+| fag               | flag/cintro  | c, pretent iam tsoding             |
 | embedded C book   | read book    | c, how compiler/os/c works         |
 | Yeetcode          | leetgo/book  | cpp[rust], algo ds, solve task     |
 | paperlike-c/el    | paperlike-go | elisp,paperlike emacs controler    |
@@ -44,7 +44,7 @@
    3. 通信/安全/无依赖/去平台/lora远距离通信-safephone
    4. 交通/电工/电子电路/openstress-去五佰[fn:: 我父亲那边的车行亲戚]那里学修车
 
-** 怎么学习底层技术
+** 怎么学习底层技术 Low-level Tech
 
 1. 第一阶段：打基础（C / Linux / GCC / Emacs）
    - C 语言：学会指针、内存管理、结构体、函数指针；刷一些小项目，比如实现

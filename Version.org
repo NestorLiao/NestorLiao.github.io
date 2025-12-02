@@ -1,4 +1,118 @@
-* 版本更新历史
+* 版本更新历史 Version
+
+\datechange{2025-12-01}{晴}
+#+ATTR_LATEX: :environment change
+- *折腾键盘*: 在我11月末尾，我懒癌犯了总是想些了完全无关技术的事[fn::   要我说 *Emacs* 就和与小说里秘传的十八般武林功夫一般，有定身/移形换影/透视经脉/必杀技/念经/修炼/经文/拜师/法宝/女伴/侠义… 甚至武功大概不过如此… 拳脚身头可用的功夫，那里有无限可能的电子计算机的空间大啊? 于是我花了很长时间思考“到底编辑的招法何在”，得到了下面的招式：动: 插入/切换/输出/笔记/补全/主题/跳转/投修/替换/扩张/行修/选择/整理/重复/变化/比较/潜在，阅: 简用/单页/全页/源码/图书/用文/说文，用: 项目/虚拟/日志/中文/终端，浏: 搜/库/问]。今天我又搞些无关技术的事，重写了键盘的配置，重设了emacs的bind。
+#+caption: 我也不知道为什么，“明明想的是高效”，最后搞得这么bloate…
+#+begin_src elisp
+         ([remap imenu] . consult-imenu)
+         ([remap kill-buffer] . kill-buffer-and-window)
+         ([remap list-buffers] . ibuffer)
+         ([remap project-switch-to-buffer] . consult-project-buffer)
+         ([remap switch-to-buffer] . consult-buffer)
+         ([remap comment-line] . comment-or-uncomment-region-or-line)
+         ([remap kill-region] . kill-line-or-region)
+         ([remap dabbrev-expand] . cape-dabbrev)
+         ([remap yank-pop] . consult-yank-pop)
+         ([remap indent-rigidly] . smart-shift-right)
+         ("C-x C-s" . (lambda () (interactive) (save-buffer)(donothing)))
+         ("C-<return>" . (lambda () (interactive) (duplicate-dwim)(next-line)))
+         ("C-M-<return>" . copy-from-above-command)
+         ("C-<iso-lefttab>" . surround-insert)
+         ("C-M-<tab>" . surround-delete)
+         ("C-s-<tab>" . surround-change)
+
+         ;; No Need "qbj'" , they are finger killers
+         ;; MOS
+         ;; a comment  c-x c-;
+         ;; r quit c-g
+         ;; s find-file c-x c-f
+         ;; t switch-buffer c-x b
+         ;; b ibuffer  c-x c-b
+
+         ("C-c C-; d" .  dired)
+         ("C-c C-; p" . disproject-dispatch)
+         ("C-c C-; u" . delete-all-space)
+         ("C-c C-; z" . isearch-forward-symbol-at-point)
+         ("C-c C-; k" . kill-buffer-and-window)
+         ("C-c C-; g" . magit-status)
+         ("C-c C-; f" . rg-dwim)
+         ("C-c C-; y" . yas-insert-snippet)
+         ("C-c C-; v" . multi-vterm-project)
+         ("C-c C-; m" . devdocs-browser-open)
+
+         ("C-c C-; x" . consult-complex-command)
+         ("C-c C-; c" . cleanup-buffer)
+         ("C-c C-; l" . git-link-dispatch)
+         ("C-c C-; w" . (lambda () (interactive) (message "%s : %s" (what-line)(current-column))))
+
+         ("C-c C-; '" . donothing)      ; b for ibuffer
+         ("C-c C-; q" . donothing)
+         ("C-c C-; j" . donothing)
+
+         ;; NAV
+         ("C-c C-~ z" .  delete-window)
+         ("C-c C-~ x" .  delete-other-windows)
+         ("C-c C-~ c" .  split-window-below)
+         ("C-c C-~ d" .  recompile)
+         ("C-c C-~ u" . consult-mark)
+         ("C-c C-~ l" .  magit-log-buffer-file)
+         ("C-c C-~ y" .  quick-sdcv-search-at-point)
+         ("C-c C-~ g" .  er/expand-region)
+
+         ("C-c C-~ w" . consult-org-agenda)
+         ("C-c C-~ v" . compile)
+         ("C-c C-~ p" . (lambda () (interactive) (consult-fd "~/Zen/C/" nil)))
+         ("C-c C-~ f" . toggle-letter-case)
+         ("C-c C-~ m" . man)
+
+         ("C-c C-~ q" .  donothing)
+         ("C-c C-~ b" .  (lambda () (interactive) (consult-ripgrep "~/Zen/C/" nil)))
+         ("C-c C-~ j" .  donothing)
+         ("C-c C-~ '" .  donothing)
+
+         ;; get sym back, all kind of toggles
+         ("C-c C-& l" . my-toggle-font)
+         ("C-c C-& u" . vertico-flat-mode)
+         ("C-c C-& y" . global-hide-mode-line-mode)
+         ("C-c C-& m" . toggle-truncate-lines)
+         ("C-c C-& k" . describe-key)
+         ("C-c C-& h" . git-timemachine-toggle)
+         ("C-c C-& ," . toggle-input-method)
+         ("C-c C-& ." . pyim-toggle-input-ascii)
+         ("C-c C-& /" . pyim-punctuation-toggle)
+
+         ("C-c C-& '" . donothing)      ; q and b used on sym layer
+         ("C-c C-& j" . donothing)
+
+         ;; minor
+         ("M-n". embark-next-symbol)
+         ("M-p". embark-previous-symbol)
+         ("M-*". (lambda () (interactive) (my/leetcode-open (string-to-number(current-word)))))
+         ("M-I" . consult-imenu-multi)
+         ("M-i". imenu)
+         ("M-o". other-window)
+         ("M-O". (lambda () (interactive) (other-window -1)))
+         ("C-;". iedit-mode)
+         ("C-,". toggle-solution-question)
+         ("ESC <f5>". hibernatecall)
+         ("<WakeUp>". donothing)
+         ("M-#" . consult-register-load)
+         ("M-$" . consult-register-store)
+         ("C-M-#" . consult-register)
+         ("M-g g" . consult-goto-line)
+         ("M-s u" . consult-global-mark)
+         ("M-s O" . multi-occur)
+         :map isearch-mode-map
+         ("M-r" . consult-isearch-history)
+         :map minibuffer-local-map
+         ("M-r" . consult-history)
+         :map transient-map
+         ("M-w". transient-copy-menu-text)))
+#+end_src
+
+
+
 \datechange{2025-11-25}{晴}
 #+ATTR_LATEX: :environment change
 - *走路*: 晚上和母亲一起在江边走路，她抱怨太远了，脚得走痛了，但还是我陪走完了一圈。我想我是很幸福的，有这样的母亲，虽然嘴碎但还是能陪伴我一行，在冷清的江边，只有两三个跑者与我俩，冬天好像萧条不少。我抡或背着二锤，吃了两个别人落下的柑子，敲敲死树、木桩，在草坪上练练投掷，作壶铃溜两下，中午还曾晒过太阳，晚上吃了红烧鱼，一天就这样，简单。简单也没什么不好，看着那些黄毛和抽烟的女友在摩托上追江风，也许他们的母亲就没有这样的耐心了，当然也许他们自己也无法耐受半小时的无聊，母亲不爱自己放荡的儿子，儿子不耐自己老气的母亲。吹着江风，默默无语的草和人在行走着，灯光亮着一路，一切干净又闲适，又有什么无聊呢?

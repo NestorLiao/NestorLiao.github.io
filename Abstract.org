@@ -49,7 +49,7 @@
 #+ATTR_LATEX: :width 0.8\textwidth
 [[file:figure/free-your-soul-wallpaper.jpg]]
 
-* 被技术改变的生活
+* 被技术改变的生活 Tech Life
 
 #+begin_verse
 -10000000005年，一切都变了。宇宙诞生了。

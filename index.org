@@ -6,8 +6,20 @@
 #+INCLUDE: "./README.org" :minlevel 1
 # 1. 通过Tsoding的项目学习 C语言
 #+INCLUDE: "../CPP/fog/README.org" :minlevel 1
+# 1.5 通过Advent of Code 学习 Zig语言
+
+# ziglings -> zig, language basic -> clings
+# aoc -> zig, solving problem
+# leetcode -> c++'s stl -> zig the-algorithm
+# flag.h/nob.h -> c's code ability -> rewrite in zig
+# paperlike -> go/c/zig/elisp, implementation of thing
+# rtos -> zig, even harder
+# phone -> zig, even harder
+# r2s/lfs/rasberry-pi/lora/eink/game dev/...
+
+#+INCLUDE: "../AoC/README.org" :minlevel 1
 # 2. 刷 Leetcode C++语言
-#+INCLUDE: "../Leetcode/README.org" :minlevel 1
+# #+INCLUDE: "../Leetcode/README.org" :minlevel 1
 # 3. 还有 操作系统相关学习
 # 学习进度自检，写点学了什么，做了什么?
 #+INCLUDE: "./Version.org" :minlevel 1

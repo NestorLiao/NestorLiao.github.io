@@ -6,6 +6,8 @@
  ;; Who I am
  user-mail-address "llqingsong@qq.com"
  user-full-name "Qingsong Liao"
+ calendar-longitude +106.5
+ calendar-latitude +29.5
  ;; Enable all disabled commands
  disabled-command-function nil
  word-wrap-by-category t
@@ -85,6 +87,9 @@
  confirm-kill-emacs 'y-or-n-p
  dictionary-server "localhost"
  browse-url-firefox-program "firefox-beta"
+ browse-url-firefox-arguments "-P firefox"
+ browse-url-new-window-flag nil
+ browse-url-firefox-new-window-is-tab t
  dired-movement-style 'cycle
  line-number-mode t
  column-number-mode t
@@ -96,7 +101,7 @@
  ;;; no message of revert buffer
  auto-revert-verbose nil
  ;;; no fringe bookmark
- bookmark-fringe-mark t
+ bookmark-fringe-mark nil
  ;;; wdired
  wdired-allow-to-change-permissions t
  wdired-create-parent-directories t
@@ -108,8 +113,152 @@
  tooltip-hide-delay 20
  tooltip-delay 0.4
  tooltip-short-delay 0.08
- org-latex-compiler "xelatex")
+ org-latex-compiler "xelatex"
+ compilation-window-height 5
+ woman-fill-column 80
+ Man-width 80
+ compilation-auto-jump-to-first-error nil)
 (require 'use-package)
+(use-package consult
+  :ensure t
+  :hook (completion-list-mode . consult-preview-at-point-mode)
+  :init
+  (setq register-preview-delay 0.5)
+  (setq register-preview-function #'consult-register-format)
+  (setq xref-show-xrefs-function #'consult-xref)
+  (setq xref-show-definitions-function #'consult-xref)
+  (advice-add #'register-preview :override #'consult-register-window)
+  :config
+  (move-text-default-bindings)
+  (use-package surround :bind-keymap ("C-<tab>" . surround-keymap))
+  (consult-customize
+   consult-theme :preview-key '(:debounce 0.2 any)
+   consult-ripgrep consult-git-grep consult-grep
+   consult-bookmark consult-recent-file consult-xref
+   consult--source-bookmark consult--source-file-register
+   consult--source-recent-file consult--source-project-recent-file
+   :preview-key '(:debounce 0.4 any))
+  (setq consult-narrow-key "<")
+  :bind (
+
+         ([remap comment-line] . comment-or-uncomment-region-or-line)
+         ([remap dabbrev-expand] . hippie-expand)
+         ([remap imenu] . consult-imenu)
+         ([remap indent-rigidly] . smart-shift-right)
+         ([remap kill-region] . kill-line-or-region)
+         ([remap list-buffers] . ibuffer)
+         ([remap project-switch-to-buffer] . consult-project-buffer)
+         ([remap switch-to-buffer] . consult-buffer)
+         ([remap yank-pop] . consult-yank-pop)
+
+         ("C-<backspace>" . avy-goto-word-0)
+         ("C-<iso-lefttab>" . surround-insert)
+         ("C-<return>" . (lambda () (interactive) (duplicate-dwim)(next-line)))
+         ("C-M-<return>" . copy-from-above-command)
+         ("C-M-<tab>" . surround-delete)
+         ("C-S-<return>" . avy-goto-line)
+         ("C-s-<tab>" . surround-change)
+         ("C-x C-s" . (lambda () (interactive) (save-buffer)(donothing)))
+         ("S-<return>" . comment-indent-new-line)
+
+         ;; No Need "qbj'" , they are finger killers
+         ;; MOS
+         ;; a comment  c-x c-;
+         ;; r quit c-g
+         ;; s find-file c-x c-f
+         ;; t switch-buffer c-x b
+         ;; b ibuffer  c-x c-b
+
+         ("C-c C-; d" .  dired)
+         ("C-c C-; f" . rg-dwim)
+         ("C-c C-; g" . magit-status)
+         ("C-c C-; k" . kill-current-buffer)
+         ("C-c C-; m" . devdocs-browser-open)
+         ("C-c C-; p" . disproject-dispatch)
+         ("C-c C-; u" . delete-all-space)
+         ("C-c C-; v" . multi-vterm-project)
+         ("C-c C-; y" . yas-insert-snippet)
+         ("C-c C-; z" . isearch-forward-symbol-at-point)
+
+         ("C-c C-; x" . consult-complex-command)
+         ("C-c C-; c" . cleanup-buffer)
+         ("C-c C-; l" . git-link-dispatch)
+         ("C-c C-; w" . (lambda () (interactive)     (completion-in-region (point) (point) (list
+                                                                                            (format "P: %s : %s" (line-number-at-pos)(current-column))
+                                                                                            (format "%s" (if (equal major-mode 'dired-mode) default-directory (buffer-file-name)))
+                                                                                            (format "%s" (buffer-name))
+                                                                                            ;; (format "%s" (current-time-string))
+                                                                                            ;; (format "S: %s" easysession--current-session-name)
+                                                                                            ))))
+
+         ("C-c C-; '" . donothing)      ; b for ibuffer
+         ("C-c C-; q" . donothing)
+         ("C-c C-; j" . donothing)
+
+         ;; NAV
+         ("C-c C-~ c" .  split-window-below)
+         ("C-c C-~ d" .  recompile)
+         ("C-c C-~ g" .  er/expand-region)
+         ("C-c C-~ l" .  magit-log-buffer-file)
+         ("C-c C-~ u" . consult-mark)
+         ("C-c C-~ x" .  delete-other-windows)
+         ("C-c C-~ y" .  quick-sdcv-search-at-point)
+         ("C-c C-~ z" .  delete-window)
+
+         ("C-c C-~ f" . consult-line)
+         ("C-c C-~ k" . consult-bookmark)
+         ("C-c C-~ m" . man)
+         ("C-c C-~ p" . (lambda () (interactive) (consult-fd "~/Zen/C/" nil)))
+         ("C-c C-~ v" . compile)
+         ("C-c C-~ w" . consult-org-agenda)
+
+         ("C-c C-~ q" .  donothing)
+         ("C-c C-~ b" .  (lambda () (interactive) (consult-ripgrep "~/Zen/C/" nil)))
+         ("C-c C-~ j" .  donothing)
+         ("C-c C-~ '" .  donothing)
+
+         ;; get sym back, all kind of toggles
+         ("C-c C-& l" . my-toggle-font)
+         ("C-c C-& u" . vertico-flat-mode)
+         ("C-c C-& y" . global-hide-mode-line-mode)
+         ("C-c C-& m" . toggle-truncate-lines)
+         ("C-c C-& k" . toggle-letter-case)
+         ("C-c C-& h" . git-timemachine-toggle)
+         ("C-c C-& ," . toggle-input-method)
+         ("C-c C-& ." . calculator)
+         ("C-c C-& /" . avy-isearch)
+
+         ("C-c C-& '" . donothing)      ; q and b used on sym layer
+         ("C-c C-& j" . donothing)
+
+         ;; minor
+         ("M-n". embark-next-symbol)
+         ("M-p". embark-previous-symbol)
+         ("C-v". (lambda() (interactive)(recenter-top-bottom 0)))
+         ("M-v". (lambda() (interactive)(recenter-top-bottom 38)))
+         ("M-*". my/leetcode-open)
+         ;; ("M-*". (lambda () (interactive) (my/leetcode-open (string-to-number(current-word)))))
+         ("M-I" . consult-imenu-multi)
+         ("M-i". imenu)
+         ("M-o". other-window)
+         ("M-O". (lambda () (interactive) (other-window -1)))
+         ("C-;". iedit-mode)
+         ("C-,". toggle-solution-question)
+         ("ESC <f5>". hibernatecall)
+         ("<WakeUp>". donothing)
+         ("M-#" . consult-register-load)
+         ("M-$" . consult-register-store)
+         ("C-M-#" . consult-register)
+         ("M-g g" . consult-goto-line)
+         ("M-s u" . consult-global-mark)
+         ("M-s O" . multi-occur)
+         :map isearch-mode-map
+         ("M-r" . consult-isearch-history)
+         :map minibuffer-local-map
+         ("M-r" . consult-history)
+         :map transient-map
+         ("M-w". transient-copy-menu-text)))
+
 (set-face-attribute 'default nil
                     :height 150)
 (setq minimal-emacs-user-directory user-emacs-directory)
@@ -155,13 +304,19 @@
   :ensure t
   :defer t
   :commands vertico-mode
-  :config
-  (use-package vertico-flat
+  :bind(
+        :map vertico-map
+             ("<next>" . scroll-up-command)
+             ("<prior>" . scroll-down-command)
+             ("M-<next>" . vertico-next-group)
+             ("M-<prior>" . vertico-previous-group)
+        )
+  :hook (after-init . vertico-mode))
+(use-package vertico-flat
     :after vertico
     :ensure nil
     :init
     (vertico-flat-mode))
-  :hook (after-init . vertico-mode))
 (use-package marginalia :ensure t :defer t
   :commands (marginalia-mode marginalia-cycle)
   :hook (after-init . marginalia-mode))
@@ -289,7 +444,8 @@
   ( :map dired-mode-map
     ("SPC" . scroll-up-command)
     ("DEL" . scroll-down-command)
-    ("," . dired-omit-mode))
+    ("," . dired-omit-mode)
+    ("e" . wdired-change-to-wdired-mode))
   :hook
   ((dired-mode . dired-hide-details-mode)
    (dired-mode . dired-omit-mode))
@@ -361,7 +517,7 @@
   (org-startup-indented nil)
   (org-adapt-indentation nil)
   (org-edit-src-content-indentation 0)
-  (org-startup-truncated t)
+  (org-startup-truncated nil)
   (org-fontify-done-headline nil)
   (org-fontify-todo-headline nil)
   (org-hide-emphasis-markers nil)
@@ -371,13 +527,14 @@
   (org-startup-with-inline-images t)
   (org-link-descriptive nil)
   ;; (org-agenda-files '("~/Leere/oooo.org"))
-  (org-agenda-files (directory-files-recursively "~/Leere/" "\\.org$"))
+  (org-agenda-files (directory-files-recursively "~/Leere/NestorLiao.github.io/" "\\.org$"))
   (org-todo-keywords ;; t要做的，f要修的，e暂时的，a失败的，k有缺陷的，o完成的
    '((sequence  "TODO(t)" "DONE(d)" "|" "FIXME(f)")
      (sequence "TEMP(e)" "FAIL(a)" "KLUDGE(k)"    "|" "OKAY(o)")))
   :bind (( "C-c a" . org-agenda)
          ( "C-c l" . org-store-link))
   :config
+  (add-hook 'org-mode-hook  #'toggle-truncate-lines)
   (with-eval-after-load 'org
     (define-key org-mode-map (kbd "C-,") nil)
     (define-key org-mode-map (kbd "C-<return>") nil)
@@ -400,9 +557,7 @@
   (global-ligature-mode 1))
 (use-package avy
   :ensure t
-  :bind (
-         ("M-g M-g" . avy-goto-line)
-         ("M-g M-k" . avy-kill-whole-line))
+  :bind (("M-s M-k" . avy-kill-whole-line))
   :config
   (setq avy-all-windows t)
   (setq avy-keys '( ?r ?s ?t ?d ?h ?n ?e ?i))
@@ -466,7 +621,6 @@
         (alist-get ?K avy-dispatch-alist) 'avy-action-kill-whole-line
         (alist-get ?  avy-dispatch-alist) 'avy-action-mark-to-char
         (alist-get ?q avy-dispatch-alist) 'avy-quick-sdcv-search-at-point))
-(move-text-default-bindings)
 (use-package diff-mode :ensure nil
   :custom
   (diff-default-read-only t)
@@ -476,8 +630,8 @@
   :ensure t
   :custom
   (buffer-terminator-verbose nil)
-  (buffer-terminator-inactivity-timeout 7200)
-  (buffer-terminator-interval 3600)
+  (buffer-terminator-inactivity-timeout 3600)
+  (buffer-terminator-interval 1800)
   :config
   (buffer-terminator-mode 1))
 (use-package magit
@@ -511,19 +665,24 @@
   ( :map quick-sdcv-mode-map
     ("SPC" . scroll-up-command)
     ("DEL" . scroll-down-command)
-    ("y" . delete-window)
+    ;; ("y" . previous-buffer)
+    ("y" . (lambda () (interactive) (previous-buffer) (other-window 1)))
     ("u" . quick-sdcv-search-at-point)))
 (use-package elisp-autofmt
   :commands (elisp-autofmt-mode
              elisp-autofmt-buffer
              elisp-autofmt-region))
 (use-package multiple-cursors
-  :bind (("C-S-c C-S-c" . mc/edit-lines)
+  :bind (
+         ("C-S-c C-S-c" . mc/edit-lines)
          ("C->"         . mc/mark-next-like-this)
          ("C-<"         . mc/mark-previous-like-this)
-         ("C-c C-<"     . mc/mark-all-like-this)
+         ("C-c C-$"     . mc/mark-all-like-this)
          ("C-$"        . mc/skip-to-next-like-this)
-         ("C-^"         . mc/skip-to-previous-like-this)))
+         ("C-^"         . mc/skip-to-previous-like-this)
+         :map mc/keymap
+         ("<return>" . electric-newline-and-maybe-indent)
+))
 (use-package recentf
   :ensure nil
   :commands (recentf-mode recentf-cleanup)
@@ -550,7 +709,7 @@
   (setq super-save-auto-save-when-idle t
         super-save-silent t
         super-save-all-buffers  t
-        super-save-remote-files t
+        super-save-remote-files nil
         super-save-idle-duration 4))
 (use-package undo-fu :ensure t :defer t
   :commands (undo-fu-only-undo
@@ -581,9 +740,34 @@
 (use-package eww
   :ensure nil
   :config
+  (setq
+   webjump-sites
+   '(("Linux Kernel" . "http://linux.doc:3000/")
+     ("C++ Reference" . "http://cpp.doc:3002/")
+     ("C Reference" . "http://c.doc:3001/")
+     ("GNU Project FTP Archive"
+      . [mirrors "https://ftp.gnu.org/pub/gnu/" "https://ftpmirror.gnu.org"])
+     ("GNU Project Website" . "https://www.gnu.org")
+     ("Emacs Website" . "https://www.gnu.org/software/emacs/emacs.html")
+     ("Savannah Emacs page" . "https://savannah.gnu.org/projects/emacs")
+     ("Emacs Wiki"
+      . [simple-query "https://www.emacswiki.org"
+                      "https://www.emacswiki.org/cgi-bin/wiki/" ""])
+     ("DuckDuckGo"
+      . [simple-query "https://duckduckgo.com" "https://duckduckgo.com/?q=" ""])
+     ("Wikipedia"
+      . [simple-query "https://wikipedia.org" "https://wikipedia.org/wiki/" ""])
+     ("Association for Computing Machinery" . "https://www.acm.org")
+     ("Computer Professionals for Social Responsibility" . "http://www.cpsr.org")
+     ("Electronic Frontier Foundation" . "https://www.eff.org")
+     ("IEEE Computer Society" . "https://www.computer.org")
+     ("Risks Digest" . webjump-to-risks)
+     ("Supplemental Web site list for webjump"
+      . "https://www.neilvandyke.org/webjump/")))
   (setq browse-url-browser-function 'eww-browse-url
         shr-use-colors nil
         eww-header-line-format ""
+        nov-header-line-format ""
         shr-bullet "• "
         shr-folding-mode t
         shr-use-fonts nil
@@ -593,7 +777,6 @@
         url-privacy-level 'none
         eww-auto-rename-buffer 'url
         eww-prompt-history '(
-                             "http://zig.doc:3003/" ; "https://ziglang.org/documentation/master/"
                              "http://c.doc:3001/" ; "https://en.cppreference.com/w/c"
                              "http://cpp.doc:3002/" ; "https://en.cppreference.com/w/cpp"
                              "http://linux.doc:3000/" ;"https://www.kernel.org/doc/html/latest/"
@@ -608,7 +791,7 @@
       (setq eww-data (plist-put eww-data :url
                                 (read-string "Edit URL: " current-url)))
       (eww-reload)))
-  (remove-hook 'eww-after-render-hook 'eww-readable)
+  (add-hook 'eww-after-render-hook 'eww-readable)
   :bind (:map eww-mode-map
               ("e" . my-eww-edit-url)))
 (defun extract-base-urls ()
@@ -683,7 +866,7 @@
               ("<next>" . scroll-up-record)
               ("b" . Info-next-preorder)))
 (setq enable-dir-local-variables nil)
-(setq shell-file-name "bash")
+(setq shell-file-name "fish")
 (setq vterm-shell "fish")
 ;; (setq shell-command-switch "-ic")
 (setq shell-command-switch "-c")
@@ -691,7 +874,7 @@
 (setq face-font-rescale-alist '(("Source Han" . 0.9)))
 (defvar my-alternate-font "-DAMA-UbuntuMono Nerd Font-regular-normal-normal-*-13-*-*-*-m-0-iso10646-1")
 (defvar my-default-font "bookerly")
-(defvar fontfont 1)
+(defvar fontfont 0)
 (defun my-toggle-font ()
   "Toggle between UbuntuMono and bookerly fonts."
   (interactive)
@@ -739,10 +922,10 @@
   :config
   (cl-defmethod pyim-page-info-format ((_style (eql minibuffer)) page-info)
     (string-replace ")" ""
-     (string-replace "(" "" (format "%s %s"
-                                                      ;; (if (plist-get page-info :assistant-enable) " P|" "")
-                                                      (if (plist-get page-info :assistant-enable)  (plist-get page-info :candidates) "")
-                                                      (if (plist-get page-info :assistant-enable)  (plist-get page-info :current-page) "")))))
+                    (string-replace "(" "" (format "%s %s"
+                                                   ;; (if (plist-get page-info :assistant-enable) " P|" "")
+                                                   (if (plist-get page-info :assistant-enable)  (plist-get page-info :candidates) "")
+                                                   (if (plist-get page-info :assistant-enable)  (plist-get page-info :current-page) "")))))
   (setq pyim-indicator-list (list #'my-pyim-indicator-with-cursor-color #'pyim-indicator-with-modeline))
   (setq pyim-english-input-switch-functions nil)
   (defun hd()
@@ -793,79 +976,6 @@
 (add-hook 'vterm-mode-hook  #'with-editor-export-editor)
 ;; (remove-hook 'before-save-hook #'xah-clean-whitespace)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
-(use-package surround
-  :ensure t
-  :bind
-  (("C-<iso-lefttab>" . surround-insert)
-   ("C-M-<tab>" . surround-delete)
-   ("C-s-<tab>" . surround-change))
-  :bind-keymap ("C-<tab>" . surround-keymap))
-(use-package consult
-  :ensure t
-  :hook (completion-list-mode . consult-preview-at-point-mode)
-  :init
-  (setq register-preview-delay 0.5)
-  (setq register-preview-function #'consult-register-format)
-  (setq xref-show-xrefs-function #'consult-xref)
-  (setq xref-show-definitions-function #'consult-xref)
-  (advice-add #'register-preview :override #'consult-register-window)
-  :config
-  (consult-customize
-   consult-theme :preview-key '(:debounce 0.2 any)
-   consult-ripgrep consult-git-grep consult-grep
-   consult-bookmark consult-recent-file consult-xref
-   consult--source-bookmark consult--source-file-register
-   consult--source-recent-file consult--source-project-recent-file
-   :preview-key '(:debounce 0.4 any))
-  (setq consult-narrow-key "<")
-  :bind (("C-<backspace>" . avy-goto-word-0)
-         ([remap imenu] . consult-imenu)
-         ([remap Info-search] . consult-info)
-         ([remap kill-buffer] . kill-buffer-and-window)
-         ([remap list-buffers] . ibuffer)
-         ([remap project-switch-to-buffer] . consult-project-buffer)
-         ([remap switch-to-buffer] . consult-buffer)
-         ([remap comment-line] . comment-or-uncomment-region-or-line)
-         ([remap kill-region] . kill-line-or-region)
-         ([remap dabbrev-expand] . hippie-expand)
-         ([remap yank-pop] . consult-yank-pop)
-         ([remap indent-rigidly] . smart-shift-right)
-         ("C-x C-s" . (lambda () (interactive) (save-buffer)(donothing)))
-         ("C-<return>" . (lambda () (interactive) (duplicate-dwim)(next-line)))
-         ("C-c C-; q" . disproject-dispatch) ;;; MOS
-         ("C-c C-; w" . replace-string)
-         ("C-c C-; v" . multi-vterm-project)
-         ("C-c C-; f" . rg)
-         ("C-c C-; p" . yas-insert-snippet)
-         ("C-c C-; j" . my-toggle-font)
-         ("C-c C-; l" . magit-log-buffer-file)
-         ("C-c C-; u" . delete-all-space)
-         ("C-c C-; y" . global-hide-mode-line-mode)
-         ("C-c C-; '" . gptel-menu)
-         ("C-c C-; m" . devdocs-browser-open)
-         ("C-c C-; c" . compile)
-         ("C-c C-~ g" .  er/expand-region) ;;; NAV
-         ("C-c C-~ m" . toggle-truncate-lines)
-         ("C-c C-~ v" .  vertico-flat-mode)
-         ("C-c C-~ b" .  donothing)
-         ("C-c C-~ j" .  donothing)
-         ("C-c C-~ l" .  recompile)
-         ("C-c C-~ u" .  consult-mark)
-         ("C-c C-~ y" .  quick-sdcv-search-at-point)
-         ("C-c C-~ '" .  donothing)
-         ("s-u" .  toggle-letter-case) ;;; NUM
-         ;; minor
-         ("M-#" . consult-register-load)
-         ("M-$" . consult-register-store)
-         ("C-M-#" . consult-register)
-         ("M-g g" . consult-goto-line)
-         ("M-g k" . consult-global-mark)
-         :map isearch-mode-map
-         ("M-r" . consult-isearch-history)
-         :map minibuffer-local-map
-         ("M-r" . consult-history)
-         :map transient-map
-         ("M-w". transient-copy-menu-text)))
 (tooltip-mode -1)(delete-selection-mode 1)
 (global-font-lock-mode 1)(global-hide-mode-line-mode 1)(global-eldoc-mode -1)
 (show-paren-mode -1)(window-divider-mode -1)(winner-mode -1)
@@ -876,6 +986,9 @@
              easysession-save-as
              easysession-save-mode
              easysession-load-including-geometry)
+  :bind
+(("C-c sl" . easysession-switch-to)
+("C-c ss" . easysession-save-as) )
   :custom
   (easysession-mode-line-misc-info t)
   (easysession-save-interval (* 10 60))
@@ -883,16 +996,16 @@
   (add-hook 'emacs-startup-hook #'easysession-load-including-geometry 102)
   (add-hook 'emacs-startup-hook #'easysession-save-mode 103))
 (setq savehist-file (expand-file-name "history" user-emacs-directory))
-(defun my-set-fringe-face ()
-  "auto hide fringe face depending on major mode."
-  (if (derived-mode-p '(occur-mode gud-mode))
-      (set-face-attribute 'fringe nil
-                          :background (face-attribute 'default :background)
-                          :foreground (face-attribute 'default :foreground))
-    (set-face-attribute 'fringe nil
-                        :background (face-attribute 'default :background)
-                        :foreground (face-attribute 'default :background))))
-(add-hook 'after-change-major-mode-hook #'my-set-fringe-face)
+;; (defun my-set-fringe-face ()
+;;   "auto hide fringe face depending on major mode."
+;;   (if (derived-mode-p '(occur-mode gud-mode))
+;;       (set-face-attribute 'fringe nil
+;;                           :background (face-attribute 'default :background)
+;;                           :foreground (face-attribute 'default :foreground))
+;;     (set-face-attribute 'fringe nil
+;;                         :background (face-attribute 'default :background)
+;;                         :foreground (face-attribute 'default :background))))
+;; (add-hook 'after-change-major-mode-hook #'my-set-fringe-face)
 (defun fancyhelloworld()
   (interactive)
   (animate-string "// -*- compile-command: \"gcc -Wall -o main main.c;./main\" -*-" 0 1)
@@ -931,6 +1044,7 @@
 (defun customize-create-theme()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
 (defun customize-themes()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
 (defun gomoku()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
+(defun calendar()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
 (use-package vterm :ensure t :defer t
   :commands (vterm--internal)
   :bind (:map vterm-mode-map
@@ -1222,18 +1336,6 @@ To undo, use \\[xref-go-forward]."
             (forward-line 1)))))))
 (use-package forge
   :after magit)
-(keymap-global-set "M-n" 'embark-next-symbol)
-(keymap-global-set "s-m" 'newday)
-(keymap-global-set "M-p" 'embark-previous-symbol)
-(keymap-global-set "M-*" (lambda () (interactive) (my/leetcode-open (string-to-number(current-word)))))
-(keymap-global-set "M-o" (lambda () (interactive)(other-window -1)))
-(keymap-global-set "M-i" 'imenu)
-(keymap-global-set "C-;" 'iedit-mode)
-
-(keymap-global-set "C-," 'toggle-solution-question)
-(keymap-global-set "ESC <f5>" 'hibernatecall)
-;; (keymap-global-set "<WakeUp>" (lambda () (interactive)(sleep-for 1)(monitor)))
-(keymap-global-set "<WakeUp>" 'donothing)
 (defun toggle-solution-question ()
   "Toggle between solution.cpp and question.org in the same directory."
   (interactive)
@@ -1260,76 +1362,6 @@ To undo, use \\[xref-go-forward]."
          ("\\.i\\'" . c-mode)
          ("\\.ii\\'" . c++-mode))
   :config
-  (defconst Qingsong-style '((c-basic-offset . 8)
-                             (c-tab-always-indent . t)
-                             (c-comment-only-line-offset . (0 . 0))
-                             (c-indent-comments-syntactically-p . t)
-                             (c-block-comments-indent-p . nil)
-                             ;;(comment-style . 'multi-line)
-                             (comment-start . "// ")
-                             (comment-end . "")
-                             (c-cleanup-list . '((defun-close-semi) (list-close-comma) (scope-operator)))
-                             (c-backslash-column . 88)
-                             (c-backslash-max-column . 88)
-                             (c-auto-align-backslashes . t)
-                             (c-toggle-auto-state . 1)
-                             (c-toggle-auto-hungry-state . 1)
-                             (c-offsets-alist
-                              ;;(c . +)                     ;; inside a multi-line C style block comment
-                              (defun-open . 0)            ;; brace that opens a function definition
-                              (defun-close . 0)           ;; brace that closes a function definition
-                              (defun-block-intro . +)     ;; the first line in a top-level defun
-                              (class-open . 0)            ;; brace that opens a class definition
-                              (class-close . 0)           ;; brace that closes a class definition
-                              (inline-open . 0)           ;; brace that opens an in-class inline method
-                              (inline-close . 0)          ;; brace that closes an in-class inline method
-                              (topmost-intro . 0)         ;; the first line in a topmost construct
-                              ;; definition
-                              (topmost-intro-cont . 0)    ;; topmost definition continuation lines
-                              (member-init-intro . +)     ;; first line in a member initialization list
-                              (member-init-cont . 0)      ;; subsequent member initialization list lines
-                              (inher-intro . 0)           ;; first line of a multiple inheritance list
-                              (inher-cont . +)            ;; subsequent multiple inheritance lines
-                              (block-open . 0)            ;; statement block open brace
-                              (block-close . 0)           ;; statement block close brace
-                              (brace-list-open . 0)       ;; open brace of an enum or static array list
-                              (brace-list-close . 0)      ;; open brace of an enum or static array list
-                              (brace-list-intro . +)      ;; first line in an enum or static array list
-                              (brace-list-entry . 0)      ;; subsequent lines in an enum or static array
-                              ;; list
-                              (statement . 0)             ;; a C/C++/ObjC statement
-                              (statement-cont . 0)        ;; a continuation of a C/C++/ObjC statement
-                              (statement-block-intro . +) ;; the first line in a new statement block
-                              (statement-case-intro . +)  ;; the first line in a case `block'
-                              (statement-case-open . +)   ;; the first line in a case `block'
-                              ;; starting with brace
-                              (substatement . +)          ;; the first line after an if/while/for/do/else
-                              (substatement-open . 0)     ;; the brace that opens a substatement block
-                              (case-label . +)            ;; a case or default label
-                              (access-label . -)          ;; C++ private/protected/public access label
-                              (label . -)                 ;; any non-special C/C++/ObjC label
-                              (do-while-closure . 0)      ;; the `while' that ends a do/while construct
-                              (else-clause . 0)           ;; the `else' of an if/else construct
-                              (comment-intro . 0)         ;; line containing only a comment introduction
-                              (arglist-intro . +)         ;; the first line in an argument list
-                              (arglist-cont . 0)          ;; subsequent argument list lines when no
-                              ;; subsequent argument list lines when no the
-                              ;; arglist opening paren
-                              (arglist-cont-nonempty . 0) ;; subsequent argument list lines when at
-                              ;; subsequent argument list lines when at line
-                              ;; as the arglist opening paren
-                              (arglist-close . 0)         ;; line as the arglist opening paren
-                              (stream-op . +)             ;; lines continuing a stream operator construct
-                              (inclass . +)               ;; the construct is nested inside a class
-                              ;; definition
-                              (cpp-macro . 0)             ;; the construct is nested inside a class
-                              ;; definition
-                              (friend . 0)                ;; a C++ friend declaration
-                              ))
-    "Qingsong C/C++ Programming Style"
-    )
-  (c-add-style "Qingsong" Qingsong-style)
-  (setq c-default-style "stroustrup")
   (advice-add 'c-update-modeline :override #'ignore)
   (defun c-compile-current-file ()
     (interactive)
@@ -1552,3 +1584,80 @@ region\) apply comment-or-uncomment to the current line"
     (call-process monitorcli nil nil nil monitorprotocol monitorpath (car (nthcdr 3 monitorarg))))
   (donothing))
 (global-smart-shift-mode 1)
+(defvar my-last-buffer nil
+  "Stores the last buffer before switching.")
+(defun my-toggle-buffer ()
+  "Toggle between current buffer and last visited buffer."
+  (interactive)
+  (let ((current (current-buffer)))
+    (when (and my-last-buffer
+               (buffer-live-p my-last-buffer)
+               (not (eq current my-last-buffer)))
+      (switch-to-buffer my-last-buffer))
+    (setq my-last-buffer current)))
+(defun rc/buffer-file-name ()
+  (if (equal major-mode 'dired-mode)
+      default-directory
+    (buffer-file-name)))
+(defun rc/parent-directory (path)
+  (file-name-directory (directory-file-name path)))
+(defun rc/root-anchor (path anchor)
+  (cond
+   ((string= anchor "") nil)
+   ((file-exists-p (concat (file-name-as-directory path) anchor)) path)
+   ((string-equal path "/") nil)
+   (t (rc/root-anchor (rc/parent-directory path) anchor))))
+(defun rc/clipboard-org-mode-file-link (anchor)
+  (interactive "sRoot anchor: ")
+  (let* ((root-dir (rc/root-anchor default-directory anchor))
+         (org-mode-file-link (format "file:%s::%d"
+                                     (if root-dir
+                                         (file-relative-name (rc/buffer-file-name) root-dir)
+                                       (rc/buffer-file-name))
+                                     (line-number-at-pos))))
+    (kill-new org-mode-file-link)
+    (message org-mode-file-link)))
+(defun rc/put-file-name-on-clipboard ()
+  "Put the current file name on the clipboard"
+  (interactive)
+  (let ((filename (rc/buffer-file-name)))
+    (when filename
+      (kill-new filename)
+      (message filename))))
+(defun rc/put-buffer-name-on-clipboard ()
+  "Put the current buffer name on the clipboard"
+  (interactive)
+  (kill-new (buffer-name))
+  (message (buffer-name)))
+(setq-default
+ c-basic-offset 4
+ c-backslash-column 99
+ c-backslash-max-column 99
+ c-default-style '((java-mode . "java")
+                   (awk-mode . "awk")
+                   (other . "bsd")))
+(add-hook 'c-mode-hook (lambda ()
+                         (interactive)
+                         (c-toggle-comment-style -1)))
+(donothing)                             ; don't annoy me anymore.
+;;; new things during last 10days
+
+(defvar rotate 0
+  "Current sway rotate state, either 0 for horizental or  1 for vertical.")
+(defun swaywindow()
+  (interactive)
+(let ((direction '("down" "right")))
+  (if (= (call-process-shell-command "swaymsg -t get_tree | jq -e '.. | select(.focused? == true and .fullscreen_mode == 1)' >/dev/null;" nil t t) 4)
+  (start-process  "swaymsg" nil  "swaymsg" "focus" (car(nthcdr rotate direction)))(progn
+    (start-process  "fullscreen1" nil  "swaymsg" "fullscreen" )
+    (start-process  "swaymsg" nil  "swaymsg" "focus" (car(nthcdr rotate direction)))
+    (start-process  "fullscreen2" nil  "swaymsg" "fullscreen" ))
+  )))
+(defun swayrotate()
+  (interactive)
+  (start-process  "fullscreen1" nil  "swaymsg" "layout toggle split" )
+  (setq rotate   (if (= 0 rotate) 1 0 )))
+(global-set-key (kbd "s-<") 'swaywindow)
+(global-set-key (kbd "s->") 'swayrotate)
+(add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
+(add-hook 'css-mode-hook #'aggressive-indent-mode)
