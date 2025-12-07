@@ -1,0 +1,13 @@
+nixos/nosurf/**
+nixos/nosurf/
+snippets/
+index.html
+index.pdf
+index.bbl
+index.tex
+index.log
+index.aux
+index.fls
+index-blx.bib
+index.fdb_latexmk
+.keys.txt

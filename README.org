@@ -141,275 +141,7 @@ fi
 **** 上网必备emacs
 #+caption: the internet capability of me. search/gpt/github and I found they are just trash. use selfhost doc/info/tldr/man/devdocs is way more better.
 #+begin_src emacs-lisp :tangle yes :results none
-(keymap-global-set "s-m" #'switch-to-gptel)
-(keymap-global-set "<Tools>" #'tavily-search)
-(defun switch-to-gptel()
-  (interactive)
-  (if (equal  (current-buffer) (gptel "*deepseek*"))
-      (previous-buffer)
-    (switch-to-buffer "*deepseek*" )))
 
-(defun tavily-search-async (callback query &optional search-depth max-results exclude_domains country include_domains)
-  "Perform a search using the Tavily API and return results as JSON string.
-API-KEY is your Tavily API key.
-QUERY is the search query string.
-Optional SEARCH-DEPTH is either \"basic\" (default) or \"advanced\".
-Optional MAX-RESULTS is the maximum number of results (default 5)."
-  (require 'plz)
-  (let* ((plz-curl-default-args (cons "-k" plz-curl-default-args))
-         (url "https://api.tavily.com/search")
-         (search-depth (or search-depth "advanced"))
-         (max-results (or max-results 1))
-         (include_answer  t)
-         (country (or country "united states"))
-         (include_domains (or include_domains '("nixos.org" "freertos.org" "zephyrproject.org" "contiki-ng.org" "riot-os.org" "nuttx.apache.org" "mynewt.apache.org" "ziglang.org" "python.org" "lua.org" "elixir-lang.org" "erlang.org" "haskell.org" "cmake.org" "gnu.org" "llvm.org" "gcc.gnu.org" "qt.io" "gtk.org" "sdl.org" "libsdl.org" "qemu-project.org" "cppreference.com" "opensource.org" "ietf.org" "w3.org" "ansi.org" "iso.org" "ieee.org" "man7.org" "discourse.nixos.org" "ziggit.dev" "emacs-china.org" "lwn.net" "kernel.org" "sourceware.org" "debian.org" "archlinux.org" "github.com" "osdev.org" "opencores.org" "riscv.org" "musl-libc.org" "newlib.sourceware.org" "uclibc-ng.org" "hackaday.com" "raspberrypi.org" "arduino.cc" "espressif.com" "gentoo.org")))
-         (request-data
-          `(("api_key" . ,tavily-api-key)
-            ("query" . ,query)
-            ("search_depth" . ,search-depth)
-            ("country" . ,country)
-            ("include_domains" . ,include_domains)
-            ("include_answer" . ,include_answer)
-            ("exclude_domains" . ,exclude_domains)
-            ("max_results" . ,max-results))))
-    (plz 'post url
-         :headers '(("Content-Type" . "application/json"))
-         :body (json-encode request-data)
-         :as 'string
-         :then (lambda (result) (funcall callback result)))))
-(defun tavily-search (query)
-  (interactive "sQuery: ")
-  (tavily-search-async
-   (lambda (result)
-     (let ((buf (get-buffer-create "*tavily-search-result*")))
-       (switch-to-buffer buf)
-       (read-only-mode 0)
-       (erase-buffer)
-       (org-mode)
-       (insert result)
-       (insert (tavily-result-to-org result))
-       (goto-char (point-min))
-       (read-only-mode 1)
-       (setq-local truncate-lines nil)
-       ))
-   query))
-(defun tavily-result-to-org (json-result)
-  (let* ((data (json-read-from-string json-result))
-         (results (alist-get 'results data)))
-    (mapconcat (lambda (item)
-                 (format "* [[%s][%s]]\n  %s"
-                         (alist-get 'url item)
-                         (alist-get 'title item)
-                         (alist-get 'content item)))
-               results
-               "\n\n")))
-(setq tavily-api-key
-      (with-temp-buffer
-        (insert-file-contents "/run/secrets/tavily_apikey")
-        (buffer-string)))
-(use-package gptel
-  :init
-  (require 'gptel-org)
-  :config
-  (with-eval-after-load 'gptel
-    (gptel-make-tool
-     :category "web"
-     :name "search"
-     :async t
-     :function (lambda (cb keyword)
-                 (tavily-search-async cb keyword "basic" 5 nil nil nil))
-     :description "Search the Internet; If you used any search results, be sure to include the references in your response."
-     :args (list '(:name "keyword"
-                         :type string
-                         :description "The keyword to search")))
-    (gptel-make-tool
-     :name "create_python_repl"
-     :function (lambda ()
-                 (run-python nil t)
-                 (pop-to-buffer (python-shell-get-buffer)))
-     :description "Create a new python repl for this session"
-     :args nil
-     :category "emacs")
-    (gptel-make-tool
-     :name "send_python_to_repl"
-     :function (lambda (code)
-                 (python-shell-send-string code))
-     :args (list '(:name "code"
-                         :type string
-                         :description "python code to execute"))
-     :description "Send some python code to the python repl for this session and execute it"
-     :category "emacs")
-    (gptel-make-tool
-     :function (lambda (url)
-                 (with-current-buffer (url-retrieve-synchronously url)
-                   (goto-char (point-min)) (forward-paragraph)
-                   (let ((dom (libxml-parse-html-region (point) (point-max))))
-                     (run-at-time 0 nil #'kill-buffer (current-buffer))
-                     (with-temp-buffer
-                       (shr-insert-document dom)
-                       (buffer-substring-no-properties (point-min) (point-max))))))
-     :name "read_url"
-     :description "Fetch and read the contents of a URL"
-     :args (list '(:name "url"
-                         :type "string"
-                         :description "The URL to read"))
-     :category "web")
-    (gptel-make-tool
-     :function (lambda (buffer text)
-                 (with-current-buffer (get-buffer-create buffer)
-                   (save-excursion
-                     (goto-char (point-max))
-                     (insert text)))
-                 (format "Appended text to buffer %s" buffer))
-     :name "append_to_buffer"
-     :description "Append text to the an Emacs buffer.  If the buffer does not exist, it will be created."
-     :args (list '(:name "buffer"
-                         :type "string"
-                         :description "The name of the buffer to append text to.")
-                 '(:name "text"
-                         :type "string"
-                         :description "The text to append to the buffer."))
-     :category "emacs")
-    (gptel-make-tool
-     :function (lambda (text)
-                 (message "%s" text)
-                 (format "Message sent: %s" text))
-     :name "echo_message"
-     :description "Send a message to the *Messages* buffer"
-     :args (list '(:name "text"
-                         :type "string"
-                         :description "The text to send to the messages buffer"))
-     :category "emacs")
-    (gptel-make-tool
-     :function (lambda (buffer)
-                 (unless (buffer-live-p (get-buffer buffer))
-                   (error "Error: buffer %s is not live." buffer))
-                 (with-current-buffer  buffer
-                   (buffer-substring-no-properties (point-min) (point-max))))
-     :name "read_buffer"
-     :description "Return the contents of an Emacs buffer"
-     :args (list '(:name "buffer"
-                         :type "string"
-                         :description "The name of the buffer whose contents are to be retrieved"))
-     :category "emacs")
-    (gptel-make-tool
-     :function (lambda (directory)
-                 (mapconcat #'identity
-                            (directory-files directory)
-                            "\n"))
-     :name "list_directory"
-     :description "List the contents of a given directory"
-     :args (list '(:name "directory"
-                         :type "string"
-                         :description "The path to the directory to list"))
-     :category "filesystem")
-    (gptel-make-tool
-     :function (lambda (parent name)
-                 (condition-case nil
-                     (progn
-                       (make-directory (expand-file-name name parent) t)
-                       (format "Directory %s created/verified in %s" name parent))
-                   (error (format "Error creating directory %s in %s" name parent))))
-     :name "make_directory"
-     :description "Create a new directory with the given name in the specified parent directory"
-     :args (list '(:name "parent"
-                         :type "string"
-                         :description "The parent directory where the new directory should be created, e.g. /tmp")
-                 '(:name "name"
-                         :type "string"
-                         :description "The name of the new directory to create, e.g. testdir"))
-     :category "filesystem")
-    (gptel-make-tool
-     :function (lambda (path filename content)
-                 (let ((full-path (expand-file-name filename path)))
-                   (with-temp-buffer
-                     (insert content)
-                     (write-file full-path))
-                   (format "Created file %s in %s" filename path)))
-     :name "create_file"
-     :description "Create a new file with the specified content"
-     :args (list '(:name "path"
-                         :type "string"
-                         :description "The directory where to create the file")
-                 '(:name "filename"
-                         :type "string"
-                         :description "The name of the file to create")
-                 '(:name "content"
-                         :type "string"
-                         :description "The content to write to the file"))
-     :category "filesystem")
-    (gptel-make-tool
-     :function (lambda (filepath)
-                 (with-temp-buffer
-                   (insert-file-contents (expand-file-name filepath))
-                   (buffer-string)))
-     :name "read_file"
-     :description "Read and display the contents of a file"
-     :args (list '(:name "filepath"
-                         :type "string"
-                         :description "Path to the file to read.  Supports relative paths and ~."))
-     :category "filesystem"))
-  (defun ant/gptel-save-buffer ()
-    "Save the current GPTEL buffer with the default directory
-set to ~/note."
-    (interactive)
-    (let ((default-directory "~/Leere/qingsongliao.github.io/"))
-      (call-interactively #'save-buffer)))
-  (defun ant/gptel-load-session ()
-    "Load a gptel session from ~/notes directory."
-    (interactive)
-    (let ((default-directory "~/.leetcode/code/"))
-      (let* ((files (directory-files default-directory t ".+\\.org$"))
-             (file (completing-read "Select session file: " files nil t)))
-        (when file
-          (find-file file)
-          (gptel-mode)))))
-  (setq  gptel-default-mode 'org-mode)
-  (setq deepseek-api-key
-        (with-temp-buffer
-          (insert-file-contents "/run/secrets/deepseek_apikey")
-          (buffer-string)))
-  (setq gptel-model   'deepseek-chat
-        gptel-backend (gptel-make-deepseek "deepseek"
-                        :stream t
-                        :key deepseek-api-key))
-  (require 'url-util)
-  (setq gptel-directives
-        '((default . "You are a large language model living in Emacs and a helpful assistant.")
-          (programming . "You are a large language model and a careful programmer. Provide code and only code as output without any additional text, prompt or note.")
-          (writing . "You are a large language model and a writing assistant. Respond concisely.")
-          (chat . "You are a large language model and a conversation partner. Respond concisely.")
-          (bug . "You are a large language model and a careful programmer. The supplied code doesn't work, or contains bugs. Describe each problem using only one sentence. Provide fixes without changing the old behavior.")))
-  (setq  gptel-stream nil))
-(use-package consult-gh
-  :after consult
-  :custom
-  (consult-gh-confirm-before-clone nil)
-  (consult-gh-default-clone-directory "~/codebase")
-  (consult-gh-ask-for-path-before-save nil)
-  (consult-gh-default-save-directory "~/codebase")
-  (consult-gh-show-preview t)
-  (consult-gh-preview-key "C-o")
-  (consult-gh-repo-action #'consult-gh--repo-browse-files-action)
-  (consult-gh-large-file-warning-threshold 2500000)
-  (consult-gh-confirm-name-before-fork nil)
-  (consult-gh-notifications-show-unread-only nil)
-  (consult-gh-default-interactive-command)
-  (consult-gh-prioritize-local-folder nil)
-  (consult-gh-issues-state-to-show "all") ; show readmes in their original format
-  (consult-gh-group-dashboard-by :reason)
-  (consult-gh-repo-preview-major-mode nil) ; show readmes in their original format
-  (consult-gh-preview-major-mode 'org-mode) ; use 'org-mode for editing comments, commit messages, ...
-  :config(consult-gh-enable-default-keybindings)
-  (use-package consult-gh-forge
-    :after consult-gh
-    :config
-    (consult-gh-forge-mode +1))
-  (use-package consult-gh-embark
-    :after consult-gh
-    :config
-    (consult-gh-embark-mode +1)
-    (setq consult-gh-forge-timeout-seconds 20)))
 #+end_src
 
 
@@ -427,11 +159,63 @@ set to ~/note."
 9. I am tired of nixos, but I can't leave it, because after using nixos eveything is hard to do in other distor, like show off to other distor users "BTW, I use NixOS".
 
 ** 用linux只为戒色
-翻开中国帝王史，有多少帝王是沉迷女色后国家衰亡，多少帝王是皇太后控制后抑郁早亡。
-野史里选王要的是看他不好色否? 当皇帝得看他有无抢夺妇女。翻开网络史发展，有多少人民群众是沉迷情色后国家衰亡，多少人是被色情控制后抑郁早亡，看人得看他好色否? 好不好色，得看他懂得怎么预防。oppo的天气预报能跳到擦边短剧，bing的结果第一个BMI测试广告中跳到黄色导航，
-百度误输成baidu.co中进入黄色应用下载，网易看见过全露的黄色直播，B站中处处是擦边广告和直播，微博中卖到各种片，知乎里表露情色隐私更引人浏览，我的世界游戏里用色情披风，淘宝里随便看情趣用品，openai支持成人内容，twitter全是福利姬，就连QQ空间连上擦边广告商，onlyfans比所有ai公司利润更高，pornhub全球流量前10，整个00后的网络被“这到提醒我了”占据，整代女人被商业文化营造黑丝和大胸的“性感”，整代男人被情色文化成为无脑动物与被情欲“冲动”控制，男人就该好色? 女人就该这样美吗? 天下皆知美之为美，斯恶也。互联网33%的流量，70%的男性，30%的女性，90%男性沉迷其中…数字不会说谎，一切已经到来，生存与繁衍不再重要，存在不过是不断刺激感官。不只是色情… 网络带来的问题似乎总是和成瘾有关，赌博/购物/社交/游戏… 就连互联网最自豪的正面形象所谓的“利于学习”也成为了信息过载的社会巨大问题，自由的代价是什么? 自由即是强迫。互联网即是色情。
 
-论我怎么戒色?答:学习技术、理解技术、控制技术，学习自由软件，远离商业软件，拒绝即是自由。
+#+ATTR_LATEX: :environment quotation
+#+BEGIN_QUOTE
+现代的世界是网络的世界，网络的世界是色情的世界，色情的世界是。---我自己说的
+#+END_QUOTE
+1. 只要在普通社区男厕所，准有同城“吃瓜约炮”，免费看片网址，女大学生服务…
+2. 只要在共享充电/电动车充电，准有一张性感女性塑料贴纸写着同城按摩…
+3. 只要一上各种中国软件，全是各种短视频入口，拿钱/积分/领券，只要你注册为男性，必有擦边内容…
+4. oppo的天气预报能跳到擦边短剧，小米只用右滑就能不用输入密码也能看各种文章，苹果封闭生态还好，但新出了3D动态壁纸，看看这些人都用来装什么出到短视频里?
+5. 只要用浏览器用中文搜些小众问题能非常简单的从虚假“xx中药院”跳到“吃瓜”黄色软件再跳转到“新葡京”澳门赌博…
+6. 有一次想知道自己算瘦吗? bing的结果第一个BMI测试广告中跳到黄色导航…
+7. 有一次用不了谷歌把百度误输成baidu.co中进入黄色应用“加藤视频”下载…
+8. 小学我喜欢玩的我的世界，那个时候游戏里别人都在用色情披风了，后来玩上各种游戏…比如黑道圣徒，我才知道用的棒子是假 xx …马桶边的是充气xx。
+9. 初中我喜欢看的B站，现在处处是“男生都在玩”擦边广告和直播，和“这到提醒我了/买瓜/鸡你太美/奶龙”的狗哨子…
+10. 高中我喜欢在网易云里听摇滚，一年新春佳节里在网易云音乐看见过全露的黄色直播…
+11. 大学用chatgpt完成作业，马上openai将支持成人内容，看看b站里用sora都产出些什么吧，女生夜跑? 看看大炒特炒的AI技术用在那里吧，把国外人的开源程序用的中国明星的色情换脸上…中国在利用技术这方面实在是强。
+12. 微博中卖到各种片，贴吧是纯纯的ai机器人刷贴的粪堆，现存在中文内容90%都在公从号…其中80%全是卖课/卖焦虑/卖书的…看看三联吧，曾经还喜欢他的杂志，现在看了公众号，只剩恶心。
+13. 知乎里表露情色隐私更引人浏览，淘宝里随便看情趣用品，twitter中文90%全是福利姬，QQ空间也连上擦边广告商
+14. 微信公众号也通过年龄发广告，年龄小的发相亲广告，年龄大的发离异求爱广告，看好你父母的手机，抖音屏蔽掉“离异少妇”之类的关键词吧…
+15. onlyfans比所有ai公司利润更高，pornhub全球流量前10，整个00后的网络被“这到提醒我了”占据，那不然B站“雀巢”的那些十次有九次关于“手冲”的视频怎么有千万播放量呢?
+16. 网络->情色->虚弱
+17. 网络->游戏->孤僻
+18. 网络->视频->二次元->Hentai->这辈子完了
+19. 网络->音乐->反社交
+20. 网络->赌博->破产
+21. 整代女人被商业文化营造黑丝长腿和大胸的“性感”，这个年代就该笑贫不笑娼?
+22. 整代男人被情色文化成为无脑动物与被情欲“冲动”控制，男人就该好色? 女人就该这样美吗?
+23. 当然绝对不是“整代”，只是“有些人”更容易被网络影响，研究发现下面因素强相关，城市/青年/男性/独生/大学生/单身/计算机相关专业…
+24. 城市/青年/男性/独生/大学生/单身/计算机相关专业，我去，这tm不就是我吗?
+25. 城市化减少户外活动更加易上瘾，青年生理发育完成，男性性欲正当时，独生子更是溺爱与放纵，大学生缺少社会交往，单身缺少异性交往，计算机缺少与人交往…
+26. tmd那个我能改? 我能去农村?我能回到童年或直接老年?我能自宫?我能让父母再生一个?我离开了大学也没进入社会，我仍然单身大概不会有机会与异性交往，我能不用电脑?那我该干啥?傻躺着吗?
+    1. 没事就去户外摸摸小草，多运动，多睡觉，少思，少忧
+    2. 从心理上，告诉父母，激进诚实
+    3. 找份工作，找些朋友，找个女友
+    4. 从网络根源禁止消费色情内容，限时/限域/限速/实名/禁商业软件(广告/算法/图片/视频/新闻/社交媒体/搜索引擎)
+
+天下皆知美之为美，斯恶也。色情占据互联网33%的流量，观众为70%的男性，30%的女性，90%男性沉迷其中…
+数字不会说谎，一切已经到来，生存与繁衍不再重要，存在不过是不断刺激感官。
+不只是色情… 网络带来的问题似乎总是和成瘾有关，赌博/购物/社交/游戏…
+就连互联网最自豪的正面形象所谓的“利于学习”也成为了信息过载的社会巨大问题，
+自由的代价是什么? 自由即是强迫。互联网即是色情，自由的色情内容带来了对色情内容的强迫性消费。
+
+消费主义让我们沉迷于物质/精神消费中，
+通过让我们接触各种光怪陆离的东西来丰富我们的身份认同感，
+这也是当今时代互联网正在加速实现的事情…
+但这是以牺牲掌握任何技能为代价换来的，
+我们沉迷得越深，想要掌握一项技能的愿望就会越来越淡化。
+
+
+翻开中国帝王史，有多少帝王是沉迷女色后国家衰亡，多少帝王是皇太后控制后抑郁早亡。
+野史里选王要的是看他不好色否? 当皇帝得看他有无抢夺妇女。
+翻开网络史发展，有多少人民群众是沉迷情色后道德衰亡，多少人是被色情控制后抑郁早亡，
+看人得看他好色否? 好不好色，得看他懂得怎么预防。
+
+论我怎么戒色? 答曰:
+学习技术、理解技术、控制技术，
+学习自由软件、拒绝商业软件、拒绝即是自由。
 + 成瘾源于: 随机|不必|即时|匿名|易得|免费|广告|失范，而互联网是完美满足这几点的最佳载体，网络从败坏道德、挠乱法律、刺激心理、久坐身体上来说绝不比烟酒赌淫的伤害少。
 + 通过 *路由器+NixOS* ，一个台式机，不使用手机与笔记本，使用玻璃胶封口，交出手机给他人并禁止其给予手机
   - 时间 :: 限时，一天三小时，2-5PM，时间甚至过于长了。
@@ -691,6 +475,31 @@ echo "✅ All done."
 - uBlock Origin :: Finally, an efficient blocker. Easy on CPU and memory.
 - Unhook - Remove YouTube Recommended & Shorts :: Hide YouTube related videos, shorts, comments, suggestions wall, homepage
 - Vimium C - All by Keyboard :: A keyboard shortcut tool for keyboard-based page navigation and browser tab
+
+** how to use C-M-x
+
+         ;; C-b C-left
+         ;; C-f C-right
+         ;; M-f
+         ;; M-b
+         ;; C-M-b
+         ;; C-M-b
+
+| fbudpn  | use c-m-arrow! |
+|---------+----------------|
+| C-b     | left           |
+| C-f     | right          |
+| M-f     | c-left         |
+| M-b     | c-right        |
+| C-M-f   | C-M-left       |
+| C-M-b   | C-M-right      |
+| C-M-u   | C-M-up         |
+| C-M-d   | C-M-down       |
+| C-M-p   | nochange       |
+| C-M-n   | nochange       |
+| c-space | c-shift        |
+|         |                |
+
 
 * 屏幕哲学 Screen
 

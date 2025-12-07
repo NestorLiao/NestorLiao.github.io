@@ -1177,6 +1177,8 @@
                         rg
                         dired-subtree
                         ztree
+                        goto-chg
+
                         ## expand & edit
                         move-text
                         surround
@@ -1184,11 +1186,11 @@
                         multiple-cursors
                         iedit
                         shift-number
-                        smart-shift
                         avy
                         yasnippet
 
                         ### Do Anything In Emacs©
+
                         #### project manager
                         magit
                         magit-todos
@@ -1222,6 +1224,7 @@
                         sicp
                         posix-manual
                         devdocs-browser
+
                         ### the you-know-who guy created a huge list of amazing pkgs
                         consult
                         embark
@@ -1231,6 +1234,7 @@
                         corfu
                         orderless
                         embark-consult
+
                         ### for language fans, and YOU DON'T HAVE TO LEARN THOSE
                         cmake-mode
                         dockerfile-mode
@@ -1242,6 +1246,7 @@
                         zig-mode
                         python-mode
                         yaml-mode
+
                         ### why I need below mode??? I am no cult dev.
                         # haskell-mode
                         # lua-mode
@@ -1267,10 +1272,12 @@
                         # qml-mode
                         # typescript-mode
                         # rfc-mode
+
                         ### save and format
                         aggressive-indent
                         elisp-autofmt
                         super-save
+
                         ### emacs look and feel
                         hide-mode-line
                         no-emoji
@@ -1278,6 +1285,7 @@
                         compile-angel
                         buffer-terminator
                         envrc
+
                         ### feel even better than drug
                         alert
                         trashed

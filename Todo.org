@@ -11,17 +11,67 @@
 - [X] pyim，提交issue修改%报错行为
 - [X] addons.mozilla，eink插件
 
+*** DONE 为什么中文图书一般是二十四行，34字一行? 为什么gnu代码是70字符fill-column? 为什么说24行一个函数就多了? 英文70字和34中文，二十四行?这些数字有任何的出版社经验? 人眼/心理/专注的心理/生理学?
 
-*** TODO write a eww-hook, when I use eww to visit a url, and  if the site(not local file) exsists more than 5 minuts, then download it to a dir I specific.
-*** TODO how to customize face as for specific mode?
-e.g., I want to have default face in calendar or compilation-mode use mono font, but stay my other face use proportional font still...
-I know I can use set-face-attribute but the way of it is do it in globally.
-(set-face-attribute 'no-emoji nil
-                      :background (face-attribute 'default :background)
-                      :foreground (face-attribute 'default :background)
-                      :height 0.1)
+中文图书的排版（如24行×34字）和GNU代码规范（70字符行宽）主要基于以下经验与原则：
+
+1. *中文排版传统*
+   - 24行×34字（约800字/页）是印刷业长期优化的结果，兼顾纸张利用、阅读节奏和视觉舒适度。
+   - 汉字为方块字，行宽过宽易串行，34字左右符合人眼水平视域范围。
+
+2. *编程规范（70字符）*
+   - 源于早期终端显示限制（如80列），留边便于并排查看或打印。
+   - 短行提升代码可读性，减少水平滚动，符合认知负荷理论。
+
+3. *认知与生理依据*
+   - 人眼专注广度有限：短行减少视线移动负担，提升信息摄取效率。
+   - 心理学研究表明，每段5–10行（英文）或20–30行（中文）利于保持注意力。
+
+4. *函数长度争议*
+   - “24行函数过长”源于软件工程实践：短函数（如<20行）更易维护和测试，符合单一职责原则。
+   - 但实际标准因语言和场景而异，并非绝对。
+
+这些数字是经验性平衡，融合了行业惯例、技术限制及人因工程，旨在优化信息传递效率。
+
+*** any famous one file header of c/c++?
+stb? std?
+
+
+Yes, *STB* is the famous single-file header library collection for C/C++.
+
+*Key points:*
+- *STB* (by Sean Barrett) provides lightweight, public domain libraries for graphics, audio, and utilities.
+- Each library is a single header file (e.g., =stb_image.h=, =stb_truetype.h=).
+- Usage: =#define= a macro like =STB_IMAGE_IMPLEMENTATION= in *one* =.c/.cpp= file before including the header to instantiate the implementation.
+
+*Other notable single-file headers:*
+- *SQLite* amalgamation (=sqlite3.c= + =sqlite3.h=)
+- *Dear ImGui* (GUI library, often used as a single header)
+- *TinyXML2*, *Nuklear* (GUI), *parson* (JSON)
+
+*STB* is especially popular in game dev and small projects for its simplicity and no dependencies.
+
+
+;; 增强 C-e 使得其可以在关键位置进行循环移动
+(use-package mwim
+  :ensure t
+  :bind (([remap move-beginning-of-line] . mwim-beginning-of-code-or-line)
+         ([remap move-end-of-line] . mwim-end-of-code-or-line)))
+
+
+;; [beginend] Better M-< M-> for programming
+(use-package beginend
+  :ensure t
+  :hook (after-init . beginend-global-mode))
+
+  check these pkg, and ws-bulster.
 
 *** TODO Advent of code in zig?
+https://github.com/TheAlgorithms/zig
+
+*** TODO how to have I can use vertico-flat-mode off when I do consult-ripgrep? and after I get to that file or quit, turn on my vertico-flat-mode?
+         ("C-c C-~ b" . (lambda () (interactive) (vertico-flat-mode -1) (consult-ripgrep "~/Zen/C/" nil) (vertico-flat-mode 1)))
+
 *** TODO package leego elisp package as emacs package
 - description: do leetcode in emacs with leetgo
 - require: wget/pandoc/leetgo/
@@ -35,6 +85,25 @@ I know I can use set-face-attribute but the way of it is do it in globally.
 - offline test, use pre fetched testcase/makefile/awk to local test tasks.
 - org format, local image, and generally you can easily export all questions.
 - wait I finished doing leetcode
+*** DONE write a eww-hook, when I use eww to visit a url, and  if the site(not local file) exsists more than 5 minuts, then download it to a dir I specific. :noneed:
+just use d to download.
+*** DONE how to customize face as for specific mode?
+e.g., I want to have default face in calendar or compilation-mode use mono font, but stay my other face use proportional font still...
+I know I can use set-face-attribute but the way of it is do it in globally.
+(set-face-attribute 'no-emoji nil
+                      :background (face-attribute 'default :background)
+                      :foreground (face-attribute 'default :background)
+                      :height 0.1)
+
+                      ;; Define a custom face for mono font
+(defface my-mono-face
+  '((t :family "UbuntuMono" :inherit default))
+  "Face for monospace text in specific modes.")
+
+;; Apply to specific modes via their hooks
+(add-hook 'calendar-mode-hook
+          (lambda () (face-remap-add-relative 'default 'my-mono-face)))
+
 *** DONE how to have pop out behavior like cape, but for my function's output?
 (completion-in-region (point) (point) (list))
 *** FIXME How to modify org-mode's #+INCLUDE:                :pr:mailinglist:
