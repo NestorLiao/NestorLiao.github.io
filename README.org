@@ -5,24 +5,25 @@ This is my blog and p(pdf)log which written in org and \LaTeX{}, and emacs/nixos
 (org-babel-do-load-languages
  'org-babel-load-languages '((emacs-lisp . t)(shell . t)))
 #+end_src
+
 #+caption: 我能用这代码块重现我的电脑，怎么样? 帅吧!
 #+begin_src sh :results none
-if [[ -f "/home/$USER/.emacs.d" ]] then
+ if [[ -f "/home/$USER/.emacs.d" ]] then
    git clone --depth 1 https://github.com/jamescherti/minimal-emacs.d ~/.emacs.d
-fi
-   ln -sf $PWD/nixos/ ~/.config/;
-   ln -sf $PWD/snippets ~/.config/;
-   ln -sf $PWD/nixos/hmdz.pyim ~/.config/;
-   ln -sf $PWD/nixos/post-init.el ~/.emacs.d/;
-   if [[ $XAPIAN_CJK_NGRAM != "true" ]] then
-      sudo cp /etc/hardware-configuration.nix $PWD/nixos/hardware-configuration.nix
-      chmod 777 $PWD/nixos/hardware-configuration.nix
-      mkdir -p   $HOME/.config/sops/age
-      cp .keys.txt  $HOME/.config/sops/age/keys.txt
-      sudo nix-channel --add https://nixos.org/channels/nixos-unstable
-      sudo nix-channel --update
-      sudo nixos-rebuild switch --flake /home/$USER/.config/nixos#$hostname  --option substituters 'https://mirrors.ustc.edu.cn/nix-channels/store  https://cache.nixos.org' --cores 6 -j 12;
-   fi
+ fi
+    ln -sf $PWD/nixos/ ~/.config/;
+    ln -sf $PWD/snippets ~/.config/;
+    ln -sf $PWD/nixos/hmdz.pyim ~/.config/;
+    ln -sf $PWD/nixos/post-init.el ~/.emacs.d/;
+    #  if [[ $XAPIAN_CJK_NGRAM != "true" ]] then
+    #    sudo cp /etc/hardware-configuration.nix $PWD/nixos/hardware-configuration.nix
+    #    chmod 777 $PWD/nixos/hardware-configuration.nix
+    #    mkdir -p   $HOME/.config/sops/age
+    #    cp .keys.txt  $HOME/.config/sops/age/keys.txt
+    #    sudo nix-channel --add https://nixos.org/channels/nixos-unstable
+    #    sudo nix-channel --update
+    #    sudo nixos-rebuild switch --flake /home/$USER/.config/nixos#$hostname  --option substituters 'https://mirrors.ustc.edu.cn/nix-channels/store  https://cache.nixos.org' --cores 6 -j 12;
+    # fi
 #+end_src
 
 这是org的文学编程能力最简单的体现，从c到bash，在一个org文件中能一起运行，神奇吧! 为什么emacs这么强大?大概就是因为它使用的elisp相当“灵”吧，再说为什么emacs这么小众，也大概是它的elisp太“难”了吧。有些人不敢学，怕自己投入又得不到钞票，有些人不能学，他们把自己的心给了别的教派如“vim”“vscode”于是固步自封，自高自大，vim模态天下第一! 我曾同样如此，抱着网上破烂配凑出的neovim，对那些大神的操作流口水但是又没法认同emacs。其实犹豫不定很正常，进入一个陌生的环境，很多怪人怪事，emacs更是如此，你常常不知道那些人口中说的eglot/flycheck/eww是什么?常常写错一些代码。当然这同样也是学习emacs的乐趣，也正是它的陌生带来的新鲜，而且有了chatgpt的帮助，学习起来相当方便。
@@ -262,7 +263,8 @@ fi
 * 语言哲学 Language
 ** 英文比不上那方块字
 ** 什么？编程语言也是语言？
-
+- useful link:
+  - https://lupyuen.org/
 
 - 看一下zig哲学：
   - Communicate intent precisely.

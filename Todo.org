@@ -10,6 +10,73 @@
 - [X] columndeeply/hosts，提交pr增加17868行新域名, +修改脚本为0.0.0.0+
 - [X] pyim，提交issue修改%报错行为
 - [X] addons.mozilla，eink插件
+*** check Zen/wirte-room-mode source code,  to implement my version of diff mode to diff font.
+*** TODO check emacs rotate-text package, config for ziglang.
+debug-ito/rotate-text.el
+*** DONE 为什么字体的高度不是线性对应?
+#+begin_src emacs-lisp :tangle yes
+(defvar my-alternate-font "-DAMA-UbuntuMono Nerd Font-regular-normal-normal-*-13-*-*-*-m-0-iso10646-1")
+(defvar my-default-font "bookerly")
+(defvar font-scale-list '((130 165)(140 190)(150 200)(160 210)(170 225)(180 240)(190 250)(200 270)(210 280)(220 285)(230 310)(240 315)(250 320)(260 350)))
+(defvar fontfont 1)
+(defun my-toggle-font (&optional size)
+  "Toggle between UbuntuMono and bookerly fonts."
+  (interactive)
+  (if (= fontfont 1)
+      (progn (set-face-attribute 'default nil :font my-default-font :height (car(nth (or size 6)  font-scale-list))) (setq fontfont 0))
+    (progn (set-face-attribute 'default nil :font my-alternate-font :height (car (cdr(nth (or size 6)  font-scale-list)))) (setq fontfont 1))))
+#+end_src
+
+I using this to swtich font.. and the 130 165, 140 190 is pair of numbers that I have to for let UbuntuMono and bookerly the same height. why the height increasing  is not linear??? I mean I increat bookerly 10 by 10 larger, byt UbuntuMono get 5/25/10/30... larger and smaller, wtf??? any way to make it easier to know what's the right height for both font in emacs or it's the font's unknown cs issues? explain in chinese, thanks you.
+
+在Emacs中，字体高度（=:height=）的单位是1/10点（point），但实际显示效果受字体设计影响。
+您遇到的问题是因为不同字体的*字符度量*（metrics）不同，包括：
+- 基线（baseline）位置
+- 上伸部（ascender）和下伸部（descender）比例
+- 字体的内置EM方框（em-square）与点尺寸的映射关系
+
+即使设置相同=:height=，不同字体的视觉大小也可能不同。
+您手动配对高度值（如130对应165）正是为了补偿这种差异。
+
+*建议的改进方法：*
+1. *使用=face-attribute=交互调试*
+   用=M-x describe-char=查看当前字符的字体属性，或临时用：
+   #+begin_src elisp
+   (face-attribute 'default :height)
+   =
+   比较两种字体的实际渲染效果。
+
+2. *编写自动配对函数*
+   通过循环测试，找到视觉高度最接近的配对值：
+   #+begin_src elisp
+   (defun find-matching-height (font1 font2 target-height)
+     "为FONT2寻找与FONT1在TARGET-HEIGHT下视觉匹配的高度"
+     (set-face-attribute 'default nil :font font1 :height target-height)
+     (let ((best-diff 1000) best-height)
+       (dolist (h (number-sequence 100 300 5))
+         (set-face-attribute 'default nil :font font2 :height h)
+         (redisplay) ; 强制刷新显示
+         (when (y-or-n-p "当前两种字体高度匹配吗？")
+           (setq best-height h)
+           (cl-return)))
+       best-height))
+   =
+
+3. *考虑使用=face-font-rescale-alist=*
+   直接缩放特定字体，避免手动配对：
+   #+begin_src elisp
+   (setq face-font-rescale-alist
+         '(("UbuntuMono Nerd Font" . 1.27))) ; 根据实际调整系数
+   =
+   之后切换字体时只需设置相同高度即可。
+
+*根本原因*：
+字体渲染依赖FreeType库，其将点尺寸转换为像素时，会参考字体的HHEA（水平头部）和OS/2表中的度量值。
+不同字体的设计单位（units per em）和缩放逻辑不同，导致非线性差异。
+
+*结论*：
+您的手动配对是合理方案。若想简化，建议采用上述第3种方法，通过全局缩放系数统一视觉大小。
+
 
 *** DONE 为什么中文图书一般是二十四行，34字一行? 为什么gnu代码是70字符fill-column? 为什么说24行一个函数就多了? 英文70字和34中文，二十四行?这些数字有任何的出版社经验? 人眼/心理/专注的心理/生理学?
 
@@ -33,7 +100,7 @@
 
 这些数字是经验性平衡，融合了行业惯例、技术限制及人因工程，旨在优化信息传递效率。
 
-*** any famous one file header of c/c++?
+*** DONE any famous one file header of c/c++?
 stb? std?
 
 

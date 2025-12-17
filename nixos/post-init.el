@@ -4,7 +4,20 @@
 (setq minimal-emacs-var-dir
       (expand-file-name "var/" minimal-emacs-user-directory))
 (setq user-emacs-directory minimal-emacs-var-dir)
-(global-unset-key (kbd "C-z"))
+;; (define-key key-translation-map (kbd "<right>") (kbd "<left>"))
+;; (define-key key-translation-map (kbd "<left>") (kbd "<right>"))
+;; (define-key key-translation-map (kbd "C-<left>") (kbd "C-<right>"))
+;; (define-key key-translation-map (kbd "C-<right>") (kbd "C-<left>"))
+;; (define-key key-translation-map (kbd "C-S-<left>") (kbd "C-S-<right>"))
+;; (define-key key-translation-map (kbd "C-S-<right>") (kbd "C-S-<left>"))
+;; (define-key key-translation-map (kbd "C-M-<left>") (kbd "C-M-<right>"))
+;; (define-key key-translation-map (kbd "C-M-<right>") (kbd "C-M-<left>"))
+;; (define-key key-translation-map (kbd "C-M-S-<left>") (kbd "C-M-S-<right>"))
+;; (define-key key-translation-map (kbd "C-M-S-<right>") (kbd "C-M-S-<left>"))
+;; (define-key key-translation-map (kbd "M-<left>") (kbd "M-<right>"))
+;; (define-key key-translation-map (kbd "M-<right>") (kbd "M-<left>"))
+;; (define-key key-translation-map (kbd "M-S-<left>") (kbd "M-S-<right>"))
+;; (define-key key-translation-map (kbd "M-S-<right>") (kbd "M-S-<left>"))
 (define-key key-translation-map (kbd "C-n") (kbd "C-x"))
 (define-key key-translation-map (kbd "C-x") (kbd "C-n"))
 (define-key key-translation-map (kbd "M-n") (kbd "M-x"))
@@ -112,7 +125,6 @@
  mode-line-position-column-line-format '("%l:%C")
  isearch-allow-scroll t
  package-install-upgrade-built-in t
- ;;; to the of the compilation
  ;;; no message of revert buffer
  auto-revert-verbose nil
  ;;; no fringe bookmark
@@ -136,15 +148,28 @@
  Man-width 75
  ;;; magit
  magit-log-margin-show-committer-date t
- magit-log-margin '(t age magit-log-margin-width t 5)
+ magit-log-margin '(t age magit-log-margin-width t 6)
  ;;; compilation
- compilation-window-height 4
- compilation-scroll-output 'first-error
+ compilation-window-height nil
+ compilation-scroll-output nil
  compilation-auto-jump-to-first-error nil
  ;;; duplicate
  duplicate-line-final-position 1
  duplicate-region-final-position 1
  treesit-font-lock-level 1
+ resize-mini-windows  nil
+ ;; visible-cursor nil
+ ;; x-stretch-cursor t
+ ;; mode-line-end-spaces nil
+ ;; bidi-inhibit-bpa t
+ ;; cursor-type 'box
+ ;; auto-mode-case-fold nil
+ ;; inhibit-compacting-font-caches nil
+ ;; bidi-display-reordering 'left-to-right
+ ;; bidi-paragraph-direction 'left-to-right
+ ;; buffer-file-coding-system 'utf-8
+ ;; indent-tabs-mode nil
+ ;; indicate-buffer-boundaries nil
  )
 (require 'use-package)
 (use-package compile-angel
@@ -177,23 +202,16 @@
    :preview-key '(:debounce 0.4 any))
   (setq consult-narrow-key "<")
   ;; stop addiction of configing emacs here. 我的人生大约是废了。
-  (defun list-packages()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
-  (defun org-agenda()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
-  (defun package-list-packages()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
-  (defun package-show-package-list()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
-  (defun customize-create-theme()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
-  (defun customize-themes()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
-  (defun gomoku()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
-  (defun calendar()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
+  ;; (defun list-packages()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
+  ;; (defun org-agenda()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
+  ;; (defun package-list-packages()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
+  ;; (defun package-show-package-list()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
+  ;; (defun customize-create-theme()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
+  ;; (defun customize-themes()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
+  ;; (defun gomoku()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
+  ;; (defun calendar()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
+  (global-unset-key (kbd "C-z"))        ;hey, what's going on? and I say hayayayayayyay.
   :bind (
-         ;; stop hurt my little finger girls here. 我的小姆指大约是废了。
-         ("C-/" . (lambda () (interactive) (message "为了我的小姆指!!!!!!! 用 C-f !!")))
-         ("M-/" . (lambda () (interactive) (message "为了我的小姆指!   别tm的用这个补全了")))
-         ("C-?" . (lambda () (interactive) (message "把小姆指留着挖鼻屎，用C-b 代劳吧!")))
-         ("C-c C-; k" . (lambda () (interactive) (message "别tm的杀buffer癌了, Use Ibuffer !!!")))
-         ("C-\\" . (lambda () (interactive) (message "别tm的用这个换输入法了")))
-         ("C-c C-; z" . (lambda () (interactive) (message "我不再使用isearch-forward-symbol-at-point用emabark-symbol or occur 它不香吗")))
-         ("C-c C-~ z" . (lambda () (interactive) (message "我不再使用C-c C-~ z, C-c C-~ d它不香吗?")))
          ([remap comment-line] . comment-or-uncomment-region-or-line)
          ([remap dabbrev-expand] . hippie-expand)
          ([remap imenu] . consult-imenu)
@@ -203,124 +221,200 @@
          ([remap kill-region] . kill-line-or-region)
          ([remap list-buffers] . ibuffer)
          ([remap project-switch-to-buffer] . consult-project-buffer)
-         ([remap find-file] . find-file-at-point)
-         ([remap dired] . dired-at-point)
+         ([remap find-file] . find-file)
+         ([remap dired] . dired)
+         ([remap kill-buffer] . kill-current-buffer)
          ([remap switch-to-buffer] . consult-buffer)
          ([remap yank-pop] . consult-yank-pop)
+         ;; stop hurt my finger girls here. 我的小姆指大约是废了。
+         ;; 爱护我们的左手小拇指
+         ;; ("C-a" . (lambda () (interactive) (message "为了我的小姆指!!!!!!! 用 <Home>!!")))
+         ;; ("M-a" . (lambda () (interactive) (message "为了我的小姆指!!!!!!! 这玩意本来就没啥用吧! 用avy!")))
+         ;; ("M-z" . (lambeda () (interactive) (message "为了我的小姆指!!!!!!! 这玩意本来就没啥用吧! 用M-x招唤吧!")))
+         ;; ("C-c C-; z" . (lambda () (interactive) (message "我不再使用isearch-forward-symbol-at-point用emabark-symbol or occur/rg 它不香吗")))
+         ;; ("C-c C-~ z" . (lambda () (interactive) (message "我不再使用navz来删窗口, navd它不香吗?")))
+         ;; ;; 爱护我们的右手小拇指
+         ;; ("<end>" . (lambda () (interactive) (message "为了我的小姆指!!!!!!! 用 C-e!!")))
+         ;; ("<right>" . (lambda () (interactive) (message "为了我的小姆指!!!!!!! 用 avy加M-f!!")))
+         ;; ("<right>" . right-char)       ; 有些时候，我们不能不妥协于世界。
+         ;; ("<right>" . (lambda () (interactive) (message "为了我的小姆指!!!!!!! 用 nav层的f!!"))) ; 有些时候，我就是不喜欢适应。去tm的世界。
+         ;; ("C-<right>" . (lambda () (interactive) (message "为了我的小姆指!!!!!!! 用m-f不是更爽吗!!"))) ; 有些时候，我就是不喜欢适应。去tm的世界。
+         ;; ("C-S-<right>" . (lambda () (interactive) (message "为了我的小姆指!!!!!!! 用m-s-f不是更爽吗!!"))) ; 有些时候，我就是不喜欢适应。去tm的世界。
+         ;; ("C-M-S-<right>" . (lambda () (interactive) (message "为了我的小姆指!!!!!!! 用C-m-s-f不是更爽吗!!"))) ; 有些时候，我就是不喜欢适应。去tm的世界。
+         ("C-/" . (lambda () (interactive) (message "为了我的小姆指!!!!!!! 用 C-f 来撤回吧!!")))
+         ("C-?" . (lambda () (interactive) (message "把小姆指留着挖鼻屎，用C-b 来重做，用食指来代劳吧!")))
+         ("M-/" . (lambda () (interactive) (message "为了我的小姆指!   别tm的用这个补全了，用M-return和M-tab对就干!!")))
+         ("M-o" . (lambda () (interactive) (message "为了我的小姆指!   别tm的用这个换窗口了，用M-e，反正我不是写小说的。")))
+         ("M-O" . (lambda () (interactive) (message "为了我的小姆指!   别tm的用这个换窗口了，用M-E，后正我不是写论文的。")))
+         ;; 也要爱护我们的食指，它可是各管着六个键的啊!
+         ("C-c C-; k" . (lambda () (interactive) (message "别tm的杀buffer癌了, Use Ibuffer 杀(窗)口 !!!")))
+         ("C-\\" . (lambda () (interactive) (message "别tm的用这个换输入法了，明明不用伸食指就行!")))
+         ;; ----------------------------------------
          ;; No Need "qbj'" if in inner
          ;; No Need "qbj'vk"  if in middle
          ;; No Need all if in outter, take care of your thumb, they are finger killers
          ;; use less z/ ao q', because little finger are easy to get hurt.
          ;; mos arstb are specific to native emacs binding
-
-         ("C-b" . goto-last-change)     ;我也不用这个啥c-bnfp来上下左右啊
-         ("C-n" . goto-last-change-reverse)
-         ("C-f" . undo)
-         ("C-p" . undo-redo)
-         ("M-n". embark-next-symbol)    ;这两本来就没bind啊
-         ("M-p". embark-previous-symbol)
-
-         ("C-<backspace>" . duplicate-dwim) ;配和M-<backspace>，爽爽爽爽!
-         ("C-M-<return>" . avy-copy-region) ;
-         ("C-S-<return>" . avy-goto-line)   ;
-         ("C-<return>" . avy-goto-word-0)   ;
-         ("M-<return>" . hippie-expand)     ; 和alt-tab 针锋相对
+         ("<Launch5>" . (lambda () (interactive)(insert "explain in chinese, thank you!")))
+         ("<Launch6>" . (lambda () (interactive)(insert "(lambda () (interactive)())")))
+         ("<Tools>" . tavily-search)
+         ("C-f" . undo)     ;我也不用这个啥c-bnfp来上下左右啊
+         ("C-b" . undo-redo)
+         ("C-p" . goto-last-change)        ;goat
+         ("M-p". goto-last-change-reverse)  ;这两本来就没bind啊
+         ;; ----------------------------------------
+         ;; M-<backspace>，backward-kill-word 爽爽爽爽!
+         ("C-<backspace>" . duplicate-dwim)
+         ("S-<backspace>" . kill-sexp)
+         ;; ----------------------------------------
+         ("C-M-<return>" . avy-copy-region)
+         ("C-S-<return>" . avy-goto-line)
+         ("C-<return>" . avy-goto-word-0)
+         ("M-<return>" . hippie-expand) ; 和alt-tab 针锋相对
          ("S-<return>" . comment-indent-new-line) ; 下一行注释
-         ("M-SPC" . consult-line) ; Why I need Bloate Emacs Bindings?
+         ;; ----------------------------------------
+         ;; 想想 C-SPC C-SPC 就是做标记，而M-SPC就是去标记点，爽了吧。
+         ("M-SPC" . consult-mark) ; Why I need Bloate Emacs Bindings?
                                         ; I just need a brave new world. give me soma!!!!
-
+         ;; ----------------------------------------
+         ;; M-<tab>用来补全，其它的用来修定 alt+tab
          ;; ("C-<tab>" . surround-mark) ; ctrl+tab
-         ("<backtab>" . surround-insert) ; shift+ tab
-         ("C-M-<tab>" . surround-kill)    ; ctrl+alt+tab
-         ("C-<iso-lefttab>" . surround-delete) ;ctrl+shift+tab
-         ("s-<tab>" . surround-change)         ;ctrl+meta+tab
+         ("<backtab>" . surround-insert) ; shift+ tab加括号
+         ("C-<iso-lefttab>" . surround-delete) ;ctrl+shift+tab删括号
+         ("C-M-<tab>" . surround-kill)    ; ctrl+alt+tab删括号内外
+         ("s-<tab>" . surround-change)         ;ctrl+meta+tab改括号
+         ;; ----------------------------------------
+         ("C-v". (lambda() (interactive)(recenter-top-bottom 0))) ;use page up and down
+         ("M-v". (lambda() (interactive)(recenter-top-bottom 38))) ;now, they are for top view and bottom view
+         ("M-i". imenu)("M-I" . consult-imenu-multi)("M-e". other-window)("M-E". (lambda () (interactive) (other-window -1)))
+         ("M-*". (lambda () (interactive) (my/leetcode-open (string-to-number(current-word)))))("C-%". iedit-mode)
+         ("C-," . toggle-solution-question)
+         ("M-+" . shift-number-up)
+         ("M-_" . shift-number-down)
+         ("C-n" . donothing)  ; 有bug也好，懒得记
+         ("M-n". donothing)
 
-         ;; MOS
+         ;;;; 我有主要有NAV/MOS/SYM/(NUM: 通过Sway调用:not anymore, I just all emacs now!) who need wtf os/wm... just using Shitty emacs.
+         ;; MOS-begin-----------------------------------------------------------------
          ("C-c C-; d" .  dired)
-         ("C-c C-; f" . rg-dwim)
+         ("C-c C-; k" .  kill-buffer)
+         ("C-c C-; f" . (lambda () (interactive)  (consult-ripgrep "~/Zen/codebase/" nil)))
          ("C-c C-; g" . er/expand-region)
-         ("C-c C-; m" . devdocs-browser-open)
          ("C-c C-; p" . disproject-dispatch)
+         ("C-c C-; m" . devdocs-browser-open)
          ("C-c C-; u" . delete-all-space)
          ("C-c C-; v" . multi-vterm-project)
+         ;; ("C-c C-; v" . eshell-toggle)
          ("C-c C-; y" . yas-insert-snippet)
-
          ("C-c C-; x" . consult-complex-command)
          ("C-c C-; c" . compile)
          ("C-c C-; l" . git-link-dispatch)
-         ("C-c C-; w" . (lambda () (interactive)     (completion-in-region (point) (point) (list
-                                                                                            (format "%s行 %s列" (line-number-at-pos)(current-column))
-                                                                                            (format "%s" (if (equal major-mode 'dired-mode) default-directory (buffer-file-name)))
-                                                                                            (format "%s" (buffer-name))
-                                                                                            (format "函: %s" (which-function))
-                                                                                            ;; (format "时: %s" (current-time-string))
-                                                                                            ;; (format "域: %s" easysession--current-session-name)
-                                                                                            ))))
+         ("C-c C-; w" . (lambda () (interactive) (completion-in-region (point) (point) (list
+                                                                                        (format "%s" (buffer-name))
+                                                                                        (format "%s" (if (equal major-mode 'dired-mode) default-directory (buffer-file-name)))
+                                                                                        (format "处于第%s行 第%s列 %s函数中" (line-number-at-pos)(current-column) (which-function))
+                                                                                        (format "现在是%s点钟 %s" (format-time-string "%k")
+                                                                                                (if (> 30 (string-to-number(format-time-string "%M")))
+                                                                                                    "未过半" "过半"))
+                                                                                        ;; (format "域: %s" easysession--current-session-name)
+                                                                                        ))))
+         ("C-c C-; j" . vertico-repeat)
          ;; 当其无，有手之用
          ("C-c C-; '" . donothing)
          ("C-c C-; q" . donothing)
-         ("C-c C-; j" . vertico-repeat)
+         ;; MOS-end-----------------------------------------------------------------
 
-         ;; NAV
-         ("C-c C-~ d" .  delete-window)
-         ("C-c C-~ c" .  split-window-below)
+         ;; NAV-begin--------------------------------------------------------------
          ("C-c C-~ x" .  delete-other-windows)
+         ("C-c C-~ c" .  split-window-below)
+         ("C-c C-~ d" .  delete-window)
          ("C-c C-~ g" .  magit-status)
-         ("C-c C-~ l" .  magit-log-buffer-file)
-         ("C-c C-~ u" . consult-mark)
+         ("C-c C-~ j" .  magit-log-buffer-file)
+         ("C-c C-~ l" .   consult-line)
+         ("C-c C-~ u" . occur)
          ("C-c C-~ y" .  quick-sdcv-search-at-point)
-
-         ("C-c C-~ f" . recompile)
-         ("C-c C-~ k" . consult-bookmark)
-         ("C-c C-~ w" . consult-org-agenda)
-         ("C-c C-~ m" . woman)
-         ("C-c C-~ p" . (lambda () (interactive)  (consult-fd "~/Zen/C/" nil) ))
-         ("C-c C-~ b" . (lambda () (interactive)  (consult-ripgrep "~/Zen/C/" nil) ))
-
+         ("C-c C-~ f" . right-char)
+         ("C-c C-~ k" . donothing)
+         ("C-c C-~ w" . right-word) ;论我为什么要用occur和这么多rg
+         ;; rg用在真实文件好用，但是不能用在虚文件中，occur可以
+         ;; rg比起occur更灵活，能指定文件种类/路径，能非常好直接修改。
+         ("C-c C-~ m" . (lambda () (interactive)  (recompile) (delete-window (get-buffer-window "*compilation*"))))
+         ("C-c C-~ p" . rg-dwim)        ;stop use WTF Occur, because rg is KING.
+         ("C-c C-~ b" . rg-dwim-current-file)
          ;; 当其无，有心之用
          ("C-c C-~ v" . donothing)
          ("C-c C-~ q" .  donothing)
-         ("C-c C-~ j" .  donothing)
          ("C-c C-~ '" .  donothing)
+         ;; NAV-end---------------------------------------------------------
 
-         ;; get SYM back, all kind of toggles
-         ("C-c C-& l" . (lambda () (interactive)(my-toggle-font font-me)))
-         ("C-c C-& u" . (lambda () (interactive) (vertico-flat-mode) (if vertico-unobtrusive-mode (vertico-unobtrusive-mode 1) (vertico-unobtrusive-mode -1))(setq vertico-unobtrusive-mode (not vertico-unobtrusive-mode))))
-         ("C-c C-& y" . global-hide-mode-line-mode)
+         ;; SYM-begin-------------------------------------------------------
+         ("C-c C-& j" . my-toggle-font)
+         ("C-c C-& u" . (lambda () (interactive)(if vertico-unobtrusive-mode (vertico-unobtrusive-mode 1) (vertico-unobtrusive-mode -1))(setq vertico-unobtrusive-mode (not vertico-unobtrusive-mode))))
+         ("C-c C-& y" . togglebook-mode)
+         ("C-c C-& l" . global-hide-mode-line-mode)
          ("C-c C-& m" . toggle-truncate-lines)
          ("C-c C-& h" . git-timemachine-toggle)
          ("C-c C-& ," . toggle-input-method)
          ("C-c C-& ." . toggle-letter-case)
          ("C-c C-& DEL" . xah-clean-whitespace)
-         ("C-c C-& j" . togglebook-mode)
          ("C-c C-& k" . swint-count-words-region)
-
+         ;; 得之心而运之于手
          ("C-c C-& /" . donothing)
-         ("C-c C-& '" . donothing)      ; q and b used on sym layer
+         ("C-c C-& '" . donothing)
+         ;; SYM-end-------------------------------------------------------
+         ("s-m" .  (lambda () (interactive)()
+                     (if (equal  (current-buffer) (gptel "*deepseek*"))
+                         (previous-buffer)
+                       (switch-to-buffer "*deepseek*" ))))
+         ;; NUM-begin
+         ("s->" . (lambda ()   (interactive)
+                    (if (equal  (buffer-name) "*compilation*")
+                        (previous-buffer)
+                      (switch-to-buffer "*compilation*" ))))
+         ("s-h" . (lambda ()
+                    (interactive)
+                    (if (derived-mode-p 'zig-mode)
+                        ;; (switch-to-buffer (other-buffer (current-buffer) t))
+                        (switch-to-buffer (cl-find-if (lambda (buf)
+                                                        (with-current-buffer buf
+                                                          (derived-mode-p 'eww-mode)))
+                                                      (buffer-list)))
+                      (switch-to-buffer (cl-find-if (lambda (buf)
+                                                      (with-current-buffer buf
+                                                        (derived-mode-p 'zig-mode)))
+                                                    (buffer-list))))))
+         ("s-<" .  (lambda ()
+                     (interactive)
+                     (if (derived-mode-p 'zig-mode)
+                         ;; FIXME: how to get the second zig mode buffer??
+                         (progn (setq zig-buffer-name (buffer-name))
+                                (switch-to-buffer (cl-find-if (lambda (buf)
+                                                                (with-current-buffer buf
+                                                                  (and (derived-mode-p 'zig-mode)
+                                                                       (not (eq (buffer-name) zig-buffer-name)))))
+                                                              (buffer-list))))
+                       (switch-to-buffer (cl-find-if (lambda (buf)
+                                                       (with-current-buffer buf
+                                                         (derived-mode-p 'zig-mode)))
+                                                     (buffer-list))))))
+         ("s-j" . (lambda () (interactive)(find-file "~/.emacs.d/post-init.el")))
+         ("s-l" . previous-buffer)
+         ("s-u" . next-buffer)
+         ;; NUM-end--------------------------------------------Yes, I now use emacs only.
 
-         ;; minor
-         ("C-v". (lambda() (interactive)(recenter-top-bottom 0))) ;use page up and down
-         ("M-v". (lambda() (interactive)(recenter-top-bottom 38)))
-         ("M-*". (lambda () (interactive) (my/leetcode-open (string-to-number(current-word)))))
-         ("M-i". imenu)
-         ("M-I" . consult-imenu-multi)
-         ("M-o". other-window)
-         ("M-O". (lambda () (interactive) (other-window -1)))
-         ("C-;". iedit-mode)
-         ("<f2>" . kmacro-set-counter)
-
+         ;; minor, don't use, they are bloated.
+         ;; just don't give shit to below...
          ("M-#" . consult-register-load)
          ("M-$" . consult-register-store)
          ("C-M-#" . consult-register)
          ("M-g g" . consult-goto-line)
          ("M-g M-g" . avy-goto-line)
-
-         ;; just don't give shit to below...
          ("M-s k" . flush-lines)
          ("M-s K" . consult-keep-lines)
          ("M-s M-k" . avy-kill-whole-line)
          ("M-s d" . delete-duplicate-lines)
-         ("M-s p" . check-parens)
+         ("M-s p" . search-zig)
+         ("M-s t" . check-parens)
          ("M-s b" . magit-blame-addition)
          ("M-s g" . consult-git-grep)
          ("M-s u" . consult-global-mark)
@@ -332,7 +426,8 @@
          :map minibuffer-local-map
          ("M-r" . consult-history)
          :map transient-map
-         ("M-w". transient-copy-menu-text)))
+         ("M-w". transient-copy-menu-text)
+         ))
 (use-package real-mono-themes :config (load-theme 'real-mono-eink t))
 (use-package markdown-mode
   :commands (gfm-mode
@@ -354,6 +449,7 @@
   :bind(
         :map vertico-map
         ("<next>" . scroll-up-command)
+        ("<right>" . sayshit)
         ("<prior>" . scroll-down-command)
         ("M-<next>" . vertico-next-group)
         ("M-<prior>" . vertico-previous-group))
@@ -397,10 +493,11 @@
          ("M-." . embark-dwim)
          ("C-h B" . embark-bindings))
   :init (setq prefix-help-command #'embark-prefix-help-command)
-  :config (add-to-list 'display-buffer-alist
-                       '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
-                         nil
-                         (window-parameters (mode-line-format . none))))
+  :config
+  (add-to-list 'display-buffer-alist
+               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+                 nil
+                 (window-parameters (mode-line-format . none))))
   (use-package embark-consult :ensure t :hook
     (embark-collect-mode . consult-preview-at-point-mode)))
 (use-package autorevert
@@ -486,8 +583,13 @@
     :init
     (corfu-popupinfo-mode 1)
     :config
-    (setq corfu-popupinfo-delay '(1.0 . 1.0)))
-  :hook ((prog-mode . corfu-mode)
+    (setq corfu-popupinfo-delay '(1.0 . 1.0))
+    (setq corfu-quick1 "rst")
+    (setq corfu-quick2 "nei")
+    (keymap-set corfu-map "M-<tab>" #'corfu-quick-complete)
+    (keymap-set corfu-map "C-<tab>" #'corfu-quick-insert))
+  :hook (
+         (prog-mode . corfu-mode)
          (shell-mode . corfu-mode)
          (eshell-mode . corfu-mode))
   :custom
@@ -611,16 +713,11 @@
   (org-confirm-babel-evaluate nil)
   (org-startup-with-inline-images t)
   (org-link-descriptive nil)
-  ;; (org-agenda-files '("~/Leere/oooo.org"))
-  (org-agenda-files (directory-files-recursively
-                     "~/Leere/NestorLiao.github.io/" "\\.org$"))
   (org-todo-keywords ;; t要做的，f要修的，e暂时的，a失败的，k有缺陷的，o就这样吧
    '((sequence  "TODO(t)" "DONE(d)" "|" "FIXME(f)")
      (sequence "TEMP(e)" "FAIL(a)" "KLUDGE(k)"    "|" "OKAY(o)")))
   :bind (( "C-c a" . org-agenda)
          ( "C-c l" . org-store-link))
-  :hook
-  (org-mode-hook . (lambda ()(interactive) (setq-local face-font-rescale-alist '(("Source Han" . 0.9)))))
   :config
   ;; (remove-hook 'org-mode-hook  #'toggle-truncate-lines)
   (with-eval-after-load 'org
@@ -710,17 +807,11 @@
         (alist-get ?K avy-dispatch-alist) 'avy-action-kill-whole-line
         (alist-get ?  avy-dispatch-alist) 'avy-action-mark-to-char
         (alist-get ?q avy-dispatch-alist) 'avy-quick-sdcv-search-at-point))
-(use-package diff-mode :ensure nil
+(use-package diff-mode
   :custom
   (diff-default-read-only t)
   (diff-font-lock-syntax 'hunk-also)
   (diff-font-lock-prettify t))
-(use-package buffer-terminator
-  :ensure t
-  :custom
-  (buffer-terminator-verbose nil)
-  :config
-  (buffer-terminator-mode 1))
 (use-package magit
   :config
   (setq magit-bury-buffer-function 'magit-restore-window-configuration)
@@ -752,9 +843,8 @@
   ( :map quick-sdcv-mode-map
     ("SPC" . scroll-up-command)
     ("DEL" . scroll-down-command)
-    ;; ("y" . previous-buffer)
     ("y" . (lambda () (interactive) (previous-buffer) (other-window 1)))
-    ("u" . quick-sdcv-search-at-point)))
+    ("u" . delete-window)))
 (use-package elisp-autofmt
   :commands (elisp-autofmt-mode
              elisp-autofmt-buffer
@@ -930,6 +1020,7 @@
               ("s" . occur)
               ("ESC <prior>" . (lambda () (interactive) (bookmark-set "epub")))
               ("C-M-i" .              (lambda () (interactive) (bookmark-jump "epub")))
+              ("ESC <f5>". hibernatecall)
               ("<prior>" . nov-scroll-down)
               ("<next>" . nov-scroll-up)))
 (use-package pdf-tools
@@ -938,9 +1029,10 @@
   :mode ("\\.pdf\\'" . pdf-view-mode)
   :init (pdf-loader-install)
   :commands (pdf-view-mode)
-  :bind (("ESC <f5>". hibernatecall)
+  :bind (
          ("<WakeUp>". donothing)
          :map pdf-view-mode-map
+         ("ESC <f5>". hibernatecall)
          ("s" . pdf-occur)
          ("n" . pdf-view-next-page)
          ("p" . pdf-view-previous-page)
@@ -976,11 +1068,12 @@
   (my/nix-store-shorten-paths))
 ;; (remove-hook 'compilation-filter-hook #'my/compilation-filter-hook)
 (add-hook 'compilation-filter-hook #'ansi-color-compilation-filter)
+(add-hook 'next-error-hook (lambda ()(interactive) (when (get-buffer-window "*compilation*") (delete-window (get-buffer-window "*compilation*")))))
+(add-hook 'previous-error-hook (lambda ()(interactive) (when (get-buffer-window "*compilation*")(delete-window (get-buffer-window "*compilation*")))))
 (defun hibernatecall()
   (interactive)
   (about-emacs)
   (call-process "systemctl" nil nil nil "hibernate"))
-(defvar justonebookonetimelessismore "index.org")
 (setq alert-default-style 'libnotify)
 (defun xah-clean-whitespace ()
   (interactive)
@@ -999,6 +1092,7 @@
         (while (eq (char-before) 32) (delete-char -1)))))
   (message "%s done" real-this-command))
 (defun donothing () (interactive)(message ""))
+(defun sayshit () (interactive)(message "You Are Note Suppose To Use This Key!"))
 (use-package pyim
   :ensure t
   :custom
@@ -1059,8 +1153,9 @@
 (add-hook 'term-exec-hook   'with-editor-export-editor)
 (add-hook 'vterm-mode-hook  #'with-editor-export-editor)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
+;; (global-hide-mode-line-mode 1)
 (tooltip-mode -1)(delete-selection-mode 1)
-(global-font-lock-mode -1)(global-hide-mode-line-mode 1)(global-eldoc-mode -1)
+(global-font-lock-mode 1)(global-eldoc-mode -1)
 (show-paren-mode -1)(window-divider-mode 1)(winner-mode -1)
 (repeat-mode -1)(display-time-mode -1)(display-line-numbers-mode -1)
 (use-package face-remap :config (defun text-scale-adjust (inc) (interactive "p") (let ((ev last-command-event) (echo-keystrokes nil) (message-log-max nil)) (let* ((base (event-basic-type ev)) (step (pcase base ((or ?+ ?=) inc) (?- (- inc)) (?0 0) (_ inc)))) (text-scale-increase step) (set-transient-map (let ((map (make-sparse-keymap))) (dolist (mods '(() (control))) (dolist (key '(?+ ?= ?- ?0)) (define-key map (vector (append mods (list key))) (lambda () (interactive) (text-scale-adjust (abs inc)))))) map) nil nil nil)))))
@@ -1094,6 +1189,7 @@
   :commands (vterm--internal)
   :bind (:map vterm-mode-map
               ("C-p" . vterm-copy-mode)
+              ("M-e" . other-window)
               :map vterm-copy-mode-map
               ("C-p" . vterm-previous-prompt )
               ("C-f" . vterm-next-prompt )
@@ -1152,6 +1248,8 @@
       (previous-buffer)
     (progn
       (switch-to-buffer "*Zen*" )
+      (setq fontfont 1 line-spacing nil)
+      (my-toggle-font 2)
       (erase-buffer)
       (insert
        "- 眼不见生物本能与工业革命驱动的越发泛滥的瘾品失范世界，心为净极简自然身心|黑白断网编程
@@ -1194,8 +1292,6 @@
       (beginning-of-buffer)
       (org-mode)
       (donothing))))
-(defvar my/leetcode-root "~/Leere/Leetcode/src/"
-  "Root directory of leetgo-generated problems.")
 (defun my/leetcode-format-number (n)
   "Return N formatted like 1 → \"0001\"."
   (format "%04d" n))
@@ -1353,9 +1449,6 @@ NUMBERS is a string like \"1 2 3 11 17 19\"."
                      (format "#+INCLUDE: \"%s\" :minlevel 2\n"
                              (file-relative-name q default-directory)))))))))
       (message "Marker '# begin of leetcode include' not found!"))))
-(global-set-key (kbd "C-,") 'toggle-solution-question)
-(global-set-key (kbd "M-+") 'shift-number-up)
-(global-set-key (kbd "M-_") 'shift-number-down)
 (use-package xref :config
   (defun xref-go-back ()
     "Go back to the previous position in xref history.
@@ -1529,7 +1622,7 @@ To undo, use \\[xref-go-forward]."
 ========================
 中英文合计(不含标点)：%s
 中英文合计(包含标点)：%s
-count-words: %s"
+%s"
              chinese-char chinese-char-and-punc english-word
              (+ chinese-char english-word)
              (+ chinese-char-and-punc english-word)
@@ -1621,8 +1714,7 @@ count-words: %s"
      region\) apply comment-or-uncomment to the current line"
   (interactive)
   (if (not mark-active)
-      (comment-or-uncomment-region
-       (line-beginning-position) (line-end-position))
+      (comment-line 1)
     (if (< (point) (mark))
         (comment-or-uncomment-region (point) (mark))
       (comment-or-uncomment-region (mark) (point)))))
@@ -1647,7 +1739,6 @@ count-words: %s"
     (sleep-for 1)
     (call-process monitorcli nil nil nil monitorprotocol monitorpath (car (nthcdr 3 monitorarg))))
   (donothing))
-(global-smart-shift-mode 1)
 (defvar my-last-buffer nil
   "Stores the last buffer before switching.")
 (defun my-toggle-buffer ()
@@ -1712,16 +1803,14 @@ count-words: %s"
   (interactive)
   (let ((direction '("down" "right")))
     (if (= (call-process-shell-command "swaymsg -t get_tree | jq -e '.. | select(.focused? == true and .fullscreen_mode == 1)' >/dev/null;" nil t t) 4)
-     (start-process  "swaymsg" nil  "swaymsg" "focus" (car(nthcdr rotate direction)))(progn
-                                                                                       (start-process  "fullscreen1" nil  "swaymsg" "fullscreen" )
-                                                                                       (start-process  "swaymsg" nil  "swaymsg" "focus" (car(nthcdr rotate direction)))
-                                                                                       (start-process  "fullscreen2" nil  "swaymsg" "fullscreen" )))))
+        (start-process  "swaymsg" nil  "swaymsg" "focus" (car(nthcdr rotate direction)))(progn
+                                                                                          (start-process  "fullscreen1" nil  "swaymsg" "fullscreen" )
+                                                                                          (start-process  "swaymsg" nil  "swaymsg" "focus" (car(nthcdr rotate direction)))
+                                                                                          (start-process  "fullscreen2" nil  "swaymsg" "fullscreen" )))))
 (defun swayrotate()
   (interactive)
   (start-process  "fullscreen1" nil  "swaymsg" "layout toggle split" )
   (setq rotate   (if (= 0 rotate) 1 0 )))
-;; (global-set-key (kbd "s-<") 'swaywindow)
-;; (global-set-key (kbd "s->") 'swayrotate)
 (use-package aggressive-indent
   :ensure t
   :commands aggressive-indent-mode
@@ -1764,16 +1853,6 @@ count-words: %s"
   ;; 只需要输入一次密码 https://www.reddit.com/r/emacs/comments/3liwm7/is_it_possible_to_configure_tramp_such_that_i/
   (tramp-use-ssh-controlmaster-options nil)
   (tramp-chunksize 2000))
-(use-package mwim
-  :bind (([remap move-beginning-of-line] . mwim-beginning-of-code-or-line) ;;test
-         ([remap move-end-of-line] . mwim-end-of-code-or-line)))
-(keymap-global-set "s-m" #'switch-to-gptel)
-(keymap-global-set "<Tools>" #'tavily-search)
-(defun switch-to-gptel()
-  (interactive)
-  (if (equal  (current-buffer) (gptel "*deepseek*"))
-      (previous-buffer)
-    (switch-to-buffer "*deepseek*" )))
 (defun tavily-search-async (callback query &optional search-depth max-results exclude_domains country include_domains)
   "Perform a search using the Tavily API and return results as JSON string.
 API-KEY is your Tavily API key.
@@ -1974,21 +2053,6 @@ Optional MAX-RESULTS is the maximum number of results (default 5)."
                          :type "string"
                          :description "Path to the file to read.  Supports relative paths and ~."))
      :category "filesystem"))
-  (defun ant/gptel-save-buffer ()
-    "Save the current GPTEL buffer with the default directory
-set to ~/note."
-    (interactive)
-    (let ((default-directory "/home/leeao/Leere/NestorLiao.github.io/"))
-      (call-interactively #'save-buffer)))
-  (defun ant/gptel-load-session ()
-    "Load a gptel session from ~/notes directory."
-    (interactive)
-    (let ((default-directory "/home/leeao/Leere/NestorLiao.github.io/"))
-      (let* ((files (directory-files default-directory t ".+\\.org$"))
-             (file (completing-read "Select session file: " files nil t)))
-        (when file
-          (find-file file)
-          (gptel-mode)))))
   (setq  gptel-default-mode 'org-mode)
   (setq deepseek-api-key
         (with-temp-buffer
@@ -2010,9 +2074,7 @@ set to ~/note."
   :after consult
   :custom
   (consult-gh-confirm-before-clone nil)
-  (consult-gh-default-clone-directory "~/codebase")
   (consult-gh-ask-for-path-before-save nil)
-  (consult-gh-default-save-directory "~/codebase")
   (consult-gh-show-preview t)
   (consult-gh-preview-key "C-o")
   (consult-gh-repo-action #'consult-gh--repo-browse-files-action)
@@ -2058,28 +2120,6 @@ This command does the inverse of `fill-paragraph'."
   (interactive)
   (let ((fill-column 90002000)) ; 90002000 is just random. you can use `most-positive-fixnum'
     (fill-paragraph nil)))
-(defvar book-mode 1
-  "toggle, from programming mode to book mode ")
-(defun togglebook-mode()
-  (interactive)
-  ;;; manual
-  (if book-mode (progn (setq-default
-                        fontfont 1
-                        line-spacing 0.3
-                        woman-fill-column 70
-                        Man-width 70
-                        fill-column 70
-                        font-me 6)
-                       (my-toggle-font 6))
-    (progn (setq-default fontfont 1
-                         line-spacing nil
-                         woman-fill-column 80
-                         Man-width 80
-                         fill-column 80
-                         font-me 3)
-           (my-toggle-font 3)))
-  (setq book-mode (not book-mode)))
-(togglebook-mode)
 (defvar my-alternate-font "-DAMA-UbuntuMono Nerd Font-regular-normal-normal-*-13-*-*-*-m-0-iso10646-1")
 (defvar my-default-font "bookerly")
 (defvar font-scale-list '((130 165)(140 190)(150 200)(160 210)(170 225)(180 240)(190 250)(200 270)(210 280)(220 285)(230 310)(240 315)(250 320)(260 350)))
@@ -2088,5 +2128,63 @@ This command does the inverse of `fill-paragraph'."
   "Toggle between UbuntuMono and bookerly fonts."
   (interactive)
   (if (= fontfont 1)
-      (progn (set-face-attribute 'default nil :font my-default-font :height (car(nth (or size 6)  font-scale-list))) (setq fontfont 0))
-    (progn (set-face-attribute 'default nil :font my-alternate-font :height (car (cdr(nth (or size 6)  font-scale-list)))) (setq fontfont 1))))
+      (progn (set-face-attribute 'default nil :font my-default-font :height (car(nth (or size 3)  font-scale-list))) (setq fontfont 0))
+    (progn (set-face-attribute 'default nil :font my-alternate-font :height (car (cdr(nth (or size 3)  font-scale-list)))) (setq fontfont 1))))
+;; (setq consult-gh-default-clone-directory "~/Zen/blogging/"
+;;       consult-gh-default-save-directory "~/.save"
+;;       org-agenda-files (directory-files-recursively "~/Leere/NestorLiao.github.io/" "\\.org$")
+;;       my/leetcode-root "~/Leere/Leetcode/src/")
+(defvar book-mode 1
+  "toggle, from programming mode to book mode ")
+(defun togglebook-mode()
+  (interactive)
+  (if book-mode (progn (setq-default
+                        fontfont 1
+                        line-spacing 0.4
+                        woman-fill-column 70
+                        Man-width 70
+                        fill-column 70
+                        font-me 6)
+                       (my-toggle-font 6)
+                       (text-scale-set 0))
+    (progn (setq-default fontfont 1
+                         line-spacing nil
+                         woman-fill-column 80
+                         Man-width 80
+                         fill-column 80
+                         font-me 3)
+           (my-toggle-font 3)
+           (text-scale-set 0)))
+  (setq book-mode (not book-mode)))
+(togglebook-mode)
+(global-hide-mode-line-mode 1)
+(use-package eshell-toggle
+  :custom
+  (eshell-toggle-size-fraction 3)
+  (eshell-toggle-use-projectile-root 'project) ;; for in-built project.el
+  (eshell-toggle-run-command nil)
+  ;; (eshell-toggle-init-function #'eshell-toggle-init-ansi-term)
+  )
+
+(use-package eshell
+  :ensure nil
+  :config
+  (defvar-keymap eshell-hist-mode-map
+    ;; "<up>"     #'eshell-previous-matching-input-from-input
+    ;; "<down>"   #'eshell-next-matching-input-from-input
+    "<up>"     #'previous-line
+    "<down>"   #'next-line
+    "C-<up>"   #'eshell-previous-input
+    "C-<down>" #'eshell-next-input
+    "M-r"      #'eshell-isearch-backward-regexp
+    "C-c M-r"  #'eshell-previous-matching-input-from-input
+    "C-c M-s"  #'eshell-next-matching-input-from-input
+    "C-c C-l"  #'eshell-list-history
+    "C-c C-x"  #'eshell-get-next-from-history)
+  (define-key eshell-mode-map (kbd "C-p") 'eshell-previous-prompt)
+  (define-key eshell-mode-map (kbd "C-n") 'eshell-next-prompt)
+  )
+(defun type-explain-in-chinese ()
+  "Use wtype to type 'explain in chinese'."
+  (interactive)
+  (start-process "wtype" nil "wtype" "explain in chinese"))

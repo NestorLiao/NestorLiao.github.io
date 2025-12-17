@@ -11,6 +11,7 @@
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
     ];
+    # access-tokens = "github.com=${secrets.github_access_token}";
   };
   outputs = { self, nixpkgs, home-manager, sops-nix, ... }@inputs:
     let
@@ -31,13 +32,14 @@
             ./hardware-configuration.nix
             ({ pkgs, config, userSetting, sops, inputs, lib, outputs, ... }:
               let
-                myEmacs =
-                  inputs.emacs-overlay.packages.${pkgs.stdenv.hostPlatform.system}.emacs-git-pgtk.override {
+           #       inputs.emacs-overlay.packages.${pkgs.stdenv.hostPlatform.system}.emacs-#git-pgtk.override {
+                myEmacs = pkgs.unstable.emacs-pgtk.override{
                     withNativeCompilation = true;
                     withSQLite3 = true;
                   };
                 emacsWithPackages =
-                  (pkgs.unstable.emacsPackagesFor myEmacs).emacsWithPackages;
+                (pkgs.unstable.emacsPackagesFor myEmacs).emacsWithPackages;
+               #   (pkgs.unstable.emacsPackagesFor myEmacs).emacsWithPackages;
                 switchframeScript = ''
                   #!/usr/bin/env bash
                   if [ $# -ne 1 ]; then
@@ -135,6 +137,7 @@
                   fish
                   fishPlugins.done
                   wmenu
+                  wtype
                   grim
                   slurp
                   wl-clipboard
@@ -254,7 +257,7 @@
                   vim-full
                   wget
                   zip
-                  zoxide
+                  # zoxide
                 ];
                 # trust me bro, run  xdg-user-dirs-update --force after
                 xdg.mime = {
@@ -490,9 +493,11 @@
                         and cd $argv[1]
                         end
                       '';
-                      home.file.".config/nixpkgs/config.nix".text = ''
-                        { allowUnfree = true; }
-                      '';
+                      # home.file.".config/nixpkgs/config.nix".text = ''
+                      #   {
+                      #     allowUnfree = true;
+                      #   }
+                      # '';
                       home.file.".config/mako/config".text = ''
                         font=Bookerly 14
                         background-color=#ffffff
@@ -580,7 +585,7 @@
                       # Name=firefox
                       # Path=firefox
                       programs.firefox = {
-                        enable = false;
+                        enable = true;
                         package= pkgs.firefox-beta;
                         policies = {
                           DisableFirefoxStudies = true;
@@ -798,6 +803,12 @@
                             # HTTPs only.
                             "dom.security.https_only_mode" = false;
                             "dom.security.https_only_mode_ever_enabled" = false;
+                            # Video Is Bloate
+                            "media.ffmpeg.enabled" = false;
+                            "media.mediasource.enabled" = false;
+                            "media.webm.enabled" = false;
+                            "media.eme.enabled" = false;
+                            "media.gmp-widevinecdm.enabled" = false;
                             # Privacy and fingerprinting.
                             "browser.download.dir" =
                               "/home/${userSetting.username}/.save";
@@ -1027,29 +1038,28 @@
                 sops.secrets.mojie = { owner = userSetting.username; };
                 sops.secrets.oney = { owner = userSetting.username; };
                 sops.secrets.ouo = { owner = userSetting.username; };
-                networking.extraHosts = '' # 其嗜欲深者，其天机浅
-                   ${builtins.readFile ./nosurf/hosts00} # 眼糊
-                   ${builtins.readFile ./nosurf/hosts01} # 耳聋
-                   ${builtins.readFile ./nosurf/hosts02} # 鼻塞
-                   ${builtins.readFile ./nosurf/hosts03} # 舌木
-                   ${builtins.readFile ./nosurf/hosts04} # 触钝
-                   ${builtins.readFile ./nosurf/hosts05} # 心闲
-                   ${builtins.readFile ./nosurf/hosts06} # 为道
-                   # 消费主义让我们沉迷于物质/精神消费中，
-                   # 通过让我们接触各种光怪陆离的东西来丰富我们的身份认同感，
-                   # 这也是当今时代互联网正在加速实现的事情…
-                   # 但这是以牺牲掌握任何技能为代价换来的，
-                   0.0.0.0 google.com
-                   0.0.0.0 www.google.com ＃文灭志，博溺心
-                   0.0.0.0 reddit.com
-                   0.0.0.0 old.reddit.com
-                   0.0.0.0 z-library.sk
-                   0.0.0.0 emacs-china.org
-                   0.0.0.0 chatgpt.com
-                   # 我们沉迷得越深，想要掌握一项技能的愿望就会越来越淡化。
-                '';
+                # networking.extraHosts = '' # 其嗜欲深者，其天机浅
+                #    ${builtins.readFile ./nosurf/hosts00} # 眼糊
+                #    ${builtins.readFile ./nosurf/hosts01} # 耳聋
+                #    ${builtins.readFile ./nosurf/hosts02} # 鼻塞
+                #    ${builtins.readFile ./nosurf/hosts03} # 舌木
+                #    ${builtins.readFile ./nosurf/hosts04} # 触钝
+                #    ${builtins.readFile ./nosurf/hosts05} # 心闲
+                #    ${builtins.readFile ./nosurf/hosts06} # 为道
+                #    # 消费主义让我们沉迷于物质/精神消费中，
+                #    # 通过让我们接触各种光怪陆离的东西来丰富我们的身份认同感，
+                #    # 这也是当今时代互联网正在加速实现的事情…
+                #    # 但这是以牺牲掌握任何技能为代价换来的，
+                #    0.0.0.0 google.com
+                #    0.0.0.0 www.google.com ＃文灭志，博溺心
+                #    0.0.0.0 reddit.com
+                #    0.0.0.0 old.reddit.com
+                #    0.0.0.0 z-library.sk
+                #    0.0.0.0 emacs-china.org
+                #    0.0.0.0 chatgpt.com
+                #    # 我们沉迷得越深，想要掌握一项技能的愿望就会越来越淡化。
+                # '';
                 services = {
-                  nscd.enable = false;
                   irqbalance.enable = false;
                   udev.extraRules =
                     ''SUBSYSTEM=="i2c-dev", GROUP="i2c", MODE="0660"'';
@@ -1060,7 +1070,17 @@
                   devmon.enable = true;
                   # 修改音频设备在空闲时自动挂起（suspend）的行为
                   power-profiles-daemon.enable = false;
-                  openssh = { enable = true; };
+                  openssh = {
+                    enable = true;
+                    ports = [ 443 ];
+                    settings = {
+    PasswordAuthentication = true;
+    AllowUsers = null; # Allows all users by default. Can be [ "user1" "user2" ]
+    UseDns = true;
+    X11Forwarding = false;
+    PermitRootLogin = "prohibit-password"; # "yes", "without-password", "prohibit-password", "forced-commands-only", "no"
+  };
+};
                   pulseaudio.enable = false;
                   pipewire = {
                     enable = true;
@@ -1084,9 +1104,9 @@
                   };
                   v2raya.enable = false;
                   dae = {
-                    package = pkgs.unstable.dae;
                     enable = true;
                     disableTxChecksumIpGeneric = false;
+                    package = pkgs.unstable.dae;
                     configFile =
                       "/home/${userSetting.username}/.config/dae/config.dae";
                     assets = with pkgs.unstable; [
@@ -1094,12 +1114,13 @@
                       v2ray-domain-list-community
                     ];
                     openFirewall = {
-                      enable = true;
+                      enable = false;
                       port = 12345;
                     };
                   };
+                  nscd.enable = true;
                   dnsmasq = {
-                    enable = true;
+                    enable = false;
                     settings = {
                       addn-hosts = "/etc/hosts";
                       cache-size = 1000;
@@ -1206,6 +1227,7 @@
                         #### get term
                         vterm
                         multi-vterm
+                        eshell-toggle
                         with-editor
                         #### read books
                         nov
@@ -1248,30 +1270,30 @@
                         yaml-mode
 
                         ### why I need below mode??? I am no cult dev.
-                        # haskell-mode
-                        # lua-mode
-                        # web-mode
-                        # racket-mode
-                        # elixir-mode
-                        # erlang
-                        # scala-mode
-                        # d-mode
-                        # glsl-mode
-                        # tuareg
-                        # less-css-mode
-                        # graphviz-dot-mode
-                        # clojure-mode
-                        # csharp-mode
-                        # nim-mode
-                        # jinja2-mode
-                        # purescript-mode
-                        # toml-mode
-                        # nginx-mode
-                        # kotlin-mode
-                        # php-mode
-                        # qml-mode
-                        # typescript-mode
-                        # rfc-mode
+                        haskell-mode
+                        lua-mode
+                        web-mode
+                        racket-mode
+                        elixir-mode
+                        #erlang
+                        scala-mode
+                        d-mode
+                        glsl-mode
+                        tuareg
+                        less-css-mode
+                        graphviz-dot-mode
+                        clojure-mode
+                        csharp-mode
+                        nim-mode
+                        jinja2-mode
+                        purescript-mode
+                        toml-mode
+                        nginx-mode
+                        kotlin-mode
+                        php-mode
+                        qml-mode
+                        typescript-mode
+                        rfc-mode
 
                         ### save and format
                         aggressive-indent
@@ -1495,7 +1517,9 @@
                         domain(geosite:cn,api.tavily.com,ziggit.dev,api.deepseek.com) -> direct
                         fallback: proxy
                     }
-                                " > /home/${userSetting.username}/.config/dae/config.dae
+                                " > "$config_file"
+      # Set the ownership and permissions of the config file so the user can edit it
+      chown ${userSetting.username}: "$config_file"
                     fi
                   '';
                   wantedBy = [ "hibernate.target" "multi-user.target" ];
@@ -1621,6 +1645,8 @@ for_window [app_id='xdg-desktop-portal-gtk'] move position center
                     # Include additional config files
                     include /etc/sway/config.d/*
                                         " > "$config_file"
+      # Set the ownership and permissions of the config file so the user can edit it
+      chown ${userSetting.username}: "$config_file"
                                         fi
                   '';
                   # WorkingDirectory = "/home/${userSetting.username}";
@@ -1629,6 +1655,30 @@ for_window [app_id='xdg-desktop-portal-gtk'] move position center
                   restartIfChanged = true;
                   after = [ "hibernate.target" ];
                 };
+
+systemd.services."getnixconfig" = {
+  script = ''
+    # Ensure the user-specific .config/nix directory exists
+    mkdir -p '/home/${userSetting.username}/.config/nix'
+
+    # Define the target config file path
+    config_file="/home/${userSetting.username}/.config/nix/nix.conf"
+
+    # Only create the file if it does not already exist
+    if [[ ! -f "$config_file" ]]; then
+      echo "access-tokens = github.com = $(cat ${config.sops.secrets.github_token.path})" > $config_file
+      # Set the ownership and permissions of the config file so the user can edit it
+      chown ${userSetting.username}: $config_file
+    fi
+  '';
+  # Trigger the service on system boot and hibernation
+  wantedBy = [ "hibernate.target" "multi-user.target" ];
+  description = "Generate Nix Config for User";
+  restartIfChanged = true;
+  # Ensure the script runs after the system is up and hibernation is set up
+  after = [ "hibernate.target" ];
+};
+
                 systemd.services.adjustPaperLight = {
                   enable = true;
                   description = "no light";
@@ -1640,11 +1690,11 @@ for_window [app_id='xdg-desktop-portal-gtk'] move position center
                 };
                 networking = {
                   hostName = userSetting.hostname;
-                  nameservers = [ "127.0.0.1" ];
+#                  nameservers = [ "127.0.0.1" ];
                   networkmanager.enable = true;
-                  firewall.enable = true;
+                  firewall.enable = false;
                 };
-                system.nssModules = lib.mkForce [ ];
+#                system.nssModules = lib.mkForce [ ];
                 hardware.i2c.enable = true;
                 boot.kernelModules = [ "i2c-dev" "i915" "spi-ch341" ];
                 boot.extraModulePackages = [ ];
@@ -1694,7 +1744,8 @@ for_window [app_id='xdg-desktop-portal-gtk'] move position center
                   };
                 };
                 hardware.enableAllFirmware = true;
-                time.timeZone = "Asia/Shanghai";
+               # time.timeZone = "Asia/Shanghai";
+                  time.timeZone = "Asia/Hong_Kong";
                 programs.bash.undistractMe.playSound = true;
                 programs.soundmodem.enable = true;
                 security.rtkit.enable = true;
@@ -1820,12 +1871,14 @@ for_window [app_id='xdg-desktop-portal-gtk'] move position center
             inputs.home-manager.nixosModules.home-manager
           ];
         };
+
       };
       overlays = {
         modifications = final: prev: { };
         unstable-packages = final: _prev: {
           unstable = import inputs.nixpkgs-unstable {
-            system = final.system;
+            # system = final.system;
+                  inherit (final.stdenv.hostPlatform) system;
             config = {
               allowUnfree = true;
               permittedInsecurePackages = [ "libsoup-2.74.3" ];
@@ -1834,18 +1887,19 @@ for_window [app_id='xdg-desktop-portal-gtk'] move position center
         };
         old-packages = final: _prev: {
           oldw = import inputs.nixpkgs-old {
-            system = final.system;
+            # system = final.system;
+                  inherit (final.stdenv.hostPlatform) system;
             config = { allowUnfree = true; };
           };
         };
       };
     };
   inputs = {
-    emacs-overlay = {
-      url = "github:nix-community/emacs-overlay/master";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
-      inputs.nixpkgs-stable.follows = "nixpkgs";
-    };
+    # emacs-overlay = {
+    # url = "github:nix-community/emacs-overlay/master";
+    # inputs.nixpkgs.follows = "nixpkgs-unstable";
+    # inputs.nixpkgs-stable.follows = "nixpkgs";
+    # };
     nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     home-manager = {
