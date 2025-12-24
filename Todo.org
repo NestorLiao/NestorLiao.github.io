@@ -10,6 +10,23 @@
 - [X] columndeeply/hosts，提交pr增加17868行新域名, +修改脚本为0.0.0.0+
 - [X] pyim，提交issue修改%报错行为
 - [X] addons.mozilla，eink插件
+
+*** How to do ISO, A way to get rid of *OS FOMO*
+- [X] hardcode *dae* config
+- [X] dae to *git* clone
+- [ ] *disko*, part/mkfs/format
+- [ ] git clone my *github* config
+- [ ] get *sops* keys.txt to user's .config/sops/age
+- [X] *nixos install* with substitute
+- [ ] reboot, *done*
+
+- OS FOMO
+  - *reproducible*
+    - full-config/no-dependency-installation
+  - *controlable*
+    - network/behavior/
+
+
 *** check Zen/wirte-room-mode source code,  to implement my version of diff mode to diff font.
 *** TODO check emacs rotate-text package, config for ziglang.
 debug-ito/rotate-text.el

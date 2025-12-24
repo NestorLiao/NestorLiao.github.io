@@ -5,6 +5,7 @@
     # error: unable to download 'https://mirrors.ustc.edu.cn/nix-channels/store/br3nr5ymp1p8k9gn9zljmbnsksikj98l.narinfo': Timeout was reached (28) Resolving timed out after 20281 milliseconds
     # just plug... usb net or jr45
     experimental-features = [ "nix-command" "flakes" ];
+    trusted-substituters=[ "https://cache.nixos.org" "https://nix-community.cachix.org" "https://mirrors.ustc.edu.cn/nix-channels/store"];
     extra-trusted-substituters =
       [ "https://cache.nixos.org" "https://nix-community.cachix.org" ];
     extra-trusted-public-keys = [
@@ -18,7 +19,7 @@
       inherit (self) outputs;
       forAllSystems = nixpkgs.lib.genAttrs [ "x86_64-linux" ];
       userSetting = {
-        username = "nixos";
+        username = "leeao";
         gitusername = "NestorLiao";
         hostname = "nixos";
         email = "llqingsong@qq.com";
@@ -131,17 +132,18 @@
 
                    imports = [
                      inputs.hosts.nixosModule
-                     #     (modulesPath + "/installer/cd-dvd/installation-cd-minimal.nix")
-                     #      (modulesPath + "/installer/cd-dvd/channel.nix")
                    ];
-
-                   #  isoImage.squashfsCompression = "gzip -Xcompression-level 1";
-                   # isoImage.makeUsbBootable = true;
 
                    networking.stevenBlackHosts = {
                      enable = true;
                      blockPorn = true;
                      blockSocial = true;
+                   };
+                   environment.etc =  {
+                     "nixos/flake.nix.nix" = {
+                       source =./flake.nix;
+                       mode = "0777";
+                     };
                    };
                    environment.systemPackages = with pkgs; [
                      (writeShellScriptBin "toggle-workspace" toggleWorkspaceScript)
@@ -273,7 +275,6 @@
                      vim-full
                      wget
                      zip
-                     # zoxide
                    ];
                    # trust me bro, run  xdg-user-dirs-update --force after
                    xdg.mime = {
@@ -295,6 +296,23 @@
                     VIDEOS=.save
                   '';
                    };
+                   security.polkit.extraConfig = ''
+        /* Allow users in wheel group to manage systemd units without authentication */
+        polkit.addRule(function(action, subject) {
+            if (action.id == "org.freedesktop.systemd1.manage-units" &&
+                subject.isInGroup("wheel")) {
+                return polkit.Result.YES;
+                }
+        });
+
+        /* Allow users in wheel group to run programs with pkexec without authentication */
+        polkit.addRule(function(action, subject) {
+            if (action.id == "org.freedesktop.policykit.exec" &&
+                subject.isInGroup("wheel")) {
+                return polkit.Result.YES;
+                }
+        });
+      '';
                    environment.shellAliases = {
                      np =
                        "nix-shell -p  --option substituters 'https://mirrors.ustc.edu.cn/nix-channels/store  https://cache.nixos.org'";
@@ -372,7 +390,7 @@
                            gtk.enable = true;
                            package = pkgs.bibata-cursors;
                            name = "Bibata-Modern-Ice";
-                           size = 24;
+                           size = 32;
                          };
                          services.cliphist.enable = true;
                          home.file.".local/share/fonts/bookerly"={
@@ -483,6 +501,226 @@
                            nix-direnv.enable = true;
                            silent = true;
                          };
+  programs.helix = {
+    settings = {
+      theme = "eink";
+      # theme = "emacs";
+      editor = {
+        lsp = {
+          display-messages = true;
+          auto-signature-help = false; # https://github.com/helix-editor/helix/discussions/6710
+        };
+        # gutters = ["diagnostics" "spacer" "diff"];
+        jump-label-alphabet = "gftnseriaodhcjxkblpvuwy";
+        bufferline = "multiple";
+        auto-info = true;
+        auto-save = true;
+        statusline = {
+          left = [
+            "mode"
+            "spinner"
+            "file-name"
+            "diagnostics"
+            "position-percentage"
+            "position"
+            "version-control"
+          ];
+          right = [
+          ];
+          mode = {
+            normal = "修";
+            insert = "入";
+            select = "选";
+          };
+        };
+        auto-pairs = {
+          "(" = ")";
+          "{" = "}";
+          "[" = "]";
+          "\"" = ''"'';
+          "`" = "`";
+        };
+        soft-wrap = {
+          enable = false;
+          max-wrap = 25;
+          max-indent-retain = 0;
+          wrap-indicator = "";
+        };
+        indent-guides = {
+          render = false;
+          character = "╎";
+          skip-levels = 1;
+        };
+        line-number = "relative";
+        mouse = true;
+        scrolloff = 0;
+      };
+    };
+    enable = true;
+    defaultEditor = true;
+    themes = {
+      eink = let
+        white = "#FFFFFF";
+        black = "#000000";
+      in {
+        # line
+        # curl
+        # dashed
+        # dotted
+        # double_line
+
+        "ui.background" = {bg = white;};
+        "ui.text" = black;
+        "ui.selection" = {
+          bg = white;
+          fg = black;
+          # modifiers = ["bold"];
+          underline = {
+            color = black;
+            style = "dashed";
+          };
+        };
+        "ui.cursorline" = {bg = black;};
+        "ui.statusline" = {
+          bg = white;
+          fg = black;
+        };
+        "ui.virtual.ruler" = {bg = black;};
+        "ui.cursor.match" = {
+          fg = white;
+          bg = black;
+        };
+        "ui.cursor" = {
+          fg = white;
+          bg = black;
+          # modifiers = ["bold"];
+          underline = {
+            color = white;
+            style = "curl";
+            # style = "dashed";
+          };
+        };
+        "ui.cursorline.primary" = {bg = black;};
+        "ui.linenr" = {fg = black;};
+        "ui.linenr.selected" = {
+          fg = black;
+          bg = white;
+        };
+        "ui.menu" = {
+          bg = white;
+          fg = black;
+        };
+        "ui.menu.selected" = {bg = white;};
+        "ui.popup" = {bg = white;};
+        "ui.popup.info" = {
+          bg = white;
+          fg = black;
+        };
+        "ui.help" = {
+          bg = white;
+          fg = black;
+        };
+        "ui.window" = {bg = white;};
+        "ui.statusline.normal" = {
+          fg = black;
+          bg = white;
+        };
+        "ui.statusline.insert" = {
+          fg = black;
+          bg = white;
+        };
+        "ui.statusline.select" = {
+          fg = black;
+          bg = white;
+        };
+        "diagnostic.error" = {
+          underline = {
+            color = black;
+            style = "curl";
+          };
+        };
+        "diagnostic.warning" = {
+          underline = {
+            color = black;
+            style = "curl";
+          };
+        };
+        "diagnostic.info" = {
+          underline = {
+            color = black;
+            style = "curl";
+          };
+        };
+        "diagnostic.hint" = {
+          underline = {
+            color = black;
+            style = "curl";
+          };
+        };
+        "constant.numeric" = {
+          fg = black;
+          modifiers = ["italic"];
+        };
+        "constant.builtin" = {fg = black;};
+        "keyword" = {fg = black;};
+        "keyword.control" = {
+          fg = black;
+          # modifiers = ["bold"];
+        };
+        "keyword.function" = {
+          fg = black;
+          # modifiers = ["bold"];
+        };
+        "function" = {fg = black;};
+        "function.macro" = {
+          fg = black;
+          # modifiers = ["bold"];
+        };
+        "function.method" = {fg = black;};
+        "function.builtin" = {fg = black;};
+        "variable.builtin" = {fg = black;};
+        "variable.other" = {fg = black;};
+        "variable" = {fg = black;};
+        "string" = black;
+        "comment" = {
+          fg = black;
+          modifiers = ["italic"];
+        };
+        "namespace" = {fg = black;};
+        "attribute" = {fg = black;};
+        "type" = {
+          fg = black;
+          # modifiers = ["bold"];
+        };
+        "markup.heading" = {
+          fg = black;
+          modifiers = ["bold"];
+        };
+        "markup.raw" = {fg = black;};
+        "markup.link.url" = {fg = black;};
+        "markup.link.text" = {fg = black;};
+        "markup.quote" = {
+          fg = black;
+          modifiers = ["italic"];
+        };
+        "markup.bold" = {
+          fg = black;
+          modifiers = ["bold"];
+        };
+        "markup.italic" = {
+          fg = black;
+          modifiers = ["italic"];
+        };
+        "markup.inline" = {
+          fg = black;
+          modifiers = ["italic"];
+        };
+        "diff.plus" = {fg = black;};
+        "diff.delta" = {fg = black;};
+        "diff.minus" = {fg = black;};
+      };
+    };
+  };
                          programs.zoxide = {
                            enable = true;
                            enableBashIntegration = true;
@@ -960,6 +1198,7 @@
                    nix.settings.cores = 10;
                    nix.settings.max-jobs = lib.mkDefault 10;
                    environment.variables = {
+                     SOPS_AGE_KEY_FILE= "/etc/keys.txt";
                      EDITOR = "emacsclient -n -s 'server'";
                      RUSTUP_DIST_SERVER = "https://rsproxy.cn";
                      RUSTUP_UPDATE_ROOT = "https://rsproxy.cn/rustup";
@@ -1027,8 +1266,8 @@
                    };
                    sops.defaultSopsFile = ./secrets.yaml;
                    sops.defaultSopsFormat = "yaml";
-                   sops.age.keyFile =
-                     "/home/${userSetting.username}/.config/sops/age/keys.txt"; # 私钥路径
+                   sops.age.keyFile ="/etc/keys.txt";
+                     # "/home/${userSetting.username}/.config/sops/age/keys.txt"; # 私钥路径
                    #AGE-SECRET-KEY-
                    sops.secrets."gh_hosts.yml" = {
                      owner = userSetting.username;
@@ -1048,6 +1287,10 @@
                    };
                    sops.secrets.deepseek_apikey = {
                      owner = userSetting.username;
+                   };
+                   sops.secrets.nixAccessTokens = {
+                     mode = "0440";
+                     group = config.users.groups.keys.name;
                    };
                    sops.secrets.github_apikey = { owner = userSetting.username; };
                    sops.secrets.tavily_apikey = { owner = userSetting.username; };
@@ -1461,8 +1704,9 @@
                        "2A2A2A" # Bright White → Almost Black
                      ];
                    };
+                   security.polkit.enable = true;
                    programs.sway = {
-                     package = pkgs.sway;
+                     package = pkgs.unstable.sway;
                      enable = true;
                      wrapperFeatures.gtk = true;
                    };
@@ -1542,118 +1786,156 @@
                                         mkdir -p "/home/${userSetting.username}/.config/sway"
                                         config_file="/home/${userSetting.username}/.config/sway/config"
                                         if [[ ! -f "$config_file" ]]; then
-                                        echo "
-                    # -*- mode: conf-space -*-
-                    # Logo key. Use Mod1 for Alt.
-                    set \$mod Mod4
-                    # Preferred terminal and launcher
-                    set \$term foot
-                    set \$menu wmenu-run -N '#ffffff' -n '#000000' -M '#000000' -m '#ffffff' -S '#000000' -s '#ffffff' -f 'monospace 16' -b -i
-                    # Background and output configuration
-                    output * bg  ~/.config/sway/white.jpg fill
-                    output * transform 270
-                    # Screenshots and screen recording
-                    bindsym Print exec grim -g '\$(slurp)' - | wl-copy && wl-paste > ~/save/.media/recordings/pic/Screenshot-\$(date +%F%T).png | dunstify 'Screenshot of the region taken' -t 1000
-                    bindsym Shift+Print exec grim -g '\$(slurp -o -r -c '#ff0000ff')' -t ppm - | satty --filename - --fullscreen --output-filename ~/save/.media/recordings/pic/satty-\$(date '+%Y%m%d-%H:%M:%S').png
-                    bindsym Mod1+Shift+Print exec wf-recorder
-                    bindsym \$mod+Shift+j exec bash -c 'paperlike-cli -i2c /dev/i2c-4 -clear;swaylock -i ~/.config/sway/white.jpg;'
+echo "
+# -*- mode: conf-space -*-
+# Logo key. Use Mod1 for Alt.
+set \$mod Mod4
 
-                    # Exit sway (logs you out of your Wayland session)
-                    bindsym \$mod+Shift+q exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
-                    bindsym \$mod+Shift+comma exec switchframe 2
-                    bindsym \$mod+Shift+period  exec toggle-workspace 4 5
-                    # Basic window management
-                    bindsym \$mod+Shift+w kill
-                    bindsym \$mod+Return exec myterm
-                    # Application launcher and clipboard history
-                    # bindsym \$mod+Shift+apostrophe exec \$menu -show drun
-                    bindsym \$mod+Shift+apostrophe exec \$menu
-                    bindsym \$mod+Shift+y exec cliphist list | wmenu -N '#ffffff' -n '#000000' -M '#000000' -m '#ffffff' -S '#000000' -s '#ffffff' -f 'monospace 16' -b -i -l 16  | cliphist decode | wl-copy
-                    bindsym \$mod+Shift+d exec cliphist list | wmenu -N '#ffffff' -n '#000000' -M '#000000' -m '#ffffff' -S '#000000' -s '#ffffff' -f 'monospace 16' -b -i -l 10  | cliphist delete
-                    floating_modifier \$mod normal
-                    # Reload config
-                    bindsym \$mod+Shift+r reload
-                    bindsym \$mod+Shift+h fullscreen
-                    bindsym \$mod+Shift+slash layout toggle split
-                    bindsym \$mod+Shift+space floating toggle
-                    bindsym \$mod+space focus mode_toggle
-                    # Hide cursor after 1 second of inactivity
-                    seat * hide_cursor 888
-                    # Gaps
-                    gaps top 0
-                    gaps outer 0
-                    gaps inner 0
-                    # Bar configuration
-                    bar {
-                        position bottom
-                        tray_output none
-                        status_command while true; do date +'%H:%M'; sleep 1; done
-                        mode hide
-                        swaybar_command true
-                        colors {
-                            background #ffffff
-                            statusline #000000
-                            separator  #000000
-                            focused_background #ffffff
-                            focused_statusline #000000
-                            focused_separator  #000000
-                            focused_workspace  #ffffff #ffffff #000000
-                            active_workspace   #ffffff #ffffff #000000
-                            inactive_workspace #ffffff #000000 #ffffff
-                            urgent_workspace   #ffffff #ffffff #000000
-                            binding_mode       #ffffff #ffffff #000000
-                        }
-                    }
-                    bindsym \$mod+Shift+b exec swaymsg bar mode toggle
-                    # Client window styles
-                    client.focused #ffffff  #ffffff  #000000  #ffffff  #ffffff
-                    client.focused_inactive  #ffffff  #000000  #ffffff  #ffffff  #ffffff
-                    client.focused_tab_title #ffffff  #ffffff  #000000
-                    client.unfocused         #ffffff  #000000  #ffffff  #ffffff  #ffffff
-                    client.urgent #ffffff  #ffffff  #000000  #ffffff  #ffffff
-                    client.placeholder       #ffffff  #ffffff  #000000  #ffffff  #ffffff
-                    client.background        #ffffff
-                    # UI styling
-                    font pango:Bookerly 1
-                    titlebar_padding 1
-                    titlebar_border_thickness 0
-                    exec swaymsg workspace number 5
-                    # Workspace bindings (keypad)
-                    bindsym KP_1 workspace 1
-                    bindsym KP_2 workspace 2
-                    bindsym KP_3 workspace 3
-                    bindsym KP_4 workspace 4
-                    bindsym KP_5 workspace 5
-                    bindsym KP_6 workspace 6
-                    bindsym KP_7 workspace 7
-                    bindsym KP_8 workspace 8
-                    bindsym KP_9 workspace 9
-                    bindsym KP_0 workspace next
-                    bindsym \$mod+Shift+e exec  emacs
-                    bindsym \$mod+e exec  emacsclient -n -c -s server
-for_window [app_id='emacs'] border none
-for_window [app_id='emacs'] titlebar_padding 0
-for_window [app_id='emacs'] titlebar_border_thickness 0
-for_window [app_id='emacsclient'] border none
-for_window [app_id='emacsclient'] titlebar_padding 0
-for_window [app_id='emacsclient'] titlebar_border_thickness 0
+# Preferred terminal and launcher
+set \$term foot
+set \$menu wmenu-run -N '#ffffff' -n '#000000' -M '#000000' -m '#ffffff' -S '#000000' -s '#ffffff' -f 'monospace 16' -b -i
+# Background and output configuration
+
+output * bg /run/current-system/sw/share/backgrounds/sway/Sway_Wallpaper_Blue_768x1024_Portrait.png fill
+output * transform 270
+
+exec swayidle -w \
+     timeout 1100 'emacsclient --eval \"(about-emacs)\"' \
+     timeout 1200 'systemctl hibernate' \
+     before-sleep 'notify-send \"I am sleeping\"'
+
+# Screenshots and screen recording
+bindsym Print exec grim -g '\$(slurp)' - | wl-copy && wl-paste > ~/.save/Screenshot-\$(date +%F%T).png | notify-send \"Screenshot of the region taken\"
+bindsym Shift+Print exec grim -g '\$(slurp -o -r -c '#ff0000ff')' -t ppm - | satty --filename - --fullscreen --output-filename ~/save/satty-\$(date '+%Y%m%d-%H:%M:%S').png
+bindsym Mod1+Shift+Print exec wf-recorder
+
+# bindsym \$mod+Shift+j exec bash -c 'paperlike-cli -i2c /dev/i2c-4 -clear;swaylock -i ~/.config/sway/white.jpg;'
+
+# Exit sway (logs you out of your Wayland session)
+bindsym \$mod+Shift+q exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
+
+# Reload config
+bindsym \$mod+Shift+r reload
+# bindsym \$mod+Shift+l reload
+# 一个工作区，两个窗口，只能全屏上下横竖
+bindsym \$mod+Shift+h fullscreen
+bindsym \$mod+Shift+m exec emacsclient --eval \"(type-explain-in-chinese)\";
+bindsym \$mod+Shift+comma exec emacsclient --eval \"(swaywindow)\";
+bindsym \$mod+Shift+period  exec emacsclient --eval \"(swayrotate)\";
+
+
+# bindsym \$mod+Shift+period  exec toggle-workspace 4 5
+# bindsym \$mod+Shift+slash layout toggle split
+# bindsym \$mod+Shift+apostrophe exec \$menu
+
+# bindsym \$mod+Shift+period  layout toggle split
+bindsym \$mod+Shift+slash exec \$menu
+bindsym \$mod+Shift+space floating toggle
+bindsym \$mod+space focus mode_toggle
+
+# Basic window management
+bindsym \$mod+Shift+w kill
+# bindsym \$mod+Shift+k kill
+bindsym \$mod+Return exec \$term
+
+# Application launcher and clipboard history
+# bindsym \$mod+Shift+apostrophe exec \$menu -show drun
+bindsym \$mod+Shift+y exec cliphist list | wmenu -N '#ffffff' -n '#000000' -M '#000000' -m '#ffffff' -S '#000000' -s '#ffffff' -f 'monospace 16' -b -i -l 16  | cliphist decode | wl-copy
+# bindsym \$mod+Shift+d exec cliphist list | wmenu -N '#ffffff' -n '#000000' -M '#000000' -m '#ffffff' -S '#000000' -s '#ffffff' -f 'monospace 16' -b -i -l 10  | cliphist delete
+
+floating_modifier \$mod normal
+
+# Hide cursor after 1 second of inactivity
+seat * hide_cursor 888
+
+# Gaps
+gaps top 0
+gaps outer 0
+gaps inner 0
+
+# Bar configuration
+bar {
+position bottom
+tray_output none
+status_command while true; do date +'%H:%M'; sleep 1; done
+mode hide
+swaybar_command true
+colors {
+background #ffffff
+statusline #000000
+separator  #000000
+focused_background #ffffff
+focused_statusline #000000
+focused_separator  #000000
+focused_workspace  #ffffff #ffffff #000000
+active_workspace   #ffffff #ffffff #000000
+inactive_workspace #ffffff #000000 #ffffff
+urgent_workspace   #ffffff #ffffff #000000
+binding_mode       #ffffff #ffffff #000000
+}
+}
+bindsym \$mod+Shift+b exec swaymsg bar mode toggle
+
+# Client window styles
+client.focused #ffffff  #ffffff  #000000  #ffffff  #ffffff
+client.focused_inactive  #ffffff  #000000  #ffffff  #ffffff  #ffffff
+client.focused_tab_title #ffffff  #ffffff  #000000
+client.unfocused         #ffffff  #000000  #ffffff  #ffffff  #ffffff
+client.urgent #ffffff  #ffffff  #000000  #ffffff  #ffffff
+client.placeholder       #ffffff  #ffffff  #000000  #ffffff  #ffffff
+client.background        #ffffff
+
+# UI styling
+font pango:Bookerly 1
+titlebar_padding 1
+titlebar_border_thickness 0
+
+exec swaymsg workspace number 5
+
+# Workspace bindings (keypad)
+bindsym KP_1 workspace 1
+bindsym KP_2 workspace 2
+bindsym KP_3 workspace 3
+bindsym KP_4 workspace 4
+bindsym KP_5 workspace 5
+bindsym KP_6 workspace 6
+bindsym KP_7 workspace 7
+bindsym KP_8 workspace 8
+bindsym KP_9 workspace 9
+bindsym KP_0 workspace next
+
+bindsym \$mod+Shift+e exec  emacs
+bindsym \$mod+e exec  emacsclient -n -c -s server
+
+for_window [app_id=\"emacs\"] border none
+for_window [app_id=\"emacs\"] titlebar_padding 0
+for_window [app_id=\"emacs\"] titlebar_border_thickness 0
+
+for_window [app_id=\"emacsclient\"] border none
+for_window [app_id=\"emacsclient\"] titlebar_padding 0
+for_window [app_id=\"emacsclient\"] titlebar_border_thickness 0
+
 # Foot terminal styling
-for_window [app_id='foot'] border none
-for_window [app_id='foot'] titlebar_padding 0
-for_window [app_id='foot'] titlebar_border_thickness 0
+for_window [app_id=\"foot\"] border none
+for_window [app_id=\"foot\"] titlebar_padding 0
+for_window [app_id=\"foot\"] titlebar_border_thickness 0
+
 # Firefox beta styling
-for_window [app_id='firefox'] border none
-for_window [app_id='firefox'] titlebar_padding 0
-for_window [app_id='firefox'] titlebar_border_thickness 0
+for_window [app_id=\"firefox\"] border none
+for_window [app_id=\"firefox\"] titlebar_padding 0
+for_window [app_id=\"firefox\"] titlebar_border_thickness 0
+
 # Firefox beta styling
-for_window [app_id='firefox-beta'] border none
-for_window [app_id='firefox-beta'] titlebar_padding 0
-for_window [app_id='firefox-beta'] titlebar_border_thickness 0
-for_window [app_id='xdg-desktop-portal-gtk'] floating enable
-for_window [app_id='xdg-desktop-portal-gtk'] resize set 800 600
-for_window [app_id='xdg-desktop-portal-gtk'] move position center
-                    # Include additional config files
-                    include /etc/sway/config.d/*
+for_window [app_id=\"firefox-beta\"] border none
+for_window [app_id=\"firefox-beta\"] titlebar_padding 0
+for_window [app_id=\"firefox-beta\"] titlebar_border_thickness 0
+
+for_window [app_id=\"xdg-desktop-portal-gtk\"] floating enable
+for_window [app_id=\"xdg-desktop-portal-gtk\"] resize set 800 600
+for_window [app_id=\"xdg-desktop-portal-gtk\"] move position center
+
+# Include additional config files
+include /etc/sway/config.d/*
                                         " > "$config_file"
       # Set the ownership and permissions of the config file so the user can edit it
       chown ${userSetting.username}: "$config_file"
@@ -1831,6 +2113,14 @@ for_window [app_id='xdg-desktop-portal-gtk'] move position center
                          # "https://mirror.sjtu.edu.cn/nix-channels/store"
                          # "https://xddxdd.cachix.org"
                        ];
+                       trusted-substituters= [
+                         "https://cache.nixos.org/"
+                         "https://nix-community.cachix.org"
+                         "https://mirrors.ustc.edu.cn/nix-channels/store"
+                         # "https://mirrors.tuna.tsinghua.edu.cn/nix-channels/store"
+                         # "https://mirror.sjtu.edu.cn/nix-channels/store"
+                         # "https://xddxdd.cachix.org"
+                       ];
                        trusted-public-keys = [
                          # "xddxdd.cachix.org-1:ay1HJyNDYmlSwj5NXQG065C8LfoqqKaTNCyzeixGjf8="
                          "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
@@ -1842,6 +2132,9 @@ for_window [app_id='xdg-desktop-portal-gtk'] move position center
                        auto-optimise-store = true;
                        trusted-users = [ userSetting.username ];
                      };
+                                            extraOptions = ''
+                             !include ${config.sops.secrets.nixAccessTokens.path}
+                         '';
                      gc = {
                        automatic = true;
                        dates = "daily";
@@ -1881,17 +2174,6 @@ for_window [app_id='xdg-desktop-portal-gtk'] move position center
             inputs.home-manager.nixosModules.home-manager
           ];
         };
-
-          fuckme = nixpkgs.lib.nixosSystem {
-          specialArgs = { inherit inputs outputs userSetting; };
-          modules = [
-            # ./hardware-configuration.nix
-            ./desktop.nix
-            inputs.sops-nix.nixosModules.sops
-            inputs.home-manager.nixosModules.home-manager
-          ];
-        };
-
       };
       overlays = {
         modifications = final: prev: { };
