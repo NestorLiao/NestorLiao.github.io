@@ -1,6 +1,7 @@
 nixos/nosurf/**
 nixos/nosurf/
-snippets/
+nixos/snippets/**
+nixos/snippets/
 index.html
 index.pdf
 index.bbl

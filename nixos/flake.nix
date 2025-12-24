@@ -18,7 +18,7 @@
       inherit (self) outputs;
       forAllSystems = nixpkgs.lib.genAttrs [ "x86_64-linux" ];
       userSetting = {
-        username = "nixos";
+        username = "leeao";
         gitusername = "NestorLiao";
         hostname = "nixos";
         email = "llqingsong@qq.com";
@@ -146,9 +146,9 @@
                   (writeShellScriptBin "toggle-workspace" toggleWorkspaceScript)
                   (writeShellScriptBin "onlyemacs" onlyemacsScript)
                   (writeShellScriptBin "switchframe" switchframeScript)
-                  # texliveFull
+                  texliveFull
                   thunderbird
-                  # texlab
+                  texlab
                   fish
                   fishPlugins.done
                   wmenu
@@ -1714,76 +1714,76 @@
                     if [[ ! -f "$config_file" ]]; then
                     echo "
 # -*- mode: conf-space -*-
-      global {
-        wan_interface: auto
-        log_level: info
-        allow_insecure: true
-        auto_config_kernel_parameter: true
-      }
+global {
+wan_interface: auto
+log_level: info
+allow_insecure: true
+auto_config_kernel_parameter: true
+}
 
-      subscription {
-        sub_airport_1: \"$(cat ${config.sops.secrets.mojie.path})\"
-                                # sub_airport_2: \"$(cat ${config.sops.secrets.ouo.path})\"
-                                sub_airport_3: \"$(cat ${config.sops.secrets.oney.path})\"
-                  }
+subscription {
+sub_airport_1: \"$(cat ${config.sops.secrets.mojie.path})\"
+# sub_airport_2: \"$(cat ${config.sops.secrets.ouo.path})\"
+# sub_airport_3: \"$(cat ${config.sops.secrets.oney.path})\"
+}
 
-      dns {
-        upstream {
-          alidns: 'udp://dns.alidns.com:53'
-          cfdns: 'tcp+udp://1.1.1.3:53'
-        }
-        routing {
-          request {
-            qtype(https) -> reject
-            fallback: alidns
-          }
-          response {
-            upstream(cfdns) -> accept
-            ip(geoip:private) && !qname(geosite:cn) -> cfdns
-            fallback: accept
-          }
-        }
-      }
+dns {
+upstream {
+alidns: 'udp://dns.alidns.com:53'
+cfdns: 'tcp+udp://1.1.1.3:53'
+}
+routing {
+request {
+qtype(https) -> reject
+fallback: alidns
+}
+response {
+upstream(cfdns) -> accept
+ip(geoip:private) && !qname(geosite:cn) -> cfdns
+fallback: accept
+}
+}
+}
 
-      group {
-          proxy {
-                filter: name(keyword:'香港','Hong')
-                policy: min_moving_avg
-          }
-          usa {
-                filter: name(keyword:'美国','USA','unite')
-                policy: min_moving_avg
-          }
-      }
+group {
+proxy {
+filter: name(keyword:'香港','Hong')
+policy: min_moving_avg
+}
+usa {
+filter: name(keyword:'美国','USA','unite')
+policy: min_moving_avg
+}
+}
 
-      routing {
-          pname(dnsmasq, dropbear) -> must_direct
-          dip(8.8.8.8) -> must_direct
-          dip(1.1.1.3) -> must_direct
-          domain(dns.alidns.com) -> must_direct
-          domain(dns.google) -> must_direct
-          domain(cloudflare-dns.com) -> must_direct
-          dip(224.0.0.0/3, 'ff00::/8') -> direct
+routing {
+pname(dnsmasq, dropbear) -> must_direct
+dip(8.8.8.8) -> must_direct
+dip(1.1.1.3) -> must_direct
+domain(dns.alidns.com) -> must_direct
+domain(dns.google) -> must_direct
+domain(cloudflare-dns.com) -> must_direct
+dip(224.0.0.0/3, 'ff00::/8') -> direct
 
 # 禁用 h3，因为它通常消耗很多 CPU 和内存资源
 l4proto(udp) && dport(443) -> block
 dip(geoip:private) -> direct
 dip(geoip:cn) -> direct
 
-      domain(
-          geosite:category-social-media-!cn,
-          geosite:category-social-media-cn,
-          geosite:category-media,
-          geosite:category-media-cn,
-          geosite:category-entertainment,
-          geosite:category-entertainment-cn,
-          geosite:category-porn,reddit.com) -> block
+domain(
+geosite:category-social-media-!cn,
+geosite:category-social-media-cn,
+geosite:category-media,
+geosite:category-media-cn,
+geosite:category-entertainment,
+geosite:category-entertainment-cn,
+geosite:category-porn,reddit.com) -> block
 
-      domain(geosite:category-ai-!cn) -> usa
+domain(geosite:category-ai-!cn) -> usa
 
-          domain(geosite:cn,api.tavily.com,ziggit.dev,api.deepseek.com,mirrors.ustc.edu.cn) -> direct
-          fallback: proxy
-      }
+domain(geosite:cn,api.tavily.com,ziggit.dev,api.deepseek.com,mirrors.ustc.edu.cn) -> direct
+fallback: proxy
+}
                                 " > "$config_file"
       # Set the ownership and permissions of the config file so the user can edit it
       chown ${userSetting.username}: "$config_file"

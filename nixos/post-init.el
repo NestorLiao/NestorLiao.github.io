@@ -904,7 +904,7 @@
   :custom
   (save-place-limit 400))
 (use-package yasnippet  :config
-  (setq yas-snippet-dirs '("~/.config/snippets"))
+  (setq yas-snippet-dirs '("~/.emacs.d/snippets"))
   (yas-global-mode 1))
 (use-package no-emoji
   :config
@@ -1118,7 +1118,7 @@
     (let ((old (current-buffer))
           (exsist 0))
       (save-excursion
-        (find-file "~/.config/hmdz.pyim")
+        (find-file "~/.emacs.d/hmdz.pyim")
         (beginning-of-buffer)
         (search-forward char nil (setq exsist 1))
         (when (= exsist 1)
@@ -1147,7 +1147,7 @@
   (setq pyim-candidates-search-buffer-p nil)
   (setq pyim-enable-shortcode nil)
   (setq pyim-punctuation-dict '(("^" "…")("\\" "、")("." "。")("," "，")("'" "‘" "’") ("\"" "“" "”")))
-  (add-to-list 'pyim-dicts '(:name "hmdz" :file "~/.config/hmdz.pyim")))
+  (add-to-list 'pyim-dicts '(:name "hmdz" :file "~/.emacs.d/hmdz.pyim")))
 (add-hook 'shell-mode-hook  'with-editor-export-editor)
 (add-hook 'eshell-mode-hook 'with-editor-export-editor)
 (add-hook 'term-exec-hook   'with-editor-export-editor)
