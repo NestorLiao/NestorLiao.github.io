@@ -1,12 +1,19 @@
 #!/usr/bin/env bash
-
 mkdir -p ~/.emacs.d
+mkdir -p ~/.save
+mkdir -p ~/Leere
+mkdir -p  ~/.config/dae
+sudo chmod 777 /etc/nixos/config.dae
+sudo mv /etc/nixos/config.dae ~/.config/dae
+sudo chmod 777 /etc/NestorLiao.github.io
+sudo mv /etc/NestorLiao.github.io ~/Leere/
+cd ~/Leere/NestorLiao.github.io/
 ln -sf $PWD/nixos/ ~/.config/;
 ln -sf $PWD/nixos/snippets ~/.emacs.d/;
 ln -sf $PWD/nixos/hmdz.pyim ~/.emacs.d/;
-ln -sf $PWD/nixos/post-init.el ~/.emacs.d/;
-ln -sf $PWD/nixos/init.el ~/.emacs.d/;
 ln -sf $PWD/nixos/early-init.el ~/.emacs.d/;
+ln -sf $PWD/nixos/init.el ~/.emacs.d/;
+ln -sf $PWD/nixos/post-init.el ~/.emacs.d/;
 # ln -sf  /etc/nixos/hardware-configuration.nix $PWD/nixos/hardware-configuration.nix;
 sudo cp /etc/nixos/hardware-configuration.nix $PWD/nixos/hardware-configuration.nix
 chmod 777 $PWD/nixos/hardware-configuration.nix

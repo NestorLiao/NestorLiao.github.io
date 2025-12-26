@@ -1159,20 +1159,20 @@
 (show-paren-mode -1)(window-divider-mode 1)(winner-mode -1)
 (repeat-mode -1)(display-time-mode -1)(display-line-numbers-mode -1)
 (use-package face-remap :config (defun text-scale-adjust (inc) (interactive "p") (let ((ev last-command-event) (echo-keystrokes nil) (message-log-max nil)) (let* ((base (event-basic-type ev)) (step (pcase base ((or ?+ ?=) inc) (?- (- inc)) (?0 0) (_ inc)))) (text-scale-increase step) (set-transient-map (let ((map (make-sparse-keymap))) (dolist (mods '(() (control))) (dolist (key '(?+ ?= ?- ?0)) (define-key map (vector (append mods (list key))) (lambda () (interactive) (text-scale-adjust (abs inc)))))) map) nil nil nil)))))
-(use-package easysession
-  :commands (easysession-switch-to
-             easysession-save-as
-             easysession-save-mode
-             easysession-load-including-geometry)
-  :bind
-  (("C-c sl" . easysession-switch-to)
-   ("C-c ss" . easysession-save-as) )
-  :custom
-  (easysession-mode-line-misc-info t)
-  (easysession-save-interval (* 10 60))
-  :init
-  (add-hook 'emacs-startup-hook #'easysession-load-including-geometry 102)
-  (add-hook 'emacs-startup-hook #'easysession-save-mode 103))
+;; (use-package easysession
+;;   :commands (easysession-switch-to
+;;              easysession-save-as
+;;              easysession-save-mode
+;;              easysession-load-including-geometry)
+;;   :bind
+;;   (("C-c sl" . easysession-switch-to)
+;;    ("C-c ss" . easysession-save-as) )
+;;   :custom
+;;   (easysession-mode-line-misc-info t)
+;;   (easysession-save-interval (* 10 60))
+;;   :init
+;;   (add-hook 'emacs-startup-hook #'easysession-load-including-geometry 102)
+;;   (add-hook 'emacs-startup-hook #'easysession-save-mode 103))
 (use-package savehist :ensure nil
   :commands (savehist-mode savehist-save)
   :hook
@@ -1862,9 +1862,9 @@ Optional MAX-RESULTS is the maximum number of results (default 5)."
   (require 'plz)
   (let* ((plz-curl-default-args (cons "-k" plz-curl-default-args))
          (url "https://api.tavily.com/search")
-         (search-depth (or search-depth "advanced"))
-         (max-results (or max-results 1))
-         (include_answer  t)
+         (search-depth (or search-depth "basic"))
+         (max-results (or max-results 3))
+         (include_answer  nil)
          (country (or country "united states"))
          (include_domains (or include_domains '("nixos.org" "freertos.org" "zephyrproject.org" "contiki-ng.org" "riot-os.org" "nuttx.apache.org" "mynewt.apache.org" "ziglang.org" "python.org" "lua.org" "elixir-lang.org" "erlang.org" "haskell.org" "cmake.org" "gnu.org" "llvm.org" "gcc.gnu.org" "qt.io" "gtk.org" "sdl.org" "libsdl.org" "qemu-project.org" "cppreference.com" "opensource.org" "ietf.org" "w3.org" "ansi.org" "iso.org" "ieee.org" "man7.org" "discourse.nixos.org" "ziggit.dev" "emacs-china.org" "lwn.net" "kernel.org" "sourceware.org" "debian.org" "archlinux.org" "github.com" "osdev.org" "opencores.org" "riscv.org" "musl-libc.org" "newlib.sourceware.org" "uclibc-ng.org" "hackaday.com" "raspberrypi.org" "arduino.cc" "espressif.com" "gentoo.org")))
          (request-data
@@ -1890,7 +1890,6 @@ Optional MAX-RESULTS is the maximum number of results (default 5)."
        (read-only-mode 0)
        (erase-buffer)
        (org-mode)
-       (insert result)
        (insert (tavily-result-to-org result))
        (goto-char (point-min))
        (read-only-mode 1)
@@ -1898,15 +1897,28 @@ Optional MAX-RESULTS is the maximum number of results (default 5)."
        ))
    query))
 (defun tavily-result-to-org (json-result)
-  (let* ((data (json-read-from-string json-result))
+  "Convert a Tavily JSON response string into Org-mode formatted entries."
+  (let* ((json-object-type 'alist)
+         (json-array-type 'list)
+         (json-key-type 'symbol)
+         (data (json-parse-string json-result
+                                  :object-type 'alist
+                                  :array-type 'list
+                                  :null-object nil))
          (results (alist-get 'results data)))
-    (mapconcat (lambda (item)
-                 (format "* [[%s][%s]]\n  %s"
-                         (alist-get 'url item)
-                         (alist-get 'title item)
-                         (alist-get 'content item)))
-               results
-               "\n\n")))
+    (mapconcat
+     (lambda (item)
+       (let ((url     (or (alist-get 'url item) ""))
+             (title   (or (alist-get 'title item) ""))
+             (content (or (alist-get 'content item) "")))
+         (format "* [[%s][%s]]\n%s"
+                 url
+                 title
+                 (replace-regexp-in-string
+                  "^" "  "
+                  (string-trim content)))))
+     results
+     "\n\n")))
 (setq tavily-api-key
       (with-temp-buffer
         (insert-file-contents "/run/secrets/tavily_apikey")
@@ -2188,3 +2200,18 @@ This command does the inverse of `fill-paragraph'."
   "Use wtype to type 'explain in chinese'."
   (interactive)
   (start-process "wtype" nil "wtype" "explain in chinese"))
+
+;; (use-package devdocs-browser
+;;   :config
+;;   ;; Programmatically install documentation
+;;   (dolist (doc '(
+;;                  ;; "cpp"
+;;                  ;; "zig"
+;;                  "rust"
+;;                  ;; "python~3.7"
+;;                  "gcc~14"
+;;                  "gcc~14_cpp"
+;;                  ))
+;;     (devdocs-browser-install-doc doc)
+;;     (devdocs-browser-download-offline-data doc))
+;;   )

@@ -5,7 +5,11 @@
     # error: unable to download 'https://mirrors.ustc.edu.cn/nix-channels/store/br3nr5ymp1p8k9gn9zljmbnsksikj98l.narinfo': Timeout was reached (28) Resolving timed out after 20281 milliseconds
     # just plug... usb net or jr45
     experimental-features = [ "nix-command" "flakes" ];
-    trusted-substituters=[ "https://cache.nixos.org" "https://nix-community.cachix.org" "https://mirrors.ustc.edu.cn/nix-channels/store"];
+    trusted-substituters = [
+      "https://cache.nixos.org"
+      "https://nix-community.cachix.org"
+      "https://mirrors.ustc.edu.cn/nix-channels/store"
+    ];
     extra-trusted-substituters =
       [ "https://cache.nixos.org" "https://nix-community.cachix.org" ];
     extra-trusted-public-keys = [
@@ -33,7 +37,7 @@
             ({ pkgs, config, userSetting, sops, inputs, lib, outputs, ... }:
               let
                 #       inputs.emacs-overlay.packages.${pkgs.stdenv.hostPlatform.system}.emacs-#git-pgtk.override {
-                myEmacs = pkgs.unstable.emacs-pgtk.override{
+                myEmacs = pkgs.unstable.emacs-pgtk.override {
                   withNativeCompilation = true;
                   withSQLite3 = true;
                 };
@@ -127,18 +131,16 @@
                 # '';
               in {
 
-                imports = [
-                  inputs.hosts.nixosModule
-                ];
+                imports = [ inputs.hosts.nixosModule ];
 
                 networking.stevenBlackHosts = {
                   enable = true;
                   blockPorn = true;
                   blockSocial = true;
                 };
-                environment.etc =  {
+                environment.etc = {
                   "nixos/flake.nix.nix" = {
-                    source =./flake.nix;
+                    source = ./flake.nix;
                     mode = "0777";
                   };
                 };
@@ -147,6 +149,7 @@
                   (writeShellScriptBin "onlyemacs" onlyemacsScript)
                   (writeShellScriptBin "switchframe" switchframeScript)
                   texliveFull
+                  trashy
                   thunderbird
                   texlab
                   fish
@@ -294,22 +297,22 @@
                   '';
                 };
                 security.polkit.extraConfig = ''
-        /* Allow users in wheel group to manage systemd units without authentication */
-        polkit.addRule(function(action, subject) {
-            if (action.id == "org.freedesktop.systemd1.manage-units" &&
-                subject.isInGroup("wheel")) {
-                return polkit.Result.YES;
-                }
-        });
+                  /* Allow users in wheel group to manage systemd units without authentication */
+                  polkit.addRule(function(action, subject) {
+                      if (action.id == "org.freedesktop.systemd1.manage-units" &&
+                          subject.isInGroup("wheel")) {
+                          return polkit.Result.YES;
+                          }
+                  });
 
-        /* Allow users in wheel group to run programs with pkexec without authentication */
-        polkit.addRule(function(action, subject) {
-            if (action.id == "org.freedesktop.policykit.exec" &&
-                subject.isInGroup("wheel")) {
-                return polkit.Result.YES;
-                }
-        });
-      '';
+                  /* Allow users in wheel group to run programs with pkexec without authentication */
+                  polkit.addRule(function(action, subject) {
+                      if (action.id == "org.freedesktop.policykit.exec" &&
+                          subject.isInGroup("wheel")) {
+                          return polkit.Result.YES;
+                          }
+                  });
+                '';
                 environment.shellAliases = {
                   np =
                     "nix-shell -p  --option substituters 'https://mirrors.ustc.edu.cn/nix-channels/store  https://cache.nixos.org'";
@@ -371,7 +374,8 @@
                   ".3" = "cd ../../..";
                   cp = "cp -iv";
                   mv = "mv -iv";
-                  rm = "rm -vI";
+                  # rm = "rm -vI";
+                  rm = "trash -c never ";
                   bc = "bc -ql";
                   mkd = "mkdir -pv";
                 };
@@ -422,24 +426,26 @@
                         size = 32;
                       };
                       services.cliphist.enable = true;
-                      home.file.".local/share/fonts/bookerly"={
+                      home.file.".local/share/fonts/bookerly" = {
                         source = pkgs.fetchFromGitHub {
                           owner = "NestorLiao";
                           repo = "boboly";
                           rev = "master";
-                          sha256 ="sha256-boN16BYYFY5MWhbLhaqIpumqsi583fIrMp+2Hz3pzqQ=";
+                          sha256 =
+                            "sha256-boN16BYYFY5MWhbLhaqIpumqsi583fIrMp+2Hz3pzqQ=";
                         };
                       };
-                      home.file.".local/share/fonts/sourcehan" ={
-                        source= pkgs.fetchFromGitHub {
+                      home.file.".local/share/fonts/sourcehan" = {
+                        source = pkgs.fetchFromGitHub {
                           owner = "NestorLiao";
                           repo = "sourcehan";
                           rev = "master";
-                          sha256 = "sha256-uyZcPv7jPv96KovMKFdp/qDv0/6b3x0We/vx7eIU6O4=";
+                          sha256 =
+                            "sha256-uyZcPv7jPv96KovMKFdp/qDv0/6b3x0We/vx7eIU6O4=";
                         };
                       };
                       home.file.".stardict/dic" = {
-                        source= pkgs.stdenv.mkDerivation {
+                        source = pkgs.stdenv.mkDerivation {
                           pname = "stardict-dictionaries";
                           version =
                             "2.4.2"; # adjust the version based on the zip contents
@@ -447,15 +453,17 @@
                             owner = "NestorLiao";
                             repo = "dict";
                             rev = "master";
-                            sha256 ="sha256-dd9dMrhPa4QeJ58uiLBNhoQy8EfSJrmLj0lpwtygR2U=";
+                            sha256 =
+                              "sha256-dd9dMrhPa4QeJ58uiLBNhoQy8EfSJrmLj0lpwtygR2U=";
                           };
-                          buildInputs = [ pkgs.unzip ]; # Add unzip as a build input
+                          buildInputs =
+                            [ pkgs.unzip ]; # Add unzip as a build input
                           unpackPhase = ''
-                    # Unzip each dictionary zip file
-                    unzip $src/stardict-ghycyzzd-2.4.2.zip -d $out
-                    unzip $src/stardict-langdao-ce-gb-2.4.2.zip -d $out
-                    unzip $src/stardict-ecdict-2.4.2.zip -d $out
-                  '';
+                            # Unzip each dictionary zip file
+                            unzip $src/stardict-ghycyzzd-2.4.2.zip -d $out
+                            unzip $src/stardict-langdao-ce-gb-2.4.2.zip -d $out
+                            unzip $src/stardict-ecdict-2.4.2.zip -d $out
+                          '';
                         };
                       };
                       programs.gh = {
@@ -504,7 +512,8 @@
                           editor = {
                             lsp = {
                               display-messages = true;
-                              auto-signature-help = false; # https://github.com/helix-editor/helix/discussions/6710
+                              auto-signature-help =
+                                false; # https://github.com/helix-editor/helix/discussions/6710
                             };
                             # gutters = ["diagnostics" "spacer" "diff"];
                             jump-label-alphabet = "gftnseriaodhcjxkblpvuwy";
@@ -521,8 +530,7 @@
                                 "position"
                                 "version-control"
                               ];
-                              right = [
-                              ];
+                              right = [ ];
                               mode = {
                                 normal = "修";
                                 insert = "入";
@@ -565,7 +573,7 @@
                             # dotted
                             # double_line
 
-                            "ui.background" = {bg = white;};
+                            "ui.background" = { bg = white; };
                             "ui.text" = black;
                             "ui.selection" = {
                               bg = white;
@@ -576,12 +584,12 @@
                                 style = "dashed";
                               };
                             };
-                            "ui.cursorline" = {bg = black;};
+                            "ui.cursorline" = { bg = black; };
                             "ui.statusline" = {
                               bg = white;
                               fg = black;
                             };
-                            "ui.virtual.ruler" = {bg = black;};
+                            "ui.virtual.ruler" = { bg = black; };
                             "ui.cursor.match" = {
                               fg = white;
                               bg = black;
@@ -596,8 +604,8 @@
                                 # style = "dashed";
                               };
                             };
-                            "ui.cursorline.primary" = {bg = black;};
-                            "ui.linenr" = {fg = black;};
+                            "ui.cursorline.primary" = { bg = black; };
+                            "ui.linenr" = { fg = black; };
                             "ui.linenr.selected" = {
                               fg = black;
                               bg = white;
@@ -606,8 +614,8 @@
                               bg = white;
                               fg = black;
                             };
-                            "ui.menu.selected" = {bg = white;};
-                            "ui.popup" = {bg = white;};
+                            "ui.menu.selected" = { bg = white; };
+                            "ui.popup" = { bg = white; };
                             "ui.popup.info" = {
                               bg = white;
                               fg = black;
@@ -616,7 +624,7 @@
                               bg = white;
                               fg = black;
                             };
-                            "ui.window" = {bg = white;};
+                            "ui.window" = { bg = white; };
                             "ui.statusline.normal" = {
                               fg = black;
                               bg = white;
@@ -655,10 +663,10 @@
                             };
                             "constant.numeric" = {
                               fg = black;
-                              modifiers = ["italic"];
+                              modifiers = [ "italic" ];
                             };
-                            "constant.builtin" = {fg = black;};
-                            "keyword" = {fg = black;};
+                            "constant.builtin" = { fg = black; };
+                            "keyword" = { fg = black; };
                             "keyword.control" = {
                               fg = black;
                               # modifiers = ["bold"];
@@ -667,53 +675,53 @@
                               fg = black;
                               # modifiers = ["bold"];
                             };
-                            "function" = {fg = black;};
+                            "function" = { fg = black; };
                             "function.macro" = {
                               fg = black;
                               # modifiers = ["bold"];
                             };
-                            "function.method" = {fg = black;};
-                            "function.builtin" = {fg = black;};
-                            "variable.builtin" = {fg = black;};
-                            "variable.other" = {fg = black;};
-                            "variable" = {fg = black;};
+                            "function.method" = { fg = black; };
+                            "function.builtin" = { fg = black; };
+                            "variable.builtin" = { fg = black; };
+                            "variable.other" = { fg = black; };
+                            "variable" = { fg = black; };
                             "string" = black;
                             "comment" = {
                               fg = black;
-                              modifiers = ["italic"];
+                              modifiers = [ "italic" ];
                             };
-                            "namespace" = {fg = black;};
-                            "attribute" = {fg = black;};
+                            "namespace" = { fg = black; };
+                            "attribute" = { fg = black; };
                             "type" = {
                               fg = black;
                               # modifiers = ["bold"];
                             };
                             "markup.heading" = {
                               fg = black;
-                              modifiers = ["bold"];
+                              modifiers = [ "bold" ];
                             };
-                            "markup.raw" = {fg = black;};
-                            "markup.link.url" = {fg = black;};
-                            "markup.link.text" = {fg = black;};
+                            "markup.raw" = { fg = black; };
+                            "markup.link.url" = { fg = black; };
+                            "markup.link.text" = { fg = black; };
                             "markup.quote" = {
                               fg = black;
-                              modifiers = ["italic"];
+                              modifiers = [ "italic" ];
                             };
                             "markup.bold" = {
                               fg = black;
-                              modifiers = ["bold"];
+                              modifiers = [ "bold" ];
                             };
                             "markup.italic" = {
                               fg = black;
-                              modifiers = ["italic"];
+                              modifiers = [ "italic" ];
                             };
                             "markup.inline" = {
                               fg = black;
-                              modifiers = ["italic"];
+                              modifiers = [ "italic" ];
                             };
-                            "diff.plus" = {fg = black;};
-                            "diff.delta" = {fg = black;};
-                            "diff.minus" = {fg = black;};
+                            "diff.plus" = { fg = black; };
+                            "diff.delta" = { fg = black; };
+                            "diff.minus" = { fg = black; };
                           };
                         };
                       };
@@ -825,6 +833,7 @@
                         homeDirectory = "/home/${userSetting.username}";
                       };
                       systemd.user.startServices = "sd-switch";
+                      #~/.mozilla/firefox/profiles.ini
                       # [General]
                       # StartWithLastProfile=1
                       # Version=2
@@ -836,7 +845,7 @@
                       # Path=firefox
                       programs.firefox = {
                         enable = true;
-                        package= pkgs.firefox-beta;
+                        package = pkgs.firefox-beta;
                         policies = {
                           DisableFirefoxStudies = true;
                           DisablePocket = true;
@@ -895,273 +904,320 @@
                         };
                         profiles.firefox = {
                           userChrome = ''
-                                          @-moz-document url(chrome://browser/content/browser.xhtml) {
-                                                /* ########  Sidetabs Styles  ######### */
-                                                /* Set Bookerly for all Firefox UI */
-                                                * {
-                                                    font-family: Bookerly !important
-                                                }
-                                                #navigator-toolbox { font-family:Bookerly !important }
-                                                #TabsToolbar { font-family: Bookerly !important }
-                                                #sidebar-header {
-                                                  display: none;
-                                          }
-                                                #statuspanel { display: none !important; }
-                                                :root[tabsintitlebar] #titlebar:-moz-window-inactive {
-                                                  opacity: 1 !important;
+                                                                      @-moz-document url(chrome://browser/content/browser.xhtml) {
+                                                                            /* ########  Sidetabs Styles  ######### */
+                                                                            /* Set Bookerly for all Firefox UI */
+                                                                            * {
+                                                                                font-family: Bookerly !important
+                                                                            }
+                                                                            #navigator-toolbox { font-family:Bookerly !important }
+                                                                            #TabsToolbar { font-family: Bookerly !important }
+                                                                            #sidebar-header {
+                                                                              display: none;
+                                                                      }
+                                                                            #statuspanel { display: none !important; }
+                                                                            :root[tabsintitlebar] #titlebar:-moz-window-inactive {
+                                                                              opacity: 1 !important;
                     }
-                                                #TabsToolbar {
-                                                  display: none !important;
+                                                                            #TabsToolbar {
+                                                                              display: none !important;
                   }
-                                                #navigator-toolbox[fullscreenShouldAnimate] {
-                                                    transition: none !important;
+                                                                            #navigator-toolbox[fullscreenShouldAnimate] {
+                                                                                transition: none !important;
                 }
-                                                #contentAreaContextMenu #context-openlinkincurrent,
-                                                #contentAreaContextMenu #context-openlinkinusercontext-menu,
-                                                #contentAreaContextMenu #context-bookmarklink,
-                                                #contentAreaContextMenu #context-selectall,
-                                                #contentAreaContextMenu #context-sendlinktodevice,
-                                                #contentAreaContextMenu #context-sendpagetodevice,
-                                                #contentAreaContextMenu #context-sep-sendlinktodevice,
-                                                #contentAreaContextMenu #context-sep-sendpagetodevice,
-                                                #contentAreaContextMenu #context-viewpartialsource-selection {
-                                                  display: none !important;
+                                                                            #contentAreaContextMenu #context-openlinkincurrent,
+                                                                            #contentAreaContextMenu #context-openlinkinusercontext-menu,
+                                                                            #contentAreaContextMenu #context-bookmarklink,
+                                                                            #contentAreaContextMenu #context-selectall,
+                                                                            #contentAreaContextMenu #context-sendlinktodevice,
+                                                                            #contentAreaContextMenu #context-sendpagetodevice,
+                                                                            #contentAreaContextMenu #context-sep-sendlinktodevice,
+                                                                            #contentAreaContextMenu #context-sep-sendpagetodevice,
+                                                                            #contentAreaContextMenu #context-viewpartialsource-selection {
+                                                                              display: none !important;
               }
-                                                :root {
-                                                  scrollbar-color: #ffffff #FFFFFF;
-                                                  scrollbar-width: none;
-                                                }
-                                                *{ scrollbar-width: none !important; } }
-                                                *{ scrollbar-width: none }
-                                                #navigator-toolbox,
-                                                #TabsToolbar,
-                                                #tabbrowser-tabs {
-                                                  background-color: #FFFFFFF !important;
+                                                                            :root {
+                                                                              scrollbar-color: #ffffff #FFFFFF;
+                                                                              scrollbar-width: none;
+                                                                            }
+                                                                            *{ scrollbar-width: none !important; } }
+                                                                            *{ scrollbar-width: none }
+                                                                            #navigator-toolbox,
+                                                                            #TabsToolbar,
+                                                                            #tabbrowser-tabs {
+                                                                              background-color: #FFFFFFF !important;
           }
-                                                :root{
-                                                  --uc-autohide-toolbox-delay: 200ms; /* Wait 0.1s before hiding toolbars */
-                                                  --uc-toolbox-rotation: 82deg;  /* This may need to be lower on mac - like 75 or so */
-                                                }
-                                                :root[sizemode="maximized"]{
-                                                  --uc-toolbox-rotation: 88.5deg;
-                                                      }
-                                                @media  (-moz-platform: windows){
-                                                  :root:not([lwtheme]) #navigator-toolbox{ background-color: -moz-dialog !important; }
-                                                }
-                                                :root[sizemode="fullscreen"],
-                                                :root[sizemode="fullscreen"] #navigator-toolbox{ margin-top: 0 !important; }
-                                                #navigator-toolbox{
-                                                  --browser-area-z-index-toolbox: 3;
-                                                  position: fixed !important;
-                                                  background-color: var(--lwt-accent-color,black) !important;
-                                                  transition: transform 82ms linear, opacity 82ms linear !important;
-                                                  transition-delay: var(--uc-autohide-toolbox-delay) !important;
-                                                  transform-origin: top;
-                                                  transform: rotateX(var(--uc-toolbox-rotation));
-                                                  opacity: 0;
-                                                  line-height: 0;
-                                                  z-index: 1;
-                                                  pointer-events: none;
+                                                                            :root{
+                                                                              --uc-autohide-toolbox-delay: 200ms; /* Wait 0.1s before hiding toolbars */
+                                                                              --uc-toolbox-rotation: 82deg;  /* This may need to be lower on mac - like 75 or so */
+                                                                            }
+                                                                            :root[sizemode="maximized"]{
+                                                                              --uc-toolbox-rotation: 88.5deg;
+                                                                                  }
+                                                                            @media  (-moz-platform: windows){
+                                                                              :root:not([lwtheme]) #navigator-toolbox{ background-color: -moz-dialog !important; }
+                                                                            }
+                                                                            :root[sizemode="fullscreen"],
+                                                                            :root[sizemode="fullscreen"] #navigator-toolbox{ margin-top: 0 !important; }
+                                                                            #navigator-toolbox{
+                                                                              --browser-area-z-index-toolbox: 3;
+                                                                              position: fixed !important;
+                                                                              background-color: var(--lwt-accent-color,black) !important;
+                                                                              transition: transform 82ms linear, opacity 82ms linear !important;
+                                                                              transition-delay: var(--uc-autohide-toolbox-delay) !important;
+                                                                              transform-origin: top;
+                                                                              transform: rotateX(var(--uc-toolbox-rotation));
+                                                                              opacity: 0;
+                                                                              line-height: 0;
+                                                                              z-index: 1;
+                                                                              pointer-events: none;
         }
-                                                :root[sessionrestored] #urlbar[popover]{
-                                                  pointer-events: none;
-                                                  opacity: 0;
-                                                  transition: transform 82ms linear var(--uc-autohide-toolbox-delay), opacity 0ms calc(var(--uc-autohide-toolbox-delay) + 82ms);
-                                                  transform-origin: 0px calc(0px - var(--tab-min-height) - var(--tab-block-margin) * 2);
-                                                  transform: rotateX(89.9deg);
+                                                                            :root[sessionrestored] #urlbar[popover]{
+                                                                              pointer-events: none;
+                                                                              opacity: 0;
+                                                                              transition: transform 82ms linear var(--uc-autohide-toolbox-delay), opacity 0ms calc(var(--uc-autohide-toolbox-delay) + 82ms);
+                                                                              transform-origin: 0px calc(0px - var(--tab-min-height) - var(--tab-block-margin) * 2);
+                                                                              transform: rotateX(89.9deg);
       }
-                                                #mainPopupSet:has(> [panelopen]:not(#ask-chat-shortcuts,#tab-preview-panel)) ~ toolbox #urlbar[popover],
-                                                #navigator-toolbox:is(:hover,:focus-within) #urlbar[popover],
-                                                #urlbar-container > #urlbar[popover]:is([focused],[open]){
-                                                  pointer-events: auto;
-                                                  opacity: 1;
-                                                  transition-delay: 33ms;
-                                                  transform: rotateX(0deg);
+                                                                            #mainPopupSet:has(> [panelopen]:not(#ask-chat-shortcuts,#tab-preview-panel)) ~ toolbox #urlbar[popover],
+                                                                            #navigator-toolbox:is(:hover,:focus-within) #urlbar[popover],
+                                                                            #urlbar-container > #urlbar[popover]:is([focused],[open]){
+                                                                              pointer-events: auto;
+                                                                              opacity: 1;
+                                                                              transition-delay: 33ms;
+                                                                              transform: rotateX(0deg);
     }
-                                                #mainPopupSet:has(> [panelopen]:not(#ask-chat-shortcuts,#tab-preview-panel)) ~ toolbox,
-                                                #navigator-toolbox:has(#urlbar:is([open],[focus-within])),
-                                                #navigator-toolbox:hover,
-                                                #navigator-toolbox:focus-within{
-                                                  transition-delay: 33ms !important;
-                                                  transform: rotateX(0);
-                                                  opacity: 1;
+                                                                            #mainPopupSet:has(> [panelopen]:not(#ask-chat-shortcuts,#tab-preview-panel)) ~ toolbox,
+                                                                            #navigator-toolbox:has(#urlbar:is([open],[focus-within])),
+                                                                            #navigator-toolbox:hover,
+                                                                            #navigator-toolbox:focus-within{
+                                                                              transition-delay: 33ms !important;
+                                                                              transform: rotateX(0);
+                                                                              opacity: 1;
 }
-                                                /* This makes things like OS menubar/taskbar show the toolbox when hovered in maximized windows.
-                                                 * Unfortunately it also means that other OS native surfaces (such as context menu on macos)
-                                                 * and other always-on-top applications will trigger toolbox to show up. */
-                                                @media (-moz-bool-pref: "userchrome.autohide-toolbox.unhide-by-native-ui.enabled"){
-                                                  :root[sizemode="maximized"]:not(:hover){
-                                                    #navigator-toolbox:not(:-moz-window-inactive),
-                                                    #urlbar[popover]:not(:-moz-window-inactive){
-                                                      transition-delay: 33ms !important;
-                                                      transform: rotateX(0);
-                                                      opacity: 1;
-                                                        }
-                                                }
-                                                }
-                                                #navigator-toolbox > *{ line-height: normal; pointer-events: auto }
-                                                #navigator-toolbox,
-                                                #navigator-toolbox > *{
-                                                  width: 100vw;
-                                                  -moz-appearance: none !important;
-                                                }
-                                                /* These two exist for oneliner compatibility */
-                                                #nav-bar{ width: var(--uc-navigationbar-width,100vw) }
-                                                #TabsToolbar{ width: calc(100vw - var(--uc-navigationbar-width,0px)) }
-                                                /* Don't apply transform before window has been fully created */
-                                                :root:not([sessionrestored]) #navigator-toolbox{ transform:none !important }
-                                                :root[customizing] #navigator-toolbox{
-                                                  position: relative !important;
-                                                  transform: none !important;
-                                                  opacity: 1 !important;
-                                                }
-                                                #navigator-toolbox[inFullscreen] > #PersonalToolbar,
-                                                #PersonalToolbar[collapsed="true"]{ display: none }
-                                                /* Uncomment this if tabs toolbar is hidden with hide_tabs_toolbar.css */
-                                                 /*#titlebar{ margin-bottom: -9px }*/
-                                                /* Uncomment the following for compatibility with tabs_on_bottom.css - this isn't well tested though */
-                                                /*
-                                                #navigator-toolbox{ flex-direction: column; display: flex; }
-                                                #titlebar{ order: 2 }
-                                                */
-                                                }
+                                                                            /* This makes things like OS menubar/taskbar show the toolbox when hovered in maximized windows.
+                                                                             * Unfortunately it also means that other OS native surfaces (such as context menu on macos)
+                                                                             * and other always-on-top applications will trigger toolbox to show up. */
+                                                                            @media (-moz-bool-pref: "userchrome.autohide-toolbox.unhide-by-native-ui.enabled"){
+                                                                              :root[sizemode="maximized"]:not(:hover){
+                                                                                #navigator-toolbox:not(:-moz-window-inactive),
+                                                                                #urlbar[popover]:not(:-moz-window-inactive){
+                                                                                  transition-delay: 33ms !important;
+                                                                                  transform: rotateX(0);
+                                                                                  opacity: 1;
+                                                                                    }
+                                                                            }
+                                                                            }
+                                                                            #navigator-toolbox > *{ line-height: normal; pointer-events: auto }
+                                                                            #navigator-toolbox,
+                                                                            #navigator-toolbox > *{
+                                                                              width: 100vw;
+                                                                              -moz-appearance: none !important;
+                                                                            }
+                                                                            /* These two exist for oneliner compatibility */
+                                                                            #nav-bar{ width: var(--uc-navigationbar-width,100vw) }
+                                                                            #TabsToolbar{ width: calc(100vw - var(--uc-navigationbar-width,0px)) }
+                                                                            /* Don't apply transform before window has been fully created */
+                                                                            :root:not([sessionrestored]) #navigator-toolbox{ transform:none !important }
+                                                                            :root[customizing] #navigator-toolbox{
+                                                                              position: relative !important;
+                                                                              transform: none !important;
+                                                                              opacity: 1 !important;
+                                                                            }
+                                                                            #navigator-toolbox[inFullscreen] > #PersonalToolbar,
+                                                                            #PersonalToolbar[collapsed="true"]{ display: none }
+                                                                            /* Uncomment this if tabs toolbar is hidden with hide_tabs_toolbar.css */
+                                                                             /*#titlebar{ margin-bottom: -9px }*/
+                                                                            /* Uncomment the following for compatibility with tabs_on_bottom.css - this isn't well tested though */
+                                                                            /*
+                                                                            #navigator-toolbox{ flex-direction: column; display: flex; }
+                                                                            #titlebar{ order: 2 }
+                                                                            */
+                                                                            }
                           '';
                           settings = {
-                            "browser.tabs.closeTabByDblclick" = true;
-                            # disable first-run onboarding
+                            "accessibility.force_disabled" =
+                              1; # Disable all accessibility features
+                            "app.update.auto" = false;
+                            "app.update.download.promptMaxAttempts" = 0;
+                            "app.update.elevation.promptMaxAttempts" = 0;
+                            "app.update.service.enabled" = false;
+                            "browser.aboutConfig.showWarning" = false;
                             "browser.aboutwelcome.enabled" = false;
-                            "general.smoothscroll" = false;
+                            "browser.accessibility.typeaheadfind" =
+                              false; # Disable typeahead find
+                            "browser.anchor_color" = "#000000";
+                            "browser.cache.disk.enable" =
+                              true; # -Disable- disk cache (use memory cache only)
+                            "browser.ctrlTab.recentlyUsedOrder" = true;
+                            "browser.display.document_color_use" = 2;
+                            "browser.display.use_document_fonts" = 0;
+                            "browser.download.dir" =
+                              "/home/${userSetting.username}/.save";
+                            "browser.download.forbid_open_with" = true;
+                            "browser.download.lastDir" =
+                              "/home/${userSetting.username}/.save";
+                            "browser.download.open_pdf_attachments_inline" =
+                              true;
+                            "browser.download.start_downloads_in_tmp_dir" =
+                              true;
+                            "browser.newtabpage.activity-stream.showWeather" =
+                              false;
+                            "browser.newtabpage.enabled" = false;
+                            "browser.quitShortcut.disabled" = true;
+                            "browser.safebrowsing.downloads.enabled" = false;
+                            "browser.safebrowsing.malware.enabled" = false;
+                            "browser.safebrowsing.phishing.enabled" = false;
+                            "browser.search.region" = "US";
+                            "browser.search.suggest.enabled" =
+                              false; # Disable search suggestions
+                            "browser.sessionstore.max_tabs_undo" =
+                              3; # Limit the number of tabs that can be reopened
+                            "browser.sessionstore.restore_on_demand" =
+                              true; # Don't restore all tabs at once
+                            "browser.sessionstore.warnOnQuit" = true;
+                            "browser.slowStartup.notificationDisabled" =
+                              true; # Disable slow startup notifications
+                            "browser.startup.homepage" =
+                              "https://www.blank.org";
+                            "browser.tabs.closeTabByDblclick" = true;
                             "browser.tabs.closeWindowWithLastTab" = false;
+                            "browser.tabs.loadInBackground" = true;
+                            "browser.tabs.tabClipWidth" = 999;
+                            "browser.tabs.warnOnClose" =
+                              false; # Prevent the warning when closing multiple tabs
+                            "browser.toolbars.bookmarks.visibility" = "never";
+                            "browser.translations.automaticallyPopup" = false;
+                            "browser.uidensity" = 1;
+                            "browser.urlbar.oneOffSearches" = false;
+                            "browser.urlbar.shortcuts.tabs" = false;
+                            "browser.urlbar.suggest.quicksuggest.sponsored" =
+                              false;
+                            "browser.visited_color" = "#000000";
+                            "datareporting.healthreport.service.enabled" =
+                              false;
+                            "devtools.chrome.enabled" = true;
+                            "devtools.debugger.remote-enabled" = true;
+                            "dom.mozTCPSocket.enabled" = false;
+                            "dom.netinfo.enabled" = false;
+                            "dom.security.https_only_mode" = true;
+                            "dom.security.https_only_mode_ever_enabled" = false;
+                            "dom.webaudio.enabled" = false;
+                            "extensions.activeThemeID" =
+                              "{5f71ffe3-23e2-49b8-b75e-2c032ef4a1d9}";
+                            "extensions.pocket.enabled" = false;
+                            "extensions.update.enabled" =
+                              false; # No extension updates
+                            "extensions.webextensions.ExtensionStorageIDB.migrated.@firefoxinvertcolors" =
+                              true;
+                            "extensions.webextensions.ExtensionStorageIDB.migrated.authenticator@mymindstorm" =
+                              true;
+                            "extensions.webextensions.ExtensionStorageIDB.migrated.bar-breaker@ris58h" =
+                              true;
+                            "extensions.webextensions.ExtensionStorageIDB.migrated.chatgpt-ctrl-enter-sender@chatgpt-extension.io" =
+                              true;
+                            "extensions.webextensions.ExtensionStorageIDB.migrated.idcac-pub@guus.ninja" =
+                              true;
+                            "extensions.webextensions.ExtensionStorageIDB.migrated.jid1-BoFifL9Vbdl2zQ@jetpack" =
+                              true;
+                            "extensions.webextensions.ExtensionStorageIDB.migrated.myallychou@gmail.com" =
+                              true;
+                            "extensions.webextensions.ExtensionStorageIDB.migrated.no-emoji@erikdesjardins.io" =
+                              true;
+                            "extensions.webextensions.ExtensionStorageIDB.migrated.uBlock0@raymondhill.net" =
+                              true;
+                            "extensions.webextensions.ExtensionStorageIDB.migrated.vimium-c@gdh1995.cn" =
+                              true;
+                            "extensions.webextensions.ExtensionStorageIDB.migrated.{2ce7df96-558d-4c2c-8d88-68606ebbe8db}" =
+                              true;
+                            "extensions.webextensions.ExtensionStorageIDB.migrated.{74145f27-f039-47ce-a470-a662b129930a}" =
+                              true;
+                            "extensions.webextensions.ExtensionStorageIDB.migrated.{80f6f2e4-eda1-417f-bf54-9645e1e20f5d}" =
+                              true;
+                            "extensions.webextensions.ExtensionStorageIDB.migrated.{88ebde3a-4581-4c6b-8019-2a05a9e3e938}" =
+                              true;
+                            "extensions.webextensions.ExtensionStorageIDB.migrated.{9350bc42-47fb-4598-ae0f-825e3dd9ceba}" =
+                              true;
+                            "extensions.webextensions.ExtensionStorageIDB.migrated.{9b8ce341-744f-4f5d-9ff7-b5d7078a7b34}" =
+                              true;
+                            "extensions.webextensions.ExtensionStorageIDB.migrated.{b52acdad-e4a6-44da-afc9-9bd22572db99}" =
+                              true;
+                            "extensions.webextensions.ExtensionStorageIDB.migrated.{b6840179-45a1-4a2d-a4ef-e2815c1faa28}" =
+                              true;
+                            "extensions.webextensions.restrictedDomains" = "";
+                            "font.name-list.emoji" = "";
+                            "font.name.monospace.x-western" =
+                              "JetBrainsMono Nerd Font Mono";
                             "full-screen-api.transition.timeout" = 0;
                             "full-screen-api.warning.delay" = 0;
                             "full-screen-api.warning.timeout" = 0;
-                            "browser.tabs.tabClipWidth" = 999;
-                            # "places.history.enabled" = false;
-                            # "services.sync.engine.history" = false;
-                            "places.history.enabled" = true;
-                            "services.sync.engine.history" = true;
-                            "widget.non-native-theme.scrollbar.style" = 3;
-                            "ui.key.menuAccessKeyFocuses" = false;
-                            "ui.key.menuAccessKey" = 17;
-                            "toolkit.legacyUserProfileCustomizations.stylesheets" =
-                              true;
-                            # "browser.display.os-zoom-behavior" = 0;
-                            "app.update.auto" = false;
-                            "app.update.service.enabled" = false;
-                            "app.update.download.promptMaxAttempts" = 0;
-                            "app.update.elevation.promptMaxAttempts" = 0;
-                            # HTTPs only.
-                            "dom.security.https_only_mode" = false;
-                            "dom.security.https_only_mode_ever_enabled" = false;
-                            # Video Is Bloate
-                            "media.ffmpeg.enabled" = false;
-                            "media.mediasource.enabled" = false;
-                            "media.webm.enabled" = false;
-                            "media.eme.enabled" = false;
-                            "media.gmp-widevinecdm.enabled" = false;
-                            # Privacy and fingerprinting.
-                            "browser.download.dir" =
-                              "/home/${userSetting.username}/.save";
-                            "browser.download.lastDir" =
-                              "/home/${userSetting.username}/.save";
-                            "privacy.userContext.enabled" = false;
-                            # Disable Pocket.
-                            "extensions.pocket.enabled" = false;
-                            # Recently used order for tab cycles.
-                            "browser.ctrlTab.recentlyUsedOrder" = true;
-                            # Catch fat fingered quits.
-                            "browser.sessionstore.warnOnQuit" = true;
-                            # Compact UI.
-                            "browser.uidensity" = 1;
-                            # Hide warnings when playing with config.
-                            "browser.aboutConfig.showWarning" = false;
-                            # Disable Shit
-                            "permissions.default.image" = 2;
-                            "media.autoplay.default" = 2;
-                            "media.autoplay.block-event.enabled" = true;
-                            "media.disabled" =
-                              true; # optional, blocks all media playback
-                            # Plain new tabs.
-                            "browser.newtabpage.enabled" = false;
-                            # when you open a link image or media in a new tab switch to it immediately
-                            "browser.tabs.loadInBackground" = true;
-                            # Locale.
-                            "browser.search.region" = "US";
-                            "browser.startup.homepage" =
-                              "https://www.blank.org";
-                            # Don't save passwords or try to fill forms.
-                            "signon.rememberSignons" = true; # true is saving
-                            "signon.autofillForms" = false;
-                            # Tell Firefox not to trust fake Enterprise-injected certificates.
-                            "security.enterprise_roots.auto-enabled" = false;
-                            "security.enterprise_roots.enabled" = false;
-                            "privacy.resistFingerprinting.block_mozAddonManager" =
-                              true;
-                            "extensions.webextensions.restrictedDomains" = "";
-                            "extensions.webextensions.ExtensionStorageIDB.migrated.@firefoxinvertcolors" = true  ;
-                            "extensions.webextensions.ExtensionStorageIDB.migrated.authenticator@mymindstorm" =  true  ;
-                            "extensions.webextensions.ExtensionStorageIDB.migrated.bar-breaker@ris58h" = true  ;
-                            "extensions.webextensions.ExtensionStorageIDB.migrated.chatgpt-ctrl-enter-sender@chatgpt-extension.io" = true  ;
-                            "extensions.webextensions.ExtensionStorageIDB.migrated.idcac-pub@guus.ninja" = true  ;
-                            "extensions.webextensions.ExtensionStorageIDB.migrated.jid1-BoFifL9Vbdl2zQ@jetpack" =  true  ;
-                            "extensions.webextensions.ExtensionStorageIDB.migrated.myallychou@gmail.com" = true  ;
-                            "extensions.webextensions.ExtensionStorageIDB.migrated.no-emoji@erikdesjardins.io" = true  ;
-                            "extensions.webextensions.ExtensionStorageIDB.migrated.uBlock0@raymondhill.net" =  true  ;
-                            "extensions.webextensions.ExtensionStorageIDB.migrated.vimium-c@gdh1995.cn" =  true  ;
-                            "extensions.webextensions.ExtensionStorageIDB.migrated.{2ce7df96-558d-4c2c-8d88-68606ebbe8db}" = true  ;
-                            "extensions.webextensions.ExtensionStorageIDB.migrated.{74145f27-f039-47ce-a470-a662b129930a}" = true  ;
-                            "extensions.webextensions.ExtensionStorageIDB.migrated.{80f6f2e4-eda1-417f-bf54-9645e1e20f5d}" = true  ;
-                            "extensions.webextensions.ExtensionStorageIDB.migrated.{88ebde3a-4581-4c6b-8019-2a05a9e3e938}" = true  ;
-                            "extensions.webextensions.ExtensionStorageIDB.migrated.{9350bc42-47fb-4598-ae0f-825e3dd9ceba}" = true  ;
-                            "extensions.webextensions.ExtensionStorageIDB.migrated.{9b8ce341-744f-4f5d-9ff7-b5d7078a7b34}" = true  ;
-                            "extensions.webextensions.ExtensionStorageIDB.migrated.{b52acdad-e4a6-44da-afc9-9bd22572db99}" = true  ;
-                            "extensions.webextensions.ExtensionStorageIDB.migrated.{b6840179-45a1-4a2d-a4ef-e2815c1faa28}" = true;
                             "general.smoothScroll" = false;
-                            "privacy.trackingprotection.enabled" =
-                              true; # Enhanced Tracking Protection
-                            "privacy.trackingprotection.socialtracking.enabled" =
-                              true; # Block social trackers
-                            "privacy.trackingprotection.cryptomining.enabled" =
-                              true; # Block crypto mining scripts
-                            "privacy.trackingprotection.fingerprinting.enabled" =
-                              true; # Block fingerprinting
-                            "toolkit.telemetry.enabled" = false;
-                            "toolkit.telemetry.unified" = false;
-                            "toolkit.telemetry.archive.enabled" = false;
-                            "toolkit.telemetry.rejected" = false;
-                            "toolkit.crashreporter.enabled" = false;
-                            "toolkit.crashreporter.dataDirectory" = "";
-                            "browser.search.suggest.enabled" =
-                              false; # Disable search suggestions
-                            "browser.sessionstore.restore_on_demand" =
-                              true; # Don't restore all tabs at once
-                            "browser.sessionstore.max_tabs_undo" =
-                              3; # Limit the number of tabs that can be reopened
-                            "browser.tabs.warnOnClose" =
-                              false; # Prevent the warning when closing multiple tabs
-                            "media.peerconnection.enabled" =
-                              false; # Disable WebRTC
-                            "extensions.update.enabled" =
-                              false; # No extension updates
-                            "browser.slowStartup.notificationDisabled" =
-                              true; # Disable slow startup notifications
-                            # "browser.cache.disk.enable" =false; # Disable disk cache (use memory cache only)
-                            "browser.cache.disk.enable" =true;
-                            "accessibility.force_disabled" =
-                              1; # Disable all accessibility features
-                            "browser.accessibility.typeaheadfind" =
-                              false; # Disable typeahead find
-                            "browser.newtabpage.activity-stream.showWeather" =
-                              false;
-                            "browser.anchor_color" = "#000000";
-                            "browser.visited_color" = "#000000";
-                            "browser.display.document_color_use" = 2;
+                            "general.smoothscroll" = false;
+                            "general.useragent.compatMode.firefox" = true;
+                            "geo.enabled" = false;
+                            "gfx.font_rendering.fontconfig.max_generic_substitutions" =
+                              127;
+                            "gfx.webrender.all" = true;
+                            "image.jxl.enabled" = true;
                             "layout.css.prefers-color-scheme.content-override" =
                               1;
-                            "browser.display.use_document_fonts" = 0;
-                            "font.name-list.emoji" = "";
-                            "extensions.activeThemeID" =
-                              "{5f71ffe3-23e2-49b8-b75e-2c032ef4a1d9}";
+                            "media.autoplay.block-event.enabled" = true;
+                            "media.autoplay.default" = 2;
+                            "media.disabled" =
+                              true; # optional, blocks all media playback
+                            "media.eme.enabled" = false;
+                            "media.ffmpeg.enabled" = false;
+                            "media.ffmpeg.vaapi.enabled" = true;
+                            "media.gmp-widevinecdm.enabled" = false;
+                            "media.mediasource.enabled" = false;
+                            "media.peerconnection.enabled" =
+                              false; # Disable WebRTC
+                            "media.peerconnection.ice.default_address_only" =
+                              true;
+                            "media.webm.enabled" = false;
+                            "network.dns.echconfig.enabled" = true;
+                            "network.dns.http3_echconfig.enabled" = true;
+                            "noscript.sync.enabled" = true;
+                            "permissions.default.image" = 2;
+                            "places.history.enabled" = true;
+                            "privacy.donottrackheader.enabled" = true;
+                            "privacy.resistFingerprinting" = true;
+                            "privacy.resistFingerprinting.block_mozAddonManager" =
+                              true;
+                            "privacy.trackingprotection.cryptomining.enabled" =
+                              true; # Block crypto mining scripts
+                            "privacy.trackingprotection.enabled" =
+                              true; # Enhanced Tracking Protection
+                            "privacy.trackingprotection.fingerprinting.enabled" =
+                              true; # Block fingerprinting
+                            "privacy.trackingprotection.socialtracking.enabled" =
+                              true; # Block social trackers
+                            "privacy.userContext.enabled" = false;
+                            "reader.parse-on-load.enabled" = false;
+                            "security.enterprise_roots.auto-enabled" = false;
+                            "security.enterprise_roots.enabled" = false;
+                            "services.sync.engine.history" = true;
+                            "services.sync.prefs.sync-seen.services.sync.prefs.sync.capability.policy.maonoscript.sites" =
+                              true;
+                            "services.sync.prefs.sync.capability.policy.maonoscript.sites" =
+                              true;
+                            "signon.autofillForms" = false;
+                            "signon.rememberSignons" = true; # true is saving
+                            "svg.context-properties.content.enabled" = true;
+                            "toolkit.crashreporter.dataDirectory" = "";
+                            "toolkit.crashreporter.enabled" = false;
+                            "toolkit.legacyUserProfileCustomizations.stylesheets" =
+                              true;
+                            "toolkit.telemetry.archive.enabled" = false;
+                            "toolkit.telemetry.enabled" = false;
+                            "toolkit.telemetry.rejected" = false;
+                            "toolkit.telemetry.unified" = false;
+                            "ui.key.menuAccessKey" = 17;
+                            "ui.key.menuAccessKeyFocuses" = false;
+                            "webgl.disabled" = true;
+                            "widget.non-native-theme.scrollbar.style" = 3;
+                            "widget.wayland.opaque-region.enabled" = false;
+                            "xpinstall.signatures.required" = false;
                           };
                         };
                       };
@@ -1195,7 +1251,7 @@
                 nix.settings.cores = 10;
                 nix.settings.max-jobs = lib.mkDefault 10;
                 environment.variables = {
-                  SOPS_AGE_KEY_FILE= "/etc/keys.txt";
+                  SOPS_AGE_KEY_FILE = "/etc/nixos/keys.txt";
                   EDITOR = "emacsclient -n -s 'server'";
                   RUSTUP_DIST_SERVER = "https://rsproxy.cn";
                   RUSTUP_UPDATE_ROOT = "https://rsproxy.cn/rustup";
@@ -1263,7 +1319,7 @@
                 };
                 sops.defaultSopsFile = ./secrets.yaml;
                 sops.defaultSopsFormat = "yaml";
-                sops.age.keyFile ="/etc/keys.txt";
+                sops.age.keyFile = "/etc/nixos/keys.txt";
                 # "/home/${userSetting.username}/.config/sops/age/keys.txt"; # 私钥路径
                 #AGE-SECRET-KEY-
                 sops.secrets."gh_hosts.yml" = {
@@ -1294,25 +1350,28 @@
                 sops.secrets.mojie = { owner = userSetting.username; };
                 sops.secrets.oney = { owner = userSetting.username; };
                 sops.secrets.ouo = { owner = userSetting.username; };
-                # networking.extraHosts = '' # 其嗜欲深者，其天机浅
-                # ${builtins.readFile ./nosurf/hosts06} # 为道
-                #    # 消费主义让我们沉迷于物质/精神消费中，
-                #    # 通过让我们接触各种光怪陆离的东西来丰富我们的身份认同感，
-                #    # 这也是当今时代互联网正在加速实现的事情…
-                #    # 但这是以牺牲掌握任何技能为代价换来的，
-                #    0.0.0.0 google.com
-                #    0.0.0.0 www.google.com ＃文灭志，博溺心
-                #    0.0.0.0 reddit.com
-                #    0.0.0.0 old.reddit.com
-                #    0.0.0.0 z-library.sk
-                #    0.0.0.0 emacs-china.org
-                #    0.0.0.0 chatgpt.com
-                #    # 我们沉迷得越深，想要掌握一项技能的愿望就会越来越淡化。
-                # '';
+                networking.extraHosts = ''
+                  # 其嗜欲深者，其天机浅
+                                 ${builtins.readFile ./hosts06} # 为道
+                                    # 消费主义让我们沉迷于物质/精神消费中，
+                                    # 通过让我们接触各种光怪陆离的东西来丰富我们的身份认同感，
+                                    # 这也是当今时代互联网正在加速实现的事情…
+                                    # 但这是以牺牲掌握任何技能为代价换来的，
+                                    0.0.0.0 google.com
+                                    0.0.0.0 www.google.com ＃文灭志，博溺心
+                                    # 0.0.0.0 www.google.com.hk
+                                    0.0.0.0 reddit.com
+                                    0.0.0.0 old.reddit.com
+                                    0.0.0.0 z-library.sk
+                                    0.0.0.0 emacs-china.org
+                                    # 0.0.0.0 chatgpt.com
+                                    # 我们沉迷得越深，想要掌握一项技能的愿望就会越来越淡化。
+                '';
                 services = {
                   irqbalance.enable = false;
-                  udev.extraRules =
-                    ''SUBSYSTEM=="i2c-dev", GROUP="i2c", MODE="0660"'';
+                  udev.extraRules = ''
+                    KERNEL=="i2c-[0-9]*", GROUP="i2c", MODE="0660"
+                  '';
                   xserver.videoDrivers = [ "modesetting" ];
                   udisks2.mountOnMedia = true;
                   udisks2.enable = true;
@@ -1325,10 +1384,12 @@
                     ports = [ 443 ];
                     settings = {
                       PasswordAuthentication = true;
-                      AllowUsers = null; # Allows all users by default. Can be [ "user1" "user2" ]
+                      AllowUsers =
+                        null; # Allows all users by default. Can be [ "user1" "user2" ]
                       UseDns = true;
                       X11Forwarding = false;
-                      PermitRootLogin = "prohibit-password"; # "yes", "without-password", "prohibit-password", "forced-commands-only", "no"
+                      PermitRootLogin =
+                        "prohibit-password"; # "yes", "without-password", "prohibit-password", "forced-commands-only", "no"
                     };
                   };
                   pulseaudio.enable = false;
@@ -1357,7 +1418,8 @@
                     enable = true;
                     disableTxChecksumIpGeneric = false;
                     package = pkgs.unstable.dae;
-                    configFile = "/home/${userSetting.username}/.config/dae/config.dae";
+                    configFile =
+                      "/home/${userSetting.username}/.config/dae/config.dae";
                     assets = with pkgs.unstable; [
                       v2ray-geoip
                       v2ray-domain-list-community
@@ -1367,9 +1429,9 @@
                       port = 12345;
                     };
                   };
-                  nscd.enable = true;
+                  nscd.enable = false;
                   dnsmasq = {
-                    enable = false;
+                    enable = true;
                     settings = {
                       addn-hosts = "/etc/hosts";
                       cache-size = 1000;
@@ -1708,86 +1770,86 @@
                 };
                 systemd.services."getdaeconfig" = {
                   script = ''
-                    mkdir -p "/home/${userSetting.username}/.config/dae"
-                    config_file="/home/${userSetting.username}/.config/dae/config.dae"
-                    source_file="/home/${userSetting.username}/.config/nixos/device/desktop/resource/daeconfig"
-                    if [[ ! -f "$config_file" ]]; then
-                    echo "
-# -*- mode: conf-space -*-
-global {
-wan_interface: auto
-log_level: info
-allow_insecure: true
-auto_config_kernel_parameter: true
-}
+                                          mkdir -p "/home/${userSetting.username}/.config/dae"
+                                          config_file="/home/${userSetting.username}/.config/dae/config.dae"
+                                            source_file="/home/${userSetting.username}/.config/nixos/device/desktop/resource/daeconfig"
+                                              if [[ ! -f "$config_file" ]]; then
+                                                echo "
+                    # -*- mode: conf-space -*-
+                    global {
+                    wan_interface: auto
+                    log_level: info
+                    allow_insecure: true
+                    auto_config_kernel_parameter: true
+                    }
 
-subscription {
-sub_airport_1: \"$(cat ${config.sops.secrets.mojie.path})\"
-# sub_airport_2: \"$(cat ${config.sops.secrets.ouo.path})\"
-# sub_airport_3: \"$(cat ${config.sops.secrets.oney.path})\"
-}
+                    subscription {
+                    sub_airport_1: \"$(cat ${config.sops.secrets.mojie.path})\"
+                    # sub_airport_2: \"$(cat ${config.sops.secrets.ouo.path})\"
+                    # sub_airport_3: \"$(cat ${config.sops.secrets.oney.path})\"
+                    }
 
-dns {
-upstream {
-alidns: 'udp://dns.alidns.com:53'
-cfdns: 'tcp+udp://1.1.1.3:53'
-}
-routing {
-request {
-qtype(https) -> reject
-fallback: alidns
-}
-response {
-upstream(cfdns) -> accept
-ip(geoip:private) && !qname(geosite:cn) -> cfdns
-fallback: accept
-}
-}
-}
+                    dns {
+                    upstream {
+                    alidns: 'udp://dns.alidns.com:53'
+                    cfdns: 'tcp+udp://1.1.1.3:53'
+                    }
+                    routing {
+                    request {
+                    qtype(https) -> reject
+                    fallback: alidns
+                    }
+                    response {
+                    upstream(cfdns) -> accept
+                    ip(geoip:private) && !qname(geosite:cn) -> cfdns
+                    fallback: accept
+                    }
+                    }
+                    }
 
-group {
-proxy {
-filter: name(keyword:'香港','Hong')
-policy: min_moving_avg
-}
-usa {
-filter: name(keyword:'美国','USA','unite')
-policy: min_moving_avg
-}
-}
+                    group {
+                    proxy {
+                    filter: name(keyword:'香港','Hong')
+                    policy: min_moving_avg
+                    }
+                    usa {
+                    filter: name(keyword:'美国','USA','unite')
+                    policy: min_moving_avg
+                    }
+                    }
 
-routing {
-pname(dnsmasq, dropbear) -> must_direct
-dip(8.8.8.8) -> must_direct
-dip(1.1.1.3) -> must_direct
-domain(dns.alidns.com) -> must_direct
-domain(dns.google) -> must_direct
-domain(cloudflare-dns.com) -> must_direct
-dip(224.0.0.0/3, 'ff00::/8') -> direct
+                    routing {
+                    pname(dnsmasq, dropbear) -> must_direct
+                    dip(8.8.8.8) -> must_direct
+                    dip(1.1.1.3) -> must_direct
+                    domain(dns.alidns.com) -> must_direct
+                    domain(dns.google) -> must_direct
+                    domain(cloudflare-dns.com) -> must_direct
+                    dip(224.0.0.0/3, 'ff00::/8') -> direct
 
-# 禁用 h3，因为它通常消耗很多 CPU 和内存资源
-l4proto(udp) && dport(443) -> block
-dip(geoip:private) -> direct
-dip(geoip:cn) -> direct
+                    # 禁用 h3，因为它通常消耗很多 CPU 和内存资源
+                    l4proto(udp) && dport(443) -> block
+                    dip(geoip:private) -> direct
+                    dip(geoip:cn) -> direct
 
-domain(
-geosite:category-social-media-!cn,
-geosite:category-social-media-cn,
-geosite:category-media,
-geosite:category-media-cn,
-geosite:category-entertainment,
-geosite:category-entertainment-cn,
-geosite:category-porn,reddit.com) -> block
+                    domain(
+                    geosite:category-social-media-!cn,
+                    geosite:category-social-media-cn,
+                    geosite:category-media,
+                    geosite:category-media-cn,
+                    geosite:category-entertainment,
+                    geosite:category-entertainment-cn,
+                    geosite:category-porn,reddit.com) -> block
 
-domain(geosite:category-ai-!cn) -> usa
+                    domain(geosite:category-ai-!cn) -> usa
 
-domain(geosite:cn,api.tavily.com,ziggit.dev,api.deepseek.com,mirrors.ustc.edu.cn) -> direct
-fallback: proxy
-}
-                                " > "$config_file"
-      # Set the ownership and permissions of the config file so the user can edit it
-      chown ${userSetting.username}: "$config_file"
-                    fi
+                    domain(geosite:cn,api.tavily.com,ziggit.dev,api.deepseek.com,mirrors.ustc.edu.cn) -> direct
+                    fallback: proxy
+                    }
+                                                    " > "$config_file"
+                                                      # Set the ownership and permissions of the config file so the user can edit it
+                                                      chown ${userSetting.username}: "$config_file"
+                                                        fi
                   '';
                   wantedBy = [ "hibernate.target" "multi-user.target" ];
                   description = "dae config generator";
@@ -1796,163 +1858,163 @@ fallback: proxy
                 };
                 systemd.services."getswayconfig" = {
                   script = ''
-                                        mkdir -p "/home/${userSetting.username}/.config/sway"
-                                        config_file="/home/${userSetting.username}/.config/sway/config"
-                                        if [[ ! -f "$config_file" ]]; then
-echo "
-# -*- mode: conf-space -*-
-# Logo key. Use Mod1 for Alt.
-set \$mod Mod4
+                                                        mkdir -p "/home/${userSetting.username}/.config/sway"
+                                                        config_file="/home/${userSetting.username}/.config/sway/config"
+                                                          if [[ ! -f "$config_file" ]]; then
+                                                            echo "
+                    # -*- mode: conf-space -*-
+                    # Logo key. Use Mod1 for Alt.
+                    set \$mod Mod4
 
-# Preferred terminal and launcher
-set \$term foot
-set \$menu wmenu-run -N '#ffffff' -n '#000000' -M '#000000' -m '#ffffff' -S '#000000' -s '#ffffff' -f 'monospace 16' -b -i
-# Background and output configuration
+                    # Preferred terminal and launcher
+                    set \$term foot
+                    set \$menu wmenu-run -N '#ffffff' -n '#000000' -M '#000000' -m '#ffffff' -S '#000000' -s '#ffffff' -f 'monospace 16' -b -i
+                    # Background and output configuration
 
-output * bg /run/current-system/sw/share/backgrounds/sway/Sway_Wallpaper_Blue_768x1024_Portrait.png fill
-output * transform 270
+                    output * bg /run/current-system/sw/share/backgrounds/sway/Sway_Wallpaper_Blue_768x1024_Portrait.png fill
+                    output * transform 270
 
-exec swayidle -w \
-     timeout 1100 'emacsclient --eval \"(about-emacs)\"' \
-     timeout 1200 'systemctl hibernate' \
-     before-sleep 'notify-send \"I am sleeping\"'
+                    exec swayidle -w \
+                         timeout 1100 'emacsclient --eval \"(about-emacs)\"' \
+                         timeout 1200 'systemctl hibernate' \
+                         before-sleep 'notify-send \"I am sleeping\"'
 
-# Screenshots and screen recording
-bindsym Print exec grim -g '\$(slurp)' - | wl-copy && wl-paste > ~/.save/Screenshot-\$(date +%F%T).png | notify-send \"Screenshot of the region taken\"
-bindsym Shift+Print exec grim -g '\$(slurp -o -r -c '#ff0000ff')' -t ppm - | satty --filename - --fullscreen --output-filename ~/save/satty-\$(date '+%Y%m%d-%H:%M:%S').png
-bindsym Mod1+Shift+Print exec wf-recorder
+                    # Screenshots and screen recording
+                    bindsym Print exec grim -g '\$(slurp)' - | wl-copy && wl-paste > ~/.save/Screenshot-\$(date +%F%T).png | notify-send \"Screenshot of the region taken\"
+                    bindsym Shift+Print exec grim -g '\$(slurp -o -r -c '#ff0000ff')' -t ppm - | satty --filename - --fullscreen --output-filename ~/save/satty-\$(date '+%Y%m%d-%H:%M:%S').png
+                    bindsym Mod1+Shift+Print exec wf-recorder
 
-# bindsym \$mod+Shift+j exec bash -c 'paperlike-cli -i2c /dev/i2c-4 -clear;swaylock -i ~/.config/sway/white.jpg;'
+                    # bindsym \$mod+Shift+j exec bash -c 'paperlike-cli -i2c /dev/i2c-4 -clear;swaylock -i ~/.config/sway/white.jpg;'
 
-# Exit sway (logs you out of your Wayland session)
-bindsym \$mod+Shift+q exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
+                    # Exit sway (logs you out of your Wayland session)
+                    bindsym \$mod+Shift+q exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
 
-# Reload config
-bindsym \$mod+Shift+r reload
-# bindsym \$mod+Shift+l reload
-# 一个工作区，两个窗口，只能全屏上下横竖
-bindsym \$mod+Shift+h fullscreen
-bindsym \$mod+Shift+m exec emacsclient --eval \"(type-explain-in-chinese)\";
-bindsym \$mod+Shift+comma exec emacsclient --eval \"(swaywindow)\";
-bindsym \$mod+Shift+period  exec emacsclient --eval \"(swayrotate)\";
+                    # Reload config
+                    bindsym \$mod+Shift+r reload
+                    # bindsym \$mod+Shift+l reload
+                    # 一个工作区，两个窗口，只能全屏上下横竖
+                    bindsym \$mod+Shift+h fullscreen
+                    bindsym \$mod+Shift+m exec emacsclient --eval \"(type-explain-in-chinese)\";
+                    bindsym \$mod+Shift+comma exec emacsclient --eval \"(swaywindow)\";
+                    bindsym \$mod+Shift+period  exec emacsclient --eval \"(swayrotate)\";
 
 
-# bindsym \$mod+Shift+period  exec toggle-workspace 4 5
-# bindsym \$mod+Shift+slash layout toggle split
-# bindsym \$mod+Shift+apostrophe exec \$menu
+                    # bindsym \$mod+Shift+period  exec toggle-workspace 4 5
+                    # bindsym \$mod+Shift+slash layout toggle split
+                    # bindsym \$mod+Shift+apostrophe exec \$menu
 
-# bindsym \$mod+Shift+period  layout toggle split
-bindsym \$mod+Shift+slash exec \$menu
-bindsym \$mod+Shift+space floating toggle
-bindsym \$mod+space focus mode_toggle
+                    # bindsym \$mod+Shift+period  layout toggle split
+                    bindsym \$mod+Shift+slash exec \$menu
+                    bindsym \$mod+Shift+space floating toggle
+                    bindsym \$mod+space focus mode_toggle
 
-# Basic window management
-bindsym \$mod+Shift+w kill
-# bindsym \$mod+Shift+k kill
-bindsym \$mod+Return exec \$term
+                    # Basic window management
+                    bindsym \$mod+Shift+w kill
+                    # bindsym \$mod+Shift+k kill
+                    bindsym \$mod+Return exec \$term
 
-# Application launcher and clipboard history
-# bindsym \$mod+Shift+apostrophe exec \$menu -show drun
-bindsym \$mod+Shift+y exec cliphist list | wmenu -N '#ffffff' -n '#000000' -M '#000000' -m '#ffffff' -S '#000000' -s '#ffffff' -f 'monospace 16' -b -i -l 16  | cliphist decode | wl-copy
-# bindsym \$mod+Shift+d exec cliphist list | wmenu -N '#ffffff' -n '#000000' -M '#000000' -m '#ffffff' -S '#000000' -s '#ffffff' -f 'monospace 16' -b -i -l 10  | cliphist delete
+                    # Application launcher and clipboard history
+                    # bindsym \$mod+Shift+apostrophe exec \$menu -show drun
+                    bindsym \$mod+Shift+y exec cliphist list | wmenu -N '#ffffff' -n '#000000' -M '#000000' -m '#ffffff' -S '#000000' -s '#ffffff' -f 'monospace 16' -b -i -l 16  | cliphist decode | wl-copy
+                    # bindsym \$mod+Shift+d exec cliphist list | wmenu -N '#ffffff' -n '#000000' -M '#000000' -m '#ffffff' -S '#000000' -s '#ffffff' -f 'monospace 16' -b -i -l 10  | cliphist delete
 
-floating_modifier \$mod normal
+                    floating_modifier \$mod normal
 
-# Hide cursor after 1 second of inactivity
-seat * hide_cursor 888
+                    # Hide cursor after 1 second of inactivity
+                    seat * hide_cursor 888
 
-# Gaps
-gaps top 0
-gaps outer 0
-gaps inner 0
+                    # Gaps
+                    gaps top 0
+                    gaps outer 0
+                    gaps inner 0
 
-# Bar configuration
-bar {
-position bottom
-tray_output none
-status_command while true; do date +'%H:%M'; sleep 1; done
-mode hide
-swaybar_command true
-colors {
-background #ffffff
-statusline #000000
-separator  #000000
-focused_background #ffffff
-focused_statusline #000000
-focused_separator  #000000
-focused_workspace  #ffffff #ffffff #000000
-active_workspace   #ffffff #ffffff #000000
-inactive_workspace #ffffff #000000 #ffffff
-urgent_workspace   #ffffff #ffffff #000000
-binding_mode       #ffffff #ffffff #000000
-}
-}
-bindsym \$mod+Shift+b exec swaymsg bar mode toggle
+                    # Bar configuration
+                    bar {
+                    position bottom
+                    tray_output none
+                    status_command while true; do date +'%H:%M'; sleep 1; done
+                    mode hide
+                    swaybar_command true
+                    colors {
+                    background #ffffff
+                    statusline #000000
+                    separator  #000000
+                    focused_background #ffffff
+                    focused_statusline #000000
+                    focused_separator  #000000
+                    focused_workspace  #ffffff #ffffff #000000
+                    active_workspace   #ffffff #ffffff #000000
+                    inactive_workspace #ffffff #000000 #ffffff
+                    urgent_workspace   #ffffff #ffffff #000000
+                    binding_mode       #ffffff #ffffff #000000
+                    }
+                    }
+                    bindsym \$mod+Shift+b exec swaymsg bar mode toggle
 
-# Client window styles
-client.focused #ffffff  #ffffff  #000000  #ffffff  #ffffff
-client.focused_inactive  #ffffff  #000000  #ffffff  #ffffff  #ffffff
-client.focused_tab_title #ffffff  #ffffff  #000000
-client.unfocused         #ffffff  #000000  #ffffff  #ffffff  #ffffff
-client.urgent #ffffff  #ffffff  #000000  #ffffff  #ffffff
-client.placeholder       #ffffff  #ffffff  #000000  #ffffff  #ffffff
-client.background        #ffffff
+                    # Client window styles
+                    client.focused #ffffff  #ffffff  #000000  #ffffff  #ffffff
+                    client.focused_inactive  #ffffff  #000000  #ffffff  #ffffff  #ffffff
+                    client.focused_tab_title #ffffff  #ffffff  #000000
+                    client.unfocused         #ffffff  #000000  #ffffff  #ffffff  #ffffff
+                    client.urgent #ffffff  #ffffff  #000000  #ffffff  #ffffff
+                    client.placeholder       #ffffff  #ffffff  #000000  #ffffff  #ffffff
+                    client.background        #ffffff
 
-# UI styling
-font pango:Bookerly 1
-titlebar_padding 1
-titlebar_border_thickness 0
+                    # UI styling
+                    font pango:Bookerly 1
+                    titlebar_padding 1
+                    titlebar_border_thickness 0
 
-exec swaymsg workspace number 5
+                    exec swaymsg workspace number 5
 
-# Workspace bindings (keypad)
-bindsym KP_1 workspace 1
-bindsym KP_2 workspace 2
-bindsym KP_3 workspace 3
-bindsym KP_4 workspace 4
-bindsym KP_5 workspace 5
-bindsym KP_6 workspace 6
-bindsym KP_7 workspace 7
-bindsym KP_8 workspace 8
-bindsym KP_9 workspace 9
-bindsym KP_0 workspace next
+                    # Workspace bindings (keypad)
+                    bindsym KP_1 workspace 1
+                    bindsym KP_2 workspace 2
+                    bindsym KP_3 workspace 3
+                    bindsym KP_4 workspace 4
+                    bindsym KP_5 workspace 5
+                    bindsym KP_6 workspace 6
+                    bindsym KP_7 workspace 7
+                    bindsym KP_8 workspace 8
+                    bindsym KP_9 workspace 9
+                    bindsym KP_0 workspace next
 
-bindsym \$mod+Shift+e exec  emacs
-bindsym \$mod+e exec  emacsclient -n -c -s server
+                    bindsym \$mod+Shift+e exec  emacs
+                    bindsym \$mod+e exec  emacsclient -n -c -s server
 
-for_window [app_id=\"emacs\"] border none
-for_window [app_id=\"emacs\"] titlebar_padding 0
-for_window [app_id=\"emacs\"] titlebar_border_thickness 0
+                    for_window [app_id=\"emacs\"] border none
+                    for_window [app_id=\"emacs\"] titlebar_padding 0
+                    for_window [app_id=\"emacs\"] titlebar_border_thickness 0
 
-for_window [app_id=\"emacsclient\"] border none
-for_window [app_id=\"emacsclient\"] titlebar_padding 0
-for_window [app_id=\"emacsclient\"] titlebar_border_thickness 0
+                    for_window [app_id=\"emacsclient\"] border none
+                    for_window [app_id=\"emacsclient\"] titlebar_padding 0
+                    for_window [app_id=\"emacsclient\"] titlebar_border_thickness 0
 
-# Foot terminal styling
-for_window [app_id=\"foot\"] border none
-for_window [app_id=\"foot\"] titlebar_padding 0
-for_window [app_id=\"foot\"] titlebar_border_thickness 0
+                    # Foot terminal styling
+                    for_window [app_id=\"foot\"] border none
+                    for_window [app_id=\"foot\"] titlebar_padding 0
+                    for_window [app_id=\"foot\"] titlebar_border_thickness 0
 
-# Firefox beta styling
-for_window [app_id=\"firefox\"] border none
-for_window [app_id=\"firefox\"] titlebar_padding 0
-for_window [app_id=\"firefox\"] titlebar_border_thickness 0
+                    # Firefox beta styling
+                    for_window [app_id=\"firefox\"] border none
+                    for_window [app_id=\"firefox\"] titlebar_padding 0
+                    for_window [app_id=\"firefox\"] titlebar_border_thickness 0
 
-# Firefox beta styling
-for_window [app_id=\"firefox-beta\"] border none
-for_window [app_id=\"firefox-beta\"] titlebar_padding 0
-for_window [app_id=\"firefox-beta\"] titlebar_border_thickness 0
+                    # Firefox beta styling
+                    for_window [app_id=\"firefox-beta\"] border none
+                    for_window [app_id=\"firefox-beta\"] titlebar_padding 0
+                    for_window [app_id=\"firefox-beta\"] titlebar_border_thickness 0
 
-for_window [app_id=\"xdg-desktop-portal-gtk\"] floating enable
-for_window [app_id=\"xdg-desktop-portal-gtk\"] resize set 800 600
-for_window [app_id=\"xdg-desktop-portal-gtk\"] move position center
+                    for_window [app_id=\"xdg-desktop-portal-gtk\"] floating enable
+                    for_window [app_id=\"xdg-desktop-portal-gtk\"] resize set 800 600
+                    for_window [app_id=\"xdg-desktop-portal-gtk\"] move position center
 
-# Include additional config files
-include /etc/sway/config.d/*
-                                        " > "$config_file"
-      # Set the ownership and permissions of the config file so the user can edit it
-      chown ${userSetting.username}: "$config_file"
-                                        fi
+                    # Include additional config files
+                    include /etc/sway/config.d/*
+                                                            " > "$config_file"
+                                                              # Set the ownership and permissions of the config file so the user can edit it
+                                                              chown ${userSetting.username}: "$config_file"
+                                                                fi
                   '';
                   # WorkingDirectory = "/home/${userSetting.username}";
                   wantedBy = [ "hibernate.target" "multi-user.target" ];
@@ -1963,19 +2025,19 @@ include /etc/sway/config.d/*
 
                 systemd.services."getnixconfig" = {
                   script = ''
-    # Ensure the user-specific .config/nix directory exists
-    mkdir -p '/home/${userSetting.username}/.config/nix'
+                    # Ensure the user-specific .config/nix directory exists
+                    mkdir -p '/home/${userSetting.username}/.config/nix'
 
-    # Define the target config file path
-    config_file="/home/${userSetting.username}/.config/nix/nix.conf"
+                    # Define the target config file path
+                    config_file="/home/${userSetting.username}/.config/nix/nix.conf"
 
-    # Only create the file if it does not already exist
-    if [[ ! -f "$config_file" ]]; then
-      echo "access-tokens = github.com = $(cat ${config.sops.secrets.github_token.path})" > $config_file
-      # Set the ownership and permissions of the config file so the user can edit it
-      chown ${userSetting.username}: $config_file
-    fi
-  '';
+                      # Only create the file if it does not already exist
+                      if [[ ! -f "$config_file" ]]; then
+                        echo "access-tokens = github.com = $(cat ${config.sops.secrets.github_token.path})" > $config_file
+                          # Set the ownership and permissions of the config file so the user can edit it
+                          chown ${userSetting.username}: $config_file
+                            fi
+                  '';
                   # Trigger the service on system boot and hibernation
                   wantedBy = [ "hibernate.target" "multi-user.target" ];
                   description = "Generate Nix Config for User";
@@ -1999,7 +2061,7 @@ include /etc/sway/config.d/*
                   networkmanager.enable = true;
                   firewall.enable = false;
                 };
-                #                system.nssModules = lib.mkForce [ ];
+                system.nssModules = lib.mkForce [ ]; # for dnsmasq
                 hardware.i2c.enable = true;
                 boot.kernelModules = [ "i2c-dev" "i915" "spi-ch341" ];
                 boot.extraModulePackages = [ ];
@@ -2058,7 +2120,7 @@ include /etc/sway/config.d/*
                 environment.etc = {
                   "wireplumber/main.lua.d/90-suspend-timeout.lua".text = ''
                     apply_properties = {
-                      ["session.suspend-timeout-seconds"] = 0;};
+                                                   ["session.suspend-timeout-seconds"] = 0;};
                   '';
                 };
                 boot.extraModprobeConfig = ''
@@ -2068,37 +2130,37 @@ include /etc/sway/config.d/*
                   package = pkgs.fish;
                   enable = true;
                   interactiveShellInit = ''
-                     zoxide init fish | source;
-                     clear
-                    set fish_greeting
-                     function vterm_prompt_end;
-                         vterm_printf '51;A'(whoami)'@'(hostname)':'(pwd)
-                     end
-                     functions --copy fish_prompt vterm_old_fish_prompt
-                     function fish_prompt --description 'Write out the prompt; do not replace this. Instead, put this at end of your file.'
-                         # Remove the trailing newline from the original prompt. This is done
-                         # using the string builtin from fish, but to make sure any escape codes
-                         # are correctly interpreted, use %b for printf.
-                         printf "%b" (string join "\n" (vterm_old_fish_prompt))
-                         vterm_prompt_end
-                     end
-                     function vterm_printf;
-                         if begin; [  -n "$TMUX" ]  ; and  string match -q -r "screen|tmux" "$TERM"; end
-                             # tell tmux to pass the escape sequences through
-                             printf "\ePtmux;\e\e]%s\007\e\\" "$argv"
-                         else if string match -q -- "screen*" "$TERM"
-                             # GNU screen (screen, screen-256color, screen-256color-bce)
-                             printf "\eP\e]%s\007\e\\" "$argv"
-                         else
-                             printf "\e]%s\e\\" "$argv"
-                         end
-                     end
-                     if [ "$INSIDE_EMACS" = 'vterm' ]
-                         function clear
-                             vterm_printf "51;Evterm-clear-scrollback";
-                             tput clear;
-                         end
-                     end
+                        zoxide init fish | source;
+                    clear
+                      set fish_greeting
+                      function vterm_prompt_end;
+                    vterm_printf '51;A'(whoami)'@'(hostname)':'(pwd)
+                      end
+                      functions --copy fish_prompt vterm_old_fish_prompt
+                      function fish_prompt --description 'Write out the prompt; do not replace this. Instead, put this at end of your file.'
+                        # Remove the trailing newline from the original prompt. This is done
+                        # using the string builtin from fish, but to make sure any escape codes
+                        # are correctly interpreted, use %b for printf.
+                        printf "%b" (string join "\n" (vterm_old_fish_prompt))
+                        vterm_prompt_end
+                        end
+                        function vterm_printf;
+if begin; [  -n "$TMUX" ]  ; and  string match -q -r "screen|tmux" "$TERM"; end
+# tell tmux to pass the escape sequences through
+printf "\ePtmux;\e\e]%s\007\e\\" "$argv"
+else if string match -q -- "screen*" "$TERM"
+# GNU screen (screen, screen-256color, screen-256color-bce)
+printf "\eP\e]%s\007\e\\" "$argv"
+else
+printf "\e]%s\e\\" "$argv"
+end
+end
+if [ "$INSIDE_EMACS" = 'vterm' ]
+function clear
+vterm_printf "51;Evterm-clear-scrollback";
+tput clear;
+end
+end
                   '';
                   shellInit = ''
                     # set -x DIRENV_LOG_FORMAT ""
@@ -2126,7 +2188,7 @@ include /etc/sway/config.d/*
                       # "https://mirror.sjtu.edu.cn/nix-channels/store"
                       # "https://xddxdd.cachix.org"
                     ];
-                    trusted-substituters= [
+                    trusted-substituters = [
                       "https://cache.nixos.org/"
                       "https://nix-community.cachix.org"
                       "https://mirrors.ustc.edu.cn/nix-channels/store"
@@ -2144,10 +2206,11 @@ include /etc/sway/config.d/*
                     # Deduplicate and optimize nix store
                     auto-optimise-store = true;
                     trusted-users = [ userSetting.username ];
+                    warn-dirty = false;
                   };
                   extraOptions = ''
-                             !include ${config.sops.secrets.nixAccessTokens.path}
-                         '';
+                    !include ${config.sops.secrets.nixAccessTokens.path}
+                  '';
                   gc = {
                     automatic = true;
                     dates = "daily";
