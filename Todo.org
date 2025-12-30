@@ -11,6 +11,8 @@
 - [X] pyim，提交issue修改%报错行为
 - [X] addons.mozilla，eink插件
 
+
+
 *** How to do ISO, A way to get rid of *OS FOMO*
 - [X] hardcode *dae* config
 - [X] dae to *git* clone
@@ -25,7 +27,6 @@
     - full-config/no-dependency-installation
   - *controlable*
     - network/behavior/
-
 
 *** check Zen/wirte-room-mode source code,  to implement my version of diff mode to diff font.
 *** TODO check emacs rotate-text package, config for ziglang.
@@ -134,6 +135,59 @@ Yes, *STB* is the famous single-file header library collection for C/C++.
 - *TinyXML2*, *Nuklear* (GUI), *parson* (JSON)
 
 *STB* is especially popular in game dev and small projects for its simplicity and no dependencies.
+
+
+C->Zig, Easy! Turst Me Bro.
+Just Rewrite  In C(Zig)!
+
+- *c*->libuv->node.js->bun-> *zig*, Cross-platform *asynchronous I/O*
+  https://github.com/libuv/libuv
+
+- gdb->gf/raddebugger, gui *debugger*
+
+- progress, nvtop, process watcher
+
+- movfuscator/c4
+- cello, black magic
+
+- libffi, A portable foreign-function interface library.
+  https://github.com/libffi/libffi
+
+- rlwrap, wrapper that uses the GNU Readline library to allow the comfortable editing and recalling of keyboard input for other commands.
+  https://github.com/hanslub42/rlwrap
+
+- raygui, A simple and easy-to-use immediate-mode *gui* library
+  https://github.com/raysan5/raygui
+
+- c++, imgui, Bloat-free *gui* for C++ with minimal dependencies
+  https://github.com/ocornut/imgui
+
+- miniaudio, *Audio* playback and capture library written in C, in a *single source file*.
+  https://github.com/mackron/miniaudio
+
+- subprocess, *single header* process launching solution for C and C++
+  https://github.com/sheredom/subprocess.h
+
+- dr_libs, *Audio* decoding libraries for C/C++, each in a *single source file* .
+  https://github.com/mackron/dr_libs
+
+- stb, *image* process, *single-file* public domain (or MIT licensed) libraries for C/C++
+  https://github.com/nothings/stb
+
+- c->zig build, *Header only library* for writing build recipes in C.
+  https://github.com/tsoding/nob.h
+
+- c, but *better*
+  https://github.com/c3lang/c3c
+  https://github.com/rustlang/rust
+  https://codeberg.org/ziglang/zig
+  d, v, c++, odain, jai, ..
+- c->java/zig,  build-once run-anywhere
+  https://github.com/jart/cosmopolitan
+- c->rust memory safty, a fanatically compatible memory-safe implementation of C and C++.
+  https://github.com/pizlonator/fil-c
+- c->go routine, Libmill is a library that introduces Go-style concurrency to C.
+  https://github.com/sustrik/libmill
 
 
 ;; 增强 C-e 使得其可以在关键位置进行循环移动

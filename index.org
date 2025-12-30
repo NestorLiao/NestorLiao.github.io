@@ -5,7 +5,7 @@
 # 我的操作流介绍，nixos/emacs/zmk
 #+INCLUDE: "./README.org" :minlevel 1
 # 1. 通过Tsoding的项目学习 C语言
-#+INCLUDE: "../CPP/fog/README.org" :minlevel 1
+# #+INCLUDE: "../CPP/fog/README.org" :minlevel 1
 # 1.5 通过Advent of Code 学习 Zig语言
 
 # ziglings -> zig, language basic -> clings
@@ -16,8 +16,9 @@
 # rtos -> zig, even harder
 # phone -> zig, even harder
 # r2s/lfs/rasberry-pi/lora/eink/game dev/...
+# 永远也不知道
 
-#+INCLUDE: "../AoC/README.org" :minlevel 1
+# #+INCLUDE: "../AoC/README.org" :minlevel 1
 # 2. 刷 Leetcode C++语言
 # #+INCLUDE: "../Leetcode/README.org" :minlevel 1
 # 3. 还有 操作系统相关学习

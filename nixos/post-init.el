@@ -4,20 +4,6 @@
 (setq minimal-emacs-var-dir
       (expand-file-name "var/" minimal-emacs-user-directory))
 (setq user-emacs-directory minimal-emacs-var-dir)
-;; (define-key key-translation-map (kbd "<right>") (kbd "<left>"))
-;; (define-key key-translation-map (kbd "<left>") (kbd "<right>"))
-;; (define-key key-translation-map (kbd "C-<left>") (kbd "C-<right>"))
-;; (define-key key-translation-map (kbd "C-<right>") (kbd "C-<left>"))
-;; (define-key key-translation-map (kbd "C-S-<left>") (kbd "C-S-<right>"))
-;; (define-key key-translation-map (kbd "C-S-<right>") (kbd "C-S-<left>"))
-;; (define-key key-translation-map (kbd "C-M-<left>") (kbd "C-M-<right>"))
-;; (define-key key-translation-map (kbd "C-M-<right>") (kbd "C-M-<left>"))
-;; (define-key key-translation-map (kbd "C-M-S-<left>") (kbd "C-M-S-<right>"))
-;; (define-key key-translation-map (kbd "C-M-S-<right>") (kbd "C-M-S-<left>"))
-;; (define-key key-translation-map (kbd "M-<left>") (kbd "M-<right>"))
-;; (define-key key-translation-map (kbd "M-<right>") (kbd "M-<left>"))
-;; (define-key key-translation-map (kbd "M-S-<left>") (kbd "M-S-<right>"))
-;; (define-key key-translation-map (kbd "M-S-<right>") (kbd "M-S-<left>"))
 (define-key key-translation-map (kbd "C-n") (kbd "C-x"))
 (define-key key-translation-map (kbd "C-x") (kbd "C-n"))
 (define-key key-translation-map (kbd "M-n") (kbd "M-x"))
@@ -158,18 +144,18 @@
  duplicate-region-final-position 1
  treesit-font-lock-level 1
  resize-mini-windows  nil
- ;; visible-cursor nil
- ;; x-stretch-cursor t
- ;; mode-line-end-spaces nil
- ;; bidi-inhibit-bpa t
- ;; cursor-type 'box
- ;; auto-mode-case-fold nil
- ;; inhibit-compacting-font-caches nil
- ;; bidi-display-reordering 'left-to-right
- ;; bidi-paragraph-direction 'left-to-right
- ;; buffer-file-coding-system 'utf-8
- ;; indent-tabs-mode nil
- ;; indicate-buffer-boundaries nil
+ visible-cursor nil
+ x-stretch-cursor t
+ mode-line-end-spaces nil
+ bidi-inhibit-bpa t
+ cursor-type 'box
+ auto-mode-case-fold nil
+ inhibit-compacting-font-caches nil
+ bidi-display-reordering 'left-to-right
+ bidi-paragraph-direction 'left-to-right
+ buffer-file-coding-system 'utf-8
+ indent-tabs-mode nil
+ indicate-buffer-boundaries t
  )
 (require 'use-package)
 (use-package compile-angel
@@ -201,15 +187,15 @@
    consult--source-recent-file consult--source-project-recent-file
    :preview-key '(:debounce 0.4 any))
   (setq consult-narrow-key "<")
-  ;; stop addiction of configing emacs here. 我的人生大约是废了。
-  ;; (defun list-packages()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
-  ;; (defun org-agenda()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
-  ;; (defun package-list-packages()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
-  ;; (defun package-show-package-list()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
-  ;; (defun customize-create-theme()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
-  ;; (defun customize-themes()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
-  ;; (defun gomoku()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
-  ;; (defun calendar()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
+  ;; stop addiction of configging emacs here. 我的人生大约是废了。
+  (defun list-packages()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
+  (defun org-agenda()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
+  (defun package-list-packages()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
+  (defun package-show-package-list()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
+  (defun customize-create-theme()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
+  (defun customize-themes()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
+  (defun gomoku()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
+  (defun calendar()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
   (global-unset-key (kbd "C-z"))        ;hey, what's going on? and I say hayayayayayyay.
   :bind (
          ([remap comment-line] . comment-or-uncomment-region-or-line)
@@ -228,19 +214,17 @@
          ([remap yank-pop] . consult-yank-pop)
          ;; stop hurt my finger girls here. 我的小姆指大约是废了。
          ;; 爱护我们的左手小拇指
-         ;; ("C-a" . (lambda () (interactive) (message "为了我的小姆指!!!!!!! 用 <Home>!!")))
-         ;; ("M-a" . (lambda () (interactive) (message "为了我的小姆指!!!!!!! 这玩意本来就没啥用吧! 用avy!")))
-         ;; ("M-z" . (lambeda () (interactive) (message "为了我的小姆指!!!!!!! 这玩意本来就没啥用吧! 用M-x招唤吧!")))
-         ;; ("C-c C-; z" . (lambda () (interactive) (message "我不再使用isearch-forward-symbol-at-point用emabark-symbol or occur/rg 它不香吗")))
-         ;; ("C-c C-~ z" . (lambda () (interactive) (message "我不再使用navz来删窗口, navd它不香吗?")))
-         ;; ;; 爱护我们的右手小拇指
-         ;; ("<end>" . (lambda () (interactive) (message "为了我的小姆指!!!!!!! 用 C-e!!")))
-         ;; ("<right>" . (lambda () (interactive) (message "为了我的小姆指!!!!!!! 用 avy加M-f!!")))
-         ;; ("<right>" . right-char)       ; 有些时候，我们不能不妥协于世界。
-         ;; ("<right>" . (lambda () (interactive) (message "为了我的小姆指!!!!!!! 用 nav层的f!!"))) ; 有些时候，我就是不喜欢适应。去tm的世界。
-         ;; ("C-<right>" . (lambda () (interactive) (message "为了我的小姆指!!!!!!! 用m-f不是更爽吗!!"))) ; 有些时候，我就是不喜欢适应。去tm的世界。
-         ;; ("C-S-<right>" . (lambda () (interactive) (message "为了我的小姆指!!!!!!! 用m-s-f不是更爽吗!!"))) ; 有些时候，我就是不喜欢适应。去tm的世界。
-         ;; ("C-M-S-<right>" . (lambda () (interactive) (message "为了我的小姆指!!!!!!! 用C-m-s-f不是更爽吗!!"))) ; 有些时候，我就是不喜欢适应。去tm的世界。
+         ("C-a" . (lambda () (interactive) (message "为了我的小姆指!!!!!!! 用 <Home>!!")))
+         ("M-a" . (lambda () (interactive) (message "为了我的小姆指!!!!!!! 这玩意本来就没啥用吧! 用avy!")))
+         ("M-z" . (lambda () (interactive) (message "为了我的小姆指!!!!!!! 这玩意本来就没啥用吧! 用M-x招唤吧!")))
+         ("C-c C-; z" . (lambda () (interactive) (message "我不再使用isearch-forward-symbol-at-point用emabark-symbol or occur/rg 它不香吗")))
+         ("C-c C-~ z" . (lambda () (interactive) (message "我不再使用navz来删窗口, navd它不香吗?")))
+         ;; 爱护我们的右手小拇指
+         ("<end>" . (lambda () (interactive) (message "为了我的小姆指!!!!!!! 用 C-e!!")))
+         ("<right>" . (lambda () (interactive) (message "为了我的小姆指!!!!!!! 用 nav层的f!!"))) ; 有些时候，我就是不喜欢适应。去tm的世界。
+         ("C-<right>" . (lambda () (interactive) (message "为了我的小姆指!!!!!!! 用m-f不是更爽吗!!"))) ; 有些时候，我就是不喜欢适应。去tm的世界。
+         ("C-S-<right>" . (lambda () (interactive) (message "为了我的小姆指!!!!!!! 用m-s-f不是更爽吗!!"))) ; 有些时候，我就是不喜欢适应。去tm的世界。
+         ("C-M-S-<right>" . (lambda () (interactive) (message "为了我的小姆指!!!!!!! 用C-m-s-f不是更爽吗!!"))) ; 有些时候，我就是不喜欢适应。去tm的世界。
          ("C-/" . (lambda () (interactive) (message "为了我的小姆指!!!!!!! 用 C-f 来撤回吧!!")))
          ("C-?" . (lambda () (interactive) (message "把小姆指留着挖鼻屎，用C-b 来重做，用食指来代劳吧!")))
          ("M-/" . (lambda () (interactive) (message "为了我的小姆指!   别tm的用这个补全了，用M-return和M-tab对就干!!")))
@@ -255,9 +239,6 @@
          ;; No Need all if in outter, take care of your thumb, they are finger killers
          ;; use less z/ ao q', because little finger are easy to get hurt.
          ;; mos arstb are specific to native emacs binding
-         ("<Launch5>" . (lambda () (interactive)(insert "explain in chinese, thank you!")))
-         ("<Launch6>" . (lambda () (interactive)(insert "(lambda () (interactive)())")))
-         ("<Tools>" . tavily-search)
          ("C-f" . undo)     ;我也不用这个啥c-bnfp来上下左右啊
          ("C-b" . undo-redo)
          ("C-p" . goto-last-change)        ;goat
@@ -270,7 +251,7 @@
          ("C-M-<return>" . avy-copy-region)
          ("C-S-<return>" . avy-goto-line)
          ("C-<return>" . avy-goto-word-0)
-         ("M-<return>" . hippie-expand) ; 和alt-tab 针锋相对
+         ("M-<return>" . dabbrev-expand) ; 和alt-tab 针锋相对
          ("S-<return>" . comment-indent-new-line) ; 下一行注释
          ;; ----------------------------------------
          ;; 想想 C-SPC C-SPC 就是做标记，而M-SPC就是去标记点，爽了吧。
@@ -292,13 +273,13 @@
          ("M-+" . shift-number-up)
          ("M-_" . shift-number-down)
          ("C-n" . donothing)  ; 有bug也好，懒得记
-         ("M-n". donothing)
+         ("M-n". tavily-search)
 
          ;;;; 我有主要有NAV/MOS/SYM/(NUM: 通过Sway调用:not anymore, I just all emacs now!) who need wtf os/wm... just using Shitty emacs.
          ;; MOS-begin-----------------------------------------------------------------
          ("C-c C-; d" .  dired)
          ("C-c C-; k" .  kill-buffer)
-         ("C-c C-; f" . (lambda () (interactive)  (consult-ripgrep "~/Zen/codebase/" nil)))
+         ("C-c C-; f" . (lambda () (interactive)  (consult-ripgrep "~/.local/bin/lib/std" nil)))
          ("C-c C-; g" . er/expand-region)
          ("C-c C-; p" . disproject-dispatch)
          ("C-c C-; m" . devdocs-browser-open)
@@ -630,7 +611,7 @@
     ("p" . (lambda () (interactive)(dired-find-file-other-window) (other-window 1)))
     ("DEL" . scroll-down-command)
     ("," . dired-omit-mode)
-    ("E" . wdired-change-to-wdired-mode))
+    ("e" . wdired-change-to-wdired-mode))
   :hook
   ((dired-mode . dired-hide-details-mode)
    (dired-mode . dired-omit-mode))
@@ -722,8 +703,9 @@
   ;; (remove-hook 'org-mode-hook  #'toggle-truncate-lines)
   (with-eval-after-load 'org
     (define-key org-mode-map (kbd "C-,") nil)
-    (define-key org-mode-map (kbd "C-<return>") nil)
-    ;; (define-key org-mode-map (kbd "C-S-<return>") #'org-insert-heading-respect-content)
+    (define-key org-mode-map (kbd "C-<return>") #'org-insert-heading)
+    (define-key org-mode-map (kbd "M-<return>") #'org-insert-item)
+    (define-key org-mode-map (kbd "C-S-<return>") #'org-insert-heading-respect-content)
     )
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -956,6 +938,7 @@
         shr-max-image-proportion 0.6
         eww-auto-rename-buffer 'url
         eww-prompt-history '(
+                             "http://ziggit.dev/"
                              "http://c.doc:3001/" ; "https://en.cppreference.com/w/c"
                              "http://cpp.doc:3002/" ; "https://en.cppreference.com/w/cpp"
                              "http://linux.doc:3000/" ;"https://www.kernel.org/doc/html/latest/"
@@ -1043,7 +1026,9 @@
          ("C-v" . pdf-view-scroll-up-or-next-page)
          ("<prior>" . pdf-view-previous-page)
          ("<next>" . pdf-view-next-page))
-  :config (add-to-list 'revert-without-query ".pdf"))
+  :config
+  (add-to-list 'revert-without-query ".pdf")
+  (use-package saveplace-pdf-view))
 (use-package info
   :bind (:map Info-mode-map
               ("<mouse-8>" . scroll-up-record)
@@ -1866,7 +1851,57 @@ Optional MAX-RESULTS is the maximum number of results (default 5)."
          (max-results (or max-results 3))
          (include_answer  nil)
          (country (or country "united states"))
-         (include_domains (or include_domains '("nixos.org" "freertos.org" "zephyrproject.org" "contiki-ng.org" "riot-os.org" "nuttx.apache.org" "mynewt.apache.org" "ziglang.org" "python.org" "lua.org" "elixir-lang.org" "erlang.org" "haskell.org" "cmake.org" "gnu.org" "llvm.org" "gcc.gnu.org" "qt.io" "gtk.org" "sdl.org" "libsdl.org" "qemu-project.org" "cppreference.com" "opensource.org" "ietf.org" "w3.org" "ansi.org" "iso.org" "ieee.org" "man7.org" "discourse.nixos.org" "ziggit.dev" "emacs-china.org" "lwn.net" "kernel.org" "sourceware.org" "debian.org" "archlinux.org" "github.com" "osdev.org" "opencores.org" "riscv.org" "musl-libc.org" "newlib.sourceware.org" "uclibc-ng.org" "hackaday.com" "raspberrypi.org" "arduino.cc" "espressif.com" "gentoo.org")))
+         (include_domains (or include_domains '(
+                                                "nixos.org"
+                                                "freertos.org"
+                                                "zephyrproject.org"
+                                                "contiki-ng.org"
+                                                "riot-os.org"
+                                                "nuttx.apache.org"
+                                                "mynewt.apache.org"
+                                                "ziglang.org"
+                                                "python.org"
+                                                "lua.org"
+                                                "elixir-lang.org"
+                                                "erlang.org"
+                                                "haskell.org"
+                                                "cmake.org"
+                                                "gnu.org"
+                                                "llvm.org"
+                                                "gcc.gnu.org"
+                                                "qt.io"
+                                                "gtk.org"
+                                                "sdl.org"
+                                                "libsdl.org"
+                                                "qemu-project.org"
+                                                "cppreference.com"
+                                                "opensource.org"
+                                                "ietf.org"
+                                                "w3.org"
+                                                "ansi.org"
+                                                "iso.org"
+                                                "ieee.org"
+                                                "man7.org"
+                                                "discourse.nixos.org"
+                                                "ziggit.dev"
+                                                "emacs-china.org"
+                                                "lwn.net"
+                                                "kernel.org"
+                                                "sourceware.org"
+                                                "debian.org"
+                                                "archlinux.org"
+                                                "github.com"
+                                                "osdev.org"
+                                                "opencores.org"
+                                                "riscv.org"
+                                                "musl-libc.org"
+                                                "newlib.sourceware.org"
+                                                "uclibc-ng.org"
+                                                ;; "hackaday.com" ;; jsut a social media site
+                                                "raspberrypi.org"
+                                                "arduino.cc"
+                                                "espressif.com"
+                                                "gentoo.org")))
          (request-data
           `(("api_key" . ,tavily-api-key)
             ("query" . ,query)
@@ -1877,10 +1912,10 @@ Optional MAX-RESULTS is the maximum number of results (default 5)."
             ("exclude_domains" . ,exclude_domains)
             ("max_results" . ,max-results))))
     (plz 'post url
-         :headers '(("Content-Type" . "application/json"))
-         :body (json-encode request-data)
-         :as 'string
-         :then (lambda (result) (funcall callback result)))))
+      :headers '(("Content-Type" . "application/json"))
+      :body (json-encode request-data)
+      :as 'string
+      :then (lambda (result) (funcall callback result)))))
 (defun tavily-search (query)
   (interactive "sQuery: ")
   (tavily-search-async
@@ -2142,17 +2177,17 @@ This command does the inverse of `fill-paragraph'."
   (if (= fontfont 1)
       (progn (set-face-attribute 'default nil :font my-default-font :height (car(nth (or size 3)  font-scale-list))) (setq fontfont 0))
     (progn (set-face-attribute 'default nil :font my-alternate-font :height (car (cdr(nth (or size 3)  font-scale-list)))) (setq fontfont 1))))
-;; (setq consult-gh-default-clone-directory "~/Zen/blogging/"
-;;       consult-gh-default-save-directory "~/.save"
-;;       org-agenda-files (directory-files-recursively "~/Leere/NestorLiao.github.io/" "\\.org$")
-;;       my/leetcode-root "~/Leere/Leetcode/src/")
+(setq consult-gh-default-clone-directory "~/Zen/"
+      consult-gh-default-save-directory "~/.save"
+      org-agenda-files (directory-files-recursively "~/Leere/NestorLiao.github.io/" "\\.org$")
+      my/leetcode-root "~/Leere/Leetcode/src/")
 (defvar book-mode 1
   "toggle, from programming mode to book mode ")
 (defun togglebook-mode()
   (interactive)
   (if book-mode (progn (setq-default
                         fontfont 1
-                        line-spacing 0.4
+                        line-spacing 0.3
                         woman-fill-column 70
                         Man-width 70
                         fill-column 70
@@ -2196,10 +2231,6 @@ This command does the inverse of `fill-paragraph'."
   (define-key eshell-mode-map (kbd "C-p") 'eshell-previous-prompt)
   (define-key eshell-mode-map (kbd "C-n") 'eshell-next-prompt)
   )
-(defun type-explain-in-chinese ()
-  "Use wtype to type 'explain in chinese'."
-  (interactive)
-  (start-process "wtype" nil "wtype" "explain in chinese"))
 
 ;; (use-package devdocs-browser
 ;;   :config
@@ -2215,3 +2246,12 @@ This command does the inverse of `fill-paragraph'."
 ;;     (devdocs-browser-install-doc doc)
 ;;     (devdocs-browser-download-offline-data doc))
 ;;   )
+(custom-set-faces
+ '(corfu-quick1 ((t (:inherit bold :background "white" :foreground "black"))))
+ '(corfu-quick2 ((t (:inherit bold :background "white" :foreground "black")))))
+
+(eww "file:///home/leeao/.local/bin/doc/langref.html")
+
+(add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
+(setq dumb-jump-force-searcher 'rg)
+(setq dumb-jump-default-project "/home/leeao/.local/bin/lib/std")

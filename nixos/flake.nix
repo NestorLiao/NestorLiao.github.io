@@ -2,8 +2,6 @@
   description = "My Config";
   nixConfig = {
     builders-use-substitutes = true;
-    # error: unable to download 'https://mirrors.ustc.edu.cn/nix-channels/store/br3nr5ymp1p8k9gn9zljmbnsksikj98l.narinfo': Timeout was reached (28) Resolving timed out after 20281 milliseconds
-    # just plug... usb net or jr45
     experimental-features = [ "nix-command" "flakes" ];
     trusted-substituters = [
       "https://cache.nixos.org"
@@ -139,7 +137,7 @@
                   blockSocial = true;
                 };
                 environment.etc = {
-                  "nixos/flake.nix.nix" = {
+                  "nixos/flake.nix" = {
                     source = ./flake.nix;
                     mode = "0777";
                   };
@@ -148,6 +146,7 @@
                   (writeShellScriptBin "toggle-workspace" toggleWorkspaceScript)
                   (writeShellScriptBin "onlyemacs" onlyemacsScript)
                   (writeShellScriptBin "switchframe" switchframeScript)
+                  foliate
                   texliveFull
                   trashy
                   thunderbird
@@ -169,6 +168,7 @@
                   glibcInfo
                   libtool
                   libvterm
+                  unstable.gemini-cli-bin
                   nil
                   nixfmt-classic
                   poppler-utils
@@ -317,6 +317,7 @@
                   np =
                     "nix-shell -p  --option substituters 'https://mirrors.ustc.edu.cn/nix-channels/store  https://cache.nixos.org'";
                   gcl = "git clone";
+                  minipdf="np texlive.combined.scheme-full --run 'pdfcrop input.pdf output.pdf'";
                   nd = "pwd | wl-copy; pwd";
                   ls = "ls --color=never";
                   weather = "curl -s 'wttr.in/chongqing?T0'";
@@ -843,8 +844,9 @@
                       # IsRelative=1
                       # Name=firefox
                       # Path=firefox
+                      ### xxxx
                       programs.firefox = {
-                        enable = true;
+                        enable = false;
                         package = pkgs.firefox-beta;
                         policies = {
                           DisableFirefoxStudies = true;
@@ -904,136 +906,136 @@
                         };
                         profiles.firefox = {
                           userChrome = ''
-                                                                      @-moz-document url(chrome://browser/content/browser.xhtml) {
-                                                                            /* ########  Sidetabs Styles  ######### */
-                                                                            /* Set Bookerly for all Firefox UI */
-                                                                            * {
-                                                                                font-family: Bookerly !important
-                                                                            }
-                                                                            #navigator-toolbox { font-family:Bookerly !important }
-                                                                            #TabsToolbar { font-family: Bookerly !important }
-                                                                            #sidebar-header {
-                                                                              display: none;
-                                                                      }
-                                                                            #statuspanel { display: none !important; }
-                                                                            :root[tabsintitlebar] #titlebar:-moz-window-inactive {
-                                                                              opacity: 1 !important;
-                    }
-                                                                            #TabsToolbar {
-                                                                              display: none !important;
-                  }
-                                                                            #navigator-toolbox[fullscreenShouldAnimate] {
-                                                                                transition: none !important;
-                }
-                                                                            #contentAreaContextMenu #context-openlinkincurrent,
-                                                                            #contentAreaContextMenu #context-openlinkinusercontext-menu,
-                                                                            #contentAreaContextMenu #context-bookmarklink,
-                                                                            #contentAreaContextMenu #context-selectall,
-                                                                            #contentAreaContextMenu #context-sendlinktodevice,
-                                                                            #contentAreaContextMenu #context-sendpagetodevice,
-                                                                            #contentAreaContextMenu #context-sep-sendlinktodevice,
-                                                                            #contentAreaContextMenu #context-sep-sendpagetodevice,
-                                                                            #contentAreaContextMenu #context-viewpartialsource-selection {
-                                                                              display: none !important;
-              }
-                                                                            :root {
-                                                                              scrollbar-color: #ffffff #FFFFFF;
-                                                                              scrollbar-width: none;
-                                                                            }
-                                                                            *{ scrollbar-width: none !important; } }
-                                                                            *{ scrollbar-width: none }
-                                                                            #navigator-toolbox,
-                                                                            #TabsToolbar,
-                                                                            #tabbrowser-tabs {
-                                                                              background-color: #FFFFFFF !important;
-          }
-                                                                            :root{
-                                                                              --uc-autohide-toolbox-delay: 200ms; /* Wait 0.1s before hiding toolbars */
-                                                                              --uc-toolbox-rotation: 82deg;  /* This may need to be lower on mac - like 75 or so */
-                                                                            }
-                                                                            :root[sizemode="maximized"]{
-                                                                              --uc-toolbox-rotation: 88.5deg;
-                                                                                  }
-                                                                            @media  (-moz-platform: windows){
-                                                                              :root:not([lwtheme]) #navigator-toolbox{ background-color: -moz-dialog !important; }
-                                                                            }
-                                                                            :root[sizemode="fullscreen"],
-                                                                            :root[sizemode="fullscreen"] #navigator-toolbox{ margin-top: 0 !important; }
-                                                                            #navigator-toolbox{
-                                                                              --browser-area-z-index-toolbox: 3;
-                                                                              position: fixed !important;
-                                                                              background-color: var(--lwt-accent-color,black) !important;
-                                                                              transition: transform 82ms linear, opacity 82ms linear !important;
-                                                                              transition-delay: var(--uc-autohide-toolbox-delay) !important;
-                                                                              transform-origin: top;
-                                                                              transform: rotateX(var(--uc-toolbox-rotation));
-                                                                              opacity: 0;
-                                                                              line-height: 0;
-                                                                              z-index: 1;
-                                                                              pointer-events: none;
-        }
-                                                                            :root[sessionrestored] #urlbar[popover]{
-                                                                              pointer-events: none;
-                                                                              opacity: 0;
-                                                                              transition: transform 82ms linear var(--uc-autohide-toolbox-delay), opacity 0ms calc(var(--uc-autohide-toolbox-delay) + 82ms);
-                                                                              transform-origin: 0px calc(0px - var(--tab-min-height) - var(--tab-block-margin) * 2);
-                                                                              transform: rotateX(89.9deg);
-      }
-                                                                            #mainPopupSet:has(> [panelopen]:not(#ask-chat-shortcuts,#tab-preview-panel)) ~ toolbox #urlbar[popover],
-                                                                            #navigator-toolbox:is(:hover,:focus-within) #urlbar[popover],
-                                                                            #urlbar-container > #urlbar[popover]:is([focused],[open]){
-                                                                              pointer-events: auto;
-                                                                              opacity: 1;
-                                                                              transition-delay: 33ms;
-                                                                              transform: rotateX(0deg);
+@-moz-document url(chrome://browser/content/browser.xhtml) {
+    /* ########  Sidetabs Styles  ######### */
+    /* Set Bookerly for all Firefox UI */
+    * {
+        font-family: Bookerly !important
     }
-                                                                            #mainPopupSet:has(> [panelopen]:not(#ask-chat-shortcuts,#tab-preview-panel)) ~ toolbox,
-                                                                            #navigator-toolbox:has(#urlbar:is([open],[focus-within])),
-                                                                            #navigator-toolbox:hover,
-                                                                            #navigator-toolbox:focus-within{
-                                                                              transition-delay: 33ms !important;
-                                                                              transform: rotateX(0);
-                                                                              opacity: 1;
+    #navigator-toolbox { font-family:Bookerly !important }
+    #TabsToolbar { font-family: Bookerly !important }
+    #sidebar-header {
+        display: none;
 }
-                                                                            /* This makes things like OS menubar/taskbar show the toolbox when hovered in maximized windows.
-                                                                             * Unfortunately it also means that other OS native surfaces (such as context menu on macos)
-                                                                             * and other always-on-top applications will trigger toolbox to show up. */
-                                                                            @media (-moz-bool-pref: "userchrome.autohide-toolbox.unhide-by-native-ui.enabled"){
-                                                                              :root[sizemode="maximized"]:not(:hover){
-                                                                                #navigator-toolbox:not(:-moz-window-inactive),
-                                                                                #urlbar[popover]:not(:-moz-window-inactive){
-                                                                                  transition-delay: 33ms !important;
-                                                                                  transform: rotateX(0);
-                                                                                  opacity: 1;
-                                                                                    }
-                                                                            }
-                                                                            }
-                                                                            #navigator-toolbox > *{ line-height: normal; pointer-events: auto }
-                                                                            #navigator-toolbox,
-                                                                            #navigator-toolbox > *{
-                                                                              width: 100vw;
-                                                                              -moz-appearance: none !important;
-                                                                            }
-                                                                            /* These two exist for oneliner compatibility */
-                                                                            #nav-bar{ width: var(--uc-navigationbar-width,100vw) }
-                                                                            #TabsToolbar{ width: calc(100vw - var(--uc-navigationbar-width,0px)) }
-                                                                            /* Don't apply transform before window has been fully created */
-                                                                            :root:not([sessionrestored]) #navigator-toolbox{ transform:none !important }
-                                                                            :root[customizing] #navigator-toolbox{
-                                                                              position: relative !important;
-                                                                              transform: none !important;
-                                                                              opacity: 1 !important;
-                                                                            }
-                                                                            #navigator-toolbox[inFullscreen] > #PersonalToolbar,
-                                                                            #PersonalToolbar[collapsed="true"]{ display: none }
-                                                                            /* Uncomment this if tabs toolbar is hidden with hide_tabs_toolbar.css */
-                                                                             /*#titlebar{ margin-bottom: -9px }*/
-                                                                            /* Uncomment the following for compatibility with tabs_on_bottom.css - this isn't well tested though */
-                                                                            /*
-                                                                            #navigator-toolbox{ flex-direction: column; display: flex; }
-                                                                            #titlebar{ order: 2 }
-                                                                            */
-                                                                            }
+    #statuspanel { display: none !important; }
+    :root[tabsintitlebar] #titlebar:-moz-window-inactive {
+        opacity: 1 !important;
+                    }
+    #TabsToolbar {
+        display: none !important;
+                  }
+    #navigator-toolbox[fullscreenShouldAnimate] {
+        transition: none !important;
+                }
+    #contentAreaContextMenu #context-openlinkincurrent,
+    #contentAreaContextMenu #context-openlinkinusercontext-menu,
+    #contentAreaContextMenu #context-bookmarklink,
+    #contentAreaContextMenu #context-selectall,
+    #contentAreaContextMenu #context-sendlinktodevice,
+    #contentAreaContextMenu #context-sendpagetodevice,
+    #contentAreaContextMenu #context-sep-sendlinktodevice,
+    #contentAreaContextMenu #context-sep-sendpagetodevice,
+    #contentAreaContextMenu #context-viewpartialsource-selection {
+        display: none !important;
+              }
+    :root {
+        scrollbar-color: #ffffff #FFFFFF;
+        scrollbar-width: none;
+    }
+    *{ scrollbar-width: none !important; } }
+*{ scrollbar-width: none }
+#navigator-toolbox,
+#TabsToolbar,
+#tabbrowser-tabs {
+    background-color: #FFFFFFF !important;
+          }
+:root{
+    --uc-autohide-toolbox-delay: 200ms; /* Wait 0.1s before hiding toolbars */
+    --uc-toolbox-rotation: 82deg;  /* This may need to be lower on mac - like 75 or so */
+}
+:root[sizemode="maximized"]{
+    --uc-toolbox-rotation: 88.5deg;
+      }
+@media  (-moz-platform: windows){
+    :root:not([lwtheme]) #navigator-toolbox{ background-color: -moz-dialog !important; }
+}
+:root[sizemode="fullscreen"],
+:root[sizemode="fullscreen"] #navigator-toolbox{ margin-top: 0 !important; }
+#navigator-toolbox{
+    --browser-area-z-index-toolbox: 3;
+    position: fixed !important;
+    background-color: var(--lwt-accent-color,black) !important;
+    transition: transform 82ms linear, opacity 82ms linear !important;
+    transition-delay: var(--uc-autohide-toolbox-delay) !important;
+    transform-origin: top;
+    transform: rotateX(var(--uc-toolbox-rotation));
+    opacity: 0;
+    line-height: 0;
+    z-index: 1;
+    pointer-events: none;
+        }
+:root[sessionrestored] #urlbar[popover]{
+    pointer-events: none;
+    opacity: 0;
+    transition: transform 82ms linear var(--uc-autohide-toolbox-delay), opacity 0ms calc(var(--uc-autohide-toolbox-delay) + 82ms);
+    transform-origin: 0px calc(0px - var(--tab-min-height) - var(--tab-block-margin) * 2);
+    transform: rotateX(89.9deg);
+      }
+#mainPopupSet:has(> [panelopen]:not(#ask-chat-shortcuts,#tab-preview-panel)) ~ toolbox #urlbar[popover],
+#navigator-toolbox:is(:hover,:focus-within) #urlbar[popover],
+#urlbar-container > #urlbar[popover]:is([focused],[open]){
+    pointer-events: auto;
+    opacity: 1;
+    transition-delay: 33ms;
+    transform: rotateX(0deg);
+    }
+#mainPopupSet:has(> [panelopen]:not(#ask-chat-shortcuts,#tab-preview-panel)) ~ toolbox,
+#navigator-toolbox:has(#urlbar:is([open],[focus-within])),
+#navigator-toolbox:hover,
+#navigator-toolbox:focus-within{
+    transition-delay: 33ms !important;
+    transform: rotateX(0);
+    opacity: 1;
+}
+/* This makes things like OS menubar/taskbar show the toolbox when hovered in maximized windows.
+ * Unfortunately it also means that other OS native surfaces (such as context menu on macos)
+ * and other always-on-top applications will trigger toolbox to show up. */
+@media (-moz-bool-pref: "userchrome.autohide-toolbox.unhide-by-native-ui.enabled"){
+    :root[sizemode="maximized"]:not(:hover){
+        #navigator-toolbox:not(:-moz-window-inactive),
+        #urlbar[popover]:not(:-moz-window-inactive){
+            transition-delay: 33ms !important;
+            transform: rotateX(0);
+            opacity: 1;
+          }
+}
+}
+#navigator-toolbox > *{ line-height: normal; pointer-events: auto }
+#navigator-toolbox,
+#navigator-toolbox > *{
+    width: 100vw;
+    -moz-appearance: none !important;
+}
+/* These two exist for oneliner compatibility */
+#nav-bar{ width: var(--uc-navigationbar-width,100vw) }
+#TabsToolbar{ width: calc(100vw - var(--uc-navigationbar-width,0px)) }
+/* Don't apply transform before window has been fully created */
+:root:not([sessionrestored]) #navigator-toolbox{ transform:none !important }
+:root[customizing] #navigator-toolbox{
+    position: relative !important;
+    transform: none !important;
+    opacity: 1 !important;
+}
+#navigator-toolbox[inFullscreen] > #PersonalToolbar,
+#PersonalToolbar[collapsed="true"]{ display: none }
+/* Uncomment this if tabs toolbar is hidden with hide_tabs_toolbar.css */
+/*#titlebar{ margin-bottom: -9px }*/
+/* Uncomment the following for compatibility with tabs_on_bottom.css - this isn't well tested though */
+/*
+  #navigator-toolbox{ flex-direction: column; display: flex; }
+  #titlebar{ order: 2 }
+*/
+}
                           '';
                           settings = {
                             "accessibility.force_disabled" =
@@ -1359,12 +1361,13 @@
                                     # 但这是以牺牲掌握任何技能为代价换来的，
                                     0.0.0.0 google.com
                                     0.0.0.0 www.google.com ＃文灭志，博溺心
-                                    # 0.0.0.0 www.google.com.hk
+                                    0.0.0.0 www.google.com.hk
                                     0.0.0.0 reddit.com
                                     0.0.0.0 old.reddit.com
+                                    0.0.0.0 bookfere.com
                                     0.0.0.0 z-library.sk
                                     0.0.0.0 emacs-china.org
-                                    # 0.0.0.0 chatgpt.com
+                                    0.0.0.0 chatgpt.com
                                     # 我们沉迷得越深，想要掌握一项技能的愿望就会越来越淡化。
                 '';
                 services = {
@@ -1623,7 +1626,7 @@
                         alert
                         trashed
                         wgrep
-                        easysession
+                        # easysession
                         undo-fu
                         undo-fu-session
                       ]) ++ (with epkgs.elpaPackages; [ plz ])

@@ -4126,7 +4126,6 @@
 0.0.0.0 book.tiexue.net
 0.0.0.0 book.zongheng.com
 0.0.0.0 bookculture.com
-0.0.0.0 bookfere.com
 0.0.0.0 booking.com
 0.0.0.0 bookishnerd.com
 0.0.0.0 bookmark.com
@@ -7923,7 +7922,6 @@
 0.0.0.0 google.co.za
 0.0.0.0 google.co.zm
 0.0.0.0 google.co.zw
-0.0.0.0 google.com
 0.0.0.0 google.com.af
 0.0.0.0 google.com.ag
 0.0.0.0 google.com.ai
@@ -9106,10 +9104,14 @@
 0.0.0.0 i.y.qq.com
 0.0.0.0 i.ytimg.com
 0.0.0.0 i0.wp.com
+0.0.0.0 i1.wp.com
 0.0.0.0 i2.100024.xyz
+0.0.0.0 i2.wp.com
 0.0.0.0 i21st.cn
 0.0.0.0 i2345.cn
+0.0.0.0 i3.wp.com
 0.0.0.0 i3oidfgs.com
+0.0.0.0 i4.wp.com
 0.0.0.0 i4hu.com
 0.0.0.0 i50dh.com
 0.0.0.0 i52tv.com
@@ -9136,6 +9138,7 @@
 0.0.0.0 ibaotu.com
 0.0.0.0 ibazi.cn
 0.0.0.0 ibb.co
+0.0.0.0 ibhmr.ssuu.uk
 0.0.0.0 iblog.ren
 0.0.0.0 ibm.com
 0.0.0.0 ibook.pc899.cn
@@ -12658,6 +12661,7 @@
 0.0.0.0 nenniunai.mom
 0.0.0.0 nenzy.icu
 0.0.0.0 neoacg.com
+0.0.0.0 neocities.org
 0.0.0.0 neojapanav.com
 0.0.0.0 neoprompt.ai
 0.0.0.0 nepalkhabar.com
@@ -18066,7 +18070,6 @@
 0.0.0.0 whyy.org
 0.0.0.0 wiacg.com
 0.0.0.0 wiby.me
-0.0.0.0 wifi.com
 0.0.0.0 wifilu.com
 0.0.0.0 wiki.antpedia.com
 0.0.0.0 wiki.biligame.com
@@ -19681,7 +19684,6 @@
 0.0.0.0 www.google.cl
 0.0.0.0 www.google.cm
 0.0.0.0 www.google.cn
-0.0.0.0 www.google.com
 0.0.0.0 www.google.cv
 0.0.0.0 www.google.cz
 0.0.0.0 www.google.de
@@ -24197,3 +24199,4 @@
 0.0.0.0 zzzjtd.com
 0.0.0.0 zzzyk.com
 0.0.0.0 zzzzporn.comreations.comom
+0.0.0.0 www.zfrontier.com
