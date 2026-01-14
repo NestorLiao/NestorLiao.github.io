@@ -1,37 +1,71 @@
-# 技术生活带来的问题，现代生活分析
-#+INCLUDE: "./Abstract.org"  :minlevel 1
-# 怎么通过项目来理解技术，总体计划
-#+INCLUDE: "./Project.org" :minlevel 1
-# 我的操作流介绍，nixos/emacs/zmk
-#+INCLUDE: "./README.org" :minlevel 1
-# 1. 通过Tsoding的项目学习 C语言
-# #+INCLUDE: "../CPP/fog/README.org" :minlevel 1
-# 1.5 通过Advent of Code 学习 Zig语言
+* ZEN
+#+begin_Verse
+Delete your windows,
+Throw away mouse,
+Install NixOS for Linux,
+Install Emacs with Sway,
+Config they until you can flow
+in 36 keys split ZMK keyboard
+in Colemak-DH layout (and wubi-like chinese-input-method)
+with one Eink screen,
+no music, no movie, no game, no news, no video, no social-media, no phone, no player, no browser,
+It is Thinking Machine, Not Skinner's BOX.
+no LLM, no LSP, no syntax highlight, no realtime checker, no network-must, no property-app, no blogging,
+Thinking by Writting, Not by Prompting.
+Just Emacs and GCC, Simple and Sinister.
+You learn C by C-Manual in Info,
+You learn elisp by Elisp-Intro in Info,
+You learn C std by read though Libc/Posix manuals in Info,
+You learn elisp std by read though Elisp/Emacs manuals in Info,
+You learn some interesting pkgs in emacs to learn navigate code,
+You learn some interesting pkgs in nixos to learn github and wiki.
+You learn the project you interesting to have mental model,
+You learn the naming and organization of the struct/function of it,
+You finally finished hot leetcode tasks and your own projects.
+Go for company or do your indie creativity things.
+You know "the industira revolution and it's consequence has been a disaster for human race."
+You choose linux/emacs, because it's hard way for fun, that's all life about, Pain give us a purpose.
+Simple and Sinister. Sleep and Love. Leere and Learn.
+#+end_verse
 
-# ziglings -> zig, language basic -> clings
-# aoc -> zig, solving problem
-# leetcode -> c++'s stl -> zig the-algorithm
-# flag.h/nob.h -> c's code ability -> rewrite in zig
-# paperlike -> go/c/zig/elisp, implementation of thing
-# rtos -> zig, even harder
-# phone -> zig, even harder
-# r2s/lfs/rasberry-pi/lora/eink/game dev/...
-# 永远也不知道
 
-# #+INCLUDE: "../AoC/README.org" :minlevel 1
-# 2. 刷 Leetcode C++语言
-# #+INCLUDE: "../Leetcode/README.org" :minlevel 1
-# 3. 还有 操作系统相关学习
-# 学习进度自检，写点学了什么，做了什么?
-#+INCLUDE: "./Version.org" :minlevel 1
-# Todolist，还在想的事情。
-#+INCLUDE: "./Todo.org" :minlevel 1
-# 4. 找工作相关，嵌入式相关。
-#+INCLUDE: "./Jobs.org" :minlevel 1
+世界嘈杂、瘾品横流、随机与即时构成新的枷锁，而真正的自由来自主动的剥离。当目光离开诱惑、离开广告、离开无意义的瞬息刺激，心才开始变得干净。生活越简，能量越纯；越慢，感受越深；越少，越能看见真正的自己。
 
-#+begin_src emacs-lisp :tangle yes :exports none :results none
-(org-latex-export-to-pdf)
-(org-html-export-to-html)
-(message "finished update")
-(find-file "index.pdf")
-#+end_src
+身体是意志的第一块土地。空腹的清明、弱光的安静、低温的醒觉、缓慢进食的耐性，都在一点点重塑我们早已被工业习惯磨钝的感官。行走、奔跑、提举、拉起、俯卧撑、壶铃、农夫行走——这些最朴素的动作让人重新理解力量的意义：力量不是爆发，而是日复一日不受伤、不懈怠、让心跳稳、饮食亦是自律的延伸。
+
+避免加工。让精神长的那种沉稳、远离高糖盐油，回到豆果菜、坚果与发酵的本味，让身体习惯真实的能量，而不是被化学甜味与工业脂肪驱使的假饱与假快乐。克制不是苦行，而是温和地恢复本能。
+
+至于技术，真正的价值不在追逐流行，而在深入底层、理解根本。用 Emacs，不是为了高效，而是为了与世界拉开距离，与自己靠得更近；不随机、不即时、无广告、无噪声，是一种长期的心性训练。读 LFS、LKD 与 SOC 文档，写驱动、调性能、跑 QEMU、玩内核、读源码、用\LaTeX{}和Org写书，是为了获得一种“我真的懂了”的安静感。而这种懂，不是为了炫耀，不是为了沉迷，而是为了让工作成为谋生技能，让生活成为真正的生活。
+
+真正的智慧是：学会技术，然后把技术放下；拥有力量，然后让力量变得温柔。生活是吃饭、睡觉、读书、编程、走路、壶铃；生命是健康、乐观、会意、精进、闲适与稳稳的力量。
+
+世界广袤、事物繁多，而心若清澈，幸福忽然变得极小，也极近——不来自外界，只来自自身安静而坚定的内心。
+
+
+
+#+TITLE: TL;DR
+#+OPTIONS: toc:2
+#+language: cn
+#+LATEX_CLASS: elegantbook
+#+LATEX_CLASS_OPTIONS: [color=black, citestyle=gb7714-2015, bibstyle=gb7714-2015,lang=cn,math=cm,10pt, scheme=chinese,toc=twocol,bibend=bibtex]
+#+LATEX_HEADER: \subtitle{Simplicity Is The Key}
+#+LATEX_HEADER: \title{My TL;DR Notes}
+#+LATEX_HEADER: \institute{Free Club}
+#+LATEX_HEADER: \bioinfo{邮箱}{llqingsong@qq.com}
+#+LATEX_HEADER: \setcounter{tocdepth}{2}
+# #+LATEX_HEADER: \logo{.jpg}
+#+LATEX_HEADER: \cover{nixos/meditate.jpg}
+#+LATEX_HEADER: \usepackage{array}
+#+LATEX_HEADER: \usepackage{cprotect}
+#+LATEX_HEADER: \definecolor{customcolor}{RGB}{255,255,255}
+#+LATEX_HEADER: \colorlet{coverlinecolor}{customcolor}
+# #+LATEX_HEADER: \addbibresource[location=local]{reference.bib}
+#+keywords: Tech, NestorLiao, FSF, Emacs, Linux, ZMK, Eink, Rust, Zig, C, C++, OS
+#+description: NestorLiao, Emacs, Linux, ZMK, Eink, Rust, Zig, C, C++, OS, embedded, tutoria
+# #+bibliography: "./reference.bib"
+#+cite_export: bibtex
+#+LATEX_HEADER: \mainmatter
+
+
+#+caption: 完
+[[file:./nixos/meditate.jpg]]

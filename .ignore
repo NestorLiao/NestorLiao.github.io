@@ -1,5 +1,5 @@
 nixos/nosurf/**
-nixos/nosurf/
+nixos/hosts06
 nixos/snippets/**
 nixos/snippets/
 index.html

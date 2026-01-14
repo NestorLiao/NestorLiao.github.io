@@ -34,7 +34,6 @@
             ./hardware-configuration.nix
             ({ pkgs, config, userSetting, sops, inputs, lib, outputs, ... }:
               let
-                #       inputs.emacs-overlay.packages.${pkgs.stdenv.hostPlatform.system}.emacs-#git-pgtk.override {
                 myEmacs = pkgs.unstable.emacs-pgtk.override {
                   withNativeCompilation = true;
                   withSQLite3 = true;
@@ -127,15 +126,23 @@
                 #   template= ''
                 #     #!/usr/bin/env bash
                 # '';
+                lock-false = {Value = false;Status = "locked";};
+                lock-true = {Value = true;Status = "locked";};
               in {
-
                 imports = [ inputs.hosts.nixosModule ];
-
-                networking.stevenBlackHosts = {
-                  enable = true;
-                  blockPorn = true;
-                  blockSocial = true;
-                };
+                # 我得道了，在怡凉乡间独自过着悠然的生活，在蓝天绿树巨石间…
+                networking.stevenBlackHosts = { # 从来都没有什么戒色…
+                  # 城市、单身、独生、男性、大学生、亚洲、
+                  # 网瘾、中产、游戏瘾、计算机相关专业人群
+                  # 一切只是“生物本性”与“传统文化”带来的欲望
+                  # 配合“工业革命”与“数字革命”带来的富饶假象
+                  enable = true; # 你知道的，开着不会影响学习编程
+                  enableIPv6 = false; # 你知道的，开着不会影响学习编程
+                  blockPorn = true; # 你知道的，虚假的情欲只会让你溺身
+                  blockSocial = true; # 你知道的，虚假的参与只会让你躁心
+                }; # 不依赖外物，不物物于物，
+                # 内心拒绝即是自由
+                # 外物自由即是强迫
                 environment.etc = {
                   "nixos/flake.nix" = {
                     source = ./flake.nix;
@@ -146,135 +153,119 @@
                   (writeShellScriptBin "toggle-workspace" toggleWorkspaceScript)
                   (writeShellScriptBin "onlyemacs" onlyemacsScript)
                   (writeShellScriptBin "switchframe" switchframeScript)
-                  foliate
-                  texliveFull
-                  trashy
-                  thunderbird
-                  texlab
-                  fish
-                  fishPlugins.done
-                  wmenu
-                  wtype
-                  grim
-                  slurp
-                  wl-clipboard
-                  mako
-                  cliphist
-                  satty
-                  libnotify
-                  wf-recorder
-                  wl-color-picker
-                  c-intro-and-ref
-                  glibcInfo
-                  libtool
-                  libvterm
-                  unstable.gemini-cli-bin
-                  nil
-                  nixfmt-classic
-                  poppler-utils
-                  ccls
-                  cmake # C/C++ 构建系统（部分依赖可能需要）
-                  ninja # 现代构建系统（可加速 CMake 编译）
-                  flex
-                  bc
-                  ### 🔹 **代码质量**
-                  codespell # 拼写检查工具（用于检查拼写错误）
-                  cppcheck # C/C++ 静态分析工具（检查潜在错误）
-                  doxygen # 生成代码文档（用于 C/C++ 文档生成）
-                  ### 🔹 **测试和覆盖率**
-                  gtest # Google Test 单元测试框架
-                  lcov # 代码覆盖率工具（用于 GCov）
-                  ### 🔹 **调试工具**
-                  rr # 录制和重放调试（类似 `gdb`，用于更好的调试体验）
-                  ### 🔹 **Linux 内核编译相关**
-                  cpio # 内核打包工具（生成 initramfs 时使用）
-                  pahole # `dwarves` 工具集，用于 BTF（BPF Type Format）
-                  kmod # 用于管理 Linux 内核模块（`modprobe` 相关）
-                  pciutils # PCI 设备管理工具（`lspci`）
-                  usbutils # USB 设备管理工具（`lsusb`）
-                  util-linux # `lsblk`、`fdisk` 等基本 Linux 工具
-                  bpftrace # BPF 追踪工具（用于调试 Linux 内核）
-                  ### 🔹 **C++ 依赖管理**
-                  conan # C++ 包管理工具（用于管理依赖）
-                  vcpkg # C++ 包管理工具（微软开发的）
-                  vcpkg-tool # `vcpkg` 相关工具
-                  # (pkgs.buildFHSEnv {
-                  #   name = "kernel-env";
-                  #   targetPkgs = pkgs:
-                  #     with pkgs; [
-                  #       bear
-                  #       bc
-                  #       gcc
-                  #       flex
-                  #       bison
-                  #       openssl
-                  #       openssl.dev
-                  #       elfutils.dev
-                  #       elfutils
-                  #       libelf
-                  #       ncurses.dev
-                  #       binutils
-                  #       gnumake
-                  #       ncurses
-                  #       kmod
-                  #     ];
-                  # })
-                  pkg-config
-                  # SDL for emulation
-                  SDL2
-                  SDL2.dev
-                  # Optional but useful
-                  cmake
-                  meson
-                  ninja
-                  # ARM cross-compilation tools
-                  gcc-arm-embedded
-                  qemu
-                  # For full system emulation:
-                  qemu-utils # qemu-img, etc.
+
+
+                  # file
+                  # fzf
+                  # opencc
+                  # pandoc
+                  # usbutils
                   age
-                  alsa-utils
-                  bear
-                  btop
-                  cachix
-                  cargo
-                  clang-tools
+                  bc
                   cliphist
                   cmake
                   coreutils-full
-                  curlFull
+                  curl
                   dash
                   fd
-                  file
-                  fzf
+                  fishPlugins.done
                   gcc
                   gdb
                   gnumake
+                  grim
                   jq
                   just
-                  opencc
-                  pandoc
+                  libnotify
+                  mako
                   paperlike-go
+                  poppler-utils
                   python3
                   ripgrep
-                  rust-analyzer
-                  rustc
-                  rustlings
-                  samba
                   sdcv
-                  tree
+                  slurp
+                  trashy
                   unrar-free
                   unstable.leetgo
-                  unstable.nix-search-cli
-                  unstable.lldb
-                  man-pages
-                  unstable.quickemu
                   unstable.sops
                   unzipNLS
-                  usbutils
-                  vim-full
+                  wf-recorder
                   wget
+                  wl-clipboard
+                  wl-color-picker
+                  wmenu
+                  wtype
                   zip
+
+                  # alsa-utils
+                  # bear
+                  # binutils
+                  # bison
+                  # bpftrace
+                  # btop
+                  # cachix
+                  # ccls
+                  # clang
+                  # clang-tools
+                  # codespell
+                  # conan
+                  # cpio
+                  # cppcheck
+                  # ctags
+                  # doxygen_gui
+                  # elfutils
+                  # elfutils.dev
+                  # flex
+                  # foliate
+                  # gcc-arm-embedded
+                  # gtest
+                  # kmod
+                  # lcov
+                  # libelf
+                  # libtool
+                  # libvterm
+                  # meson
+                  # ncurses
+                  # ncurses.dev
+                  # nil
+                  # ninja
+                  # nixfmt-classic
+                  # openssl
+                  # openssl.dev
+                  # pahole
+                  # pciutils
+                  # qemu
+                  # qemu-utils
+                  # rr
+                  # samba
+                  # satty
+                  # scc
+                  # texlab
+                  # texliveFull
+                  thunderbird
+                  # tree
+                  # unstable.gemini-cli-bin
+                  # unstable.quickemu
+                  # usbutils
+                  # util-linux
+                  # vcpkg
+                  # vcpkg-tool
+                  # vim-full
+
+                  # cargo
+                  # rust-analyzer
+                  # rustc
+                  # rustlings
+                  # unstable.nix-search-cli
+                  # unstable.lldb
+
+                  c-intro-and-ref
+                  glibcInfo
+                  man-pages
+                  man-pages-posix
+                  # stdmanpages
+                  # clang-manpages
+                  # linux-manual
+
                 ];
                 # trust me bro, run  xdg-user-dirs-update --force after
                 xdg.mime = {
@@ -286,14 +277,14 @@
                 };
                 environment.etc = {
                   "xdg/user-dirs.defaults".text = ''
-                    DESKTOP=.save
-                    DOCUMENTS=.save
-                    DOWNLOAD=.save
-                    MUSIC=.save/.media
-                    PICTURES=.save
-                    PUBLICSHARE=.save
-                    TEMPLATES=.save
-                    VIDEOS=.save
+                    DESKTOP=save
+                    DOCUMENTS=save
+                    DOWNLOAD=save
+                    MUSIC=save
+                    PICTURES=save
+                    PUBLICSHARE=save
+                    TEMPLATES=save
+                    VIDEOS=save
                   '';
                 };
                 security.polkit.extraConfig = ''
@@ -316,7 +307,7 @@
                 environment.shellAliases = {
                   np =
                     "nix-shell -p  --option substituters 'https://mirrors.ustc.edu.cn/nix-channels/store  https://cache.nixos.org'";
-                  gcl = "git clone";
+                  gcl = "git clone --depth 1";
                   minipdf="np texlive.combined.scheme-full --run 'pdfcrop input.pdf output.pdf'";
                   nd = "pwd | wl-copy; pwd";
                   ls = "ls --color=never";
@@ -377,7 +368,7 @@
                   mv = "mv -iv";
                   # rm = "rm -vI";
                   rm = "trash -c never ";
-                  bc = "bc -ql";
+                  # bc = "bc -ql";
                   mkd = "mkdir -pv";
                 };
                 programs.bash.interactiveShellInit = ''
@@ -443,6 +434,16 @@
                           rev = "master";
                           sha256 =
                             "sha256-uyZcPv7jPv96KovMKFdp/qDv0/6b3x0We/vx7eIU6O4=";
+                        };
+                      };
+                      home.file.".local/share/mysource" = {
+                        source = pkgs.fetchFromGitHub {
+                          owner = "NestorLiao";
+                          repo = "mutable-config";
+                          rev = "master";
+                          sha256 =
+                            # lib.fakeSha256;
+                            "sha256-K8d4b1AkKonzYVGpyDrRFPgUqombROJXHqBVIGBoM9A=";
                         };
                       };
                       home.file.".stardict/dic" = {
@@ -846,9 +847,10 @@
                       # Path=firefox
                       ### xxxx
                       programs.firefox = {
-                        enable = false;
+                        enable = true;
                         package = pkgs.firefox-beta;
                         policies = {
+                          DisableDeveloperTools = false;
                           DisableFirefoxStudies = true;
                           DisablePocket = true;
                           DisableTelemetry = true;
@@ -865,7 +867,7 @@
                           AutofillAddressEnabled = false;
                           AutofillCreditCardEnabled = false;
                           DefaultDownloadDirectory =
-                            "/home/${userSetting.username}/.save";
+                            "/home/${userSetting.username}/save";
                           OfferToSaveLoginsDefault = false;
                           OverrideFirstRunPage = "";
                           OverridePostUpdatePage = "";
@@ -883,8 +885,7 @@
                             SkipOnboarding = true;
                           };
                           SearchBar = "unified";
-                          PasswordManagerEnabled =
-                            true; # enabled password manager
+                          PasswordManagerEnabled = true;
                           NoDefaultBookmarks = true;
                           DontCheckDefaultBrowser = true;
                           DisableSetDesktopBackground = true;
@@ -897,7 +898,7 @@
                             Fingerprinting = true;
                           };
                           DisableFeedbackCommands = true;
-                          SearchEngines.Default = "Google";
+                          SearchEngines.Default = "ebay";
                           # DisableFormHistory = true;
                           DisableFormHistory = false;
                           AppAutoUpdate = false;
@@ -1038,188 +1039,161 @@
 }
                           '';
                           settings = {
-                            "accessibility.force_disabled" =
-                              1; # Disable all accessibility features
-                            "app.update.auto" = false;
-                            "app.update.download.promptMaxAttempts" = 0;
-                            "app.update.elevation.promptMaxAttempts" = 0;
-                            "app.update.service.enabled" = false;
-                            "browser.aboutConfig.showWarning" = false;
-                            "browser.aboutwelcome.enabled" = false;
-                            "browser.accessibility.typeaheadfind" =
-                              false; # Disable typeahead find
-                            "browser.anchor_color" = "#000000";
-                            "browser.cache.disk.enable" =
-                              true; # -Disable- disk cache (use memory cache only)
-                            "browser.ctrlTab.recentlyUsedOrder" = true;
-                            "browser.display.document_color_use" = 2;
-                            "browser.display.use_document_fonts" = 0;
-                            "browser.download.dir" =
-                              "/home/${userSetting.username}/.save";
-                            "browser.download.forbid_open_with" = true;
-                            "browser.download.lastDir" =
-                              "/home/${userSetting.username}/.save";
-                            "browser.download.open_pdf_attachments_inline" =
-                              true;
-                            "browser.download.start_downloads_in_tmp_dir" =
-                              true;
-                            "browser.newtabpage.activity-stream.showWeather" =
-                              false;
-                            "browser.newtabpage.enabled" = false;
-                            "browser.quitShortcut.disabled" = true;
-                            "browser.safebrowsing.downloads.enabled" = false;
-                            "browser.safebrowsing.malware.enabled" = false;
-                            "browser.safebrowsing.phishing.enabled" = false;
-                            "browser.search.region" = "US";
-                            "browser.search.suggest.enabled" =
-                              false; # Disable search suggestions
-                            "browser.sessionstore.max_tabs_undo" =
-                              3; # Limit the number of tabs that can be reopened
-                            "browser.sessionstore.restore_on_demand" =
-                              true; # Don't restore all tabs at once
-                            "browser.sessionstore.warnOnQuit" = true;
-                            "browser.slowStartup.notificationDisabled" =
-                              true; # Disable slow startup notifications
-                            "browser.startup.homepage" =
-                              "https://www.blank.org";
-                            "browser.tabs.closeTabByDblclick" = true;
-                            "browser.tabs.closeWindowWithLastTab" = false;
-                            "browser.tabs.loadInBackground" = true;
-                            "browser.tabs.tabClipWidth" = 999;
-                            "browser.tabs.warnOnClose" =
-                              false; # Prevent the warning when closing multiple tabs
-                            "browser.toolbars.bookmarks.visibility" = "never";
-                            "browser.translations.automaticallyPopup" = false;
-                            "browser.uidensity" = 1;
-                            "browser.urlbar.oneOffSearches" = false;
-                            "browser.urlbar.shortcuts.tabs" = false;
-                            "browser.urlbar.suggest.quicksuggest.sponsored" =
-                              false;
-                            "browser.visited_color" = "#000000";
-                            "datareporting.healthreport.service.enabled" =
-                              false;
-                            "devtools.chrome.enabled" = true;
-                            "devtools.debugger.remote-enabled" = true;
-                            "dom.mozTCPSocket.enabled" = false;
-                            "dom.netinfo.enabled" = false;
-                            "dom.security.https_only_mode" = true;
-                            "dom.security.https_only_mode_ever_enabled" = false;
-                            "dom.webaudio.enabled" = false;
-                            "extensions.activeThemeID" =
-                              "{5f71ffe3-23e2-49b8-b75e-2c032ef4a1d9}";
-                            "extensions.pocket.enabled" = false;
-                            "extensions.update.enabled" =
-                              false; # No extension updates
-                            "extensions.webextensions.ExtensionStorageIDB.migrated.@firefoxinvertcolors" =
-                              true;
-                            "extensions.webextensions.ExtensionStorageIDB.migrated.authenticator@mymindstorm" =
-                              true;
-                            "extensions.webextensions.ExtensionStorageIDB.migrated.bar-breaker@ris58h" =
-                              true;
-                            "extensions.webextensions.ExtensionStorageIDB.migrated.chatgpt-ctrl-enter-sender@chatgpt-extension.io" =
-                              true;
-                            "extensions.webextensions.ExtensionStorageIDB.migrated.idcac-pub@guus.ninja" =
-                              true;
-                            "extensions.webextensions.ExtensionStorageIDB.migrated.jid1-BoFifL9Vbdl2zQ@jetpack" =
-                              true;
-                            "extensions.webextensions.ExtensionStorageIDB.migrated.myallychou@gmail.com" =
-                              true;
-                            "extensions.webextensions.ExtensionStorageIDB.migrated.no-emoji@erikdesjardins.io" =
-                              true;
-                            "extensions.webextensions.ExtensionStorageIDB.migrated.uBlock0@raymondhill.net" =
-                              true;
-                            "extensions.webextensions.ExtensionStorageIDB.migrated.vimium-c@gdh1995.cn" =
-                              true;
-                            "extensions.webextensions.ExtensionStorageIDB.migrated.{2ce7df96-558d-4c2c-8d88-68606ebbe8db}" =
-                              true;
-                            "extensions.webextensions.ExtensionStorageIDB.migrated.{74145f27-f039-47ce-a470-a662b129930a}" =
-                              true;
-                            "extensions.webextensions.ExtensionStorageIDB.migrated.{80f6f2e4-eda1-417f-bf54-9645e1e20f5d}" =
-                              true;
-                            "extensions.webextensions.ExtensionStorageIDB.migrated.{88ebde3a-4581-4c6b-8019-2a05a9e3e938}" =
-                              true;
-                            "extensions.webextensions.ExtensionStorageIDB.migrated.{9350bc42-47fb-4598-ae0f-825e3dd9ceba}" =
-                              true;
-                            "extensions.webextensions.ExtensionStorageIDB.migrated.{9b8ce341-744f-4f5d-9ff7-b5d7078a7b34}" =
-                              true;
-                            "extensions.webextensions.ExtensionStorageIDB.migrated.{b52acdad-e4a6-44da-afc9-9bd22572db99}" =
-                              true;
-                            "extensions.webextensions.ExtensionStorageIDB.migrated.{b6840179-45a1-4a2d-a4ef-e2815c1faa28}" =
-                              true;
-                            "extensions.webextensions.restrictedDomains" = "";
-                            "font.name-list.emoji" = "";
-                            "font.name.monospace.x-western" =
-                              "JetBrainsMono Nerd Font Mono";
-                            "full-screen-api.transition.timeout" = 0;
-                            "full-screen-api.warning.delay" = 0;
-                            "full-screen-api.warning.timeout" = 0;
-                            "general.smoothScroll" = false;
-                            "general.smoothscroll" = false;
-                            "general.useragent.compatMode.firefox" = true;
-                            "geo.enabled" = false;
-                            "gfx.font_rendering.fontconfig.max_generic_substitutions" =
-                              127;
-                            "gfx.webrender.all" = true;
-                            "image.jxl.enabled" = true;
-                            "layout.css.prefers-color-scheme.content-override" =
-                              1;
-                            "media.autoplay.block-event.enabled" = true;
-                            "media.autoplay.default" = 2;
-                            "media.disabled" =
-                              true; # optional, blocks all media playback
-                            "media.eme.enabled" = false;
-                            "media.ffmpeg.enabled" = false;
-                            "media.ffmpeg.vaapi.enabled" = true;
-                            "media.gmp-widevinecdm.enabled" = false;
-                            "media.mediasource.enabled" = false;
-                            "media.peerconnection.enabled" =
-                              false; # Disable WebRTC
-                            "media.peerconnection.ice.default_address_only" =
-                              true;
-                            "media.webm.enabled" = false;
-                            "network.dns.echconfig.enabled" = true;
-                            "network.dns.http3_echconfig.enabled" = true;
-                            "noscript.sync.enabled" = true;
-                            "permissions.default.image" = 2;
-                            "places.history.enabled" = true;
-                            "privacy.donottrackheader.enabled" = true;
-                            "privacy.resistFingerprinting" = true;
-                            "privacy.resistFingerprinting.block_mozAddonManager" =
-                              true;
-                            "privacy.trackingprotection.cryptomining.enabled" =
-                              true; # Block crypto mining scripts
-                            "privacy.trackingprotection.enabled" =
-                              true; # Enhanced Tracking Protection
-                            "privacy.trackingprotection.fingerprinting.enabled" =
-                              true; # Block fingerprinting
-                            "privacy.trackingprotection.socialtracking.enabled" =
-                              true; # Block social trackers
-                            "privacy.userContext.enabled" = false;
-                            "reader.parse-on-load.enabled" = false;
-                            "security.enterprise_roots.auto-enabled" = false;
-                            "security.enterprise_roots.enabled" = false;
-                            "services.sync.engine.history" = true;
-                            "services.sync.prefs.sync-seen.services.sync.prefs.sync.capability.policy.maonoscript.sites" =
-                              true;
-                            "services.sync.prefs.sync.capability.policy.maonoscript.sites" =
-                              true;
-                            "signon.autofillForms" = false;
-                            "signon.rememberSignons" = true; # true is saving
-                            "svg.context-properties.content.enabled" = true;
-                            "toolkit.crashreporter.dataDirectory" = "";
-                            "toolkit.crashreporter.enabled" = false;
-                            "toolkit.legacyUserProfileCustomizations.stylesheets" =
-                              true;
-                            "toolkit.telemetry.archive.enabled" = false;
-                            "toolkit.telemetry.enabled" = false;
-                            "toolkit.telemetry.rejected" = false;
-                            "toolkit.telemetry.unified" = false;
-                            "ui.key.menuAccessKey" = 17;
-                            "ui.key.menuAccessKeyFocuses" = false;
-                            "webgl.disabled" = true;
-                            "widget.non-native-theme.scrollbar.style" = 3;
-                            "widget.wayland.opaque-region.enabled" = false;
-                            "xpinstall.signatures.required" = false;
+"accessibility.force_disabled" =1;
+"app.update.auto" = lock-false;
+"app.update.download.promptMaxAttempts" = 0;
+"app.update.elevation.promptMaxAttempts" = 0;
+"app.update.service.enabled" = lock-false;
+"browser.aboutConfig.showWarning" = lock-false;
+"browser.aboutwelcome.enabled" = lock-false;
+"browser.accessibility.typeaheadfind" = lock-false;
+"browser.anchor_color" = "#000000";
+"browser.cache.disk.enable" =lock-true;
+"browser.ctrlTab.recentlyUsedOrder" = lock-true;
+"browser.display.document_color_use" = 2;
+"browser.display.use_document_fonts" = 0;
+"browser.download.dir" = "/home/${userSetting.username}/save";
+"browser.download.forbid_open_with" = lock-true;
+"browser.download.lastDir" = "/home/${userSetting.username}/save";
+"browser.download.open_pdf_attachments_inline" =lock-true;
+"browser.download.start_downloads_in_tmp_dir" =lock-true;
+"browser.newtabpage.activity-stream.showWeather" =lock-false;
+"browser.newtabpage.enabled" = lock-false;
+"browser.quitShortcut.disabled" = lock-true;
+"browser.safebrowsing.downloads.enabled" = lock-false;
+"browser.safebrowsing.malware.enabled" = lock-false;
+"browser.safebrowsing.phishing.enabled" = lock-false;
+"browser.search.region" = "US";
+"browser.search.suggest.enabled" =lock-false;
+"browser.sessionstore.max_tabs_undo" =3;
+"browser.sessionstore.restore_on_demand" =lock-true;
+"browser.sessionstore.warnOnQuit" = lock-true;
+"browser.slowStartup.notificationDisabled" =lock-true;
+"browser.startup.homepage" = "https://www.blank.org";
+"browser.tabs.closeTabByDblclick" = lock-true;
+"browser.tabs.closeWindowWithLastTab" = lock-false;
+"browser.tabs.loadInBackground" = lock-true;
+"browser.tabs.tabClipWidth" = 999;
+"browser.tabs.warnOnClose" = lock-false;
+"browser.toolbars.bookmarks.visibility" = "never";
+"browser.translations.automaticallyPopup" = lock-false;
+"browser.uidensity" = 1;
+"browser.urlbar.oneOffSearches" = lock-false;
+"browser.urlbar.shortcuts.tabs" = lock-false;
+"browser.urlbar.suggest.quicksuggest.sponsored" = lock-false;
+"browser.visited_color" = "#000000";
+"canvas.capturestream.enabled" = lock-false;
+"datareporting.healthreport.service.enabled" = lock-false;
+"devtools.chrome.enabled" = lock-true;
+"devtools.debugger.remote-enabled" = lock-true;
+"dom.ipc.plugins.enabled" = lock-false;
+"dom.ipc.plugins.enabled.libflashplayer.so" = lock-false;
+"dom.media.mediasource.enabled" = lock-false;
+"dom.mozTCPSocket.enabled" = lock-false;
+"dom.netinfo.enabled" = lock-false;
+"dom.webaudio.enabled" = lock-false;
+"dom.webvtt.enabled" = lock-false;
+"extensions.activeThemeID" = "{5f71ffe3-23e2-49b8-b75e-2c032ef4a1d9}";
+"extensions.pocket.enabled" = lock-false;
+"extensions.update.enabled" = lock-false;
+"extensions.webextensions.restrictedDomains" = "";
+"font.name-list.emoji" = "";
+"font.name.monospace.x-western" ="JetBrainsMono Nerd Font Mono";
+"full-screen-api.transition.timeout" = 0;
+"full-screen-api.warning.delay" = 0;
+"full-screen-api.warning.timeout" = 0;
+"general.smoothScroll" = lock-false;
+"general.smoothscroll" = lock-false;
+"general.useragent.compatMode.firefox" = lock-true;
+"geo.enabled" = lock-false;
+"gfx.font_rendering.fontconfig.max_generic_substitutions" = 127;
+"gfx.webrender.all" = lock-false;
+"image.jxl.enabled" = lock-true;
+"layout.css.prefers-color-scheme.content-override" = 1;
+"media.autoplay.block-event.enabled" = lock-true;
+"media.autoplay.default" = 2;
+"media.av1.enabled" = lock-false;
+"media.block-autoplay-until-in-foreground" = lock-true;
+"media.block-play-until-visible" = lock-true;
+"media.disabled" =lock-true;
+"media.eme.enabled" = lock-false;
+"media.ffmpeg.enabled" = lock-false;
+"media.ffmpeg.vaapi.enabled" = lock-true;
+"media.ffvpx.enabled" = lock-false;
+"media.flac.enabled" = lock-false;
+"media.getusermedia.screensharing.enabled" = lock-false;
+"media.gmp-widevinecdm.enabled" = lock-false;
+"media.h264.enabled" = lock-false;
+"media.libvpx.enabled" = lock-false;
+"media.mediasource.enabled" = lock-false;
+"media.mediasource.mp4.enabled" = lock-false;
+"media.mediasource.webm.enabled" = lock-false;
+"media.mediasource.whitelist" = lock-false;
+"media.mp4.enabled" = lock-false;
+"media.navigator.audio.enabled" = lock-false;
+"media.navigator.enabled" = lock-false;
+"media.navigator.video.enabled" = lock-false;
+"media.ogg.enabled" = lock-false;
+"media.peerconnection.enabled" =lock-false;
+"media.peerconnection.ice.default_address_only" =lock-true;
+"media.wave.enabled" = lock-false;
+"media.webm.enabled" = lock-false;
+"media.webspeech.recognition.enable" = lock-false;
+"media.webspeech.synth.enabled" = lock-false;
+"network.dns.echconfig.enabled" = lock-true;
+"network.dns.http3_echconfig.enabled" = lock-true;
+"noscript.sync.enabled" = lock-true;
+"permissions.default.image" = 2;
+"places.history.enabled" = lock-true;
+"plugin.state.flash" = 0 ;
+"privacy.donottrackheader.enabled" = lock-true;
+"privacy.resistFingerprinting" = lock-true;
+"privacy.resistFingerprinting.block_mozAddonManager" = lock-true;
+"privacy.trackingprotection.cryptomining.enabled" =lock-true;
+"privacy.trackingprotection.enabled" = lock-true;
+"privacy.trackingprotection.fingerprinting.enabled" = lock-true;
+"privacy.trackingprotection.socialtracking.enabled" = lock-true;
+"privacy.userContext.enabled" = lock-false;
+"reader.parse-on-load.enabled" = lock-false;
+"security.enterprise_roots.auto-enabled" = lock-false;
+"security.enterprise_roots.enabled" = lock-false;
+"services.sync.engine.history" = lock-true;
+"services.sync.prefs.sync-seen.services.sync.prefs.sync.capability.policy.maonoscript.sites" =lock-true;
+"services.sync.prefs.sync.capability.policy.maonoscript.sites" =lock-true;
+"signon.autofillForms" = lock-false;
+"signon.rememberSignons" = lock-true;
+"svg.context-properties.content.enabled" = lock-true;
+"toolkit.crashreporter.dataDirectory" = "";
+"toolkit.crashreporter.enabled" = lock-false;
+"toolkit.legacyUserProfileCustomizations.stylesheets" =lock-true;
+"toolkit.telemetry.archive.enabled" = lock-false;
+"toolkit.telemetry.enabled" = lock-false;
+"toolkit.telemetry.rejected" = lock-false;
+"toolkit.telemetry.unified" = lock-false;
+"ui.key.menuAccessKey" = 17;
+"ui.key.menuAccessKeyFocuses" = lock-false;
+"webgl.disabled" = lock-true;
+"widget.non-native-theme.scrollbar.style" = 3;
+"widget.wayland.opaque-region.enabled" = lock-false;
+"xpinstall.signatures.required" = lock-false;
+"extensions.webextensions.ExtensionStorageIDB.migrated.@firefoxinvertcolors" = lock-true;
+"extensions.webextensions.ExtensionStorageIDB.migrated.authenticator@mymindstorm" = lock-true;
+"extensions.webextensions.ExtensionStorageIDB.migrated.bar-breaker@ris58h" = lock-true;
+"extensions.webextensions.ExtensionStorageIDB.migrated.chatgpt-ctrl-enter-sender@chatgpt-extension.io" = lock-true;
+"extensions.webextensions.ExtensionStorageIDB.migrated.idcac-pub@guus.ninja" = lock-true;
+"extensions.webextensions.ExtensionStorageIDB.migrated.jid1-BoFifL9Vbdl2zQ@jetpack" = lock-true;
+"extensions.webextensions.ExtensionStorageIDB.migrated.myallychou@gmail.com" = lock-true;
+"extensions.webextensions.ExtensionStorageIDB.migrated.no-emoji@erikdesjardins.io" = lock-true;
+"extensions.webextensions.ExtensionStorageIDB.migrated.uBlock0@raymondhill.net" = lock-true;
+"extensions.webextensions.ExtensionStorageIDB.migrated.vimium-c@gdh1995.cn" = lock-true;
+"extensions.webextensions.ExtensionStorageIDB.migrated.{2ce7df96-558d-4c2c-8d88-68606ebbe8db}" = lock-true;
+"extensions.webextensions.ExtensionStorageIDB.migrated.{74145f27-f039-47ce-a470-a662b129930a}" = lock-true;
+"extensions.webextensions.ExtensionStorageIDB.migrated.{80f6f2e4-eda1-417f-bf54-9645e1e20f5d}" = lock-true;
+"extensions.webextensions.ExtensionStorageIDB.migrated.{88ebde3a-4581-4c6b-8019-2a05a9e3e938}" = lock-true;
+"extensions.webextensions.ExtensionStorageIDB.migrated.{9350bc42-47fb-4598-ae0f-825e3dd9ceba}" = lock-true;
+"extensions.webextensions.ExtensionStorageIDB.migrated.{9b8ce341-744f-4f5d-9ff7-b5d7078a7b34}" = lock-true;
+"extensions.webextensions.ExtensionStorageIDB.migrated.{b52acdad-e4a6-44da-afc9-9bd22572db99}" = lock-true;
+"extensions.webextensions.ExtensionStorageIDB.migrated.{b6840179-45a1-4a2d-a4ef-e2815c1faa28}" = lock-true;
                           };
                         };
                       };
@@ -1227,7 +1201,7 @@
                         enable = false;
                         package = pkgs.ungoogled-chromium;
                       };
-                      home.stateVersion = "25.05";
+                      home.stateVersion = "25.11";
                     };
                   };
                 };
@@ -1240,7 +1214,7 @@
                       # Add your SSH public key(s) here, if you plan on using SSH to connect
                     ];
                     shell = pkgs.fish;
-                    extraGroups = [ "wheel" "networkmanager" ];
+                    extraGroups = [ "wheel" "networkmanager" "i2c" "i2c-dev"];
                   };
                 };
                 users.defaultUserShell = pkgs.fish;
@@ -1322,7 +1296,6 @@
                 sops.defaultSopsFile = ./secrets.yaml;
                 sops.defaultSopsFormat = "yaml";
                 sops.age.keyFile = "/etc/nixos/keys.txt";
-                # "/home/${userSetting.username}/.config/sops/age/keys.txt"; # 私钥路径
                 #AGE-SECRET-KEY-
                 sops.secrets."gh_hosts.yml" = {
                   owner = userSetting.username;
@@ -1354,26 +1327,24 @@
                 sops.secrets.ouo = { owner = userSetting.username; };
                 networking.extraHosts = ''
                   # 其嗜欲深者，其天机浅
-                                 ${builtins.readFile ./hosts06} # 为道
-                                    # 消费主义让我们沉迷于物质/精神消费中，
-                                    # 通过让我们接触各种光怪陆离的东西来丰富我们的身份认同感，
-                                    # 这也是当今时代互联网正在加速实现的事情…
-                                    # 但这是以牺牲掌握任何技能为代价换来的，
-                                    0.0.0.0 google.com
-                                    0.0.0.0 www.google.com ＃文灭志，博溺心
-                                    0.0.0.0 www.google.com.hk
-                                    0.0.0.0 reddit.com
-                                    0.0.0.0 old.reddit.com
-                                    0.0.0.0 bookfere.com
-                                    0.0.0.0 z-library.sk
-                                    0.0.0.0 emacs-china.org
-                                    0.0.0.0 chatgpt.com
-                                    # 我们沉迷得越深，想要掌握一项技能的愿望就会越来越淡化。
+                  # 消费主义让我们沉迷于物质/精神消费中，
+                  # 通过让我们接触各种光怪陆离的东西来丰富我们的身份认同感，
+                  # 这也是当今时代互联网正在加速实现的事情…
+                  # 但这是以牺牲掌握任何技能为代价换来的，
+                  # 我们沉迷得越深，想要掌握一项技能的愿望就会越来越淡化。
+                  127.0.0.1 c.doc
+                  127.0.0.1 cpp.doc
+                  127.0.0.1 linux.doc
+                  # 0.0.0.0 emacs-china.org
+                  # 0.0.0.0 chatgpt.com
+                  # 0.0.0.0 www.google.com.hk
+                  # 0.0.0.0 google.com.hk
+
                 '';
                 services = {
                   irqbalance.enable = false;
                   udev.extraRules = ''
-                    KERNEL=="i2c-[0-9]*", GROUP="i2c", MODE="0660"
+                    KERNEL=="i2c-[0-9]*", GROUP="i2c", MODE="0777"
                   '';
                   xserver.videoDrivers = [ "modesetting" ];
                   udisks2.mountOnMedia = true;
@@ -1433,13 +1404,14 @@
                     };
                   };
                   nscd.enable = false;
+                  # and system.nssModules = lib.mkForce [ ]; # for dnsmasq
                   dnsmasq = {
                     enable = true;
                     settings = {
                       addn-hosts = "/etc/hosts";
                       cache-size = 1000;
                       local-ttl = 3600;
-                      server = [ "223.5.5.5" "119.29.29.29" ];
+                      server = [ "223.5.5.5"  "1.1.1.1"];
                     };
                     resolveLocalQueries = true;
                   };
@@ -1462,13 +1434,13 @@
                   nginx = {
                     enable = true;
                     virtualHosts = {
-                      "linux.doc" = {
-                        listen = [{
-                          addr = "0.0.0.0";
-                          port = 3000;
-                        }];
-                        root = "${pkgs.linux-doc}/share/doc/linux-doc";
-                      };
+                      # "linux.doc" = {
+                      #   listen = [{
+                      #     addr = "0.0.0.0";
+                      #     port = 3000;
+                      #   }];
+                      #   root = "${pkgs.linux-doc}/share/doc/linux-doc";
+                      # };
                       "c.doc" = {
                         listen = [{
                           addr = "0.0.0.0";
@@ -1476,6 +1448,14 @@
                         }];
                         root =
                           "${pkgs.cppreference-doc}/share/cppreference/doc/html/en/c";
+                      };
+                      "ccpp.doc" = {
+                        listen = [{
+                          addr = "0.0.0.0";
+                          port = 3003;
+                        }];
+                        root =
+                          "${pkgs.cppreference-doc}/share/cppreference/doc/html/en";
                       };
                       "cpp.doc" = {
                         listen = [{
@@ -1499,7 +1479,10 @@
                   };
                   dictd = {
                     enable = false;
-                    DBs = with pkgs.dictdDBs; [ wiktionary wordnet ];
+                    DBs = with pkgs.dictdDBs; [
+                      # wiktionary
+                      wordnet
+                    ];
                   };
                   xserver.dpi = 192;
                   emacs = {
@@ -1520,7 +1503,7 @@
                         expand-region
                         multiple-cursors
                         iedit
-                        shift-number
+                        # shift-number
                         avy
                         yasnippet
 
@@ -1538,6 +1521,9 @@
                         kubernetes
                         git-link
                         git-timemachine
+                        dumb-jump
+                        cff
+
                         #### get term
                         vterm
                         multi-vterm
@@ -1550,7 +1536,7 @@
                         #### chinese input method
                         pyim
                         #### read log/manual/doc/dict/gpt/... in emacs
-                        doxymacs
+                        # doxymacs
                         syslog-mode
                         journalctl-mode
                         quick-sdcv
@@ -1589,7 +1575,7 @@
                         web-mode
                         racket-mode
                         elixir-mode
-                        #erlang
+                        erlang
                         scala-mode
                         d-mode
                         glsl-mode
@@ -1619,7 +1605,7 @@
                         no-emoji
                         ligature
                         compile-angel
-                        buffer-terminator
+                        # buffer-terminator
                         envrc
 
                         ### feel even better than drug
@@ -1636,111 +1622,106 @@
                 programs.nix-ld = {
                   enable = true;
                   libraries = with pkgs; [
-                    stdenv.cc.cc
-                    openssl.dev
-                    pkg-config
-                    openssl
+                    # stdenv.cc.cc
+                    # openssl.dev
+                    # pkg-config
+                    # autotools
+                    # libxml2
+                    # openssl
                     # openssl_3_4
-                    gcc13
-                    xorg.libXcomposite
-                    xorg.libXtst
-                    xorg.libXrandr
-                    xorg.libXext
-                    xorg.libX11
-                    xorg.libXfixes
-                    libGL
-                    libva
+                    # gcc13
+                    # xorg.libXcomposite
+                    # xorg.libXtst
+                    # xorg.libXrandr
+                    # xorg.libXext
+                    # xorg.libX11
+                    # xorg.libXfixes
+                    # libGL
+                    # libva
                     # pipewire.lib
-                    xorg.libxcb
-                    xorg.libXdamage
-                    xorg.libxshmfence
-                    xorg.libXxf86vm
-                    nix-ld
-                    sqlite
-                    libelf
-                    libayatana-appindicator
-                    webkitgtk_4_1
-                    # Required
-                    glib
-                    gtk2
-                    gtk3
-                    bzip2
-                    at-spi2-atk
-                    atkmm
-                    cairo
-                    gdk-pixbuf
-                    harfbuzz
-                    librsvg
-                    libsoup_3
-                    pango
-                    openssl
-                    # Without these it silently fails
-                    xorg.libXinerama
-                    xorg.libXcursor
-                    xorg.libXrender
-                    xorg.libXScrnSaver
-                    xorg.libXi
-                    xorg.libSM
-                    xorg.libICE
-                    # gnome2.GConf
-                    nspr
-                    nss
-                    cups
-                    libcap
-                    SDL2
-                    libusb1
-                    dbus-glib
-                    ffmpeg
-                    # Only libraries are needed from those two
-                    libudev0-shim
-                    # Verified games requirements
-                    xorg.libXt
-                    xorg.libXmu
-                    libogg
-                    libvorbis
-                    SDL
-                    SDL2_image
-                    glew110
-                    libidn
-                    tbb
-                    # Other things from runtime
-                    flac
-                    freeglut
-                    libjpeg
-                    libpng
-                    libpng12
-                    libsamplerate
-                    libmikmod
-                    libtheora
-                    libtiff
-                    pixman
-                    speex
-                    SDL_image
-                    # SDL_ttf
-                    SDL_mixer
-                    # SDL2_ttf
-                    SDL2_mixer
-                    libappindicator-gtk2
-                    libappindicator-gtk3
-                    libdbusmenu-gtk2
-                    libindicator-gtk2
-                    libdbusmenu-gtk3
-                    libindicator-gtk3
-                    libcaca
-                    libcanberra
-                    libgcrypt
-                    util-linux
-                    libvpx
-                    xorg.libXft
-                    libvdpau
-                    # gnome2.pango
-                    atk
-                    fontconfig
-                    freetype
-                    dbus
-                    alsa-lib
-                    expat
-                    ncurses
+                    # xorg.libxcb
+                    # xorg.libXdamage
+                    # xorg.libxshmfence
+                    # xorg.libXxf86vm
+                    # sqlite
+                    # libelf
+                    # libayatana-appindicator
+                    # webkitgtk_4_1
+                    # glib
+                    # gtk2
+                    # gtk3
+                    # bzip2
+                    # at-spi2-atk
+                    # atkmm
+                    # cairo
+                    # gdk-pixbuf
+                    # harfbuzz
+                    # librsvg
+                    # libsoup_3
+                    # pango
+                    # openssl
+
+                    # xorg.libXinerama
+                    # xorg.libXcursor
+                    # xorg.libXrender
+                    # xorg.libXScrnSaver
+                    # xorg.libXi
+                    # xorg.libSM
+                    # xorg.libICE
+
+                    # nspr
+                    # nss
+                    # cups
+                    # libcap
+                    # SDL2
+                    # libusb1
+                    # dbus-glib
+                    # ffmpeg
+
+                    # xorg.libXt
+                    # xorg.libXmu
+                    # libogg
+                    # libvorbis
+                    # SDL
+                    # SDL2_image
+                    # glew110
+                    # libidn
+                    # tbb
+
+                    # flac
+                    # freeglut
+                    # libjpeg
+                    # libpng
+                    # libpng12
+                    # libsamplerate
+                    # libmikmod
+                    # libtheora
+                    # libtiff
+                    # pixman
+                    # speex
+                    # SDL_image
+                    # SDL_mixer
+                    # SDL2_mixer
+                    # libappindicator-gtk2
+                    # libappindicator-gtk3
+                    # libdbusmenu-gtk2
+                    # libindicator-gtk2
+                    # libdbusmenu-gtk3
+                    # libindicator-gtk3
+                    # libcaca
+                    # libcanberra
+                    # libgcrypt
+                    # util-linux
+                    # libvpx
+                    # xorg.libXft
+                    # libvdpau
+                    # atk
+                    # fontconfig
+                    # freetype
+                    # dbus
+                    # alsa-lib
+                    # expat
+                    # ncurses
                   ];
                 };
                 console = {
@@ -1767,10 +1748,15 @@
                 };
                 security.polkit.enable = true;
                 programs.sway = {
-                  package = pkgs.unstable.sway;
+                  package = pkgs.sway;
                   enable = true;
                   wrapperFeatures.gtk = true;
                 };
+                programs.clash-verge = {
+                  enable = false;
+                  package = pkgs.unstable.clash-verge-rev;
+                    };
+                services.mihomo.tunMode = false;
                 systemd.services."getdaeconfig" = {
                   script = ''
                                           mkdir -p "/home/${userSetting.username}/.config/dae"
@@ -1883,7 +1869,7 @@
                          before-sleep 'notify-send \"I am sleeping\"'
 
                     # Screenshots and screen recording
-                    bindsym Print exec grim -g '\$(slurp)' - | wl-copy && wl-paste > ~/.save/Screenshot-\$(date +%F%T).png | notify-send \"Screenshot of the region taken\"
+                    bindsym Print exec grim -g '\$(slurp)' - | wl-copy && wl-paste > ~/save/Screenshot-\$(date +%F%T).png | notify-send \"Screenshot of the region taken\"
                     bindsym Shift+Print exec grim -g '\$(slurp -o -r -c '#ff0000ff')' -t ppm - | satty --filename - --fullscreen --output-filename ~/save/satty-\$(date '+%Y%m%d-%H:%M:%S').png
                     bindsym Mod1+Shift+Print exec wf-recorder
 
@@ -1900,7 +1886,6 @@
                     bindsym \$mod+Shift+m exec emacsclient --eval \"(type-explain-in-chinese)\";
                     bindsym \$mod+Shift+comma exec emacsclient --eval \"(swaywindow)\";
                     bindsym \$mod+Shift+period  exec emacsclient --eval \"(swayrotate)\";
-
 
                     # bindsym \$mod+Shift+period  exec toggle-workspace 4 5
                     # bindsym \$mod+Shift+slash layout toggle split
@@ -2058,18 +2043,18 @@
                   wantedBy = [ "hibernate.target" "multi-user.target" ];
                   path = [ "/nix/store" ];
                 };
+                  # nameservers = [ "127.0.0.1" "223.5.5.5" "119.29.29.29" ];
                 networking = {
                   hostName = userSetting.hostname;
-                  #                  nameservers = [ "127.0.0.1" ];
-                  networkmanager.enable = true;
-                  firewall.enable = false;
+                  networkmanager.enable = false;
+                  firewall.enable = true;
                 };
                 system.nssModules = lib.mkForce [ ]; # for dnsmasq
                 hardware.i2c.enable = true;
-                boot.kernelModules = [ "i2c-dev" "i915" "spi-ch341" ];
+                # boot.kernelModules = [ "i2c-dev" "i915" "spi-ch341" ];
+                boot.kernelModules = [ "i2c-dev"];
                 boot.extraModulePackages = [ ];
-                boot.binfmt.emulatedSystems =
-                  [ "aarch64-linux" "riscv64-linux" "i686-linux" ];
+                # boot.binfmt.emulatedSystems =   [ "aarch64-linux" "riscv64-linux" "i686-linux" ];
                 boot = {
                   kernel = {
                     sysctl = {
@@ -2081,7 +2066,7 @@
                     };
                   };
                 };
-                boot.kernelPackages = pkgs.linuxPackages;
+                boot.kernelPackages = pkgs.unstable.linuxPackages;
                 # Bootloader
                 # boot.loader.timeout = 5;
                 boot.loader.systemd-boot.enable = true;
@@ -2096,7 +2081,8 @@
                   info.enable = true;
                   man = {
                     enable = true;
-                    generateCaches = true; # will take little time
+                    # generateCaches = true; # will take little time
+                    generateCaches = false; # will take little time
                   };
                   dev.enable = true;
                 };
@@ -2171,7 +2157,7 @@ end
                     # clear
                   '';
                 };
-                system.stateVersion = "25.05";
+                system.stateVersion = "25.11";
                 nix = {
                   package = pkgs.nixVersions.latest;
                   # This will add each flake input as a registry
@@ -2258,7 +2244,6 @@ end
         modifications = final: prev: { };
         unstable-packages = final: _prev: {
           unstable = import inputs.nixpkgs-unstable {
-            # system = final.system;
             inherit (final.stdenv.hostPlatform) system;
             config = {
               allowUnfree = true;
@@ -2276,15 +2261,12 @@ end
       };
     };
   inputs = {
-    # emacs-overlay = {
-    # url = "github:nix-community/emacs-overlay/master";
-    # inputs.nixpkgs.follows = "nixpkgs-unstable";
-    # inputs.nixpkgs-stable.follows = "nixpkgs";
-    # };
     hosts = {
-      url = "github:StevenBlack/hosts"; # or a fork/mirror
+      url = "github:NestorLiao/mhosts";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # nix flake update hosts
+    # this is is "the game changer"
     nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     home-manager = {
