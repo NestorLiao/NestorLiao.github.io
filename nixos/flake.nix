@@ -40,35 +40,6 @@
                 };
                 emacsWithPackages =
                   (pkgs.unstable.emacsPackagesFor myEmacs).emacsWithPackages;
-                switchframeScript = ''
-                  #!/usr/bin/env bash
-                  if [ $# -ne 1 ]; then
-                      echo "Usage: $0 <direction>"
-                      echo "Directions: 1=up, 2=down, 3=left, 4=right"
-                      exit 1
-                  fi
-                  case $1 in
-                      1) direction="up" ;;
-                      2) direction="down" ;;
-                      3) direction="left" ;;
-                      4) direction="right" ;;
-                      *)
-                          echo "Invalid direction: $1"
-                          echo "Valid directions: 1=up, 2=down, 3=left, 4=right"
-                          exit 1
-                          ;;
-                  esac
-                  # Check if focused window is in fullscreen mode
-                  if swaymsg -t get_tree | jq -e '.. | select(.focused? == true and .fullscreen_mode == 1)' >/dev/null; then
-                      # If in fullscreen: exit fullscreen, focus in direction, then re-enter fullscreen
-                      swaymsg fullscreen
-                      swaymsg focus "$direction"
-                      swaymsg fullscreen
-                  else
-                      # If not in fullscreen: simply focus in direction
-                      swaymsg focus "$direction"
-                  fi
-                '';
                 onlyemacsScript = ''
                   #!/usr/bin/env bash
                   swaymsg workspace number 5
@@ -102,32 +73,11 @@
                   swaymsg fullscreen
                   sleep 0.5
                 '';
-                toggleWorkspaceScript = ''
-                  #!/usr/bin/env bash
-                  # Ensure exactly two arguments are provided
-                  if [ "$#" -ne 2 ]; then
-                      echo "Usage: $0 <workspace1> <workspace2>"
-                      exit 1
-                  fi
-                  workspace1="$1"
-                  workspace2="$2"
-                  # Get the current workspace name
-                  current_workspace=$(swaymsg -t get_workspaces | jq -r '.[] | select(.focused==true) | .name')
-                  # Toggle between the provided workspaces
-                  if [ "$current_workspace" = "$workspace2" ]; then
-                      swaymsg workspace number "$workspace1"
-                  elif [ "$current_workspace" = "$workspace1" ]; then
-                      swaymsg workspace number "$workspace2"
-                  else
-                      # If not in either workspace, jump to workspace1 by default
-                      swaymsg workspace number "$workspace1"
-                  fi
-                '';
                 #   template= ''
                 #     #!/usr/bin/env bash
                 # '';
-                lock-false = {Value = false;Status = "locked";};
-                lock-true = {Value = true;Status = "locked";};
+                lock-false = {Value = false; Status = "locked";};
+                lock-true = {Value = true; Status = "locked";};
               in {
                 imports = [ inputs.hosts.nixosModule ];
                 # 我得道了，在怡凉乡间独自过着悠然的生活，在蓝天绿树巨石间…
@@ -150,10 +100,7 @@
                   };
                 };
                 environment.systemPackages = with pkgs; [
-                  (writeShellScriptBin "toggle-workspace" toggleWorkspaceScript)
                   (writeShellScriptBin "onlyemacs" onlyemacsScript)
-                  (writeShellScriptBin "switchframe" switchframeScript)
-
 
                   # file
                   # fzf
@@ -211,7 +158,7 @@
                   # cpio
                   # cppcheck
                   # ctags
-                  # doxygen_gui
+                  # doxygen
                   # elfutils
                   # elfutils.dev
                   # flex
@@ -275,6 +222,7 @@
                     "x-directory/normal" = [ "thunar.desktop" ];
                   };
                 };
+
                 environment.etc = {
                   "xdg/user-dirs.defaults".text = ''
                     DESKTOP=save
@@ -286,6 +234,28 @@
                     TEMPLATES=save
                     VIDEOS=save
                   '';
+                };
+                environment.sessionVariables = {
+                  XDG_CACHE_HOME = "$HOME/.cache";
+                  XDG_CONFIG_HOME = "$HOME/.config";
+                  XDG_DATA_HOME = "$HOME/.local/share";
+                  XDG_BIN_HOME = "$HOME/.local/bin/";
+                  __GL_GSYNC_ALLOWED = "0";
+                  __GL_VRR_ALLOWED = "0";
+                  WLR_DRM_NO_ATOMIC = "1";
+                  _JAVA_AWT_WM_NONREPARENTING = "1";
+                  QT_QPA_PLATFORM = "wayland;xcb";
+                  GDK_BACKEND = "wayland,x11";
+                  WLR_NO_HARDWARE_CURSORS = "1";
+                  MOZ_ENABLE_WAYLAND = "1";
+                  WLR_BACKEND = "vulkan";
+                  WLR_RENDERER = "vulkan";
+                  XCURSOR_SIZE = "24";
+                  NIXOS_OZONE_WL = "1";
+                  GTK_USE_PORTAL = "1";
+                  # PATH = [
+                  #   "$HOME/.local/bin/:$PATH"
+                  # ];
                 };
                 security.polkit.extraConfig = ''
                   /* Allow users in wheel group to manage systemd units without authentication */
@@ -847,66 +817,215 @@
                       # Path=firefox
                       ### xxxx
                       programs.firefox = {
-                        enable = true;
                         package = pkgs.firefox-beta;
-                        policies = {
-                          DisableDeveloperTools = false;
-                          DisableFirefoxStudies = true;
-                          DisablePocket = true;
-                          DisableTelemetry = true;
-                          DisableFirefoxScreenshots = true;
-                          DisplayBookmarksToolbar = "never";
-                          OfferToSaveLogins = false;
-                          FirefoxHome = {
-                            Search = false;
-                            Pocket = false;
-                            Snippets = false;
-                            Highlights = false;
-                            TopSites = false;
-                          };
-                          AutofillAddressEnabled = false;
-                          AutofillCreditCardEnabled = false;
-                          DefaultDownloadDirectory =
-                            "/home/${userSetting.username}/save";
-                          OfferToSaveLoginsDefault = false;
-                          OverrideFirstRunPage = "";
-                          OverridePostUpdatePage = "";
-                          PromptForDownloadLocation = true;
-                          SearchSuggestEnabled = false;
-                          TranslateEnabled = false;
-                          FirefoxSuggest = {
-                            WebSuggestions = false;
-                            SponsoredSuggestions = false;
-                            ImproveSuggest = false;
-                            Locked = false;
-                          };
-                          UserMessaging = {
-                            ExtensionRecommendations = false;
-                            SkipOnboarding = true;
-                          };
-                          SearchBar = "unified";
-                          PasswordManagerEnabled = true;
-                          NoDefaultBookmarks = true;
-                          DontCheckDefaultBrowser = true;
-                          DisableSetDesktopBackground = true;
-                          DisableSystemAddonUpdate = false;
-                          ExtensionUpdate = false;
-                          EnableTrackingProtection = {
-                            Value = true;
-                            Locked = true;
-                            Cryptomining = true;
-                            Fingerprinting = true;
-                          };
-                          DisableFeedbackCommands = true;
-                          SearchEngines.Default = "ebay";
-                          # DisableFormHistory = true;
-                          DisableFormHistory = false;
-                          AppAutoUpdate = false;
-                          DisableAppUpdate = true;
-                          BlockAboutAddons = false;
-                        };
-                        profiles.firefox = {
-                          userChrome = ''
+                        enable = true;
+                        languagePacks = ["en-US"];
+                        # Check about:policies#documentation for options.
+                        profiles = {
+                          default = {
+                            id = 0;
+                            name = "firefox";
+                            isDefault = true;
+                            search.default = "Nix Packages";
+                            search.force = true;
+                            search.engines = {
+                              "Rust Crates (lib.rs)" = {
+                                urls = [{
+                                  template = "https://lib.rs/search?q={searchTerms}";
+                                }];
+                                definedAliases = [ "@lr" ];
+                              };
+
+                              "Rust Std Documentation" = {
+                                urls = [{
+                                  template = "https://doc.rust-lang.org/std/?search={searchTerms}";
+                                }];
+                                definedAliases = [ "@rs" ];
+                              };
+
+                              "Crates.io" = {
+                                urls = [{
+                                  template = "https://crates.io/crates/{searchTerms}";
+                                }];
+                                definedAliases = [ "@ci" ];
+                              };
+
+                              "Google (Filtered, HK)" = {
+                                urls = [{
+                                  template = "https://www.google.com.hk/search?q=-youtube+-reddit+-dailymotion+-pbslearningmedia+-dcnewsnow+-ted+-facebook+-douyin+-cctv+-bilibili+-iqiyi+-youku+-tencentvideo+-tiktok+-instagram+-twitter+-cnn+-yahoo+-aljazeera+-foxnews+{searchTerms}";
+                                }];
+                                definedAliases = [ "@g" "@gg" ];
+                              };
+
+                              "Nix Packages" = {
+                                urls = [{
+                                  template = "https://search.nixos.org/packages?type=packages&channel=unstable&query={searchTerms}";
+                                }];
+                                icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
+                                definedAliases = [ "@np" ];
+                              };
+
+                              "NixOS Options" = {
+                                urls = [{
+                                  template = "https://search.nixos.org/options?type=options&channel=unstable&query={searchTerms}";
+                                }];
+                                icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
+                                definedAliases = [ "@no" ];
+                              };
+
+                              "NixOS Discourse" = {
+                                urls = [{
+                                  template = "https://discourse.nixos.org/search?q={searchTerms}";
+                                }];
+                                definedAliases = [ "@nd" ];
+                              };
+
+                              "Nixpkgs PR Tracker" = {
+                                urls = [{
+                                  template = "https://nixpk.gs/pr-tracker.html?pr={searchTerms}";
+                                }];
+                                definedAliases = [ "@npt" ];
+                              };
+
+                              "Arch Wiki" = {
+                                urls = [{
+                                  template = "https://wiki.archlinux.org/title/{searchTerms}";
+                                }];
+                                definedAliases = [ "@aw" ];
+                              };
+
+                              "NixOS Wiki" = {
+                                urls = [{
+                                  template = "https://nixos.wiki/index.php?search={searchTerms}";
+                                }];
+                                icon = "https://nixos.wiki/favicon.png";
+                                updateInterval = 24 * 60 * 60 * 1000;
+                                definedAliases = [ "@nw" ];
+                              };
+
+                              "Python Docs (zh-cn)" = {
+                                urls = [{
+                                  template = "https://docs.python.org/zh-cn/3/search.html?q={searchTerms}";
+                                }];
+                                definedAliases = [ "@py" ];
+                              };
+
+                              "Stack Overflow" = {
+                                urls = [{
+                                  template = "https://stackoverflow.com/search?q={searchTerms}";
+                                }];
+                                definedAliases = [ "@so" ];
+                              };
+
+                              "GitHub Repositories" = {
+                                urls = [{
+                                  template = "https://github.com/search?q={searchTerms}&type=repositories";
+                                }];
+                                definedAliases = [ "@gp" ];
+                              };
+
+                              "GitHub Nix Code" = {
+                                urls = [{
+                                  template = "https://github.com/search?q=language:nix+{searchTerms}&type=code";
+                                }];
+                                definedAliases = [ "@gcn" ];
+                              };
+
+                              "GitHub Emacs Lisp Code" = {
+                                urls = [{
+                                  template = "https://github.com/search?q=language:\"Emacs Lisp\"+{searchTerms}&type=code";
+                                }];
+                                definedAliases = [ "@gce" ];
+                              };
+
+                              "GitHub Rust Code" = {
+                                urls = [{
+                                  template = "https://github.com/search?q=language:Rust+{searchTerms}&type=code";
+                                }];
+                                definedAliases = [ "@gcr" ];
+                              };
+
+                              "GitHub Lua Code" = {
+                                urls = [{
+                                  template = "https://github.com/search?q=language:Lua+{searchTerms}&type=code";
+                                }];
+                                definedAliases = [ "@gcl" ];
+                              };
+
+                              "GitHub Python Code" = {
+                                urls = [{
+                                  template = "https://github.com/search?q=language:Python+{searchTerms}&type=code";
+                                }];
+                                definedAliases = [ "@gcp" ];
+                              };
+
+                              "GitHub C Code" = {
+                                urls = [{
+                                  template = "https://github.com/search?q=language:C+{searchTerms}&type=code";
+                                }];
+                                definedAliases = [ "@gcc" ];
+                              };
+
+                              "GitHub C++ Code" = {
+                                urls = [{
+                                  template = "https://github.com/search?q=language:C%2B%2B+{searchTerms}&type=code";
+                                }];
+                                definedAliases = [ "@gcpp" ];
+                              };
+
+                              "GitHub Issues" = {
+                                urls = [{
+                                  template = "https://github.com/search?type=issues&q={searchTerms}";
+                                }];
+                                definedAliases = [ "@gi" ];
+                              };
+
+                              "Nixpkgs Source Search" = {
+                                urls = [{
+                                  template = "https://github.com/search?q=repo:NixOS/nixpkgs+{searchTerms}&type=code";
+                                }];
+                                definedAliases = [ "@npk" ];
+                              };
+
+                              "Taobao" = {
+                                urls = [{
+                                  template = "https://s.taobao.com/search?q={searchTerms}";
+                                }];
+                                definedAliases = [ "@tb" ];
+                              };
+
+                              "Tiger Code (虎码)" = {
+                                urls = [{
+                                  template = "https://tiger-code.com/search?query={searchTerms}";
+                                }];
+                                definedAliases = [ "@tg" ];
+                              };
+
+                              "OSHWHub" = {
+                                urls = [{
+                                  template = "https://oshwhub.com/search?wd={searchTerms}";
+                                }];
+                                definedAliases = [ "@jlc" ];
+                              };
+
+                              "Thingiverse" = {
+                                urls = [{
+                                  template = "https://www.thingiverse.com/search?q={searchTerms}&page=1";
+                                }];
+                                definedAliases = [ "@th" ];
+                              };
+
+                              "Cambridge Dictionary (EN→ZH)" = {
+                                urls = [{
+                                  template = "https://dictionary.cambridge.org/zhs/词典/英语-汉语-简体/{searchTerms}";
+                                }];
+                                definedAliases = [ "@dc" ];
+                              };
+
+                              "bing".metaData.hidden = true;
+                            };
+
+                            userChrome =''
 @-moz-document url(chrome://browser/content/browser.xhtml) {
     /* ########  Sidetabs Styles  ######### */
     /* Set Bookerly for all Firefox UI */
@@ -1038,165 +1157,427 @@
 */
 }
                           '';
-                          settings = {
-"accessibility.force_disabled" =1;
-"app.update.auto" = lock-false;
-"app.update.download.promptMaxAttempts" = 0;
-"app.update.elevation.promptMaxAttempts" = 0;
-"app.update.service.enabled" = lock-false;
-"browser.aboutConfig.showWarning" = lock-false;
-"browser.aboutwelcome.enabled" = lock-false;
-"browser.accessibility.typeaheadfind" = lock-false;
-"browser.anchor_color" = "#000000";
-"browser.cache.disk.enable" =lock-true;
-"browser.ctrlTab.recentlyUsedOrder" = lock-true;
-"browser.display.document_color_use" = 2;
-"browser.display.use_document_fonts" = 0;
-"browser.download.dir" = "/home/${userSetting.username}/save";
-"browser.download.forbid_open_with" = lock-true;
-"browser.download.lastDir" = "/home/${userSetting.username}/save";
-"browser.download.open_pdf_attachments_inline" =lock-true;
-"browser.download.start_downloads_in_tmp_dir" =lock-true;
-"browser.newtabpage.activity-stream.showWeather" =lock-false;
-"browser.newtabpage.enabled" = lock-false;
-"browser.quitShortcut.disabled" = lock-true;
-"browser.safebrowsing.downloads.enabled" = lock-false;
-"browser.safebrowsing.malware.enabled" = lock-false;
-"browser.safebrowsing.phishing.enabled" = lock-false;
-"browser.search.region" = "US";
-"browser.search.suggest.enabled" =lock-false;
-"browser.sessionstore.max_tabs_undo" =3;
-"browser.sessionstore.restore_on_demand" =lock-true;
-"browser.sessionstore.warnOnQuit" = lock-true;
-"browser.slowStartup.notificationDisabled" =lock-true;
-"browser.startup.homepage" = "https://www.blank.org";
-"browser.tabs.closeTabByDblclick" = lock-true;
-"browser.tabs.closeWindowWithLastTab" = lock-false;
-"browser.tabs.loadInBackground" = lock-true;
-"browser.tabs.tabClipWidth" = 999;
-"browser.tabs.warnOnClose" = lock-false;
-"browser.toolbars.bookmarks.visibility" = "never";
-"browser.translations.automaticallyPopup" = lock-false;
-"browser.uidensity" = 1;
-"browser.urlbar.oneOffSearches" = lock-false;
-"browser.urlbar.shortcuts.tabs" = lock-false;
-"browser.urlbar.suggest.quicksuggest.sponsored" = lock-false;
-"browser.visited_color" = "#000000";
-"canvas.capturestream.enabled" = lock-false;
-"datareporting.healthreport.service.enabled" = lock-false;
-"devtools.chrome.enabled" = lock-true;
-"devtools.debugger.remote-enabled" = lock-true;
-"dom.ipc.plugins.enabled" = lock-false;
-"dom.ipc.plugins.enabled.libflashplayer.so" = lock-false;
-"dom.media.mediasource.enabled" = lock-false;
-"dom.mozTCPSocket.enabled" = lock-false;
-"dom.netinfo.enabled" = lock-false;
-"dom.webaudio.enabled" = lock-false;
-"dom.webvtt.enabled" = lock-false;
-"extensions.activeThemeID" = "{5f71ffe3-23e2-49b8-b75e-2c032ef4a1d9}";
-"extensions.pocket.enabled" = lock-false;
-"extensions.update.enabled" = lock-false;
-"extensions.webextensions.restrictedDomains" = "";
-"font.name-list.emoji" = "";
-"font.name.monospace.x-western" ="JetBrainsMono Nerd Font Mono";
-"full-screen-api.transition.timeout" = 0;
-"full-screen-api.warning.delay" = 0;
-"full-screen-api.warning.timeout" = 0;
-"general.smoothScroll" = lock-false;
-"general.smoothscroll" = lock-false;
-"general.useragent.compatMode.firefox" = lock-true;
-"geo.enabled" = lock-false;
-"gfx.font_rendering.fontconfig.max_generic_substitutions" = 127;
-"gfx.webrender.all" = lock-false;
-"image.jxl.enabled" = lock-true;
-"layout.css.prefers-color-scheme.content-override" = 1;
-"media.autoplay.block-event.enabled" = lock-true;
-"media.autoplay.default" = 2;
-"media.av1.enabled" = lock-false;
-"media.block-autoplay-until-in-foreground" = lock-true;
-"media.block-play-until-visible" = lock-true;
-"media.disabled" =lock-true;
-"media.eme.enabled" = lock-false;
-"media.ffmpeg.enabled" = lock-false;
-"media.ffmpeg.vaapi.enabled" = lock-true;
-"media.ffvpx.enabled" = lock-false;
-"media.flac.enabled" = lock-false;
-"media.getusermedia.screensharing.enabled" = lock-false;
-"media.gmp-widevinecdm.enabled" = lock-false;
-"media.h264.enabled" = lock-false;
-"media.libvpx.enabled" = lock-false;
-"media.mediasource.enabled" = lock-false;
-"media.mediasource.mp4.enabled" = lock-false;
-"media.mediasource.webm.enabled" = lock-false;
-"media.mediasource.whitelist" = lock-false;
-"media.mp4.enabled" = lock-false;
-"media.navigator.audio.enabled" = lock-false;
-"media.navigator.enabled" = lock-false;
-"media.navigator.video.enabled" = lock-false;
-"media.ogg.enabled" = lock-false;
-"media.peerconnection.enabled" =lock-false;
-"media.peerconnection.ice.default_address_only" =lock-true;
-"media.wave.enabled" = lock-false;
-"media.webm.enabled" = lock-false;
-"media.webspeech.recognition.enable" = lock-false;
-"media.webspeech.synth.enabled" = lock-false;
-"network.dns.echconfig.enabled" = lock-true;
-"network.dns.http3_echconfig.enabled" = lock-true;
-"noscript.sync.enabled" = lock-true;
-"permissions.default.image" = 2;
-"places.history.enabled" = lock-true;
-"plugin.state.flash" = 0 ;
-"privacy.donottrackheader.enabled" = lock-true;
-"privacy.resistFingerprinting" = lock-true;
-"privacy.resistFingerprinting.block_mozAddonManager" = lock-true;
-"privacy.trackingprotection.cryptomining.enabled" =lock-true;
-"privacy.trackingprotection.enabled" = lock-true;
-"privacy.trackingprotection.fingerprinting.enabled" = lock-true;
-"privacy.trackingprotection.socialtracking.enabled" = lock-true;
-"privacy.userContext.enabled" = lock-false;
-"reader.parse-on-load.enabled" = lock-false;
-"security.enterprise_roots.auto-enabled" = lock-false;
-"security.enterprise_roots.enabled" = lock-false;
-"services.sync.engine.history" = lock-true;
-"services.sync.prefs.sync-seen.services.sync.prefs.sync.capability.policy.maonoscript.sites" =lock-true;
-"services.sync.prefs.sync.capability.policy.maonoscript.sites" =lock-true;
-"signon.autofillForms" = lock-false;
-"signon.rememberSignons" = lock-true;
-"svg.context-properties.content.enabled" = lock-true;
-"toolkit.crashreporter.dataDirectory" = "";
-"toolkit.crashreporter.enabled" = lock-false;
-"toolkit.legacyUserProfileCustomizations.stylesheets" =lock-true;
-"toolkit.telemetry.archive.enabled" = lock-false;
-"toolkit.telemetry.enabled" = lock-false;
-"toolkit.telemetry.rejected" = lock-false;
-"toolkit.telemetry.unified" = lock-false;
-"ui.key.menuAccessKey" = 17;
-"ui.key.menuAccessKeyFocuses" = lock-false;
-"webgl.disabled" = lock-true;
-"widget.non-native-theme.scrollbar.style" = 3;
-"widget.wayland.opaque-region.enabled" = lock-false;
-"xpinstall.signatures.required" = lock-false;
-"extensions.webextensions.ExtensionStorageIDB.migrated.@firefoxinvertcolors" = lock-true;
-"extensions.webextensions.ExtensionStorageIDB.migrated.authenticator@mymindstorm" = lock-true;
-"extensions.webextensions.ExtensionStorageIDB.migrated.bar-breaker@ris58h" = lock-true;
-"extensions.webextensions.ExtensionStorageIDB.migrated.chatgpt-ctrl-enter-sender@chatgpt-extension.io" = lock-true;
-"extensions.webextensions.ExtensionStorageIDB.migrated.idcac-pub@guus.ninja" = lock-true;
-"extensions.webextensions.ExtensionStorageIDB.migrated.jid1-BoFifL9Vbdl2zQ@jetpack" = lock-true;
-"extensions.webextensions.ExtensionStorageIDB.migrated.myallychou@gmail.com" = lock-true;
-"extensions.webextensions.ExtensionStorageIDB.migrated.no-emoji@erikdesjardins.io" = lock-true;
-"extensions.webextensions.ExtensionStorageIDB.migrated.uBlock0@raymondhill.net" = lock-true;
-"extensions.webextensions.ExtensionStorageIDB.migrated.vimium-c@gdh1995.cn" = lock-true;
-"extensions.webextensions.ExtensionStorageIDB.migrated.{2ce7df96-558d-4c2c-8d88-68606ebbe8db}" = lock-true;
-"extensions.webextensions.ExtensionStorageIDB.migrated.{74145f27-f039-47ce-a470-a662b129930a}" = lock-true;
-"extensions.webextensions.ExtensionStorageIDB.migrated.{80f6f2e4-eda1-417f-bf54-9645e1e20f5d}" = lock-true;
-"extensions.webextensions.ExtensionStorageIDB.migrated.{88ebde3a-4581-4c6b-8019-2a05a9e3e938}" = lock-true;
-"extensions.webextensions.ExtensionStorageIDB.migrated.{9350bc42-47fb-4598-ae0f-825e3dd9ceba}" = lock-true;
-"extensions.webextensions.ExtensionStorageIDB.migrated.{9b8ce341-744f-4f5d-9ff7-b5d7078a7b34}" = lock-true;
-"extensions.webextensions.ExtensionStorageIDB.migrated.{b52acdad-e4a6-44da-afc9-9bd22572db99}" = lock-true;
-"extensions.webextensions.ExtensionStorageIDB.migrated.{b6840179-45a1-4a2d-a4ef-e2815c1faa28}" = lock-true;
+                            userContent = ''
+/* =========================================================
+   LEERE / ZEN — Pure Black & White userContent.css
+   Typeface: Bookerly
+   ========================================================= */
+
+/* -------- Global reset -------- */
+
+* {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  font-family: "Bookerly", serif !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+  border-radius: 0 !important;
+}
+
+/* -------- Body & text -------- */
+
+body {
+  background-image: none !important;
+  font-size: 18px !important;
+  line-height: 1.7 !important;
+  letter-spacing: 0.01em !important;
+}
+
+/* Headings: hierarchy by size & weight only */
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600 !important;
+  line-height: 1.3 !important;
+  margin-top: 1.6em !important;
+  margin-bottom: 0.6em !important;
+}
+
+/* Paragraph spacing */
+
+p {
+  margin-top: 0.6em !important;
+  margin-bottom: 0.6em !important;
+}
+
+/* -------- Links -------- */
+
+a {
+  text-decoration: none !important;
+  font-weight: 500 !important;
+}
+
+/* Subtle link indication on hover only */
+
+a:hover {
+  text-decoration: underline !important;
+}
+
+/* -------- Buttons & interactive elements -------- */
+
+button,
+input,
+select,
+textarea {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border: 1px solid #000000 !important;
+  font-family: "Bookerly", serif !important;
+}
+
+/* Remove excessive focus/hover effects */
+
+button:hover,
+input:hover,
+textarea:hover {
+  background-color: #ffffff !important;
+}
+
+/* Clear, non-distracting focus state */
+
+:focus {
+  outline: 2px solid #000000 !important;
+  outline-offset: 2px !important;
+}
+
+/* -------- Icons & SVG -------- */
+
+svg,
+svg * {
+  fill: #000000 !important;
+  stroke: #000000 !important;
+}
+
+/* -------- Media -------- */
+
+img,
+video,
+iframe {
+  max-width: 100% !important;
+  height: auto !important;
+  filter: grayscale(100%) contrast(120%) !important;
+}
+
+/* -------- Lists -------- */
+
+ul,
+ol {
+  padding-left: 1.5em !important;
+}
+
+li {
+  margin-bottom: 0.4em !important;
+}
+
+/* -------- Tables -------- */
+
+table {
+  border-collapse: collapse !important;
+}
+
+th,
+td {
+  border: 1px solid #000000 !important;
+  padding: 0.4em 0.6em !important;
+}
+
+/* -------- Remove visual noise -------- */
+
+hr {
+  border: none !important;
+  border-top: 1px solid #000000 !important;
+  margin: 2em 0 !important;
+}
+
+/* Disable animations & transitions */
+
+* {
+  transition: none !important;
+  animation: none !important;
+}
+
+'';
+                          };
+                        };
+                        policies = {
+                          # Copied from https://discourse.nixos.org/t/declare-firefox-extensions-and-settings/36265
+                          DisableDeveloperTools = false;
+                          DisableFirefoxStudies = true;
+                          DisablePocket = true;
+                          DisableTelemetry = true;
+                          DisableFirefoxScreenshots = true;
+                          DisplayBookmarksToolbar = "never";
+                          OfferToSaveLogins = false;
+                          FirefoxHome = {
+                            Search = false;
+                            Pocket = false;
+                            Snippets = false;
+                            Highlights = false;
+                            TopSites = false;
+                          };
+                          AutofillAddressEnabled = false;
+                          AutofillCreditCardEnabled = false;
+                          DefaultDownloadDirectory =
+                            "/home/${userSetting.username}/save";
+                          OfferToSaveLoginsDefault = false;
+                          OverrideFirstRunPage = "";
+                          OverridePostUpdatePage = "";
+                          PromptForDownloadLocation = true;
+                          SearchSuggestEnabled = false;
+                          TranslateEnabled = false;
+                          FirefoxSuggest = {
+                            WebSuggestions = false;
+                            SponsoredSuggestions = false;
+                            ImproveSuggest = false;
+                            Locked = false;
+                          };
+                          UserMessaging = {
+                            ExtensionRecommendations = false;
+                            SkipOnboarding = true;
+                          };
+                          SearchBar = "unified";
+                          PasswordManagerEnabled = true;
+                          NoDefaultBookmarks = true;
+                          DontCheckDefaultBrowser = true;
+                          DisableSetDesktopBackground = true;
+                          DisableSystemAddonUpdate = false;
+                          ExtensionUpdate = false;
+                          EnableTrackingProtection = {
+                            Value = true;
+                            Locked = true;
+                            Cryptomining = true;
+                            Fingerprinting = true;
+                          };
+                          DisableFeedbackCommands = true;
+                          SearchEngines.Default = "ebay";
+                          # DisableFormHistory = true;
+                          DisableFormHistory = false;
+                          AppAutoUpdate = false;
+                          DisableAppUpdate = true;
+                          BlockAboutAddons = false;
+
+                          # rsop; rm .mozilla/; firefox-beta
+                          ExtensionSettings = {
+                            "*".installation_mode = "allowed"; # blocks all addons except the ones specified below
+
+                            # Firefox Invert Colors
+                            "firefoxinvertcolors" = {
+                              installation_mode = "force_installed";
+                              install_url = "https://addons.mozilla.org/firefox/downloads/latest/firefox-invert-colors/latest.xpi";
+                            };
+
+                            # Authenticator
+                            "authenticator@mymindstorm" = {
+                              installation_mode = "force_installed";
+                              install_url = "https://addons.mozilla.org/firefox/downloads/latest/authenticator/latest.xpi";
+                            };
+
+                            # Bar Breaker
+                            "bar-breaker@ris58h" = {
+                              installation_mode = "force_installed";
+                              install_url = "https://addons.mozilla.org/firefox/downloads/latest/bar-breaker/latest.xpi";
+                            };
+
+                            # ChatGPT Ctrl+Enter Sender
+                            "chatgpt-ctrl-enter-sender@chatgpt-extension.io" = {
+                              installation_mode = "force_installed";
+                              install_url = "https://addons.mozilla.org/firefox/downloads/latest/chatgpt-ctrl-enter-sender/latest.xpi";
+                            };
+
+                            # IDCAC
+                            "idcac-pub@guus.ninja" = {
+                              installation_mode = "force_installed";
+                              install_url = "https://addons.mozilla.org/firefox/downloads/latest/idcac/latest.xpi";
+                            };
+
+                            # HTTPS Everywhere (legacy Jetpack ID)
+                            "jid1-BoFifL9Vbdl2zQ@jetpack" = {
+                              installation_mode = "force_installed";
+                              install_url = "https://addons.mozilla.org/firefox/downloads/latest/https-everywhere/latest.xpi";
+                            };
+
+                            # No Emoji
+                            "no-emoji@erikdesjardins.io" = {
+                              installation_mode = "force_installed";
+                              install_url = "https://addons.mozilla.org/firefox/downloads/latest/no-emoji/latest.xpi";
+                            };
+
+                            # uBlock Origin
+                            "uBlock0@raymondhill.net" = {
+                              installation_mode = "force_installed";
+                              install_url = "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi";
+                            };
+
+                            # Vimium C
+                            "vimium-c@gdh1995.cn" = {
+                              installation_mode = "force_installed";
+                              install_url = "https://addons.mozilla.org/firefox/downloads/latest/vimium-c/latest.xpi";
+                            };
+                          };
+                          Preferences = {
+                            "accessibility.force_disabled" =1;
+                            "app.update.auto" = lock-false;
+                            "app.update.download.promptMaxAttempts" = 0;
+                            "app.update.elevation.promptMaxAttempts" = 0;
+                            "app.update.service.enabled" = lock-false;
+                            "browser.aboutConfig.showWarning" = lock-false;
+                            "browser.aboutwelcome.enabled" = lock-false;
+                            "browser.accessibility.typeaheadfind" = lock-false;
+                            "browser.anchor_color" = "#000000";
+                            "browser.cache.disk.enable" =lock-true;
+                            "browser.ctrlTab.recentlyUsedOrder" = lock-true;
+                            "browser.display.document_color_use" = 2;
+                            "browser.display.use_document_fonts" = 0;
+                            "browser.download.dir" = "/home/${userSetting.username}/save";
+                            "browser.download.forbid_open_with" = lock-true;
+                            "widget.use-xdg-desktop-portal.file-picker" = 1;
+                            "browser.download.lastDir" = "/home/${userSetting.username}/save";
+                            "browser.download.open_pdf_attachments_inline" =lock-true;
+                            "browser.download.start_downloads_in_tmp_dir" =lock-true;
+                            "browser.newtabpage.activity-stream.showWeather" =lock-false;
+                            "browser.newtabpage.enabled" = lock-false;
+                            "browser.quitShortcut.disabled" = lock-true;
+                            "browser.safebrowsing.downloads.enabled" = lock-false;
+                            "browser.safebrowsing.malware.enabled" = lock-false;
+                            "browser.safebrowsing.phishing.enabled" = lock-false;
+                            "browser.search.region" = "US";
+                            "browser.sessionstore.max_tabs_undo" =3;
+                            "browser.sessionstore.restore_on_demand" =lock-true;
+                            "browser.sessionstore.warnOnQuit" = lock-true;
+                            "browser.slowStartup.notificationDisabled" =lock-true;
+                            "browser.startup.homepage" = "https://www.github.com";
+                            "browser.tabs.closeTabByDblclick" = lock-true;
+                            "browser.tabs.closeWindowWithLastTab" = lock-false;
+                            "browser.tabs.loadInBackground" = lock-true;
+                            "browser.tabs.tabClipWidth" = 999;
+                            "browser.tabs.warnOnClose" = lock-false;
+                            "browser.toolbars.bookmarks.visibility" = "never";
+                            "browser.translations.automaticallyPopup" = lock-false;
+                            "browser.uidensity" = 1;
+                            "browser.urlbar.oneOffSearches" = lock-false;
+                            "browser.urlbar.shortcuts.tabs" = lock-false;
+                            "browser.urlbar.suggest.quicksuggest.sponsored" = lock-false;
+                            "browser.visited_color" = "#000000";
+                            "canvas.capturestream.enabled" = lock-false;
+                            "datareporting.healthreport.service.enabled" = lock-false;
+                            "devtools.chrome.enabled" = lock-true;
+                            "devtools.debugger.remote-enabled" = lock-true;
+                            "dom.ipc.plugins.enabled" = lock-false;
+                            "dom.ipc.plugins.enabled.libflashplayer.so" = lock-false;
+                            "dom.media.mediasource.enabled" = lock-false;
+                            "dom.mozTCPSocket.enabled" = lock-false;
+                            "dom.netinfo.enabled" = lock-false;
+                            "dom.webaudio.enabled" = lock-false;
+                            "dom.webvtt.enabled" = lock-false;
+                            "extensions.activeThemeID" = "{5f71ffe3-23e2-49b8-b75e-2c032ef4a1d9}";
+                            "extensions.pocket.enabled" = lock-false;
+                            "extensions.update.enabled" = lock-false;
+                            "extensions.webextensions.restrictedDomains" = "";
+                            "font.name-list.emoji" = "";
+                            "font.name.monospace.x-western" ="JetBrainsMono Nerd Font Mono";
+                            "full-screen-api.transition.timeout" = 0;
+                            "full-screen-api.warning.delay" = 0;
+                            "full-screen-api.warning.timeout" = 0;
+                            "general.smoothscroll" = lock-false;
+                            "general.useragent.compatMode.firefox" = lock-true;
+                            "geo.enabled" = lock-false;
+                            "gfx.font_rendering.fontconfig.max_generic_substitutions" = 127;
+                            # "gfx.webrender.all" = lock-false;
+                            "image.jxl.enabled" = lock-true;
+                            "layout.css.prefers-color-scheme.content-override" = 1;
+                            "media.autoplay.block-event.enabled" = lock-true;
+                            "media.autoplay.default" = 2;
+                            "media.av1.enabled" = lock-false;
+                            "media.block-autoplay-until-in-foreground" = lock-true;
+                            "media.block-play-until-visible" = lock-true;
+                            "media.disabled" =lock-true;
+                            "media.eme.enabled" = lock-false;
+                            "media.ffmpeg.enabled" = lock-false;
+                            "media.ffmpeg.vaapi.enabled" = lock-true;
+                            "media.ffvpx.enabled" = lock-false;
+                            "media.flac.enabled" = lock-false;
+                            "media.getusermedia.screensharing.enabled" = lock-false;
+                            "media.gmp-widevinecdm.enabled" = lock-false;
+                            "media.h264.enabled" = lock-false;
+                            "media.libvpx.enabled" = lock-false;
+                            "media.mediasource.enabled" = lock-false;
+                            "media.mediasource.mp4.enabled" = lock-false;
+                            "media.mediasource.webm.enabled" = lock-false;
+                            "media.mediasource.whitelist" = lock-false;
+                            "media.mp4.enabled" = lock-false;
+                            "media.navigator.audio.enabled" = lock-false;
+                            "media.navigator.enabled" = lock-false;
+                            "media.navigator.video.enabled" = lock-false;
+                            "media.ogg.enabled" = lock-false;
+                            "media.peerconnection.enabled" =lock-false;
+                            "media.peerconnection.ice.default_address_only" =lock-true;
+                            "media.wave.enabled" = lock-false;
+                            "media.webm.enabled" = lock-false;
+                            "media.webspeech.recognition.enable" = lock-false;
+                            "media.webspeech.synth.enabled" = lock-false;
+                            "network.dns.echconfig.enabled" = lock-true;
+                            "network.dns.http3_echconfig.enabled" = lock-true;
+                            "permissions.default.image" = 2;
+                            "places.history.enabled" = lock-true;
+                            "plugin.state.flash" = 0 ;
+                            "privacy.donottrackheader.enabled" = lock-true;
+                            "privacy.resistFingerprinting" = lock-true;
+                            "privacy.resistFingerprinting.block_mozAddonManager" = lock-true;
+                            "privacy.trackingprotection.cryptomining.enabled" =lock-true;
+                            "privacy.trackingprotection.enabled" = lock-true;
+                            "privacy.trackingprotection.fingerprinting.enabled" = lock-true;
+                            "privacy.trackingprotection.socialtracking.enabled" = lock-true;
+                            "reader.parse-on-load.enabled" = lock-false;
+                            "security.enterprise_roots.auto-enabled" = lock-false;
+                            "security.enterprise_roots.enabled" = lock-false;
+                            "services.sync.engine.history" = lock-true;
+                            "services.sync.prefs.sync-seen.services.sync.prefs.sync.capability.policy.maonoscript.sites" =lock-true;
+                            "services.sync.prefs.sync.capability.policy.maonoscript.sites" =lock-true;
+                            "signon.autofillForms" = lock-false;
+                            # "signon.rememberSignons" = lock-true;
+                            "svg.context-properties.content.enabled" = lock-true;
+                            "toolkit.crashreporter.dataDirectory" = "";
+                            "toolkit.crashreporter.enabled" = lock-false;
+                            "toolkit.telemetry.archive.enabled" = lock-false;
+                            "toolkit.telemetry.enabled" = lock-false;
+                            "toolkit.telemetry.rejected" = lock-false;
+                            "toolkit.telemetry.unified" = lock-false;
+                            # Convenience
+                            "browser.formfill.enable" = lock-false;
+                            "browser.search.suggest.enabled" = lock-false;
+                            "browser.search.suggest.enabled.private" = lock-false;
+                            "browser.urlbar.suggest.searches" = lock-false;
+                            "browser.urlbar.showSearchSuggestionsFirst" = lock-false;
+                            "signon.rememberSignons" = lock-false; # Stop asking to save passwords
+                            "extensions.formautofill.addresses.capture.enabled" = lock-false; # Stop asking to save addresses
+                            # Styling
+                            "browser.compactmode.show" = lock-true;
+                            "toolkit.legacyUserProfileCustomizations.stylesheets" = lock-true; # This is needed for other userX.css files
+                            # Containers
+
+                            "privacy.userContext.enabled" = lock-true;
+                            "privacy.userContext.ui.enabled" = lock-true;
+                            # Downloads
+                            "browser.download.useDownloadDir" = lock-false;
+                            "browser.download.always_ask_before_handling_new_types" = lock-true;
+                            # Privacy
+                            "privacy.sanitize.sanitizeOnShutdown" = lock-true;
+                            "privacy.clearOnShutdown_v2.cache" = lock-true;
+                            "privacy.clearOnShutdown_v2.historyFormDataAndDownloads" = lock-true;
+                            "privacy.clearOnShutdown_v2.browsingHistoryAndDownloads" = lock-true;
+                            "privacy.clearOnShutdown_v2.downloads" = lock-true;
+                            "privacy.clearOnShutdown_v2.formdata" = lock-true;
+                            "privacy.clearOnShutdown_v2.cookiesAndStorage" = lock-true;
+                            # # HTTPS only
+                            # # "dom.security.https_only_mode" = lock-true;
+                            "ui.key.menuAccessKey" = 17;
+                            "ui.key.menuAccessKeyFocuses" = lock-false;
+                            "webgl.disabled" = lock-true;
+                            "widget.non-native-theme.scrollbar.style" = 3;
+                            "xpinstall.signatures.required" = lock-false;
                           };
                         };
                       };
+
                       programs.chromium = {
                         enable = false;
                         package = pkgs.ungoogled-chromium;
@@ -1227,6 +1608,7 @@
                 nix.settings.cores = 10;
                 nix.settings.max-jobs = lib.mkDefault 10;
                 environment.variables = {
+                  PATH = "$PATH:$HOME/.config/bin:$HOME/.local/bin";
                   SOPS_AGE_KEY_FILE = "/etc/nixos/keys.txt";
                   EDITOR = "emacsclient -n -s 'server'";
                   RUSTUP_DIST_SERVER = "https://rsproxy.cn";
@@ -1659,7 +2041,6 @@
                     # librsvg
                     # libsoup_3
                     # pango
-                    # openssl
 
                     # xorg.libXinerama
                     # xorg.libXcursor
@@ -1668,7 +2049,6 @@
                     # xorg.libXi
                     # xorg.libSM
                     # xorg.libICE
-
                     # nspr
                     # nss
                     # cups
@@ -1677,7 +2057,6 @@
                     # libusb1
                     # dbus-glib
                     # ffmpeg
-
                     # xorg.libXt
                     # xorg.libXmu
                     # libogg
@@ -1687,7 +2066,6 @@
                     # glew110
                     # libidn
                     # tbb
-
                     # flac
                     # freeglut
                     # libjpeg
@@ -2119,6 +2497,8 @@
                   package = pkgs.fish;
                   enable = true;
                   interactiveShellInit = ''
+                          fish_add_path $HOME/bin
+                          fish_add_path $HOME/.local/bin/
                         zoxide init fish | source;
                     clear
                       set fish_greeting
@@ -2153,7 +2533,7 @@ end
                   '';
                   shellInit = ''
                     # set -x DIRENV_LOG_FORMAT ""
-                    set -U fish_user_paths $HOME/.local/bin/ $fish_user_paths
+                    # set -U fish_user_paths $HOME/.local/bin/ $fish_user_paths
                     # clear
                   '';
                 };

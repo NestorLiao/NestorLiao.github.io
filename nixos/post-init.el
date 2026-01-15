@@ -1169,10 +1169,33 @@
     (while (re-search-forward
             "/nix/store/[a-z0-9]+-\\([^[:space:]]+\\)" nil t)
       (replace-match "...-\\1" t nil))))
+
 (defun my/compilation-filter-hook ()
   (my/nix-store-shorten-paths))
 (add-hook 'compilation-filter-hook #'my/compilation-filter-hook)
-(add-hook 'compilation-filter-hook #'ansi-color-compilation-filter)
+;; ;; Set TERM for comint-derived modes like shell-mode
+;; (defun strip-ansi-codes (string)
+;;   "Strip ANSI escape codes from STRING."
+;;   (replace-regexp-in-string "\033\\[[0-9;]*m" "" string))
+;;
+;; (defun my-compilation-filter ()
+;;   (let ((output (buffer-substring-no-properties compilation-filter-start compilation-filter-end)))
+;;     (delete-region compilation-filter-start compilation-filter-end)
+;;     (insert (strip-ansi-codes output))))
+;;
+;; (add-hook 'compilation-filter-hook 'my-compilation-filter)
+;;
+;; Enable basic ANSI escape sequence support for compilation-mode
+
+;;
+;; (defun colorize-compilation-buffer ()
+;;   (let ((inhibit-read-only t))
+;;     (ansi-color-apply-on-region (save-excursion
+;;                                   (goto-char compilation-filter-start)
+;;                                   (line-beginning-position))
+;;                                 (point))))
+;; (add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
+
 (defvar compilation-show 1
   "Current compilation buffer mode, either 0 for show or  1 for close.")
 (defun my-next-error() (interactive)
@@ -1863,7 +1886,7 @@
   ;; (interactive)
   (interactive "^p")
   (if (numberp n)
-      (when (= n 202641)
+      (when (= n 123)
         (setq use-short-answers nil)
         (if (yes-or-no-p "(Bro, Are you in a Clear mind now? yes or no)")
             (setq monitor-state 0)
@@ -2446,14 +2469,22 @@ Optional MAX-RESULTS is the maximum number of results (default 5)."
     :config
     (consult-gh-embark-mode +1)
     (setq consult-gh-forge-timeout-seconds 20)))
-;; TODO: Write a way to invoke gh search code according to current-mode
-(defun search-zig ()
-  "Search Zig code on GitHub using consult-gh-search-code.
+(defun search-github-code ()
+  "Search GitHub code for current major mode's language.
 Uses word at point as default, or prompts for input."
   (interactive)
   (let* ((default (thing-at-point 'word t))
-         (input (read-string "Search Zig code: " default)))
-    (consult-gh-search-code (format "%s -- --language=zig --limit 7" input)
+         (language (pcase major-mode
+                     ('zig-mode "zig")
+                     ('rust-mode "rust")
+                     ('python-mode "python")
+                     ('emacs-lisp-mode "emacs-lisp")
+                     ('go-mode "go")
+                     ('javascript-mode "javascript")
+                     ('typescript-mode "typescript")
+                     (_ (read-string "Language: "))))
+         (input (read-string (format "Search %s code: " language) default)))
+    (consult-gh-search-code (format "%s -- --language=%s --limit 7" input language)
                             nil nil nil nil)))
 
 (defun c-lineup-arglist-tabs-only (ignored)
@@ -2510,48 +2541,7 @@ Uses word at point as default, or prompts for input."
 ;; if not, open doxymacs
 ;; if not, open dumb-jump
 
-
-;; (use-package doxymacs
-;;   :hook (c-mode-common-hook . doxymacs-mode)
-;;   :bind (:map c-mode-base-map
-;;               ;; Lookup documentation for the symbol at point.
-;;               ("C-c d ?" . doxymacs-lookup)
-;;               ;; Rescan your Doxygen tags file.
-;;               ("C-c d r" . doxymacs-rescan-tags)
-;;               ;; Prompt you for a Doxygen command to enter, and its
-;;               ;; arguments.
-;;               ("C-c d RET" . doxymacs-insert-command)
-;;               ;; Insert a Doxygen comment for the next function.
-;;               ("C-c d f" . doxymacs-insert-function-comment)
-;;               ;; Insert a Doxygen comment for the current file.
-;;               ("C-c d i" . doxymacs-insert-file-comment)
-;;               ;; Insert a Doxygen comment for the current member.
-;;               ("C-c d ;" . doxymacs-insert-member-comment)
-;;               ;; Insert a blank multi-line Doxygen comment.
-;;               ("C-c d m" . doxymacs-insert-blank-multiline-comment)
-;;               ;; Insert a blank single-line Doxygen comment.
-;;               ("C-c d s" . doxymacs-insert-blank-singleline-comment)
-;;               ;; Insert a grouping comments around the current region.
-;;               ("C-c d @" . doxymacs-insert-grouping-comments))
-;;   :custom
-;;   ;; Configure source code <-> Doxygen tag file <-> Doxygen HTML
-;;   ;; documentation mapping:
-;;   ;;   - Files in /home/me/project/foo/ have their tag file at
-;;   ;;     http://someplace.com/doc/foo/foo.xml, and HTML documentation
-;;   ;;     at http://someplace.com/doc/foo/.
-;;   ;;   - Files in /home/me/project/bar/ have their tag file at
-;;   ;;     ~/project/bar/doc/bar.xml, and HTML documentation at
-;;   ;;     file:///home/me/project/bar/doc/.
-;;   ;; This must be configured for Doxymacs to function!
-;;   (doxymacs-doxygen-dirs
-;;    '(("^/home/leeao/C"
-;;       "~/C/html/index.xml"
-;;       "file:///home/leeao/C/html/")
-;;      )))
-
-
 (add-to-list 'pyim-dicts '(:name "hmdz" :file "~/.local/share/mysource/hmdz.pyim"))
-
 
 (defun replace-url-in-region ()
   "Replace URLs in region with 0.0.0.0 and convert / to 0.0.0.0."
@@ -2577,3 +2567,14 @@ Uses word at point as default, or prompts for input."
         (sort-lines nil (point-min) (point-max))
         (delete-duplicate-lines (point-min) (point-max))
         ))))
+
+
+(setq-default comint-terminfo-terminal "dumb-emacs-ansi")
+
+(with-eval-after-load 'compile
+  (add-to-list 'compilation-environment "TERM=dumb-emacs-ansi")
+  (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter))
+
+;; (load-file "~/hh.el")
+;; (with-eval-after-load 'comint
+;; (require 'comint-carriage-motion-fixed))
