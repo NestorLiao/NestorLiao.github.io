@@ -34,9 +34,19 @@
             ./hardware-configuration.nix
             ({ pkgs, config, userSetting, sops, inputs, lib, outputs, ... }:
               let
+                  lock = pkgs.writeScript "lock" ''
+                       exec sudo systemctl start physlock
+                       '';
                 myEmacs = pkgs.unstable.emacs-pgtk.override {
                   withNativeCompilation = true;
                   withSQLite3 = true;
+                };
+                  # Custom Latex distribution
+                myTexLive = pkgs.texlive.combine {
+                  inherit (pkgs.texlive)
+                    scheme-basic latexmk
+                    collection-latexextra
+                    collection-xetex;
                 };
                 emacsWithPackages =
                   (pkgs.unstable.emacsPackagesFor myEmacs).emacsWithPackages;
@@ -100,13 +110,86 @@
                   };
                 };
                 environment.systemPackages = with pkgs; [
-                  (writeShellScriptBin "onlyemacs" onlyemacsScript)
 
+                  # # utilities
+                  # file bash man-pages sudo sd bc pv rename vimv
+                  # lsb-release moreutils unzip zip unrar envsubst
+                  # # processes
+                  # dtach pstree killall sysstat
+                  # # monitoring
+                  # htop btop iotop iftop s-tui multitail entr
+                  # # dev tools
+                  # jq tmux fzf silver-searcher git
+                  # # hardware tools
+                  # pciutils lm_sensors acpi pmutils usbutils dmidecode
+                  # # networking
+                  # wget curl nmap nettools traceroute dnsutils iperf
+                  # # filesystems
+                  # ncdu ranger lsof ntfs3g nfs-utils
+                  # # hard drive management
+                  # lsscsi hddtemp hdparm perf-tools parted gptfdisk
+                  # # security
+                  # pass gopass
+
+                  (writeShellScriptBin "onlyemacs" onlyemacsScript)
+                  # alsa-utils
+                  # bear
+                  # binutils
+                  # bison
+                  # bpftrace
+                  # btop
+                  # cachix
+                  # ccls
+                  # clang
+                  # clang-tools
+                  # codespell
+                  # conan
+                  # cpio
+                  # cppcheck
+                  # ctags
+                  # doxygen
+                  # elfutils
+                  # elfutils.dev
                   # file
+                  # flex
+                  # foliate
                   # fzf
+                  # gcc-arm-embedded
+                  # gtest
+                  # kmod
+                  # lcov
+                  # libelf
+                  # libtool
+                  # libvterm
+                  # meson
+                  # ncurses
+                  # ncurses.dev
+                  # nil
+                  # ninja
+                  # nixfmt-classic
                   # opencc
+                  # openssl
+                  # openssl.dev
+                  # pahole
                   # pandoc
+                  # pciutils
+                  # qemu
+                  # qemu-utils
+                  # rr
+                  # samba
+                  # satty
+                  # scc
+                  # texlab
+                  # texliveFull
+                  # tree
+                  # unstable.gemini-cli-bin
+                  # unstable.quickemu
                   # usbutils
+                  # usbutils
+                  # util-linux
+                  # vcpkg
+                  # vcpkg-tool
+                  # vim-full
                   age
                   bc
                   cliphist
@@ -130,6 +213,7 @@
                   ripgrep
                   sdcv
                   slurp
+                  thunderbird
                   trashy
                   unrar-free
                   unstable.leetgo
@@ -142,61 +226,6 @@
                   wmenu
                   wtype
                   zip
-
-                  # alsa-utils
-                  # bear
-                  # binutils
-                  # bison
-                  # bpftrace
-                  # btop
-                  # cachix
-                  # ccls
-                  # clang
-                  # clang-tools
-                  # codespell
-                  # conan
-                  # cpio
-                  # cppcheck
-                  # ctags
-                  # doxygen
-                  # elfutils
-                  # elfutils.dev
-                  # flex
-                  # foliate
-                  # gcc-arm-embedded
-                  # gtest
-                  # kmod
-                  # lcov
-                  # libelf
-                  # libtool
-                  # libvterm
-                  # meson
-                  # ncurses
-                  # ncurses.dev
-                  # nil
-                  # ninja
-                  # nixfmt-classic
-                  # openssl
-                  # openssl.dev
-                  # pahole
-                  # pciutils
-                  # qemu
-                  # qemu-utils
-                  # rr
-                  # samba
-                  # satty
-                  # scc
-                  # texlab
-                  # texliveFull
-                  thunderbird
-                  # tree
-                  # unstable.gemini-cli-bin
-                  # unstable.quickemu
-                  # usbutils
-                  # util-linux
-                  # vcpkg
-                  # vcpkg-tool
-                  # vim-full
 
                   # cargo
                   # rust-analyzer
@@ -225,14 +254,14 @@
 
                 environment.etc = {
                   "xdg/user-dirs.defaults".text = ''
-                    DESKTOP=save
-                    DOCUMENTS=save
-                    DOWNLOAD=save
-                    MUSIC=save
-                    PICTURES=save
-                    PUBLICSHARE=save
-                    TEMPLATES=save
-                    VIDEOS=save
+                    DESKTOP=Downloads
+                    DOCUMENTS=Downloads
+                    DOWNLOAD=Downloads
+                    MUSIC=Downloads
+                    PICTURES=Downloads
+                    PUBLICSHARE=Downloads
+                    TEMPLATES=Downloads
+                    VIDEOS=Downloads
                   '';
                 };
                 environment.sessionVariables = {
@@ -348,7 +377,7 @@
                   enable = true;
                   settings = {
                     main = {
-                      font = "FiraCode Nerd Font:size=12";
+                      font = "FiraCode Font:size=12";
                       selection-target =
                         "both"; # Save to clipboard and primary selection
                     };
@@ -1166,6 +1195,10 @@
 /* -------- Global reset -------- */
 
 * {
+	scrollbar-width: none !important;
+}
+
+* {
   background-color: #ffffff !important;
   color: #000000 !important;
   font-family: "Bookerly", serif !important;
@@ -1317,7 +1350,7 @@ hr {
                           AutofillAddressEnabled = false;
                           AutofillCreditCardEnabled = false;
                           DefaultDownloadDirectory =
-                            "/home/${userSetting.username}/save";
+                            "/home/${userSetting.username}/Downloads";
                           OfferToSaveLoginsDefault = false;
                           OverrideFirstRunPage = "";
                           OverridePostUpdatePage = "";
@@ -1427,10 +1460,10 @@ hr {
                             "browser.ctrlTab.recentlyUsedOrder" = lock-true;
                             "browser.display.document_color_use" = 2;
                             "browser.display.use_document_fonts" = 0;
-                            "browser.download.dir" = "/home/${userSetting.username}/save";
+                            "browser.download.dir" = "/home/${userSetting.username}/Downloads";
                             "browser.download.forbid_open_with" = lock-true;
                             "widget.use-xdg-desktop-portal.file-picker" = 1;
-                            "browser.download.lastDir" = "/home/${userSetting.username}/save";
+                            "browser.download.lastDir" = "/home/${userSetting.username}/Downloads";
                             "browser.download.open_pdf_attachments_inline" =lock-true;
                             "browser.download.start_downloads_in_tmp_dir" =lock-true;
                             "browser.newtabpage.activity-stream.showWeather" =lock-false;
@@ -1444,7 +1477,8 @@ hr {
                             "browser.sessionstore.restore_on_demand" =lock-true;
                             "browser.sessionstore.warnOnQuit" = lock-true;
                             "browser.slowStartup.notificationDisabled" =lock-true;
-                            "browser.startup.homepage" = "https://www.github.com";
+                            # instaed of blank.org or github, they are not reliable for chinese and eink user.
+                            "browser.startup.homepage" = "https://search.nixos.org";
                             "browser.tabs.closeTabByDblclick" = lock-true;
                             "browser.tabs.closeWindowWithLastTab" = lock-false;
                             "browser.tabs.loadInBackground" = lock-true;
@@ -1477,15 +1511,17 @@ hr {
                             "full-screen-api.transition.timeout" = 0;
                             "full-screen-api.warning.delay" = 0;
                             "full-screen-api.warning.timeout" = 0;
-                            "general.smoothscroll" = lock-false;
+                            "general.smoothScroll" = lock-false;
                             "general.useragent.compatMode.firefox" = lock-true;
                             "geo.enabled" = lock-false;
                             "gfx.font_rendering.fontconfig.max_generic_substitutions" = 127;
                             # "gfx.webrender.all" = lock-false;
                             "image.jxl.enabled" = lock-true;
                             "layout.css.prefers-color-scheme.content-override" = 1;
+                            "browser.ml.linkPreview.enabled" = lock-false;
                             "media.autoplay.block-event.enabled" = lock-true;
                             "media.autoplay.default" = 2;
+                            "media.videocontrols.picture-in-picture.keyboard-controls.enabled" = lock-false;
                             "media.av1.enabled" = lock-false;
                             "media.block-autoplay-until-in-foreground" = lock-true;
                             "media.block-play-until-visible" = lock-true;
@@ -1553,11 +1589,10 @@ hr {
                             "browser.compactmode.show" = lock-true;
                             "toolkit.legacyUserProfileCustomizations.stylesheets" = lock-true; # This is needed for other userX.css files
                             # Containers
-
                             "privacy.userContext.enabled" = lock-true;
                             "privacy.userContext.ui.enabled" = lock-true;
                             # Downloads
-                            "browser.download.useDownloadDir" = lock-false;
+                            "browser.download.useDownloadDir" = lock-true;
                             "browser.download.always_ask_before_handling_new_types" = lock-true;
                             # Privacy
                             "privacy.sanitize.sanitizeOnShutdown" = lock-true;
@@ -1595,7 +1630,11 @@ hr {
                       # Add your SSH public key(s) here, if you plan on using SSH to connect
                     ];
                     shell = pkgs.fish;
-                    extraGroups = [ "wheel" "networkmanager" "i2c" "i2c-dev"];
+                        extraGroups = [
+                          "wheel" "audio" "dialout" "video" "disk"
+                          "adm" "tty" "systemd-journal" "docker"
+                          "networkmanager" "cdrom" "lp" "networkmanager" "i2c"
+                        ];
                   };
                 };
                 users.defaultUserShell = pkgs.fish;
@@ -1621,26 +1660,23 @@ hr {
                 fonts.fontDir.enable = true;
                 fonts.packages = with pkgs;
                   lib.mkForce [
-                    nerd-fonts.fira-code
-                    nerd-fonts.fira-mono
-                    nerd-fonts.noto
-                    nerd-fonts.terminess-ttf
-                    nerd-fonts.ubuntu
-                    nerd-fonts.ubuntu-mono
+                    fira-code
+                    noto
+                    ubuntu
+                    ubuntu-mono
+                    dejavu_fonts
                     noto-fonts-emoji-blob-bin
                   ];
                 fonts.fontconfig = let
                   sansFallback = [
-                    "Fira Code Nerd Font"
-                    "Fira Mono Nerd Font"
-                    "Terminess Nerd Font"
+                    "Fira Code Font"
+                    "Terminess Font"
                     "Ubuntu"
                     "Ubuntu Mono"
                   ];
                   serifFallback = [
-                    "Fira Code Nerd Font"
-                    "Fira Mono Nerd Font"
-                    "Terminess Nerd Font"
+                    "Fira Code Font"
+                    "Terminess Font"
                     "Ubuntu"
                     "Ubuntu Mono"
                   ];
@@ -1675,6 +1711,7 @@ hr {
                   };
                   supportedLocales = [ "en_US.UTF-8/UTF-8" ];
                 };
+
                 sops.defaultSopsFile = ./secrets.yaml;
                 sops.defaultSopsFormat = "yaml";
                 sops.age.keyFile = "/etc/nixos/keys.txt";
@@ -1717,10 +1754,10 @@ hr {
                   127.0.0.1 c.doc
                   127.0.0.1 cpp.doc
                   127.0.0.1 linux.doc
-                  # 0.0.0.0 emacs-china.org
-                  # 0.0.0.0 chatgpt.com
-                  # 0.0.0.0 www.google.com.hk
-                  # 0.0.0.0 google.com.hk
+                  0.0.0.0 emacs-china.org
+                  0.0.0.0 chatgpt.com
+                  0.0.0.0 www.google.com.hk
+                  0.0.0.0 google.com.hk
 
                 '';
                 services = {
@@ -2103,7 +2140,10 @@ hr {
                   ];
                 };
                 console = {
-                  font = "latarcyrheb-sun32";
+                  useXkbConfig = true;
+                  earlySetup = true;
+                  font = "${pkgs.terminus_font}/share/consolefonts/ter-132n.psf.gz";
+                  packages = with pkgs; [ terminus_font ];
                   keyMap = "us";
                   colors = [
                     "FFFFFF" # Black → Off-White (Background)
@@ -2247,8 +2287,8 @@ hr {
                          before-sleep 'notify-send \"I am sleeping\"'
 
                     # Screenshots and screen recording
-                    bindsym Print exec grim -g '\$(slurp)' - | wl-copy && wl-paste > ~/save/Screenshot-\$(date +%F%T).png | notify-send \"Screenshot of the region taken\"
-                    bindsym Shift+Print exec grim -g '\$(slurp -o -r -c '#ff0000ff')' -t ppm - | satty --filename - --fullscreen --output-filename ~/save/satty-\$(date '+%Y%m%d-%H:%M:%S').png
+                    bindsym Print exec grim -g '\$(slurp)' - | wl-copy && wl-paste > ~/Downloads/Screenshot-\$(date +%F%T).png | notify-send \"Screenshot of the region taken\"
+                    bindsym Shift+Print exec grim -g '\$(slurp -o -r -c '#ff0000ff')' -t ppm - | satty --filename - --fullscreen --output-filename ~/Downloads/satty-\$(date '+%Y%m%d-%H:%M:%S').png
                     bindsym Mod1+Shift+Print exec wf-recorder
 
                     # bindsym \$mod+Shift+j exec bash -c 'paperlike-cli -i2c /dev/i2c-4 -clear;swaylock -i ~/.config/sway/white.jpg;'
@@ -2436,6 +2476,12 @@ hr {
                 boot = {
                   kernel = {
                     sysctl = {
+
+                      # SysRQ is useful when things hang.
+                      "kernel.sysrq" = 1;
+                      # Reclaim file pages as often as anon pages.
+                      "vm.swappiness" = 100;
+
                       # forward network packets that are not destined for the interface on which they were received
                       "net.ipv4.conf.all.forwarding" = true;
                       "net.ipv6.conf.all.forwarding" = true;

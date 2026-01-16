@@ -1,6 +1,0 @@
-# -*- mode: snippet -*-
-# name: okay
-# key: ok
-# condition: (not (member major-mode '(sh-mode bash-ts-mode)))
-# --
-`comment-start`OKAY: $0`comment-end`

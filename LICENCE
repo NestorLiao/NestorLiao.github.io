@@ -1,8 +1,4 @@
-# -*- mode: snippet -*-
-# name: mit
-# key: mit
-# --
-Copyright `(format-time-string "%Y")` Liao Qingsong <llqingsong@qq.com>
+Copyright 2026 Liao Qingsong <llqingsong@qq.com>
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the

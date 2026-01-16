@@ -212,8 +212,6 @@
          ;; ([remap kill-region] . kill-line-or-region)
          ([remap list-buffers] . ibuffer)
          ([remap project-switch-to-buffer] . consult-project-buffer)
-         ([remap find-file] . find-file)
-         ([remap dired] . dired)
          ([remap kill-buffer] . kill-current-buffer)
          ([remap switch-to-buffer] . consult-buffer)
          ([remap yank-pop] . consult-yank-pop)
@@ -465,13 +463,16 @@
          ("M-s K" . consult-keep-lines)
          ("M-s M-k" . avy-kill-whole-line)
          ("M-s d" . delete-duplicate-lines)
-         ("M-s p" . search-zig)
+         ("M-s p" . search-github-code)
          ("M-s t" . check-parens)
          ("M-s b" . magit-blame-addition)
          ("M-s g" . consult-git-grep)
          ("M-s u" . consult-global-mark)
          ("M-s O" . multi-occur)
 
+         ;; :map zig-mode-map
+         ;; ("<f20>" . my/zig-build-vterm)
+         ;; ("<f21>" . firefox-search-zig)
          :map isearch-mode-map
          ("C-\\" . (lambda () (interactive) (message "别拉伸宝贵的食指了")))
          ("M-r" . consult-isearch-history)
@@ -658,13 +659,13 @@
   (text-mode-ispell-word-completion nil)
   (tab-always-indent 'complete)
   :config (global-corfu-mode))
-(use-package cape :ensure t :defer t
-  :commands (cape-dabbrev cape-file cape-elisp-block)
-  :bind ("C-c p" . cape-prefix-map)
-  :init
-  (add-hook 'completion-at-point-functions #'cape-dabbrev)
-  (add-hook 'completion-at-point-functions #'cape-file)
-  (add-hook 'completion-at-point-functions #'cape-elisp-block))
+;; (use-package cape :ensure t :defer t
+;;   :commands (cape-dabbrev cape-file cape-elisp-block)
+;;   :bind ("C-c p" . cape-prefix-map)
+;;   :init
+;;   (add-hook 'completion-at-point-functions #'cape-dabbrev)
+;;   (add-hook 'completion-at-point-functions #'cape-file)
+;;   (add-hook 'completion-at-point-functions #'cape-elisp-block))
 (use-package which-key
   :ensure nil
   :defer t
@@ -708,6 +709,7 @@
            (seq bol ".DS_Store")
            (seq bol "." (or "svn" "git") eos)
            (seq bol ".ccls-cach" eos)
+           (seq bol "Downloads" eos)
            (seq bol "__pycache__" eos)
            (seq bol ".project" (? "ile") eos)
            (seq bol (or "flake.lock" "Cargo.lock" "LICENSE") eos)
@@ -973,9 +975,10 @@
   (after-init . save-place-mode)
   :custom
   (save-place-limit 400))
-(use-package yasnippet  :config
+(use-package yasnippet
+  :config
   (setq yas-snippet-dirs '("~/.emacs.d/snippets"))
-  (yas-global-mode 1))
+  :hook (prog-mode . yas-minor-mode))
 (use-package no-emoji
   :config
   (setq no-emoji-display-table (make-display-table))
@@ -1275,7 +1278,7 @@
     (let ((old (current-buffer))
           (exsist 0))
       (save-excursion
-        (find-file "~/.emacs.d/hmdz.pyim")
+        (find-file "~/.local/share/mysource/hmdz.pyim")
         (beginning-of-buffer)
         (search-forward char nil (setq exsist 1))
         (when (= exsist 1)
@@ -1378,6 +1381,16 @@
     (let* ((text (if (use-region-p)
                      (buffer-substring-no-properties (region-beginning) (region-end))
                    (buffer-substring-no-properties (line-beginning-position) (line-end-position))))
+           (vbuf (my/ensure-project-vterm)))
+      (unless vbuf (user-error "No project vterm buffer"))
+      (let ((proc (get-buffer-process vbuf)))
+        (unless proc (user-error "No process for vterm buffer"))
+        (process-send-string proc (concat text "\n")))))
+  (defun my/zig-build-vterm ()
+    "Send active region or current line to project vterm without touching kill-ring."
+    (interactive)
+    (save-buffer)
+    (let* ((text "zig build")
            (vbuf (my/ensure-project-vterm)))
       (unless vbuf (user-error "No project vterm buffer"))
       (let ((proc (get-buffer-process vbuf)))
@@ -2534,13 +2547,6 @@ Uses word at point as default, or prompts for input."
  (expand-file-name "~/linux-trees")
  'linux-kernel)
 
-
-;; describe-function describe-variable in C!!!
-;; (devdocs-browser-open-in "c")
-;; if devdocs can find, open devdocs
-;; if not, open doxymacs
-;; if not, open dumb-jump
-
 (add-to-list 'pyim-dicts '(:name "hmdz" :file "~/.local/share/mysource/hmdz.pyim"))
 
 (defun replace-url-in-region ()
@@ -2559,7 +2565,7 @@ Uses word at point as default, or prompts for input."
         (while (search-forward "http://" nil t)
           (replace-match "0.0.0.0 " nil t))
         (goto-char (point-min))
-        ;; Replace / → 0.0.0.0
+        ;; Replace / →
         (while (search-forward "/" nil t)
           (replace-match "" nil t))
         (mark-whole-buffer)
@@ -2568,13 +2574,19 @@ Uses word at point as default, or prompts for input."
         (delete-duplicate-lines (point-min) (point-max))
         ))))
 
-
 (setq-default comint-terminfo-terminal "dumb-emacs-ansi")
 
 (with-eval-after-load 'compile
   (add-to-list 'compilation-environment "TERM=dumb-emacs-ansi")
   (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter))
 
-;; (load-file "~/hh.el")
-;; (with-eval-after-load 'comint
-;; (require 'comint-carriage-motion-fixed))
+(defun firefox-search-zig()
+  (interactive)
+  (let ((meme (if (use-region-p)
+                  (buffer-substring-no-properties (region-beginning) (region-end))
+                (thing-at-point 'word t)) ))
+    (start-process "me" nil browse-url-firefox-program
+                   "--new-tab" (concat "http://127.0.0.1:55555/#" meme))
+    (swaywindow)))
+
+(start-process  "zigstd" nil  "zig" "std"  "-p" "55555")
