@@ -4,8 +4,7 @@
     builders-use-substitutes = true;
     experimental-features = [ "nix-command" "flakes" ];
     trusted-substituters = [
-      "https://cache.nixos.org"
-      "https://nix-community.cachix.org"
+      "https://cache.nixos.org" "https://nix-community.cachix.org"
       "https://mirrors.ustc.edu.cn/nix-channels/store"
     ];
     extra-trusted-substituters =
@@ -34,19 +33,9 @@
             ./hardware-configuration.nix
             ({ pkgs, config, userSetting, sops, inputs, lib, outputs, ... }:
               let
-                  lock = pkgs.writeScript "lock" ''
-                       exec sudo systemctl start physlock
-                       '';
                 myEmacs = pkgs.unstable.emacs-pgtk.override {
                   withNativeCompilation = true;
                   withSQLite3 = true;
-                };
-                  # Custom Latex distribution
-                myTexLive = pkgs.texlive.combine {
-                  inherit (pkgs.texlive)
-                    scheme-basic latexmk
-                    collection-latexextra
-                    collection-xetex;
                 };
                 emacsWithPackages =
                   (pkgs.unstable.emacsPackagesFor myEmacs).emacsWithPackages;
@@ -96,8 +85,7 @@
                   # 网瘾、中产、游戏瘾、计算机相关专业人群
                   # 一切只是“生物本性”与“传统文化”带来的欲望
                   # 配合“工业革命”与“数字革命”带来的富饶假象
-                  enable = true; # 你知道的，开着不会影响学习编程
-                  enableIPv6 = false; # 你知道的，开着不会影响学习编程
+                  enable = true; enableIPv6 = false; # 开着不会影响学习编程
                   blockPorn = true; # 你知道的，虚假的情欲只会让你溺身
                   blockSocial = true; # 你知道的，虚假的参与只会让你躁心
                 }; # 不依赖外物，不物物于物，
@@ -111,25 +99,25 @@
                 };
                 environment.systemPackages = with pkgs; [
 
-                  # # utilities
-                  # file bash man-pages sudo sd bc pv rename vimv
-                  # lsb-release moreutils unzip zip unrar envsubst
-                  # # processes
-                  # dtach pstree killall sysstat
-                  # # monitoring
-                  # htop btop iotop iftop s-tui multitail entr
-                  # # dev tools
-                  # jq tmux fzf silver-searcher git
-                  # # hardware tools
-                  # pciutils lm_sensors acpi pmutils usbutils dmidecode
-                  # # networking
-                  # wget curl nmap nettools traceroute dnsutils iperf
-                  # # filesystems
-                  # ncdu ranger lsof ntfs3g nfs-utils
-                  # # hard drive management
-                  # lsscsi hddtemp hdparm perf-tools parted gptfdisk
-                  # # security
-                  # pass gopass
+                  # utilities
+                  file bash man-pages sudo sd bc pv rename vimv
+                  lsb-release moreutils unzip zip unrar envsubst
+                  # processes
+                  dtach pstree killall sysstat
+                  # monitoring
+                  htop btop iotop iftop s-tui multitail entr
+                  # dev tools
+                  jq tmux fzf silver-searcher git
+                  # hardware tools
+                  pciutils lm_sensors acpi pmutils usbutils dmidecode
+                  # networking
+                  wget curl nmap nettools traceroute dnsutils iperf
+                  # filesystems
+                  ncdu ranger lsof ntfs3g nfs-utils
+                  # hard drive management
+                  lsscsi hddtemp hdparm perf-tools parted gptfdisk
+                  # security
+                  pass gopass
 
                   (writeShellScriptBin "onlyemacs" onlyemacsScript)
                   # alsa-utils
@@ -137,7 +125,7 @@
                   # binutils
                   # bison
                   # bpftrace
-                  # btop
+                  btop
                   # cachix
                   # ccls
                   # clang
@@ -177,14 +165,13 @@
                   # qemu-utils
                   # rr
                   # samba
-                  # satty
-                  # scc
+                  satty
+                  scc
                   # texlab
                   # texliveFull
                   # tree
                   # unstable.gemini-cli-bin
                   # unstable.quickemu
-                  # usbutils
                   # usbutils
                   # util-linux
                   # vcpkg
@@ -243,15 +230,13 @@
                   # linux-manual
 
                 ];
-                # trust me bro, run  xdg-user-dirs-update --force after
                 xdg.mime = {
                   enable = true;
                   defaultApplications = {
                     "inode/directory" = [ "thunar.desktop" ];
                     "x-directory/normal" = [ "thunar.desktop" ];
                   };
-                };
-
+                };# trust me bro, run  xdg-user-dirs-update --force after
                 environment.etc = {
                   "xdg/user-dirs.defaults".text = ''
                     DESKTOP=Downloads
@@ -269,22 +254,6 @@
                   XDG_CONFIG_HOME = "$HOME/.config";
                   XDG_DATA_HOME = "$HOME/.local/share";
                   XDG_BIN_HOME = "$HOME/.local/bin/";
-                  __GL_GSYNC_ALLOWED = "0";
-                  __GL_VRR_ALLOWED = "0";
-                  WLR_DRM_NO_ATOMIC = "1";
-                  _JAVA_AWT_WM_NONREPARENTING = "1";
-                  QT_QPA_PLATFORM = "wayland;xcb";
-                  GDK_BACKEND = "wayland,x11";
-                  WLR_NO_HARDWARE_CURSORS = "1";
-                  MOZ_ENABLE_WAYLAND = "1";
-                  WLR_BACKEND = "vulkan";
-                  WLR_RENDERER = "vulkan";
-                  XCURSOR_SIZE = "24";
-                  NIXOS_OZONE_WL = "1";
-                  GTK_USE_PORTAL = "1";
-                  # PATH = [
-                  #   "$HOME/.local/bin/:$PATH"
-                  # ];
                 };
                 security.polkit.extraConfig = ''
                   /* Allow users in wheel group to manage systemd units without authentication */
@@ -353,55 +322,44 @@
                   sysusu = "systemctl --user  status";
                   sysust = "systemctl --user  stop";
                   sysur = "systemctl --user  restart";
-                  randompeeword = "";
                   jo = "journalctl -xeu";
                   e = "emacsclient -n -s server";
                   en = "emacsclient -n -s server .";
                   cleanup = "doas nix-collect-garbage --delete-older-than 7d";
-                  ytmp3 =
-                    "yt-dlp -x --continue --add-metadata --embed-thumbnail --audio-format mp3 --audio-quality 0 --metadata-from-title = '%(artist)s - %(title)s' --prefer-ffmpeg -o '%(title)s.%(ext)s' ";
-                  ".1" = "cd ..";
-                  ".2" = "cd ../..";
-                  ".3" = "cd ../../..";
                   cp = "cp -iv";
                   mv = "mv -iv";
-                  # rm = "rm -vI";
                   rm = "trash -c never ";
-                  # bc = "bc -ql";
                   mkd = "mkdir -pv";
                 };
                 programs.bash.interactiveShellInit = ''
                   eval "$(zoxide init bash)"
-                '';
+                  '';
                 programs.foot = {
                   enable = true;
                   settings = {
                     main = {
-                      font = "FiraCode Font:size=12";
-                      selection-target =
-                        "both"; # Save to clipboard and primary selection
+                      font = "FiraCode Nerd Font:size=12";
+                      selection-target = "both";
                     };
                     colors = {
                       foreground = "000000";
                       background = "FFFFFF";
-                      # Normal colors
-                      regular0 = "000000"; # black
-                      regular1 = "0C322F"; # red
-                      regular2 = "019E07"; # green
-                      regular3 = "B58900"; # yellow
-                      regular4 = "068BD2"; # blue
-                      regular5 = "033682"; # magenta
-                      regular6 = "CAA198"; # cyan
-                      regular7 = "FFFFFF"; # white
-                      # Bright colors
-                      bright0 = "000000"; # bright black
-                      bright1 = "0C322F"; # bright red
-                      bright2 = "019E07"; # bright green
-                      bright3 = "A58900"; # bright yellow
-                      bright4 = "068BD2"; # bright blue
-                      bright5 = "033682"; # bright magenta
-                      bright6 = "0AA198"; # bright cyan
-                      bright7 = "FFFFFF"; # bright white
+                      regular0 = "000000";
+                      regular1 = "0C322F";
+                      regular2 = "019E07";
+                      regular3 = "B58900";
+                      regular4 = "068BD2";
+                      regular5 = "033682";
+                      regular6 = "CAA198";
+                      regular7 = "FFFFFF";
+                      bright0 = "000000";
+                      bright1 = "0C322F";
+                      bright2 = "019E07";
+                      bright3 = "A58900";
+                      bright4 = "068BD2";
+                      bright5 = "033682";
+                      bright6 = "0AA198";
+                      bright7 = "FFFFFF";
                     };
                   };
                 };
@@ -439,17 +397,15 @@
                         source = pkgs.fetchFromGitHub {
                           owner = "NestorLiao";
                           repo = "mutable-config";
-                          rev = "master";
+                          rev = "master"; # lib.fakeSha256;
                           sha256 =
-                            # lib.fakeSha256;
                             "sha256-K8d4b1AkKonzYVGpyDrRFPgUqombROJXHqBVIGBoM9A=";
                         };
                       };
                       home.file.".stardict/dic" = {
                         source = pkgs.stdenv.mkDerivation {
                           pname = "stardict-dictionaries";
-                          version =
-                            "2.4.2"; # adjust the version based on the zip contents
+                          version = "2.4.2";
                           src = pkgs.fetchFromGitHub {
                             owner = "NestorLiao";
                             repo = "dict";
@@ -457,10 +413,8 @@
                             sha256 =
                               "sha256-dd9dMrhPa4QeJ58uiLBNhoQy8EfSJrmLj0lpwtygR2U=";
                           };
-                          buildInputs =
-                            [ pkgs.unzip ]; # Add unzip as a build input
+                          buildInputs =[ pkgs.unzip ];
                           unpackPhase = ''
-                            # Unzip each dictionary zip file
                             unzip $src/stardict-ghycyzzd-2.4.2.zip -d $out
                             unzip $src/stardict-langdao-ce-gb-2.4.2.zip -d $out
                             unzip $src/stardict-ecdict-2.4.2.zip -d $out
@@ -479,6 +433,7 @@
                           prompt = "enabled";
                         };
                       };
+                      home.packages = with pkgs; [ git-credential-manager ];
                       programs.git = {
                         ignores =
                           [ "*~" "*.swp" "*result*" ".direnv" "node_modules" ];
@@ -509,7 +464,6 @@
                       programs.helix = {
                         settings = {
                           theme = "eink";
-                          # theme = "emacs";
                           editor = {
                             lsp = {
                               display-messages = true;
@@ -579,7 +533,6 @@
                             "ui.selection" = {
                               bg = white;
                               fg = black;
-                              # modifiers = ["bold"];
                               underline = {
                                 color = black;
                                 style = "dashed";
@@ -598,7 +551,6 @@
                             "ui.cursor" = {
                               fg = white;
                               bg = black;
-                              # modifiers = ["bold"];
                               underline = {
                                 color = white;
                                 style = "curl";
@@ -670,16 +622,13 @@
                             "keyword" = { fg = black; };
                             "keyword.control" = {
                               fg = black;
-                              # modifiers = ["bold"];
                             };
                             "keyword.function" = {
                               fg = black;
-                              # modifiers = ["bold"];
                             };
                             "function" = { fg = black; };
                             "function.macro" = {
                               fg = black;
-                              # modifiers = ["bold"];
                             };
                             "function.method" = { fg = black; };
                             "function.builtin" = { fg = black; };
@@ -695,7 +644,6 @@
                             "attribute" = { fg = black; };
                             "type" = {
                               fg = black;
-                              # modifiers = ["bold"];
                             };
                             "markup.heading" = {
                               fg = black;
@@ -752,13 +700,8 @@
                         and cd $argv[1]
                         end
                       '';
-                      # home.file.".config/nixpkgs/config.nix".text = ''
-                      #   {
-                      #     allowUnfree = true;
-                      #   }
-                      # '';
                       home.file.".config/mako/config".text = ''
-                        font=Bookerly 14
+                        font=Bookerly 20
                         background-color=#ffffff
                         text-color=#000000
                         border-size=0
@@ -780,7 +723,6 @@
                         git-fetch-with-cli = true
                       '';
                       programs.command-not-found.enable = false;
-                      home.packages = with pkgs; [ git-credential-manager ];
                       home.enableNixpkgsReleaseCheck = false;
                       nixpkgs = {
                         overlays = [
@@ -819,7 +761,7 @@
                           name = "Adwaita";
                         };
                         font = {
-                          name = "Sans";
+                          name = "Bookerly";
                           size = 16;
                         };
                       };
@@ -843,13 +785,67 @@
                       # Default=1
                       # IsRelative=1
                       # Name=firefox
-                      # Path=firefox
+                      # Path=default
                       ### xxxx
                       programs.firefox = {
                         package = pkgs.firefox-beta;
-                        enable = true;
+                        enable = false;
+
+                        # 浏览器就像是大脑的信息化改造工具
+                        # 它让人感觉良好，全是浏览/点击，很少修改/写作
+                        # 它带我们去博客/娱乐/社交/发现/新闻…
+                        # 短的长的… 点击进入… cookie/弹窗/登录/付费/翻墙…
+                        # 没有人会用网页修改网页代码，有，但是那种网站早己没落。
+                        # 没有人会用网站评论长篇大论，有，但是人们只会一扫而过。
+                        # 浏览->狩猎，点击->采集，用原始方式实行消费行为
+                        # 缺少的是修改/写作，消灭工业自动化剩余的创造行为
+                        # 它让各种事物依着它运作，数据/网络/信息/简历…
+                        # 我们争先恐后的找着新奇的东西，好像不用就会被时代抛弃。
+                        # gemini，chatgpt，豆包，deepseek，宇树，spacex…
+                        # 我们争先恐后的上传最新的简历，好像向世界展示自恋自虑。
+                        # github.io，教育经历，获奖，项目，论文，职位，头衔…
+                        # 这些外部工具，试图用幻觉来强迫我们租用这些服务。
+                        # 这些外部名号，试图用地位来强迫我们学习这些知识。
+                        # 什么上云… 不过是科技公司的隐形房租
+                        # 什么院士… 不过是技术统治的诱人娼妓
+                        # 一切都在浏览器上，
+                        # 编程人类。
+                        # 在中国，更是如此。
+                        # 技术上瘾，垄断传媒，算法人群，地位崇拜，地广人多。
+                        # 中国人如此迷恋智能机，炒作5G… 只是生意…
+                        # 24h在线 彩色大屏 完全闭源 缺少控制 全是传媒 信息封闭 随身携带。
+                        # 里面的这么多的浏览器，一堆electron，只是卖更多手机…
+                        # 小红书/知乎/qq/豆瓣/b站/微信/即刻/…
+                        # 24h在线 视频图片 完全闭源 缺少控制 全是传媒 信息封闭 链接可达。
+                        # 越是智能，越是浅薄。
+                        # 越是浏览，越是迷茫。
+                        # 网络 工业 技术 书写 文明 生物 宇宙
+                        # 炒5G，因为手机卖不出去… 4G够用了
+                        # 炒电车，因为手机卖不出去… 加四个轮子
+                        # 中国独一档的:
+                        # 51吃瓜，用中国的性保守文化为资本，随机域名网络为载体，
+                        # 以传播谣言，泛娱乐集体性奋，失范式对广大国人产生影响。
+                        # 电车/三折叠，用单一政府下的全国式宣传机器进行洗脑
+                        # 摄像头与视觉算法，用单一政府下的全国式监视机器进行管制
+                        #
+                        # 51吃瓜用户上传了用视觉算法换脸的
+                        # 被电车摄像头扫描的路边女子的形貌，
+                        # 被一个用三折叠欣赏色情片的身边人发现。
+                        # 谣言四起，性保守的中国人，在网络分享性放纵。
+                        # 禁忌诱人，网络自由，意识趋向于资本与自由
+                        #
+                        # 地广人多社会新闻产生与消费多，大集体国家对国际新闻的消费多
+                        # 高等教育水平低，泛娱乐水平高，有GFW，英语水平与认识水平低下
+                        # 保守东亚文化、网络集体性放纵与日本泛二次元文化交织，色情成瘾多
+                        # 无宗教/生育制度，随着城市化/工业化，内卷躺平、拜金与失范为常态
+                        # 网络/手机/电车消费第一，空闲网络使用比例第一，幸福指数世界中下
+                        # 中文极高的信息密度与无空格属性，产生b站以及各种技术成瘾
+                        # 对技术知之甚少，对开源技术更是稀少，世界性创新技术更是少之又少
+                        # 国内程序员多为web领域，大大加重和信息的网际过载与监管能力
+                        # 成瘾算法 如temu/tiktok，擅长操控用户的行为，使其成瘾
+                        #
+
                         languagePacks = ["en-US"];
-                        # Check about:policies#documentation for options.
                         profiles = {
                           default = {
                             id = 0;
@@ -1612,7 +1608,6 @@ hr {
                           };
                         };
                       };
-
                       programs.chromium = {
                         enable = false;
                         package = pkgs.ungoogled-chromium;
@@ -1653,30 +1648,31 @@ hr {
                   RUSTUP_DIST_SERVER = "https://rsproxy.cn";
                   RUSTUP_UPDATE_ROOT = "https://rsproxy.cn/rustup";
                   GOPATH = "~/.go";
-                  XAPIAN_CJK_NGRAM = "true";
                   GTK_IM_MODULE = lib.mkForce "";
                 };
-                #  fc-cache -fv
-                fonts.fontDir.enable = true;
+                fonts.fontDir.enable = true; #  fc-cache -fv
                 fonts.packages = with pkgs;
                   lib.mkForce [
-                    fira-code
-                    noto
-                    ubuntu
-                    ubuntu-mono
-                    dejavu_fonts
+                    nerd-fonts.fira-code
+                    nerd-fonts.fira-mono
+                    nerd-fonts.noto
+                    nerd-fonts.terminess-ttf
+                    nerd-fonts.ubuntu
+                    nerd-fonts.ubuntu-mono
                     noto-fonts-emoji-blob-bin
                   ];
                 fonts.fontconfig = let
                   sansFallback = [
-                    "Fira Code Font"
-                    "Terminess Font"
+                    "Fira Code Nerd Font"
+                    "Fira Mono Nerd Font"
+                    "Terminess Nerd Font"
                     "Ubuntu"
                     "Ubuntu Mono"
                   ];
                   serifFallback = [
-                    "Fira Code Font"
-                    "Terminess Font"
+                    "Fira Code Nerd Font"
+                    "Fira Mono Nerd Font"
+                    "Terminess Nerd Font"
                     "Ubuntu"
                     "Ubuntu Mono"
                   ];
@@ -1715,7 +1711,6 @@ hr {
                 sops.defaultSopsFile = ./secrets.yaml;
                 sops.defaultSopsFormat = "yaml";
                 sops.age.keyFile = "/etc/nixos/keys.txt";
-                #AGE-SECRET-KEY-
                 sops.secrets."gh_hosts.yml" = {
                   owner = userSetting.username;
                   path = "/home/${userSetting.username}/.config/gh/hosts.yml";
@@ -1758,7 +1753,6 @@ hr {
                   0.0.0.0 chatgpt.com
                   0.0.0.0 www.google.com.hk
                   0.0.0.0 google.com.hk
-
                 '';
                 services = {
                   irqbalance.enable = false;
@@ -1771,7 +1765,7 @@ hr {
                   gvfs.enable = true;
                   devmon.enable = true;
                   # 修改音频设备在空闲时自动挂起（suspend）的行为
-                  power-profiles-daemon.enable = false;
+                  power-profiles-daemon.enable = true; # false 为不自动挂起
                   openssh = {
                     enable = true;
                     ports = [ 443 ];
@@ -1787,11 +1781,11 @@ hr {
                   };
                   pulseaudio.enable = false;
                   pipewire = {
-                    enable = true;
-                    audio.enable = true;
-                    pulse.enable = true;
+                    enable = false; # turn off sound
+                    audio.enable = false;
+                    pulse.enable = false;
                     alsa = {
-                      enable = true;
+                      enable = false; # false to here
                       support32Bit = true;
                     };
                     jack.enable = false;
@@ -1802,7 +1796,7 @@ hr {
                     settings = {
                       INTERNET_IFACE = "enp46s0";
                       PASSPHRASE = "12345678";
-                      SSID = "{$userSetting.hostname} Hotspot";
+                      SSID = "My-NixOS";
                       WIFI_IFACE = "wlp45s0";
                     };
                   };
@@ -1818,7 +1812,7 @@ hr {
                       v2ray-domain-list-community
                     ];
                     openFirewall = {
-                      enable = false;
+                      enable = true;
                       port = 12345;
                     };
                   };
@@ -2144,7 +2138,6 @@ hr {
                   earlySetup = true;
                   font = "${pkgs.terminus_font}/share/consolefonts/ter-132n.psf.gz";
                   packages = with pkgs; [ terminus_font ];
-                  keyMap = "us";
                   colors = [
                     "FFFFFF" # Black → Off-White (Background)
                     "202124" # Red → Dark Gray (Text)
@@ -2166,14 +2159,13 @@ hr {
                 };
                 security.polkit.enable = true;
                 programs.sway = {
-                  package = pkgs.sway;
                   enable = true;
                   wrapperFeatures.gtk = true;
                 };
                 programs.clash-verge = {
                   enable = false;
                   package = pkgs.unstable.clash-verge-rev;
-                    };
+                };
                 services.mihomo.tunMode = false;
                 systemd.services."getdaeconfig" = {
                   script = ''
@@ -2444,7 +2436,6 @@ hr {
                           chown ${userSetting.username}: $config_file
                             fi
                   '';
-                  # Trigger the service on system boot and hibernation
                   wantedBy = [ "hibernate.target" "multi-user.target" ];
                   description = "Generate Nix Config for User";
                   restartIfChanged = true;
@@ -2461,7 +2452,6 @@ hr {
                   wantedBy = [ "hibernate.target" "multi-user.target" ];
                   path = [ "/nix/store" ];
                 };
-                  # nameservers = [ "127.0.0.1" "223.5.5.5" "119.29.29.29" ];
                 networking = {
                   hostName = userSetting.hostname;
                   networkmanager.enable = false;
@@ -2469,29 +2459,27 @@ hr {
                 };
                 system.nssModules = lib.mkForce [ ]; # for dnsmasq
                 hardware.i2c.enable = true;
-                # boot.kernelModules = [ "i2c-dev" "i915" "spi-ch341" ];
                 boot.kernelModules = [ "i2c-dev"];
                 boot.extraModulePackages = [ ];
                 # boot.binfmt.emulatedSystems =   [ "aarch64-linux" "riscv64-linux" "i686-linux" ];
-                boot = {
-                  kernel = {
-                    sysctl = {
-
-                      # SysRQ is useful when things hang.
-                      "kernel.sysrq" = 1;
-                      # Reclaim file pages as often as anon pages.
-                      "vm.swappiness" = 100;
-
-                      # forward network packets that are not destined for the interface on which they were received
-                      "net.ipv4.conf.all.forwarding" = true;
-                      "net.ipv6.conf.all.forwarding" = true;
-                      "net.ipv4.conf.br-lan.rp_filter" = 1;
-                      "net.ipv4.conf.wan.rp_filter" = 1;
-                    };
-                  };
-                };
+                # boot = {
+                #   kernel = {
+                #     sysctl = {
+                #
+                #       # SysRQ is useful when things hang.
+                #       "kernel.sysrq" = 1;
+                #       # Reclaim file pages as often as anon pages.
+                #       "vm.swappiness" = 100;
+                #
+                #       # forward network packets that are not destined for the interface on which they were received
+                #       "net.ipv4.conf.all.forwarding" = true;
+                #       "net.ipv6.conf.all.forwarding" = true;
+                #       "net.ipv4.conf.br-lan.rp_filter" = 1;
+                #       "net.ipv4.conf.wan.rp_filter" = 1;
+                #     };
+                #   };
+                # };
                 boot.kernelPackages = pkgs.unstable.linuxPackages;
-                # Bootloader
                 # boot.loader.timeout = 5;
                 boot.loader.systemd-boot.enable = true;
                 # boot.loader.systemd-boot.configurationLimit = 5;
@@ -2524,23 +2512,20 @@ hr {
                   };
                 };
                 hardware.enableAllFirmware = true;
-                # time.timeZone = "Asia/Shanghai";
                 time.timeZone = "Asia/Hong_Kong";
-                programs.bash.undistractMe.playSound = true;
-                programs.soundmodem.enable = true;
                 security.rtkit.enable = true;
-                xdg.sounds.enable = true;
+                programs.bash.undistractMe.playSound = false;
+                programs.soundmodem.enable = false;
+                xdg.sounds.enable = false;  # stop sound
                 environment.etc = {
                   "wireplumber/main.lua.d/90-suspend-timeout.lua".text = ''
-                    apply_properties = {
-                                                   ["session.suspend-timeout-seconds"] = 0;};
+                    apply_properties = {["session.suspend-timeout-seconds"] = 0;};
                   '';
                 };
                 boot.extraModprobeConfig = ''
                   options snd-hda-intel power_save=0 power_save_controller=N
                 '';
                 programs.fish = {
-                  package = pkgs.fish;
                   enable = true;
                   interactiveShellInit = ''
                           fish_add_path $HOME/bin
@@ -2560,22 +2545,22 @@ hr {
                         vterm_prompt_end
                         end
                         function vterm_printf;
-if begin; [  -n "$TMUX" ]  ; and  string match -q -r "screen|tmux" "$TERM"; end
-# tell tmux to pass the escape sequences through
-printf "\ePtmux;\e\e]%s\007\e\\" "$argv"
-else if string match -q -- "screen*" "$TERM"
-# GNU screen (screen, screen-256color, screen-256color-bce)
-printf "\eP\e]%s\007\e\\" "$argv"
-else
-printf "\e]%s\e\\" "$argv"
-end
-end
-if [ "$INSIDE_EMACS" = 'vterm' ]
-function clear
-vterm_printf "51;Evterm-clear-scrollback";
-tput clear;
-end
-end
+                        if begin; [  -n "$TMUX" ]  ; and  string match -q -r "screen|tmux" "$TERM"; end
+                        # tell tmux to pass the escape sequences through
+                        printf "\ePtmux;\e\e]%s\007\e\\" "$argv"
+                        else if string match -q -- "screen*" "$TERM"
+                        # GNU screen (screen, screen-256color, screen-256color-bce)
+                        printf "\eP\e]%s\007\e\\" "$argv"
+                        else
+                        printf "\e]%s\e\\" "$argv"
+                        end
+                        end
+                        if [ "$INSIDE_EMACS" = 'vterm' ]
+                        function clear
+                        vterm_printf "51;Evterm-clear-scrollback";
+                        tput clear;
+                        end
+                        end
                   '';
                   shellInit = ''
                     # set -x DIRENV_LOG_FORMAT ""
@@ -2596,23 +2581,18 @@ end
                       config.nix.registry;
                   settings = {
                     substituters = [
-                      "https://cache.nixos.org/"
-                      "https://nix-community.cachix.org"
+                      "https://cache.nixos.org/" "https://nix-community.cachix.org"
                       "https://mirrors.ustc.edu.cn/nix-channels/store"
                       # "https://mirrors.tuna.tsinghua.edu.cn/nix-channels/store"
                       # "https://mirror.sjtu.edu.cn/nix-channels/store"
-                      # "https://xddxdd.cachix.org"
                     ];
                     trusted-substituters = [
-                      "https://cache.nixos.org/"
-                      "https://nix-community.cachix.org"
+                      "https://cache.nixos.org/" "https://nix-community.cachix.org"
                       "https://mirrors.ustc.edu.cn/nix-channels/store"
                       # "https://mirrors.tuna.tsinghua.edu.cn/nix-channels/store"
                       # "https://mirror.sjtu.edu.cn/nix-channels/store"
-                      # "https://xddxdd.cachix.org"
                     ];
                     trusted-public-keys = [
-                      # "xddxdd.cachix.org-1:ay1HJyNDYmlSwj5NXQG065C8LfoqqKaTNCyzeixGjf8="
                       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
                       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
                     ];
@@ -2690,9 +2670,8 @@ end
     hosts = {
       url = "github:NestorLiao/mhosts";
       inputs.nixpkgs.follows = "nixpkgs";
-    };
-    # nix flake update hosts
-    # this is is "the game changer"
+    }; # nix flake update hosts
+    # nixpkgs-old.url = "github:nixos/nixpkgs/nixos-25.05";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     home-manager = {

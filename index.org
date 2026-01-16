@@ -65,7 +65,3 @@ Simple and Sinister. Sleep and Love. Leere and Learn.
 # #+bibliography: "./reference.bib"
 #+cite_export: bibtex
 #+LATEX_HEADER: \mainmatter
-
-
-#+caption: 完
-[[file:./nixos/meditate.jpg]]
