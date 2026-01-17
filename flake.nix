@@ -99,25 +99,25 @@
                 };
                 environment.systemPackages = with pkgs; [
 
-                  # utilities
-                  file bash man-pages sudo sd bc pv rename vimv
-                  lsb-release moreutils unzip zip unrar envsubst
-                  # processes
-                  dtach pstree killall sysstat
-                  # monitoring
-                  htop btop iotop iftop s-tui multitail entr
-                  # dev tools
-                  jq tmux fzf silver-searcher git
-                  # hardware tools
-                  pciutils lm_sensors acpi pmutils usbutils dmidecode
-                  # networking
-                  wget curl nmap nettools traceroute dnsutils iperf
-                  # filesystems
-                  ncdu ranger lsof ntfs3g nfs-utils
-                  # hard drive management
-                  lsscsi hddtemp hdparm perf-tools parted gptfdisk
-                  # security
-                  pass gopass
+                  # # utilities
+                  # file bash man-pages sudo sd bc pv rename vimv
+                  # lsb-release moreutils unzip zip unrar envsubst
+                  # # processes
+                  # dtach pstree killall sysstat
+                  # # monitoring
+                  # htop btop iotop iftop s-tui multitail entr
+                  # # dev tools
+                  # jq tmux fzf silver-searcher git
+                  # # hardware tools
+                  # pciutils lm_sensors acpi pmutils usbutils dmidecode
+                  # # networking
+                  # wget curl nmap nettools traceroute dnsutils iperf
+                  # # filesystems
+                  # ncdu ranger lsof ntfs3g nfs-utils
+                  # # hard drive management
+                  # lsscsi hddtemp hdparm perf-tools parted gptfdisk
+                  # # security
+                  # pass gopass
 
                   (writeShellScriptBin "onlyemacs" onlyemacsScript)
                   # alsa-utils
@@ -1862,6 +1862,14 @@ hr {
                         root =
                           "${pkgs.cppreference-doc}/share/cppreference/doc/html/en/c";
                       };
+                      # "c-intro.doc" = {
+                      #   listen = [{
+                      #     addr = "0.0.0.0";
+                      #     port = 3004;
+                      #   }];
+                      #   root =
+                      #     "${pkgs.c-intro-and-ref}/share/doc/c-intro-and-ref/";
+                      # };
                       "ccpp.doc" = {
                         listen = [{
                           addr = "0.0.0.0";
@@ -1916,9 +1924,8 @@ hr {
                         expand-region
                         multiple-cursors
                         iedit
-                        # shift-number
                         avy
-                        yasnippet
+                        # yasnippet
 
                         ### Do Anything In Emacs©
 
@@ -1940,7 +1947,7 @@ hr {
                         #### get term
                         vterm
                         multi-vterm
-                        eshell-toggle
+                        # eshell-toggle
                         with-editor
                         #### read books
                         nov

@@ -41,6 +41,68 @@ Simple and Sinister. Sleep and Love. Leere and Learn.
 
 世界广袤、事物繁多，而心若清澈，幸福忽然变得极小，也极近——不来自外界，只来自自身安静而坚定的内心。
 
+* Leere
+
+#+begin_Verse
+居事寂静而世事安宁。
+
+I was what I walk and see,
+come out to be.
+
+文灭志，博溺心。
+
+- No Phone, No Internet, No Browser, No IDE, On Plain Text, Consume->Creat.
+- Master NixOS/Emacs, For Into Boring Stable and Fluent MindFlow Mode.
+- Read HTML Reference, Manual, Info, Help, Compilation, Source Code.
+- Master C language and it's Std, and library often used with debug exprience.
+- Do Leetcode, Learn Algorithm and Data Structure, Exciting to Solving Tasks.
+- Do Flag.h/Paperlike-cli/WM/RTOS, Learn Real programming For Myself.
+- Accumulate a codebase, Use Erlang/Zig/Rust to creat project You Like.
+#+end_Verse
+
+
+A 20s Old man yell at Cloud.
+
+---------------------------------------------------------------------------------------
+
+
+Phone is about 24h slaving human close-source which full of spyware made by Jews/Chinese, they make consumers arguing over and over about brand/chips/products/new fasion/new shitty color.
+
+People consume the phone shit, like it's part of they body, they dress the phone, they customize themes, they delete apps, they seems like owner of the phones. However, Phone Own Their Users.
+
+People use this kind tool mainly just for sex trade, pretend sociable in hundreds of fake relationship groups, and make boss slave empolyee out of their working time, make people distance each other becase "they can social in phones, easily". and due to shitty phone, people no long trust each other,
+every message can transmit means it can save, so every chat is like public speaking,
+and it's not like public speaking, image you are in a chat group in reality, there will be not everyone will know what you are saying, but int chatting apps, every word is store in database, every thing you do is unforgeable.
+
+so, people less and less social in reality, and more and more addict to phone anoy chatting, is a unhuman way to live in such "modern world".
+
+Smart phone ads tell us that the 5G shits and big camera shit, but in reality, phone more ofthen show you ads, shotting personal porn, sharing mindless videos and misinformation, phone is useless on mindful things, it just popout endless app and shitty small screen artical which full of garbage ads.
+
+Come and consume new phones, we have Back Screen to bring back feeling of 90s which watch porn on tiny screen and "AI Phone" to help you make fancy todo-list, and shopping junk food, the price is only need to cut off you hands and smaller you brain, because you don't need they anymore.
+
+---------------------------------------------------------------------------------------
+
+
+Actually, No Internet, there will be no Browser/Phone, But Internet is not totally evil, so you can see this blogging. Internet is aboubt blogging garbage, spread fear. All in all, Freedom Cause Compulsive Abuse.
+
+
+
+---------------------------------------------------------------------------------------
+
+
+Browser is gateway of porn and doomscroll, you search, jerk off, comment, browsing, blogging, ship electron app with chromium to everyone's phone and pc to help phone brand sell more new phones.  Just make living for javascript web devs by share your pravicy to shopping tech company.
+
+
+---------------------------------------------------------------------------------------
+
+IDE give you LSP, LLM to help M$ gain 100 billion$,
+LSP Just give you tons of distraction, and fake feelings of understanding a project, it pop out when you learning, typing, the aim is to make people no longer able to write programs that work.
+
+LLM just give you a chatbox to help you modify code you generate from LLM which is already sucks enough, by that way, you lost you own ability to modify text, you just chat and chat, You don't know your code by mental model, you just find bug at compiletime and runtime at launch, you are doomed to really love programming, you just a interface of BOSS to LLM.
+
+LSP and 100 fancy color themes with 1 million panels and Javascript Extensions, will not save you from pain of learning, they excuses for lazy people who can't read code at all. they don't remember what function they want to use, they wait for lsp load codebase and popout endless list of useless functions, and using white on dark with 1000 "true-colors" theme for the "syntax highling" eye candy, They don't READ, They Browsing, They don't remember, They LSP, They don't modifying, They LLM, They don't Read Manual, They Searching.
+
+Busy-minds cause Less Mindful.
 
 
 #+TITLE: TL;DR
@@ -54,7 +116,7 @@ Simple and Sinister. Sleep and Love. Leere and Learn.
 #+LATEX_HEADER: \bioinfo{邮箱}{llqingsong@qq.com}
 #+LATEX_HEADER: \setcounter{tocdepth}{2}
 # #+LATEX_HEADER: \logo{.jpg}
-#+LATEX_HEADER: \cover{nixos/meditate.jpg}
+#+LATEX_HEADER: \cover{~/.local/share/mysource/meditate.jpg}
 #+LATEX_HEADER: \usepackage{array}
 #+LATEX_HEADER: \usepackage{cprotect}
 #+LATEX_HEADER: \definecolor{customcolor}{RGB}{255,255,255}

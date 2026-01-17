@@ -282,13 +282,13 @@
          ;; MOS-begin-----------------------------------------------------------------
          ("C-c C-; d" .  dired)
          ("C-c C-; k" .  kill-buffer)
-         ("C-c C-; f" . forge-dispatch)
+         ("C-c C-; f" . magit-dispatch)
          ("C-c C-; g" . er/expand-region)
          ("C-c C-; p" . disproject-dispatch)
          ("C-c C-; m" . devdocs-browser-open)
          ("C-c C-; u" . delete-all-space)
          ("C-c C-; v" . multi-vterm-project)
-         ("C-c C-; y" . yas-insert-snippet)
+         ("C-c C-; y" . quick-sdcv-search-at-point)
          ("C-c C-; x" . multi-vterm-dedicated-toggle)
          ("C-c C-; c" . compile)
          ("C-c C-; l" . git-link-dispatch)
@@ -299,12 +299,11 @@
                                                                                         (format "现在是%s点钟 %s" (format-time-string "%k")
                                                                                                 (if (> 30 (string-to-number (format-time-string "%M")))
                                                                                                     "未过半" "过半"))
-                                                                                        ;; (format "域: %s" easysession--current-session-name)
                                                                                         ))))
          ("C-c C-; j" . journalctl)
          ;; 当其无，有手之用
          ("C-c C-; '" . vertico-repeat)
-         ("C-c C-; q" . quick-sdcv-search-at-point)
+         ("C-c C-; q" . donothing)
          ;; MOS-end-----------------------------------------------------------------
 
          ;; NAV-begin--------------------------------------------------------------
@@ -996,11 +995,11 @@
         shr-width nil
         shr-max-image-proportion 0.6
         eww-search-prefix nil
-        eww-default-download-directory "~/save"
+        eww-default-download-directory "~/"
         url-privacy-level 'low
         eww-auto-rename-buffer 'url
         eww-prompt-history '(
-                             "https://ziggit.dev/"
+                             ;; "https://ziggit.dev/"
                              "https://learnxinyminutes.com/"
                              "http://c.doc:3001/" ; "https://en.cppreference.com/w/c"
                              "http://cpp.doc:3002/" ; "https://en.cppreference.com/w/cpp"
@@ -1310,7 +1309,7 @@
 ;; (global-hide-mode-line-mode 1)
 (tooltip-mode -1)(delete-selection-mode 1)
 (global-font-lock-mode 1)(global-eldoc-mode -1)
-(show-paren-mode -1)(window-divider-mode 1)(winner-mode -1)
+(show-paren-mode -1)(window-divider-mode -1)(winner-mode -1)
 (repeat-mode -1)(display-time-mode -1)(display-line-numbers-mode -1)
 (use-package face-remap :config (defun text-scale-adjust (inc) (interactive "p") (let ((ev last-command-event) (echo-keystrokes nil) (message-log-max nil)) (let* ((base (event-basic-type ev)) (step (pcase base ((or ?+ ?=) inc) (?- (- inc)) (?0 0) (_ inc)))) (text-scale-increase step) (set-transient-map (let ((map (make-sparse-keymap))) (dolist (mods '(() (control))) (dolist (key '(?+ ?= ?- ?0)) (define-key map (vector (append mods (list key))) (lambda () (interactive) (text-scale-adjust (abs inc)))))) map) nil nil nil)))))
 ;; (use-package easysession
@@ -2047,9 +2046,9 @@ This command does the inverse of `fill-paragraph'."
       (progn (set-face-attribute 'default nil :font my-default-font :height (car(nth (or size 3)  font-scale-list))) (setq fontfont 0))
     (progn (set-face-attribute 'default nil :font my-alternate-font :height (car (cdr(nth (or size 3)  font-scale-list)))) (setq fontfont 1))))
 (setq consult-gh-default-clone-directory "~/Zen/"
-      consult-gh-default-save-directory "~/save"
+      consult-gh-default-save-directory "~/"
       org-agenda-files (directory-files-recursively "~/.me/" "\\.org$")
-      my/leetcode-root "~/Leetcode/src/")
+      my/leetcode-root "~/codebase/Leetcode/src/")
 (defvar book-mode 1
   "toggle, from programming mode to book mode ")
 (defun togglebook-mode()
@@ -2574,14 +2573,14 @@ Uses word at point as default, or prompts for input."
   (add-to-list 'compilation-environment "TERM=dumb-emacs-ansi")
   (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter))
 
-(defun firefox-search-zig()
-  (interactive)
-  (let ((meme (if (use-region-p)
-                  (buffer-substring-no-properties (region-beginning) (region-end))
-                (thing-at-point 'word t)) ))
-    (start-process "me" nil browse-url-firefox-program "--new-tab"
-                   (concat "http://127.0.0.1:55555/#" meme))
-    (swaywindow)))
+;; (defun firefox-search-zig()
+;;   (interactive)
+;;   (let ((meme (if (use-region-p)
+;;                   (buffer-substring-no-properties (region-beginning) (region-end))
+;;                 (thing-at-point 'word t)) ))
+;;     (start-process "me" nil browse-url-firefox-program "--new-tab"
+;;                    (concat "http://127.0.0.1:55555/#" meme))
+;;     (swaywindow)))
 
 ;; (start-process  "zigstd" nil  "zig" "std"  "-p" "55555")
 
