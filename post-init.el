@@ -35,8 +35,8 @@
  ;; indentation width -- eg. c-basic-offset: use that to adjust your
  ;; personal indentation width, while maintaining the style (and
  ;; meaning) of any files you load.
- ;; indent-tabs-mode nil ; don't use tabs to indent
- ;; tab-width 4 ; but maintain correct appearance
+ indent-tabs-mode nil ; don't use tabs to indent
+ tab-width 4 ; but maintain correct appearance
  ;; Use one space as sentence end
  sentence-end-double-space 'nil
  ;; Newline at end of file
@@ -103,12 +103,12 @@
  ;; browse-url-firefox-arguments "-P firefox"
  browse-url-new-window-flag nil
  ;; browse-url-firefox-new-window-is-tab t
- dired-movement-style 'cycle
+ dired-movement-style nil
  line-number-mode t
  column-number-mode t
  mode-line-position-column-line-format '("%l:%C")
  isearch-allow-scroll t
- package-install-upgrade-built-in t
+ package-install-upgrade-built-in nil ;; I am using nix to manage it.
  ;;; no message of revert buffer
  auto-revert-verbose nil
  ;;; no fringe bookmark
@@ -140,8 +140,11 @@
  ;;; duplicate
  duplicate-line-final-position 1
  duplicate-region-final-position 1
- treesit-font-lock-level 1
+ treesit-font-lock-level 1              ; bro I dont even use font lock
+ font-lock-maximum-decoration nil
  resize-mini-windows t
+ read-buffer-completion-ignore-case t
+ read-file-name-completion-ignore-case t
  visible-cursor nil
  x-stretch-cursor nil
  mode-line-end-spaces nil
@@ -156,17 +159,14 @@
  indicate-buffer-boundaries nil
  )
 (require 'use-package)
-(use-package compile-angel
-  :ensure t
-  :demand t
+(use-package compile-angel :ensure t :demand t
   :custom
   (compile-angel-verbose nil)
   :config
   (push "/post-init.el" compile-angel-excluded-files)
   (add-hook 'emacs-lisp-mode-hook #'compile-angel-on-save-local-mode)
   (compile-angel-on-load-mode))
-(use-package consult
-  :ensure t
+(use-package consult :ensure t
   :hook (completion-list-mode . consult-preview-at-point-mode)
   :init
   (setq register-preview-delay 0.5)
@@ -175,8 +175,12 @@
   (setq xref-show-definitions-function #'consult-xref)
   (advice-add #'register-preview :override #'consult-register-window)
   :config
+  (rg-enable-default-bindings)
   (move-text-default-bindings)
   (use-package surround :bind-keymap ("C-<tab>" . surround-keymap))
+  (setq consult-async-input-debounce 0.02
+        consult-async-input-throttle 0.05
+        consult-async-refresh-delay 0.02)
   (consult-customize
    consult-theme :preview-key '(:debounce 0.2 any)
    consult-ripgrep consult-git-grep consult-grep
@@ -186,22 +190,22 @@
    :preview-key '(:debounce 0.4 any))
   (setq consult-narrow-key "<")
   ;; stop addiction of configging emacs here. 我的人生大约是废了。
-  (defun list-packages()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
-  (defun org-agenda()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
-  (defun package-list-packages()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
-  (defun package-show-package-list()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
-  (defun customize-create-theme()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
-  (defun customize-themes()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
-  (defun gomoku()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
-  (defun calendar()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
+  ;; (defun calendar()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
+  ;; (defun customize-create-theme()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
+  ;; (defun customize-themes()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
+  ;; (defun describe-package()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
+  ;; (defun gomoku()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
+  ;; (defun list-packages()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
+  ;; (defun org-agenda()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
+  ;; (defun package-list-packages()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
+  ;; (defun package-list-packages-no-fetch()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
+  ;; (defun package-show-package-list()(interactive)(animate-birthday-present "别上瘾折腾emacs了，写点代码吧"))
   (global-unset-key (kbd "C-z"))        ;hey, what's going on? and I say hayayayayayyay.
   :bind (
          ([remap comment-line] . comment-or-uncomment-region-or-line)
          ([remap completion-at-point] . hippie-expand)
          ([remap complete-symbol] . hippie-expand)
          ([remap imenu] . consult-imenu)
-         ([remap undo] . undo-fu-only-undo)
-         ([remap undo-redo] . undo-fu-only-redo)
          ([remap indent-rigidly] . cleanup-buffer)
          ([remap list-buffers] . ibuffer)
          ([remap project-switch-to-buffer] . consult-project-buffer)
@@ -281,14 +285,17 @@
          ;;;; 我有主要有NAV/MOS/SYM/(NUM: 通过Sway调用:not anymore, I just all emacs now!) who need wtf os/wm... just using Shitty emacs.
          ;; MOS-begin-----------------------------------------------------------------
          ("C-c C-; d" .  dired)
-         ("C-c C-; k" .  kill-buffer)
+         ("C-c C-; k" .  (lambda () (interactive)
+                           (save-selected-window
+                             (other-window 1)
+                             (isearch-forward))))
          ("C-c C-; f" . magit-dispatch)
          ("C-c C-; g" . er/expand-region)
          ("C-c C-; p" . disproject-dispatch)
          ("C-c C-; m" . devdocs-browser-open)
          ("C-c C-; u" . delete-all-space)
          ("C-c C-; v" . multi-vterm-project)
-         ("C-c C-; y" . quick-sdcv-search-at-point)
+         ("C-c C-; y" . yas-insert-snippet)
          ("C-c C-; x" . multi-vterm-dedicated-toggle)
          ("C-c C-; c" . compile)
          ("C-c C-; l" . git-link-dispatch)
@@ -303,7 +310,7 @@
          ("C-c C-; j" . journalctl)
          ;; 当其无，有手之用
          ("C-c C-; '" . vertico-repeat)
-         ("C-c C-; q" . donothing)
+         ("C-c C-; q" . quick-sdcv-search-at-point)
          ;; MOS-end-----------------------------------------------------------------
 
          ;; NAV-begin--------------------------------------------------------------
@@ -440,8 +447,8 @@
                                                      (buffer-list))))))
          ("s-j" . (lambda () (interactive)(find-file "~/.emacs.d/post-init.el")))
          ("s-\"" . (lambda () (interactive)(find-file "~/.me/nixos/flake.nix")))
-         ("s-l" . previous-buffer)
-         ("s-u" . next-buffer)
+         ("s-u" . previous-buffer)
+         ("s-l" . next-buffer)
          ;; NUM-end--------------------------------------------Yes, I now use emacs only.
 
          ;; minor, don't use, they are bloated.
@@ -462,9 +469,6 @@
          ("M-s u" . consult-global-mark)
          ("M-s O" . multi-occur)
 
-         ;; :map zig-mode-map
-         ;; ("<f20>" . my/zig-build-vterm)
-         ;; ("<f21>" . firefox-search-zig)
          :map isearch-mode-map
          ("C-\\" . (lambda () (interactive) (message "别拉伸宝贵的食指了")))
          ("M-r" . consult-isearch-history)
@@ -474,7 +478,9 @@
          ("M-w". transient-copy-menu-text)
          ))
 ;; (load-theme 'modus-operandi t)
-(use-package real-mono-themes :config (load-theme 'real-mono-eink t)
+(use-package real-mono-themes :config
+  (mapc #'disable-theme custom-enabled-themes)
+  (load-theme 'real-mono-eink t)
   (custom-set-faces
    '(corfu-quick1 ((t (:inherit bold))))
    '(corfu-quick2 ((t (:inherit bold))))
@@ -484,6 +490,7 @@
    '(dictionary-word-definition-face ((t (:font "bookerly"))))
    '(dictionary-word-entry-face ((t (:font "bookerly"))))))
 (use-package markdown-mode
+  :defer t
   :commands (gfm-mode
              gfm-view-mode
              markdown-mode
@@ -498,7 +505,6 @@
   (advice-add 'org-babel-eval :around #'envrc-propagate-environment))
 (use-package vertico
   :ensure t
-  :defer t
   :commands vertico-mode
   :bind(
         :map vertico-map
@@ -533,9 +539,9 @@
     ;; Tidy shadowed file names
     :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
   :hook (after-init . vertico-mode))
-(use-package marginalia :ensure t :defer t
-  :commands (marginalia-mode marginalia-cycle)
-  :hook (after-init . marginalia-mode))
+;; (use-package marginalia :ensure t :defer t
+;;   :commands (marginalia-mode marginalia-cycle)
+;;   :hook (after-init . marginalia-mode))
 (use-package embark :ensure t :defer t
   :commands (embark-act
              embark-dwim
@@ -604,7 +610,6 @@
           (rust-mode . ("rust-analyzer")))))
 (use-package helpful
   :ensure t
-  :defer t
   :commands (helpful-callable
              helpful-variable
              helpful-key
@@ -619,38 +624,39 @@
   ([remap describe-variable] . helpful-variable)
   :custom
   (helpful-max-buffers 7))
-(use-package corfu
-  :ensure t
-  :commands (corfu-mode global-corfu-mode)
-  :config
-  (use-package corfu-history
-    :ensure nil
-    :after corfu
-    :init
-    (corfu-history-mode 1)
-    :config
-    (with-eval-after-load 'savehist
-      (cl-pushnew 'corfu-history savehist-additional-variables)))
-  ;; (use-package corfu-popupinfo
-  ;;   :ensure nil
-  ;;   :after corfu
-  ;;   :init
-  ;;   (corfu-popupinfo-mode 1)
-  ;;   :config
-  ;;   (setq corfu-popupinfo-delay '(1.0 . 1.0))
-  ;;   (setq corfu-quick1 "rst")
-  ;;   (setq corfu-quick2 "nei")
-  ;;   (keymap-set corfu-map "M-<tab>" #'corfu-quick-complete)
-  ;;   (keymap-set corfu-map "C-<tab>" #'corfu-quick-insert))
-  :hook (
-         (prog-mode . corfu-mode)
-         (shell-mode . corfu-mode)
-         (eshell-mode . corfu-mode))
-  :custom
-  (read-extended-command-predicate #'command-completion-default-include-p)
-  (text-mode-ispell-word-completion nil)
-  (tab-always-indent 'complete)
-  :config (global-corfu-mode))
+;; (use-package corfu
+;;   :ensure t
+;; :defer t
+;;   :commands (corfu-mode global-corfu-mode)
+;;   :config
+;;   (use-package corfu-history
+;;     :ensure nil
+;;     :after corfu
+;;     :init
+;;     (corfu-history-mode 1)
+;;     :config
+;;     (with-eval-after-load 'savehist
+;;       (cl-pushnew 'corfu-history savehist-additional-variables)))
+;;   ;; (use-package corfu-popupinfo
+;;   ;;   :ensure nil
+;;   ;;   :after corfu
+;;   ;;   :init
+;;   ;;   (corfu-popupinfo-mode 1)
+;;   ;;   :config
+;;   ;;   (setq corfu-popupinfo-delay '(1.0 . 1.0))
+;;   ;;   (setq corfu-quick1 "rst")
+;;   ;;   (setq corfu-quick2 "nei")
+;;   ;;   (keymap-set corfu-map "M-<tab>" #'corfu-quick-complete)
+;;   ;;   (keymap-set corfu-map "C-<tab>" #'corfu-quick-insert))
+;;   :hook (
+;;          (prog-mode . corfu-mode)
+;;          (shell-mode . corfu-mode)
+;;          (eshell-mode . corfu-mode))
+;;   :custom
+;;   (read-extended-command-predicate #'command-completion-default-include-p)
+;;   (text-mode-ispell-word-completion nil)
+;;   (tab-always-indent 'complete)
+;;   :config (global-corfu-mode))
 ;; (use-package cape :ensure t :defer t
 ;;   :commands (cape-dabbrev cape-file cape-elisp-block)
 ;;   :bind ("C-c p" . cape-prefix-map)
@@ -660,7 +666,6 @@
 ;;   (add-hook 'completion-at-point-functions #'cape-elisp-block))
 (use-package which-key
   :ensure nil
-  :defer t
   :commands which-key-mode
   :hook (after-init . which-key-mode)
   :custom
@@ -732,6 +737,7 @@
   :config (setq dired-subtree-use-backgrounds nil))
 (use-package trashed
   :ensure t
+  :defer t
   :commands (trashed)
   :config
   (setq trashed-action-confirmer 'y-or-n-p
@@ -953,11 +959,16 @@
         super-save-all-buffers  t
         super-save-remote-files nil
         super-save-idle-duration 4))
-(use-package undo-fu :ensure t :defer t
+(use-package undo-fu :ensure t
   :commands (undo-fu-only-undo
              undo-fu-only-redo
              undo-fu-only-redo-all
-             undo-fu-disable-checkpoint))
+             undo-fu-disable-checkpoint)
+  :bind (
+         ([remap undo] . undo-fu-only-undo)
+         ([remap undo-redo] . undo-fu-only-redo))
+  :custom
+  (undo-fu-allow-undo-in-region nil))
 (use-package undo-fu-session :ensure t :defer t
   :commands undo-fu-session-global-mode
   :hook (after-init . undo-fu-session-global-mode))
@@ -969,9 +980,26 @@
   :custom
   (save-place-limit 400))
 (use-package yasnippet
-  :config
-  (setq yas-snippet-dirs '("~/.emacs.d/snippets"))
-  (yas-global-mode))
+  :ensure t
+  :commands (yas-minor-mode
+             yas-global-mode)
+
+  :hook
+  (after-init . yas-global-mode)
+
+  :custom
+  (yas-snippet-dirs '("~/.emacs.d/snippets"))
+  (yas-also-auto-indent-first-line t)  ; Indent first line of snippet
+  (yas-also-indent-empty-lines t)
+  (yas-snippet-revival nil)  ; Setting this to t causes issues with undo
+  (yas-wrap-around-region nil) ; Do not wrap region when expanding snippets
+  ;; (yas-triggers-in-field nil)  ; Disable nested snippet expansion
+  ;; (yas-indent-line 'fixed) ; Do not auto-indent snippet content
+  ;; (yas-prompt-functions '(yas-no-prompt))  ; No prompt for snippet choices
+
+  :init
+  ;; Suppress verbose messages
+  (setq yas-verbosity 0))
 (use-package no-emoji
   :config
   (setq no-emoji-display-table (make-display-table))
@@ -1056,6 +1084,18 @@
         (recenter-top-bottom 0))
        (t
         (eww-browse-url orig-url external)))))
+  (defun extract-base-urls ()
+    "Extract base URLs from the current buffer containing text file links."
+    (interactive)
+    (save-excursion
+      (goto-char (point-min))
+      (let ((urls '()))
+        (while (re-search-forward "https?://\\([^:/]+\\)" nil t)
+          (push (match-string 0) urls))
+        (with-output-to-temp-buffer "*Base URLs*"
+          (dolist (url (delete-dups (nreverse urls)))
+            (princ url)
+            (princ "\n"))))))
   ;; (remove-hook 'eww-after-render-hook 'eww-readable)
   :bind (:map eww-mode-map
               ("L" . eww-list-bookmarks)
@@ -1065,33 +1105,6 @@
               ("C-M-i" . my-eww-back-url)
               ("b" . my-eww-forward-url)
               ("E" . my-eww-edit-url)))
-(defun extract-base-urls ()
-  "Extract base URLs from the current buffer containing text file links."
-  (interactive)
-  (save-excursion
-    (goto-char (point-min))
-    (let ((urls '()))
-      (while (re-search-forward "https?://\\([^:/]+\\)" nil t)
-        (push (match-string 0) urls))
-      (with-output-to-temp-buffer "*Base URLs*"
-        (dolist (url (delete-dups (nreverse urls)))
-          (princ url)
-          (princ "\n"))))))
-(defun url-to-hosts-line ()
-  "Convert a URL on the current line to '    0.0.0.0 hostname' format."
-  (interactive)
-  (let* ((line (thing-at-point 'line t))
-         (url (when line
-                (string-match "https?://\\([^/]+\\)" line)
-                (match-string 0 line)))
-         (hostname (when url
-                     (replace-regexp-in-string
-                      "^https?://\\([^/]+\\).*" "\\1" url))))
-    (when hostname
-      (beginning-of-line)
-      (kill-line)
-      (insert (concat "0.0.0.0 " hostname))
-      (beginning-of-line))))
 ;; PEN 笔
 ;; 1. <tab>
 ;;    - double: <enter>
@@ -1145,8 +1158,6 @@
   (use-package saveplace-pdf-view))
 (use-package info
   :bind (:map Info-mode-map
-              ;; ("<mouse-8>" . scroll-up-record)
-              ;; ("<mouse-9>" . scroll-down-record)
               ("C-M-i" . Info-history-back)
               ("<prior>" . (lambda () (interactive)(Info-scroll-down)(bookmark-set (string-trim Info-current-file "/run/current-system/sw/share/info/"))(donothing)))
               ("<next>" . (lambda () (interactive)(Info-scroll-up)(bookmark-set (string-trim Info-current-file "/run/current-system/sw/share/info/"))(donothing)))
@@ -1169,29 +1180,6 @@
 (defun my/compilation-filter-hook ()
   (my/nix-store-shorten-paths))
 (add-hook 'compilation-filter-hook #'my/compilation-filter-hook)
-;; ;; Set TERM for comint-derived modes like shell-mode
-;; (defun strip-ansi-codes (string)
-;;   "Strip ANSI escape codes from STRING."
-;;   (replace-regexp-in-string "\033\\[[0-9;]*m" "" string))
-;;
-;; (defun my-compilation-filter ()
-;;   (let ((output (buffer-substring-no-properties compilation-filter-start compilation-filter-end)))
-;;     (delete-region compilation-filter-start compilation-filter-end)
-;;     (insert (strip-ansi-codes output))))
-;;
-;; (add-hook 'compilation-filter-hook 'my-compilation-filter)
-;;
-;; Enable basic ANSI escape sequence support for compilation-mode
-
-;;
-;; (defun colorize-compilation-buffer ()
-;;   (let ((inhibit-read-only t))
-;;     (ansi-color-apply-on-region (save-excursion
-;;                                   (goto-char compilation-filter-start)
-;;                                   (line-beginning-position))
-;;                                 (point))))
-;; (add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
-
 (defvar compilation-show 1
   "Current compilation buffer mode, either 0 for show or  1 for close.")
 (defun my-next-error() (interactive)
@@ -1248,6 +1236,8 @@
 (defun sayshit () (interactive)(message "You Are Note Suppose To Use This Key!"))
 (use-package pyim
   :ensure t
+  :defer t
+  :commands (toggle-input-method)
   :custom
   (default-input-method "pyim")
   :config
@@ -1300,32 +1290,18 @@
   (setq pyim-cloudim nil)
   (setq pyim-candidates-search-buffer-p nil)
   (setq pyim-enable-shortcode nil)
-  (setq pyim-punctuation-dict '(("^" "…")("\\" "、")("." "。")("," "，")("'" "‘" "’") ("\"" "“" "”"))))
-(add-hook 'shell-mode-hook  'with-editor-export-editor)
-(add-hook 'eshell-mode-hook 'with-editor-export-editor)
-(add-hook 'term-exec-hook   'with-editor-export-editor)
-(add-hook 'vterm-mode-hook  #'with-editor-export-editor)
+  (setq pyim-punctuation-dict '(("^" "…")("\\" "、")("." "。")("," "，")("'" "‘" "’") ("\"" "“" "”")))
+  (add-to-list 'pyim-dicts '(:name "hmdz" :file "~/.local/share/mysource/hmdz.pyim")))
+;; (add-hook 'shell-mode-hook  'with-editor-export-editor)
+;; (add-hook 'eshell-mode-hook 'with-editor-export-editor)
+;; (add-hook 'term-exec-hook   'with-editor-export-editor)
+;; (add-hook 'vterm-mode-hook  'with-editor-export-editor)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
-;; (global-hide-mode-line-mode 1)
 (tooltip-mode -1)(delete-selection-mode 1)
 (global-font-lock-mode 1)(global-eldoc-mode -1)
-(show-paren-mode -1)(window-divider-mode -1)(winner-mode -1)
+(show-paren-mode -1)(window-divider-mode 1)(winner-mode -1)
 (repeat-mode -1)(display-time-mode -1)(display-line-numbers-mode -1)
 (use-package face-remap :config (defun text-scale-adjust (inc) (interactive "p") (let ((ev last-command-event) (echo-keystrokes nil) (message-log-max nil)) (let* ((base (event-basic-type ev)) (step (pcase base ((or ?+ ?=) inc) (?- (- inc)) (?0 0) (_ inc)))) (text-scale-increase step) (set-transient-map (let ((map (make-sparse-keymap))) (dolist (mods '(() (control))) (dolist (key '(?+ ?= ?- ?0)) (define-key map (vector (append mods (list key))) (lambda () (interactive) (text-scale-adjust (abs inc)))))) map) nil nil nil)))))
-;; (use-package easysession
-;;   :commands (easysession-switch-to
-;;              easysession-save-as
-;;              easysession-save-mode
-;;              easysession-load-including-geometry)
-;;   :bind
-;;   (("C-c sl" . easysession-switch-to)
-;;    ("C-c ss" . easysession-save-as) )
-;;   :custom
-;;   (easysession-mode-line-misc-info t)
-;;   (easysession-save-interval (* 10 60))
-;;   :init
-;;   (add-hook 'emacs-startup-hook #'easysession-load-including-geometry 102)
-;;   (add-hook 'emacs-startup-hook #'easysession-save-mode 103))
 (use-package savehist :ensure nil
   :commands (savehist-mode savehist-save)
   :hook
@@ -1351,44 +1327,6 @@
               ("C-<return>" . compile-goto-error))
   :config
   (setq vterm-shell "fish")
-  (defun my/get-project-vterm-buffer ()
-    "Return the project vterm buffer, or nil if not exists."
-    (let* ((proj (project-current t))
-           (root (directory-file-name (project-root proj)))
-           (pattern (format "\\*vterminal - %s" (regexp-quote root))))
-      (catch 'found
-        (dolist (buf (buffer-list))
-          (when (string-match pattern (buffer-name buf))
-            (throw 'found buf)))
-        nil)))
-  (defun my/ensure-project-vterm ()
-    "Ensure project vterm exists."
-    (let ((buf (my/get-project-vterm-buffer)))
-      (unless buf
-        (multi-vterm-project)
-        (setq buf (my/get-project-vterm-buffer)))
-      buf))
-  (defun my/send-to-vterm ()
-    "Send active region or current line to project vterm without touching kill-ring."
-    (interactive)
-    (let* ((text (if (use-region-p)
-                     (buffer-substring-no-properties (region-beginning) (region-end))
-                   (buffer-substring-no-properties (line-beginning-position) (line-end-position))))
-           (vbuf (my/ensure-project-vterm)))
-      (unless vbuf (user-error "No project vterm buffer"))
-      (let ((proc (get-buffer-process vbuf)))
-        (unless proc (user-error "No process for vterm buffer"))
-        (process-send-string proc (concat text "\n")))))
-  (defun my/zig-build-vterm ()
-    "Send active region or current line to project vterm without touching kill-ring."
-    (interactive)
-    (save-buffer)
-    (let* ((text "zig build")
-           (vbuf (my/ensure-project-vterm)))
-      (unless vbuf (user-error "No project vterm buffer"))
-      (let ((proc (get-buffer-process vbuf)))
-        (unless proc (user-error "No process for vterm buffer"))
-        (process-send-string proc (concat text "\n")))))
   (setq vterm-always-compile-module t)
   (setq vterm-timer-delay 0.01)
   (with-eval-after-load 'vterm
@@ -1398,7 +1336,7 @@
                   (with-current-buffer buf
                     (set-process-query-on-exit-flag
                      (get-buffer-process (current-buffer)) nil))))))
-;; (add-hook 'vterm-mode-hook (lambda () (compilation-shell-minor-mode 1) (define-key vterm-copy-mode-map (kbd "C-<return>") 'compile-goto-error))
+(add-hook 'vterm-mode-hook (lambda () (compilation-shell-minor-mode 1) (define-key vterm-copy-mode-map (kbd "C-<return>") 'compile-goto-error)))
 (with-eval-after-load 'ox-latex
   (add-to-list 'org-latex-classes
                '("elegantbook"
@@ -1692,6 +1630,20 @@
             (find-file target-file)
           (message "Target file %s does not exist" target-file))
       (message "Not in solution.cpp or question.org"))))
+
+; (use-package rust-mode
+;   :config
+;   (add-hook 'rust-mode-hook 'cargo-minor-mode))
+
+;; (use-package zig-mode
+;;   :mode(("\\.zig\\'" . zig-mode)
+;;         ("\\.zon\\'" . zig-mode))
+;;   :bind(
+;;         :map zig-mode-map
+;;         ;; ("C-c C-; c" . my/zig-build-vterm)
+;;         ;; ("C-c C-; m" . firefox-search-zig)
+;;         ))
+
 (use-package cc-mode
   :mode (("\\.\\(cc\\|hh\\)\\'" . c++-mode)
          ("\\.[ch]\\(pp\\|xx\\|\\+\\+\\)\\'" . c++-mode)
@@ -1724,7 +1676,7 @@
                          (or (getenv "CPPFLAGS") "")
                          (or (getenv "CFLAGS") "-Wall -g")
                          file)))))
-  (dolist (hook '(c-mode-common-hook zig-mode asm-mode-hook))
+  (dolist (hook '(c-mode-common-hook zig-mode-hook asm-mode-hook))
     (add-hook hook (lambda ()
                      (define-key c-mode-base-map (kbd "M-o") 'cff-find-other-file)
                      (define-key c-mode-base-map (kbd "C-c C-c") 'c-compile-current-file)
@@ -1734,7 +1686,7 @@
                      (define-key c-mode-base-map (kbd "C-M-q") nil)
                      (define-key c-mode-base-map (kbd "(") nil)
                      (define-key c-mode-base-map (kbd "{") nil)
-                     (font-lock-mode -1)
+                     (electric-operator-mode)
                      ))))
 (defun thunar-open-default-directory ()
   (interactive)
@@ -1892,19 +1844,22 @@
   ;; (interactive)
   (interactive "^p")
   (if (numberp n)
+      (progn
       (when (= n 123)
         (setq use-short-answers nil)
         (if (yes-or-no-p "(Bro, Are you in a Clear mind now? yes or no)")
             (setq monitor-state 0)
           (keyboard-quit))
         (setq use-short-answers t))
+      (when (= n 3)
+            (setq monitor-state 2)))
     (setq monitor-state 1))
 
   (let ((monitorprotocol "-i2c")
         (monitorpath "/dev/i2c-4")
         (monitorcli "paperlike-cli")
         (monitorarg '("-contrast" "-speed" "-mode" "-clear"))
-        (mode-state '(("3" "5" "3")  ("9" "5" "1")))) ; hey,  eink is awesome!
+        (mode-state '(("3" "5" "3")  ("9" "5" "1") ("9" "2" "1")))) ; hey,  eink is awesome!
     (sleep-for 0.5)
     (dotimes (number 3)
       (call-process monitorcli nil nil nil
@@ -1970,9 +1925,7 @@
  c-default-style '((java-mode . "java")
                    (awk-mode . "awk")
                    (other . "bsd")))
-(donothing)                             ; don't annoy me anymore.
 ;;; new things during last 10days
-
 (defvar rotate 0
   "Current sway rotate state, either 0 for horizental or  1 for vertical.")
 (defun swaywindow()
@@ -1989,9 +1942,18 @@
   (setq rotate   (if (= 0 rotate) 1 0 )))
 (use-package aggressive-indent
   :ensure t
+  :defer t
   :commands aggressive-indent-mode
-  :hook
-  (emacs-lisp-mode . aggressive-indent-mode))
+  :config
+  (dolist (hooks '(
+                   ;; nix-mode-hook
+                   emacs-lisp-mode-hook
+                   ;; erlang-mode-hook
+                   css-mode-hook
+                   ;; lisp-mode
+                   ))
+    (add-hook hooks #'aggressive-indent-mode)
+    ))
 (use-package tramp
   :config
   ;; 似乎是支持 remote 启动其他进程的
@@ -2035,6 +1997,8 @@ This command does the inverse of `fill-paragraph'."
   (interactive)
   (let ((fill-column 90002000)) ; 90002000 is just random. you can use `most-positive-fixnum'
     (fill-paragraph nil)))
+;; On Linux, you can display a comprehensive list of all installed font families by executing the following command:
+;; fc-list : family | sed 's/,/\n/g' | sort -u
 (defvar my-alternate-font "-DAMA-UbuntuMono Nerd Font-regular-normal-normal-*-13-*-*-*-m-0-iso10646-1")
 (defvar my-default-font "bookerly")
 (defvar font-scale-list '((130 165)(140 190)(150 200)(160 210)(170 225)(180 240)(190 250)(200 270)(210 280)(220 285)(230 310)(240 315)(250 320)(260 350)))
@@ -2047,7 +2011,7 @@ This command does the inverse of `fill-paragraph'."
     (progn (set-face-attribute 'default nil :font my-alternate-font :height (car (cdr(nth (or size 3)  font-scale-list)))) (setq fontfont 1))))
 (setq consult-gh-default-clone-directory "~/Zen/"
       consult-gh-default-save-directory "~/"
-      org-agenda-files (directory-files-recursively "~/.me/" "\\.org$")
+      ;; org-agenda-files (directory-files-recursively "~/.me/" "\\.org$")
       my/leetcode-root "~/codebase/Leetcode/src/")
 (defvar book-mode 1
   "toggle, from programming mode to book mode ")
@@ -2073,31 +2037,31 @@ This command does the inverse of `fill-paragraph'."
   (setq book-mode (not book-mode)))
 (togglebook-mode)
 (global-hide-mode-line-mode 1)
-(use-package eshell-toggle
-  :custom
-  (eshell-toggle-size-fraction 3)
-  (eshell-toggle-use-projectile-root 'project) ;; for in-built project.el
-  (eshell-toggle-run-command nil)
-  ;; (eshell-toggle-init-function #'eshell-toggle-init-ansi-term)
-  )
+;; (use-package eshell-toggle
+;;   :custom
+;;   (eshell-toggle-size-fraction 3)
+;;   (eshell-toggle-use-projectile-root 'project) ;; for in-built project.el
+;;   (eshell-toggle-run-command nil)
+;;   ;; (eshell-toggle-init-function #'eshell-toggle-init-ansi-term)
+;;   )
 
-(use-package eshell
-  :ensure nil
-  :config
-  (defvar-keymap eshell-hist-mode-map
-    ;; "<up>"     #'eshell-previous-matching-input-from-input
-    ;; "<down>"   #'eshell-next-matching-input-from-input
-    "<up>"     #'previous-line
-    "<down>"   #'next-line
-    "C-<up>"   #'eshell-previous-input
-    "C-<down>" #'eshell-next-input
-    "M-r"      #'eshell-isearch-backward-regexp
-    "C-c M-r"  #'eshell-previous-matching-input-from-input
-    "C-c M-s"  #'eshell-next-matching-input-from-input
-    "C-c C-l"  #'eshell-list-history
-    "C-c C-x"  #'eshell-get-next-from-history)
-  (define-key eshell-mode-map (kbd "C-p") 'eshell-previous-prompt)
-  (define-key eshell-mode-map (kbd "C-n") 'eshell-next-prompt))
+;; (use-package eshell
+;;   :ensure nil
+;;   :config
+;;   (defvar-keymap eshell-hist-mode-map
+;;     ;; "<up>"     #'eshell-previous-matching-input-from-input
+;;     ;; "<down>"   #'eshell-next-matching-input-from-input
+;;     "<up>"     #'previous-line
+;;     "<down>"   #'next-line
+;;     "C-<up>"   #'eshell-previous-input
+;;     "C-<down>" #'eshell-next-input
+;;     "M-r"      #'eshell-isearch-backward-regexp
+;;     "C-c M-r"  #'eshell-previous-matching-input-from-input
+;;     "C-c M-s"  #'eshell-next-matching-input-from-input
+;;     "C-c C-l"  #'eshell-list-history
+;;     "C-c C-x"  #'eshell-get-next-from-history)
+;;   (define-key eshell-mode-map (kbd "C-p") 'eshell-previous-prompt)
+;;   (define-key eshell-mode-map (kbd "C-n") 'eshell-next-prompt))
 
 ;; (use-package devdocs-browser
 ;;   :config
@@ -2113,60 +2077,73 @@ This command does the inverse of `fill-paragraph'."
 ;;     (devdocs-browser-download-offline-data doc))
 ;;   )
 
-;; (eww "file:///home/leeao/.local/bin/doc/langref.html")
-;; (async-shell-command  "zig std -p 55555")
-;; (delete-window)
-;; (browse-url-firefox "file:///home/leeao/.local/bin/doc/langref.html"  nil)
-;; (browse-url-firefox "http://127.0.0.1:55555/"  nil)
+(use-package dumb-jump
+  :config
+  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
+  (setq dumb-jump-force-searcher 'rg)
+  (setq dumb-jump-default-project "/home/leeao/.local/bin/lib/std"))
 
-(add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
-(setq dumb-jump-force-searcher 'rg)
-(setq dumb-jump-default-project "/home/leeao/.local/bin/lib/std")
+(defun sdcv-here()
+  (interactive)
+  (require 'quick-sdcv)
+  (let ((word (quick-sdcv--get-region-or-word)))
+    (save-excursion
+      (find-file "~/Vocabulary")
+      (goto-char (point-max))
+      (insert (format " %s" word))
+      (previous-buffer)
+      (quick-sdcv--search-detail word)
+      (kill-buffer "Vocabulary"))))
 
-;; (defun sdcv-here()
-;;   (interactive)
-;;   (require 'quick-sdcv)
-;;   (let ((word (quick-sdcv--get-region-or-word)))
-;;     (save-excursion
-;;       (find-file "~/NestorLiao.github.io/Vocabulary.org")
-;;       (goto-char (point-max))
-;;       (insert (format " %s" word))
-;;       (previous-buffer)
-;;       (quick-sdcv--search-detail word)
-;;       (kill-buffer "Vocabulary.org"))))
-
-;; (load-file "~/.emacs.d/rotate-text.el")
 (use-package rotate-text
   :vc (:url "https://github.com/debug-ito/rotate-text.el"
-            :rev :newest))
-
-(autoload 'rotate-text "rotate-text" nil t)
-(autoload 'rotate-text-backward "rotate-text" nil t)
-(setq rotate-text-symbols '(
-                            ("true" "false")
-                            ("t" "nil")
-                            ("yes" "no")
+            :rev :newest)
+  :config
+  (autoload 'rotate-text "rotate-text" nil t)
+  (autoload 'rotate-text-backward "rotate-text" nil t)
+  (setq rotate-text-symbols '(
+                              ("t" "nil")
+                              ("in" "out" "err" "io")
+                              ("a" "b" "c" "d")
+                              ("i" "j" "k")
+                              ("private" "protected" "public")
+                              ("break" "continue")
+                              ("x" "y" "z")))
+  (setq rotate-text-words '(
+                            ("argc" "argv")
+                            ("column" "line")
+                            ("const" "statis")
+                            ("cos" "sin")
                             ("enable" "disable")
-                            ))
-(setq rotate-text-words '(
-                          ("width" "height")
-                          ("left" "right" "top" "bottom")))
-
-;; (dolist (modes 'c-mode-common-hook )
+                            ("fixme" "todo" "okay" "temp")
+                            ("float" "double")
+                            ("init" "creat" "close")
+                            ("input" "output")
+                            ("left" "right" "top" "bottom")
+                            ("max" "min")
+                            ("new" "old")
+                            ("printf" "fprintf" "sprintf" "snprintf")
+                            ("size" "uint")
+                            ("start" "end")
+                            ("stdout" "stdin" "stderr" "stdio")
+                            ("str" "list")
+                            ("timer" "keyboard" "display")
+                            ("true" "false")
+                            ("void" "bool" "char" "int")
+                            ("width" "height")
+                            ("yes" "no")
+                            )))
 (add-hook 'c-mode-common-hook (lambda ()
                                 (interactive)
-                                (c-toggle-comment-style -1)
-                                ;; (setq rotate-text-local-words '(
-                                ;;                                 ("" "")
-                                ;;                                 ))
-                                (setq rotate-text-local-symbols '(
-                                                                  ("const" "statis")
-                                                                  ("stdout" "stderr")
-                                                                  ))
-                                ))
-
+                                (c-toggle-comment-style -1)))
 (setq-default fringe-indicator-alist '((truncation nil nil) (continuation nil nil) (overlay-arrow . right-triangle) (up . up-arrow) (down . down-arrow) (top top-left-angle top-right-angle) (bottom bottom-left-angle bottom-right-angle top-right-angle top-left-angle) (top-bottom left-bracket right-bracket top-right-angle top-left-angle) (empty-line . empty-line) (unknown . question-mark)))
-(use-package compile :config (defun compilation-start (command &optional mode name-function highlight-regexp continue) "Run compilation command COMMAND (low level interface). If COMMAND starts with a cd command, that becomes the `default-directory'. The rest of the arguments are optional; for them, nil means use the default. MODE is the major mode to set in the compilation buffer.  Mode may also be t meaning use `compilation-shell-minor-mode' under `comint-mode'. If NAME-FUNCTION is non-nil, call it with one argument (the mode name) to determine the buffer name.  Otherwise, the default is to reuses the current buffer if it has the proper major mode, else use or create a buffer with name based on the major mode. If HIGHLIGHT-REGEXP is non-nil, `next-error' will temporarily highlight the matching section of the visited source line; the default is to use the global value of `compilation-highlight-regexp'. If CONTINUE is non-nil, the buffer won't be emptied before compilation is started.  This can be useful if you wish to combine the output from several compilation commands in the same buffer.  The new output will be at the end of the buffer, and point is not changed. Returns the compilation buffer created." (or mode (setq mode 'compilation-mode)) (let* ((name-of-mode (if (eq mode t) "compilation" (replace-regexp-in-string "-mode\\'" "" (symbol-name mode)))) (thisdir default-directory) (thisenv compilation-environment) (buffer-path (and (local-variable-p 'exec-path) exec-path)) (buffer-env (and (local-variable-p 'process-environment) process-environment)) outwin outbuf) (with-current-buffer (setq outbuf (get-buffer-create (compilation-buffer-name name-of-mode mode name-function))) (let ((comp-proc (get-buffer-process (current-buffer)))) (if comp-proc (if (or (not (eq (process-status comp-proc) 'run)) (eq (process-query-on-exit-flag comp-proc) nil) (yes-or-no-p (format "A %s process is running; kill it? " name-of-mode))) (condition-case () (progn (interrupt-process comp-proc) (sit-for 1) (delete-process comp-proc)) (error nil)) (error "Cannot have two processes in `%s' at once" (buffer-name))))) (setq default-directory thisdir) (let ((inhibit-read-only t) (default-directory thisdir)) (cd (cond ((not (string-match "\\`\\s *cd\\(?:\\s +\\(\\S +?\\|'[^']*'\\|\"\\(?:[^\"`$\\]\\|\\\\.\\)*\"\\)\\)?\\s *[;&\n]" command)) default-directory) ((not (match-end 1)) "~") ((eq (aref command (match-beginning 1)) ?\') (substring command (1+ (match-beginning 1)) (1- (match-end 1)))) ((eq (aref command (match-beginning 1)) ?\") (replace-regexp-in-string "\\\\\\(.\\)" "\\1" (substring command (1+ (match-beginning 1)) (1- (match-end 1))))) (t (let* ((substituted-dir (substitute-env-vars (match-string 1 command))) (expanded-dir (file-expand-wildcards substituted-dir))) (if (= (length expanded-dir) 1) (car expanded-dir) substituted-dir))))) (if continue (progn (setq continue (point)) (goto-char (point-max))) (erase-buffer)) (if (not (eq mode t)) (progn (buffer-disable-undo) (funcall mode)) (setq buffer-read-only nil) (with-no-warnings (comint-mode)) (compilation-shell-minor-mode)) (setq-local compilation-directory thisdir) (setq-local compilation-environment thisenv) (if buffer-path (setq-local exec-path buffer-path) (kill-local-variable 'exec-path)) (if buffer-env (setq-local process-environment buffer-env) (kill-local-variable 'process-environment)) (if highlight-regexp (setq-local compilation-highlight-regexp highlight-regexp)) (if (or compilation-auto-jump-to-first-error (eq compilation-scroll-output 'first-error)) (setq-local compilation-auto-jump-to-next t))  (compilation-insert-annotation command "\n") (setq compilation--start-time (float-time)) (setq thisdir default-directory)) (set-buffer-modified-p nil)) (setq outwin (display-buffer outbuf '(nil (allow-no-window . t)))) (with-current-buffer outbuf (let ((process-environment (append compilation-environment (and (derived-mode-p 'comint-mode) (comint-term-environment)) (list (format "INSIDE_EMACS=%s,compile" emacs-version)) (list "PAGER=") (copy-sequence process-environment)))) (setq-local compilation-arguments (list command mode name-function highlight-regexp)) (setq-local revert-buffer-function 'compilation-revert-buffer) (when (and outwin (not continue) (not compilation-scroll-output)) (set-window-start outwin (point-min))) (let ((desired-visible-point (cond (continue continue) (compilation-scroll-output (point-max)) (t (point-min))))) (goto-char desired-visible-point) (when (and outwin (not (eq outwin (selected-window)))) (set-window-point outwin desired-visible-point))) (if compilation-process-setup-function (funcall compilation-process-setup-function)) (and outwin (compilation-set-window-height outwin)) (if (fboundp 'make-process) (let ((proc (if (eq mode t) (with-connection-local-variables (get-buffer-process (with-no-warnings (comint-exec outbuf (compilation--downcase-mode-name mode-name) shell-file-name nil `(,shell-command-switch ,command))))) (start-file-process-shell-command (compilation--downcase-mode-name mode-name) outbuf command)))) (setq mode-line-process '((:propertize ":%s" face compilation-mode-line-run) compilation-mode-line-errors)) (when compilation-always-kill (set-process-query-on-exit-flag proc nil)) (set-process-sentinel proc #'compilation-sentinel) (unless (eq mode t) (set-process-filter proc #'compilation-filter)) (set-marker (process-mark proc) (point-max) outbuf) (when compilation-disable-input (condition-case nil (process-send-eof proc) (error nil))) (run-hook-with-args 'compilation-start-hook proc) (compilation--update-in-progress-mode-line) (push proc compilation-in-progress)) (message "Executing `%s'..." command) (setq mode-line-process '((:propertize ":run" face compilation-mode-line-run) compilation-mode-line-errors)) (force-mode-line-update) (sit-for 0) (save-excursion (goto-char (point-max)) (let* ((inhibit-read-only t) (compilation-filter-start (point)) (status (call-process shell-file-name nil outbuf nil "-c" command))) (run-hooks 'compilation-filter-hook) (cond ((numberp status) (compilation-handle-exit 'exit status (if (zerop status) "finished\n" (format "exited abnormally with code %d\n" status)))) ((stringp status) (compilation-handle-exit 'signal status (concat status "\n"))) (t (compilation-handle-exit 'bizarre status status))))) (set-buffer-modified-p nil) (message "Executing `%s'...done" command))) (setq default-directory thisdir) (when compilation-scroll-output (goto-char (point-max)))) (setq next-error-last-buffer outbuf))) (defun compilation-handle-exit (process-status exit-status msg) "Write MSG in the current buffer and hack its `mode-line-process'." (let ((inhibit-read-only t) (status (if compilation-exit-message-function (funcall compilation-exit-message-function process-status exit-status msg) (cons msg exit-status))) (omax (point-max)) (opoint (point)) (cur-buffer (current-buffer))) (goto-char omax) (compilation-insert-annotation ?\n mode-name " " (car status)) (if (and (numberp compilation-window-height) (zerop compilation-window-height)) (message "%s" (cdr status))) (if (bolp) (forward-char -1)) (compilation-insert-annotation ", duration " (let ((elapsed (- (float-time) compilation--start-time))) (cond ((< elapsed 10) (format "%.2f s" elapsed)) ((< elapsed 60) (format "%.1f s" elapsed)) (t (format-seconds "%h:%02m:%02s" elapsed))))) (goto-char (point-max)) (add-text-properties omax (point) (append '(compilation-handle-exit t) nil)) (setq mode-line-process (list (let ((out-string (format ":%s [%s]" process-status (cdr status))) (msg (format "%s %s" mode-name (replace-regexp-in-string "\n?$" "" (car status))))) (message "%s" msg) (propertize out-string 'help-echo msg 'face (if (> exit-status 0) 'compilation-mode-line-fail 'compilation-mode-line-exit))) compilation-mode-line-errors)) (force-mode-line-update) (if (and opoint (< opoint omax)) (goto-char opoint)) (run-hook-with-args 'compilation-finish-functions cur-buffer msg))))
+(use-package compile :config
+  (setq-default comint-terminfo-terminal "dumb-emacs-ansi")
+
+  (with-eval-after-load 'compile
+    (add-to-list 'compilation-environment "TERM=dumb-emacs-ansi")
+    (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter))
+  (defun compilation-start (command &optional mode name-function highlight-regexp continue) "Run compilation command COMMAND (low level interface). If COMMAND starts with a cd command, that becomes the `default-directory'. The rest of the arguments are optional; for them, nil means use the default. MODE is the major mode to set in the compilation buffer.  Mode may also be t meaning use `compilation-shell-minor-mode' under `comint-mode'. If NAME-FUNCTION is non-nil, call it with one argument (the mode name) to determine the buffer name.  Otherwise, the default is to reuses the current buffer if it has the proper major mode, else use or create a buffer with name based on the major mode. If HIGHLIGHT-REGEXP is non-nil, `next-error' will temporarily highlight the matching section of the visited source line; the default is to use the global value of `compilation-highlight-regexp'. If CONTINUE is non-nil, the buffer won't be emptied before compilation is started.  This can be useful if you wish to combine the output from several compilation commands in the same buffer.  The new output will be at the end of the buffer, and point is not changed. Returns the compilation buffer created." (or mode (setq mode 'compilation-mode)) (let* ((name-of-mode (if (eq mode t) "compilation" (replace-regexp-in-string "-mode\\'" "" (symbol-name mode)))) (thisdir default-directory) (thisenv compilation-environment) (buffer-path (and (local-variable-p 'exec-path) exec-path)) (buffer-env (and (local-variable-p 'process-environment) process-environment)) outwin outbuf) (with-current-buffer (setq outbuf (get-buffer-create (compilation-buffer-name name-of-mode mode name-function))) (let ((comp-proc (get-buffer-process (current-buffer)))) (if comp-proc (if (or (not (eq (process-status comp-proc) 'run)) (eq (process-query-on-exit-flag comp-proc) nil) (yes-or-no-p (format "A %s process is running; kill it? " name-of-mode))) (condition-case () (progn (interrupt-process comp-proc) (sit-for 1) (delete-process comp-proc)) (error nil)) (error "Cannot have two processes in `%s' at once" (buffer-name))))) (setq default-directory thisdir) (let ((inhibit-read-only t) (default-directory thisdir)) (cd (cond ((not (string-match "\\`\\s *cd\\(?:\\s +\\(\\S +?\\|'[^']*'\\|\"\\(?:[^\"`$\\]\\|\\\\.\\)*\"\\)\\)?\\s *[;&\n]" command)) default-directory) ((not (match-end 1)) "~") ((eq (aref command (match-beginning 1)) ?\') (substring command (1+ (match-beginning 1)) (1- (match-end 1)))) ((eq (aref command (match-beginning 1)) ?\") (replace-regexp-in-string "\\\\\\(.\\)" "\\1" (substring command (1+ (match-beginning 1)) (1- (match-end 1))))) (t (let* ((substituted-dir (substitute-env-vars (match-string 1 command))) (expanded-dir (file-expand-wildcards substituted-dir))) (if (= (length expanded-dir) 1) (car expanded-dir) substituted-dir))))) (if continue (progn (setq continue (point)) (goto-char (point-max))) (erase-buffer)) (if (not (eq mode t)) (progn (buffer-disable-undo) (funcall mode)) (setq buffer-read-only nil) (with-no-warnings (comint-mode)) (compilation-shell-minor-mode)) (setq-local compilation-directory thisdir) (setq-local compilation-environment thisenv) (if buffer-path (setq-local exec-path buffer-path) (kill-local-variable 'exec-path)) (if buffer-env (setq-local process-environment buffer-env) (kill-local-variable 'process-environment)) (if highlight-regexp (setq-local compilation-highlight-regexp highlight-regexp)) (if (or compilation-auto-jump-to-first-error (eq compilation-scroll-output 'first-error)) (setq-local compilation-auto-jump-to-next t))  (compilation-insert-annotation command "\n") (setq compilation--start-time (float-time)) (setq thisdir default-directory)) (set-buffer-modified-p nil)) (setq outwin (display-buffer outbuf '(nil (allow-no-window . t)))) (with-current-buffer outbuf (let ((process-environment (append compilation-environment (and (derived-mode-p 'comint-mode) (comint-term-environment)) (list (format "INSIDE_EMACS=%s,compile" emacs-version)) (list "PAGER=") (copy-sequence process-environment)))) (setq-local compilation-arguments (list command mode name-function highlight-regexp)) (setq-local revert-buffer-function 'compilation-revert-buffer) (when (and outwin (not continue) (not compilation-scroll-output)) (set-window-start outwin (point-min))) (let ((desired-visible-point (cond (continue continue) (compilation-scroll-output (point-max)) (t (point-min))))) (goto-char desired-visible-point) (when (and outwin (not (eq outwin (selected-window)))) (set-window-point outwin desired-visible-point))) (if compilation-process-setup-function (funcall compilation-process-setup-function)) (and outwin (compilation-set-window-height outwin)) (if (fboundp 'make-process) (let ((proc (if (eq mode t) (with-connection-local-variables (get-buffer-process (with-no-warnings (comint-exec outbuf (compilation--downcase-mode-name mode-name) shell-file-name nil `(,shell-command-switch ,command))))) (start-file-process-shell-command (compilation--downcase-mode-name mode-name) outbuf command)))) (setq mode-line-process '((:propertize ":%s" face compilation-mode-line-run) compilation-mode-line-errors)) (when compilation-always-kill (set-process-query-on-exit-flag proc nil)) (set-process-sentinel proc #'compilation-sentinel) (unless (eq mode t) (set-process-filter proc #'compilation-filter)) (set-marker (process-mark proc) (point-max) outbuf) (when compilation-disable-input (condition-case nil (process-send-eof proc) (error nil))) (run-hook-with-args 'compilation-start-hook proc) (compilation--update-in-progress-mode-line) (push proc compilation-in-progress)) (message "Executing `%s'..." command) (setq mode-line-process '((:propertize ":run" face compilation-mode-line-run) compilation-mode-line-errors)) (force-mode-line-update) (sit-for 0) (save-excursion (goto-char (point-max)) (let* ((inhibit-read-only t) (compilation-filter-start (point)) (status (call-process shell-file-name nil outbuf nil "-c" command))) (run-hooks 'compilation-filter-hook) (cond ((numberp status) (compilation-handle-exit 'exit status (if (zerop status) "finished\n" (format "exited abnormally with code %d\n" status)))) ((stringp status) (compilation-handle-exit 'signal status (concat status "\n"))) (t (compilation-handle-exit 'bizarre status status))))) (set-buffer-modified-p nil) (message "Executing `%s'...done" command))) (setq default-directory thisdir) (when compilation-scroll-output (goto-char (point-max)))) (setq next-error-last-buffer outbuf))) (defun compilation-handle-exit (process-status exit-status msg) "Write MSG in the current buffer and hack its `mode-line-process'." (let ((inhibit-read-only t) (status (if compilation-exit-message-function (funcall compilation-exit-message-function process-status exit-status msg) (cons msg exit-status))) (omax (point-max)) (opoint (point)) (cur-buffer (current-buffer))) (goto-char omax) (compilation-insert-annotation ?\n mode-name " " (car status)) (if (and (numberp compilation-window-height) (zerop compilation-window-height)) (message "%s" (cdr status))) (if (bolp) (forward-char -1)) (compilation-insert-annotation ", duration " (let ((elapsed (- (float-time) compilation--start-time))) (cond ((< elapsed 10) (format "%.2f s" elapsed)) ((< elapsed 60) (format "%.1f s" elapsed)) (t (format-seconds "%h:%02m:%02s" elapsed))))) (goto-char (point-max)) (add-text-properties omax (point) (append '(compilation-handle-exit t) nil)) (setq mode-line-process (list (let ((out-string (format ":%s [%s]" process-status (cdr status))) (msg (format "%s %s" mode-name (replace-regexp-in-string "\n?$" "" (car status))))) (message "%s" msg) (propertize out-string 'help-echo msg 'face (if (> exit-status 0) 'compilation-mode-line-fail 'compilation-mode-line-exit))) compilation-mode-line-errors)) (force-mode-line-update) (if (and opoint (< opoint omax)) (goto-char opoint)) (run-hook-with-args 'compilation-finish-functions cur-buffer msg))))
 
 (defun tavily-search-async (callback query &optional search-depth max-results exclude_domains country include_domains)
   "Perform a search using the Tavily API and return results as JSON string.
@@ -2182,56 +2159,370 @@ Optional MAX-RESULTS is the maximum number of results (default 5)."
          (include_answer  nil)
          (country (or country "united states"))
          (include_domains (or include_domains '(
-                                                "nixos.org"
-                                                "freertos.org"
-                                                "zephyrproject.org"
-                                                "contiki-ng.org"
-                                                "riot-os.org"
-                                                "nuttx.apache.org"
-                                                "mynewt.apache.org"
-                                                "ziglang.org"
-                                                "python.org"
-                                                "lua.org"
-                                                "elixir-lang.org"
-                                                "erlang.org"
-                                                "haskell.org"
+
+                                                ;; "ansi.org"
+                                                ;; "contiki-ng.org"
+                                                ;; "freertos.org"
+                                                ;; "gcc.gnu.org"
+                                                ;; "gnu.org"
+                                                ;; "gtk.org"
+                                                ;; "ieee.org"
+                                                ;; "ietf.org"
+                                                ;; "iso.org"
+                                                ;; "kernel.org"
+                                                ;; "libsdl.org"
+                                                ;; "llvm.org"
+                                                ;; "man7.org"
+                                                ;; "musl-libc.org"
+                                                ;; "mynewt.apache.org"
+                                                ;; "newlib.sourceware.org"
+                                                ;; "nuttx.apache.org"
+                                                ;; "opencores.org"
+                                                ;; "opensource.org"
+                                                ;; "qemu-project.org"
+                                                ;; "qt.io"
+                                                ;; "riot-os.org"
+                                                ;; "riscv.org"
+                                                ;; "sdl.org"
+                                                ;; "sourceware.org"
+                                                ;; "uclibc-ng.org"
+                                                ;; "w3.org"
+                                                ;; "zephyrproject.org"
+
+                                                ;; "arduino.cc"
+                                                ;; "espressif.com"
+                                                ;; "raspberrypi.org"
+
+                                                ;; "archlinux.org"
+                                                ;; "nixos.org"
+                                                ;; "gentoo.org"
+                                                ;; "debian.org"
+
+                                                "100.github.io"
+                                                "250bpm.com"
+                                                "adtinfo.org"
+                                                "anjuta.org"
+                                                "apophenia.info"
+                                                "apr.apache.org"
+                                                "astyle.sourceforge.net"
+                                                "attractivechaos.github.io"
+                                                "avro.apache.org"
+                                                "bitbucket.org"
+                                                "blog.llvm.org"
+                                                "blog.noctua-software.com"
+                                                "blog.pkh.me"
+                                                "blogs.oracle.com"
+                                                "blosc.org"
+                                                "brechtsanders.github.io"
+                                                "c-faq.com"
+                                                "c2html.sourceforge.net"
+                                                "cairographics.org"
+                                                "ccache.dev"
+                                                "ccodearchive.net"
+                                                "cdecl.org"
+                                                "cedet.sourceforge.net"
+                                                "cesanta.com"
+                                                "chipmunk-physics.net"
+                                                "clang.llvm.org"
                                                 "cmake.org"
-                                                "gnu.org"
-                                                "llvm.org"
+                                                "cmocka.org"
+                                                "coap.technology"
+                                                "codeforwin.org"
+                                                "codeplea.com"
+                                                "computing.llnl.gov"
+                                                "conan.io"
+                                                "concurrencykit.org"
+                                                "cppcheck.sourceforge.net"
+                                                "criterion.readthedocs.io"
+                                                "criu.org"
+                                                "cunit.sourceforge.net"
+                                                "curl.haxx.se"
+                                                "cyan4973.github.io"
+                                                "cygwin.com"
+                                                "czmq.zeromq.org"
+                                                "danluu.com"
+                                                "dl.acm.org"
+                                                "docutils.sourceforge.net"
+                                                "dotat.at"
+                                                "download.libsodium.org"
+                                                "duckdb.org"
+                                                "duktape.org"
+                                                "ebassi.github.io"
+                                                "ed-von-schleck.github.io"
+                                                "ejdb.org"
+                                                "embed.cs.utah.edu"
+                                                "en.wikibooks.org"
+                                                "en.wikipedia.org"
+                                                "esbmc.org"
+                                                "expat.sourceforge.net"
+                                                "ezxml.sourceforge.net"
+                                                "fabutil.org"
+                                                "facebook.github.io"
+                                                "facil.io"
+                                                "faragon.github.io"
+                                                "flintlib.org"
+                                                "fragglet.github.io"
+                                                "freeglut.sourceforge.net"
+                                                "freeweb.siol.net"
                                                 "gcc.gnu.org"
-                                                "qt.io"
-                                                "gtk.org"
-                                                "sdl.org"
-                                                "libsdl.org"
-                                                "qemu-project.org"
-                                                "cppreference.com"
-                                                "opensource.org"
-                                                "ietf.org"
-                                                "w3.org"
-                                                "ansi.org"
-                                                "iso.org"
-                                                "ieee.org"
-                                                "man7.org"
-                                                "discourse.nixos.org"
-                                                "ziggit.dev"
-                                                "emacs-china.org"
-                                                "lwn.net"
-                                                "kernel.org"
-                                                "sourceware.org"
-                                                "debian.org"
-                                                "archlinux.org"
+                                                "gist.github.com"
+                                                "git.mpich.org"
+                                                "git.sr.ht"
                                                 "github.com"
-                                                "osdev.org"
-                                                "opencores.org"
-                                                "riscv.org"
-                                                "musl-libc.org"
-                                                "newlib.sourceware.org"
+                                                "glade.gnome.org"
+                                                "gmplib.org"
+                                                "gmsl.sourceforge.net"
+                                                "gnu.org"
+                                                "gnupg.org"
+                                                "google.github.io"
+                                                "graphics.stanford.edu"
+                                                "gstreamer.freedesktop.org"
+                                                "h2o.examp1e.net"
+                                                "hal.science"
+                                                "hardysimpson.github.io"
+                                                "hintjens.gitbooks.io"
+                                                "hirrolot.github.io"
+                                                "hplgit.github.io"
+                                                "icculus.org"
+                                                "igraph.org"
+                                                "ioquake3.org"
+                                                "jemalloc.net"
+                                                "joaotavora.github.io"
+                                                "jstimpfle.de"
+                                                "jvns.ca"
+                                                "kitsune-dsu.com"
+                                                "knking.com"
+                                                "kore.io"
+                                                "kristaps.bsd.lv"
+                                                "liballeg.org"
+                                                "libccv.org"
+                                                "libcello.org"
+                                                "libcheck.github.io"
+                                                "libcork.readthedocs.io"
+                                                "libcox.symisc.net"
+                                                "libdill.org"
+                                                "libevent.org"
+                                                "libgit2.org"
+                                                "libjpeg-turbo.virtualgl.org"
+                                                "libjpeg.sourceforge.net"
+                                                "liblfds.org"
+                                                "libmill.org"
+                                                "libsound.io"
+                                                "libspng.org"
+                                                "libtrading.org"
+                                                "liburcu.org"
+                                                "libusb.info"
+                                                "libuv.org"
+                                                "libvips.github.io"
+                                                "libzip.org"
+                                                "lionet.info"
+                                                "lipforge.ens-lyon.fr"
+                                                "lldb.llvm.org"
+                                                "llhttp.org"
+                                                "lloyd.github.io"
+                                                "locklessinc.com"
+                                                "lodev.org"
+                                                "logological.org"
+                                                "lvgl.io"
+                                                "lwan.ws"
+                                                "lz4.github.io"
+                                                "lzip.nongnu.org"
+                                                "maciejczyzewski.github.io"
+                                                "madmurphy.github.io"
+                                                "marek.vavrusa.com"
+                                                "math-atlas.sourceforge.net"
+                                                "mesonbuild.com"
+                                                "michaelrsweet.github.io?Z3"
+                                                "mihl.sourceforge.net"
+                                                "mike.steinert.ca"
+                                                "mingw-w64.yaxm.org"
+                                                "mingw.org"
+                                                "mongoc.org"
+                                                "mpfr.loria.fr"
+                                                "mpitutorial.com"
+                                                "mpv.io"
+                                                "msgpack.org"
+                                                "msune.github.io"
+                                                "msys2.github.io"
+                                                "musl.libc.org"
+                                                "nanomsg.github.io"
+                                                "nappgui.com"
+                                                "nemequ.github.io"
+                                                "netbeans.org"
+                                                "nethack4.org"
+                                                "nullprogram.com"
+                                                "openquantumsafe.org"
+                                                "opensource.org"
+                                                "opic.rocks"
+                                                "oprofile.sourceforge.net"
+                                                "orx-project.org"
+                                                "pari.math.u-bordeaux.fr"
+                                                "paulbatchelor.github.io"
+                                                "pcc.ludd.ltu.se"
+                                                "pdclib.e43.eu"
+                                                "pdos.csail.mit.edu"
+                                                "perf.wiki.kernel.org"
+                                                "pngquant.org"
+                                                "port70.net"
+                                                "pp.ipd.kit.edu"
+                                                "premake.github.io"
+                                                "projects.malikania.fr"
+                                                "proprogramming.org"
+                                                "re2c.org"
+                                                "redis.io"
+                                                "remove-to-waste.info"
+                                                "repo.hu"
+                                                "risoflora.github.io"
+                                                "roaringbitmap.org"
+                                                "rr-project.org"
+                                                "savannah.nongnu.org"
+                                                "savedparadigms.files.wordpress.com"
+                                                "scientificc.github.io"
+                                                "shop.oreilly.com"
+                                                "sigrok.org"
+                                                "site.icu-project.org"
+                                                "sites.google.com"
+                                                "slepc.upv.es"
+                                                "snaipe.me"
+                                                "sod.pixlab.io"
+                                                "software.schmorp.de"
+                                                "sophia.systems"
+                                                "sourceforge.net"
+                                                "sourceware.org"
+                                                "spdx.org"
+                                                "steve-yegge.blogspot.co.nz"
+                                                "svn.msweet.org"
+                                                "talloc.samba.org"
+                                                "tartarus.org"
+                                                "tatsuhiro-t.github.io"
+                                                "tiny-rex.sourceforge.net"
+                                                "tinycthread.github.io"
+                                                "tls.mbed.org"
+                                                "tools.ietf.org"
+                                                "troydhanson.github.io"
+                                                "trumpowen.github.io"
+                                                "tulipindicators.org"
+                                                "tuxfan.github.io"
                                                 "uclibc-ng.org"
-                                                ;; "hackaday.com" ;; jsut a social media site
-                                                "raspberrypi.org"
-                                                "arduino.cc"
-                                                "espressif.com"
-                                                "gentoo.org")))
+                                                "unqlite.org"
+                                                "uriparser.github.io"
+                                                "viewsourcecode.org"
+                                                "web.archive.org"
+                                                "webserver2.tecgraf.puc-rio.br"
+                                                "wiki.gnome.org"
+                                                "wiki.haskell.org"
+                                                "wiki.sei.cmu.edu"
+                                                "wiki.videolan.org"
+                                                "wolkykim.github.io"
+                                                "www.andre-simon.de"
+                                                "www.bzip.org"
+                                                "www.chiark.greenend.org.uk"
+                                                "www.codeblocks.org"
+                                                "www.codelite.org"
+                                                "www.codeproject.com"
+                                                "www.colm.net"
+                                                "www.coralbits.com"
+                                                "www.cprover.org"
+                                                "www.crasseux.com"
+                                                "www.digip.org"
+                                                "www.doxygen.nl"
+                                                "www.dyncall.org"
+                                                "www.enlightenment.org"
+                                                "www.eso.org"
+                                                "www.etalabs.net"
+                                                "www.etpan.org"
+                                                "www.fefe.de"
+                                                "www.feynarts.de"
+                                                "www.ffmpeg.org"
+                                                "www.fftw.org"
+                                                "www.flourish.org"
+                                                "www.freedesktop.org"
+                                                "www.geany.org"
+                                                "www.gedanken.org.uk"
+                                                "www.gii.upv.es"
+                                                "www.glfw.org"
+                                                "www.gnu.org"
+                                                "www.gnutls.org"
+                                                "www.greenend.org.uk"
+                                                "www.gtk.org"
+                                                "www.hboehm.info"
+                                                "www.hughes.com.au"
+                                                "www.infradead.org"
+                                                "www.kdevelop.org"
+                                                "www.koanlogic.com"
+                                                "www.learn-c.org"
+                                                "www.libjpeg-turbo.org"
+                                                "www.libpng.org"
+                                                "www.libretro.com"
+                                                "www.libsdl.org"
+                                                "www.libsigil.com"
+                                                "www.libtom.net"
+                                                "www.mcs.anl.gov"
+                                                "www.mega-nerd.com"
+                                                "www.mission-base.com"
+                                                "www.mongodb.org"
+                                                "www.mpich.org"
+                                                "www.multiprecision.org"
+                                                "www.netlib.org"
+                                                "www.nlnetlabs.nl"
+                                                "www.oberhumer.com"
+                                                "www.opengl.org"
+                                                "www.openmp.org"
+                                                "www.openssl.org"
+                                                "www.oracle.com"
+                                                "www.pcre.org"
+                                                "www.pearson.com"
+                                                "www.pell.portland.or.us"
+                                                "www.planetpdf.com"
+                                                "www.postgresql.org"
+                                                "www.pyyaml.org"
+                                                "www.rabbitmq.com"
+                                                "www.raylib.com"
+                                                "www.recurse.com"
+                                                "www.saphir2.com"
+                                                "www.scons.org"
+                                                "www.sfml-dev.org"
+                                                "www.sgi.com"
+                                                "www.shlomifish.org"
+                                                "www.spinellis.gr"
+                                                "www.sqlite.org"
+                                                "www.symas.com"
+                                                "www.tcl.tk"
+                                                "www.throwtheswitch.org"
+                                                "www.valgrind.org"
+                                                "www.webdav.org"
+                                                "www.xiph.org"
+                                                "xforms-toolkit.org"
+                                                "xiph.org"
+                                                "xmake.io"
+                                                "xmlsoft.org"
+                                                "zeromq.org"
+                                                "zinjai.sourceforge.net"
+                                                "zlib.net"
+                                                "zserge.com"
+
+                                                "codeberg.org"
+                                                "github.com"
+                                                "gitlab.com"
+                                                "hackaday.com"
+                                                "lwn.net"
+                                                "osdev.org"
+                                                "ziggit.dev"
+                                                ;; "emacs-china.org"
+                                                ;; "news.ycombinator.com"
+                                                ;; "rustcc.cn"
+
+                                                ;; "cmake.org"
+                                                ;; "cppreference.com"
+                                                ;; "elixir-lang.org"
+                                                ;; "erlang.org"
+                                                ;; "haskell.org"
+                                                ;; "lua.org"
+                                                ;; "python.org"
+                                                ;; "rustlang.org"
+                                                ;; "ziglang.org"
+
+                                                )))
          (request-data
           `(("api_key" . ,tavily-api-key)
             ("query" . ,query)
@@ -2448,6 +2739,7 @@ Optional MAX-RESULTS is the maximum number of results (default 5)."
                   (bug . "You are a large language model and a careful programmer. The supplied code doesn't work, or contains bugs. Describe each problem using only one sentence. Provide fixes without changing the old behavior.")))
   (setq  gptel-stream nil))
 (use-package consult-gh
+  :defer t
   :after consult
   :custom
   (consult-gh-confirm-before-clone nil)
@@ -2479,7 +2771,7 @@ Optional MAX-RESULTS is the maximum number of results (default 5)."
   "Search GitHub code for current major mode's language.
 Uses word at point as default, or prompts for input."
   (interactive)
-  (let* ((default (thing-at-point 'word t))
+  (let* (
          (language (pcase major-mode
                      ('zig-mode "zig")
                      ('rust-mode "rust")
@@ -2489,7 +2781,7 @@ Uses word at point as default, or prompts for input."
                      ('javascript-mode "javascript")
                      ('typescript-mode "typescript")
                      (_ (read-string "Language: "))))
-         (input (read-string (format "Search %s code: " language) default)))
+         (input (read-string (format "Search %s code: " language) )))
     (consult-gh-search-code (format "%s -- --language=%s --limit 7" input language)
                             nil nil nil nil)))
 
@@ -2539,9 +2831,40 @@ Uses word at point as default, or prompts for input."
 (dir-locals-set-directory-class
  (expand-file-name "~/linux-trees")
  'linux-kernel)
+;; (setq enable-dir-local-variables nil)
 
-(add-to-list 'pyim-dicts '(:name "hmdz" :file "~/.local/share/mysource/hmdz.pyim"))
-
+(defun my-jichang(price traffic usage &optional used)
+  "如 (my-jichang 14.9 130.0 0.39 86.08)， 用于计算梯子的大概天数/日均价格，
+  0.39是最近110天内计算的日均流量使用。 price 梯子价格, traffic 购得的流量
+  usage 个人一般每日使用的流量,used(可选) 己经使用的流量"
+  (message (format (concat " 每GB流量%f元 \n 大概使用%f天或%f年 \n 每天大概%f元 \n " (if  (numberp used) (format "大概还剩%f天"     (/ (- traffic used) (* usage 1.0)))nil))
+                   (/ price (* traffic 1.0))
+                   (/ traffic (* usage 1.0))
+                   (/ (/ traffic (* usage 1.0)) 365)
+                   (/ price (/ traffic (* usage 1.0))))))
+(defun firefox-search-zig()
+  (interactive)
+  (let ((meme (if (use-region-p)
+                  (buffer-substring-no-properties (region-beginning) (region-end))
+                (thing-at-point 'word t)) ))
+    (start-process "me" nil browse-url-firefox-program "--new-tab"
+                   (concat "http://127.0.0.1:55555/#" meme))
+    (swaywindow)))
+(defun url-to-hosts-line ()
+  "Convert a URL on the current line to '    0.0.0.0 hostname' format."
+  (interactive)
+  (let* ((line (thing-at-point 'line t))
+         (url (when line
+                (string-match "https?://\\([^/]+\\)" line)
+                (match-string 0 line)))
+         (hostname (when url
+                     (replace-regexp-in-string
+                      "^https?://\\([^/]+\\).*" "\\1" url))))
+    (when hostname
+      (beginning-of-line)
+      (kill-line)
+      (insert (concat "0.0.0.0 " hostname))
+      (beginning-of-line))))
 (defun replace-url-in-region ()
   "Replace URLs in region with 0.0.0.0 and convert / to 0.0.0.0."
   (interactive)
@@ -2567,29 +2890,41 @@ Uses word at point as default, or prompts for input."
         (delete-duplicate-lines (point-min) (point-max))
         ))))
 
-(setq-default comint-terminfo-terminal "dumb-emacs-ansi")
-
-(with-eval-after-load 'compile
-  (add-to-list 'compilation-environment "TERM=dumb-emacs-ansi")
-  (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter))
-
-;; (defun firefox-search-zig()
-;;   (interactive)
-;;   (let ((meme (if (use-region-p)
-;;                   (buffer-substring-no-properties (region-beginning) (region-end))
-;;                 (thing-at-point 'word t)) ))
-;;     (start-process "me" nil browse-url-firefox-program "--new-tab"
-;;                    (concat "http://127.0.0.1:55555/#" meme))
-;;     (swaywindow)))
-
-;; (start-process  "zigstd" nil  "zig" "std"  "-p" "55555")
-
-(defun my-jichang(price traffic usage &optional used)
-  "如 (my-jichang 14.9 130.0 0.39 86.08)， 用于计算梯子的大概天数/日均价格，
-0.39是最近110天内计算的日均流量使用。 price 梯子价格, traffic 购得的流量
-usage 个人一般每日使用的流量,used(可选) 己经使用的流量"
-  (message (format (concat " 每GB流量%f元 \n 大概使用%f天或%f年 \n 每天大概%f元 \n " (if  (numberp used) (format "大概还剩%f天"     (/ (- traffic used) (* usage 1.0)))nil))
-                   (/ price (* traffic 1.0))
-                   (/ traffic (* usage 1.0))
-                   (/ (/ traffic (* usage 1.0)) 365)
-                   (/ price (/ traffic (* usage 1.0))))))
+(defun my/get-project-vterm-buffer ()
+  "Return the project vterm buffer, or nil if not exists."
+  (let* ((proj (project-current t))
+         (root (directory-file-name (project-root proj)))
+         (pattern (format "\\*vterminal - %s" (regexp-quote root))))
+    (catch 'found
+      (dolist (buf (buffer-list))
+        (when (string-match pattern (buffer-name buf))
+          (throw 'found buf)))
+      nil)))
+(defun my/ensure-project-vterm ()
+  "Ensure project vterm exists."
+  (let ((buf (my/get-project-vterm-buffer)))
+    (unless buf
+      (multi-vterm-project)
+      (setq buf (my/get-project-vterm-buffer)))
+    buf))
+(defun my/send-to-vterm ()
+  "Send active region or current line to project vterm without touching kill-ring."
+  (interactive)
+  (let* ((text (if (use-region-p)
+                   (buffer-substring-no-properties (region-beginning) (region-end))
+                 (buffer-substring-no-properties (line-beginning-position) (line-end-position))))
+         (vbuf (my/ensure-project-vterm)))
+    (unless vbuf (user-error "No project vterm buffer"))
+    (let ((proc (get-buffer-process vbuf)))
+      (unless proc (user-error "No process for vterm buffer"))
+      (process-send-string proc (concat text "\n")))))
+(defun my/zig-build-vterm ()
+  "Send active region or current line to project vterm without touching kill-ring."
+  (interactive)
+  (save-buffer)
+  (let* ((text "c; zig build")
+         (vbuf (my/ensure-project-vterm)))
+    (unless vbuf (user-error "No project vterm buffer"))
+    (let ((proc (get-buffer-process vbuf)))
+      (unless proc (user-error "No process for vterm buffer"))
+      (process-send-string proc (concat text "\n")))))

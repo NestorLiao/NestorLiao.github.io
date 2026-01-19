@@ -128,17 +128,17 @@
                   btop
                   # cachix
                   # ccls
-                  # clang
-                  # clang-tools
+                  clang
+                  clang-tools
                   # codespell
                   # conan
                   # cpio
                   # cppcheck
-                  # ctags
+                  ctags
                   # doxygen
                   # elfutils
                   # elfutils.dev
-                  # file
+                  file
                   # flex
                   # foliate
                   # fzf
@@ -160,6 +160,7 @@
                   # openssl.dev
                   # pahole
                   # pandoc
+                  # openvpn
                   # pciutils
                   # qemu
                   # qemu-utils
@@ -288,16 +289,22 @@
                     "quickemu --vm windows-10.conf --display spice; sleep 480; notify-send -t 1000  'out of windows, now!';sleep 10; pkill windows;";
                   garbage = "nix-collect-garbage -d";
                   sgarbage = ''
-                    sudo rm /tmp/tmp.* -rf;
-                     sudo nix-collect-garbage -d;
-                     nix-collect-garbage -d;
-                    sudo nix-store --optimise;'';
+                    sudo rm /tmp/tmp.* -rf
+                     sudo nix-collect-garbage -d
+                     nix-collect-garbage -d
+                    sudo nix-store --optimise'';
                   # sudo nix-collect-garbage -d
                   # sudo nix-store --optimise
                   # nix-store --query --roots
                   # ls -l /var/run/current-system
                   nixh = "nix-prefetch-url";
                   nixhu = "nix-prefetch-url --unpack";
+                  rsap=
+                    "sudo nixos-rebuild switch --flake .#$hostname  --option substituters 'https://mirrors.ustc.edu.cn/nix-channels/store  https://cache.nixos.org' --cores 6 -j 12";
+                  rsme=
+                    "sudo nixos-rebuild switch --flake /home/$USER/.me#$hostname  --option substituters 'https://mirrors.ustc.edu.cn/nix-channels/store  https://cache.nixos.org' --cores 6 -j 12";
+                  rsmeo=
+                    "sudo nixos-rebuild switch --flake /home/$USER/.me#$hostname  --option substituters 'https://mirrors.ustc.edu.cn/nix-channels/store  https://cache.nixos.org' --cores 6 -j 12 --offline";
                   rso =
                     "sudo nixos-rebuild switch --flake /home/${userSetting.username}/.config/nixos#${userSetting.hostname} --offline";
                   rs =
@@ -397,9 +404,9 @@
                         source = pkgs.fetchFromGitHub {
                           owner = "NestorLiao";
                           repo = "mutable-config";
-                          rev = "master"; # lib.fakeSha256;
-                          sha256 =
-                            "sha256-K8d4b1AkKonzYVGpyDrRFPgUqombROJXHqBVIGBoM9A=";
+                          rev = "master";
+                          # sha256 = lib.fakeSha256;
+                          sha256 = "sha256-2kzLVqdT9STloYa8vOl3iZmcf20p4RZS/cIjibhFyBE=";
                         };
                       };
                       home.file.".stardict/dic" = {
@@ -467,11 +474,10 @@
                           editor = {
                             lsp = {
                               display-messages = true;
-                              auto-signature-help =
-                                false; # https://github.com/helix-editor/helix/discussions/6710
+                              auto-signature-help = false;
                             };
                             # gutters = ["diagnostics" "spacer" "diff"];
-                            jump-label-alphabet = "gftnseriaodhcjxkblpvuwy";
+                            jump-label-alphabet = "aorisetndh";
                             bufferline = "multiple";
                             auto-info = true;
                             auto-save = true;
@@ -1917,6 +1923,8 @@ hr {
                         dired-subtree
                         ztree
                         goto-chg
+                        dumb-jump
+                        cff
 
                         ## expand & edit
                         move-text
@@ -1925,9 +1933,14 @@ hr {
                         multiple-cursors
                         iedit
                         avy
-                        # yasnippet
+                        yasnippet
 
                         ### Do Anything In Emacs©
+
+                        #### Service Manager
+                        docker
+                        kubernetes
+                        # ovpn-mode
 
                         #### project manager
                         magit
@@ -1937,34 +1950,39 @@ hr {
                         consult-gh-embark
                         consult-gh-forge
                         consult-gh-with-pr-review
-                        docker
-                        kubernetes
                         git-link
                         git-timemachine
-                        dumb-jump
-                        cff
+
 
                         #### get term
                         vterm
                         multi-vterm
-                        # eshell-toggle
                         with-editor
+                        # eshell-toggle
+
                         #### read books
                         nov
                         pdf-tools
                         saveplace-pdf-view
+                        # pandoc-mode
+
                         #### chinese input method
+                        # 为什么有人需要让浏览器能用vim(连文本框也要)
+                        # tmd©，直接在emacs写全复制不就行了吗?
+                        # vimium/tridactyl/vimium C/surfinger…
+                        # 去tm的浏览器，就呆在编程器!
                         pyim
+
                         #### read log/manual/doc/dict/gpt/... in emacs
-                        # doxymacs
+                        # doxymacs # anything relate to c++ is a f**ked mess.
                         syslog-mode
                         journalctl-mode
                         quick-sdcv
                         tldr
                         gptel
                         helpful
-                        sicp
-                        posix-manual
+                        # sicp
+                        # posix-manual
                         devdocs-browser
 
                         ### the you-know-who guy created a huge list of amazing pkgs
@@ -1977,46 +1995,87 @@ hr {
                         orderless
                         embark-consult
 
-                        ### for language fans, and YOU DON'T HAVE TO LEARN THOSE
-                        cmake-mode
-                        dockerfile-mode
-                        go-mode
-                        markdown-mode
-                        nix-mode
-                        cargo-mode
-                        rust-mode
-                        zig-mode
-                        python-mode
-                        yaml-mode
+                        ### for Language FANBoys: "YOU DON'T HAVE TO LEARN THOSE"
 
-                        ### why I need below mode??? I am no cult dev.
-                        haskell-mode
-                        lua-mode
-                        web-mode
-                        racket-mode
-                        elixir-mode
-                        erlang
-                        scala-mode
-                        d-mode
-                        glsl-mode
-                        tuareg
-                        less-css-mode
-                        graphviz-dot-mode
-                        clojure-mode
-                        csharp-mode
-                        nim-mode
-                        jinja2-mode
-                        purescript-mode
-                        toml-mode
-                        nginx-mode
-                        kotlin-mode
-                        php-mode
-                        qml-mode
-                        typescript-mode
-                        rfc-mode
+                        zig-mode
+                        nix-mode
+                        # cargo-mode
+                        # rust-mode
+                        # cmake-mode
+                        # go-mode
+                        # go-template-mode
+
+                        # bqn-mode
+                        # capnp-mode
+                        # circom-mode
+                        # clojure-mode
+                        # csharp-mode
+                        # d-mode
+                        # dockerfile-mode
+                        # elixir-mode
+                        # enh-ruby-mode
+                        # erlang
+                        # fennel-mode
+                        # fsharp-mode
+                        # fstar-mode
+                        # gams-mode
+                        # gcode-mode
+                        # gdshader-mode
+                        # glsl-mode
+                        # graphviz-dot-mode
+                        # hack-mode
+                        # haskell-mode
+                        # haxe-mode
+                        # hoa-mode
+                        # ini-mode
+                        # jbeam-mode
+                        # jinja2-mode
+                        # just-mode
+                        # k8s-mode
+                        # kdl-mode
+                        # kotlin-mode
+                        # less-css-mode
+                        # lfe-mode
+                        # lua-mode
+                        # lumos-mode
+                        # markdown-mode
+                        # mermaid-mode
+                        # mgmtconfig-mode
+                        # minizinc-mode
+                        # move-mode
+                        # nael
+                        # neut-mode
+                        # nginx-mode
+                        # nim-mode
+                        # php-mode
+                        # ponylang-mode
+                        # puppet-mode
+                        # purescript-mode
+                        # python-mode
+                        # qml-mode
+                        # racket-mode
+                        # rasi-mode
+                        # scala-mode
+                        # scallop-mode
+                        # terraform-mode
+                        # tuareg
+                        # typescript-mode
+                        # uv-mode
+                        # web-mode
+                        # yaml-imenu
+                        # yaml-mode
+
+                        # 我实在想不通，语言为什么这么多? 需求为什么停不了?
+                        # 这些程序也就几百行… 为什么会产生这么大的“不简洁感”
+                        # 随便配个浏览器就远远大过这些了…
+                        # 人们总是过于关心因自己产生的事物。
+                        # 或是说“人们总是在意自己没用过的事物”，
+                        # 而对轻视已拥有的事物。幻想… 自贱…
+                        # 但确实，注释完这些，启动时间从1.76变成了1.01
 
                         ### save and format
                         aggressive-indent
+                        electric-operator
                         elisp-autofmt
                         super-save
 
@@ -2025,18 +2084,35 @@ hr {
                         no-emoji
                         ligature
                         compile-angel
-                        # buffer-terminator
                         envrc
 
-                        ### feel even better than drug
+                        ### feel even better
                         alert
                         trashed
                         wgrep
-                        # easysession
                         undo-fu
                         undo-fu-session
-                      ]) ++ (with epkgs.elpaPackages; [ plz ])
-                      ++ (with pkgs; [ ]));
+
+                        # smart-compile 算了吧，简单点，你一天写80种语言
+                        # 可能连它们的hello world都写不出来。
+                        # consult-notes 难道，哥们不知道写笔记不如写代码?
+                        # obsidian/yuque/typora，你让的笔记传销坑还少吗?
+                        # 笔记就是每天后悔，明天期待，复制粘贴，llm输出。
+                        # 谁tm的用笔记就是脑瓜子弱智… 专门给llm加语料…
+                        # fsrs/anki-editor 难道，哥们是出题人? 一天天的搞记忆法。
+                        # 买本单词本记记吧…
+                        # viking-mode 难道，哥们不知道expand-region?
+                        # call-graph 难道，哥们以为画个图就理清楚了?
+                        # el-fetch 难道，哥们真的写得来elisp就写个包?
+                        # 天天关心天气质量和自己编辑器占用多少内存的男性
+                        # 大概率是抖m的男娘吧，bro，get some help!
+                        # 甩几下铁，不关心这些那些，只是用心做事…
+                        # 那里需要管什么RAM和ROM的几百MB…
+                      ]) ++ (with epkgs.elpaPackages; [
+                        plz # tavily-search
+                      ])
+                      ++ (with pkgs; [
+                      ]));
                   };
                 };
                 programs.nix-ld = {
@@ -2685,6 +2761,9 @@ hr {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # Still, after 20 years passed, nobody fucking care about these.
+    # sudo nix-channel --add https://nixos.org/channels/nixos-unstable
+    # sudo nix-channel --update
     sops-nix.url = "github:Mic92/sops-nix";
   };
 }

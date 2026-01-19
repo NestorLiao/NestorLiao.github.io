@@ -105,6 +105,15 @@ LSP and 100 fancy color themes with 1 million panels and Javascript Extensions, 
 Busy-minds cause Less Mindful.
 
 
+#+ATTR_LATEX: :environment quotation
+#+BEGIN_QUOTE
+       Most of these tools are distractions. I don't want suggestions
+       or needling warnings sliding around on my screen while I
+       compose and examine programs; I want a quiet space to
+       write and think. Focus is essential.
+#+END_QUOTE
+
+
 #+TITLE: TL;DR
 #+OPTIONS: toc:2
 #+language: cn
