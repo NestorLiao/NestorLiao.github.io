@@ -133,6 +133,44 @@ Busy-minds cause Less Mindful.
 # #+LATEX_HEADER: \addbibresource[location=local]{reference.bib}
 #+keywords: Tech, NestorLiao, FSF, Emacs, Linux, ZMK, Eink, Rust, Zig, C, C++, OS
 #+description: NestorLiao, Emacs, Linux, ZMK, Eink, Rust, Zig, C, C++, OS, embedded, tutoria
-# #+bibliography: "./reference.bib"
 #+cite_export: bibtex
 #+LATEX_HEADER: \mainmatter
+
+
+* 禅
+- 眼不见生物本能与工业革命驱动的越发泛滥的瘾品失范世界，心为净极简自然身心|黑白断网编程
+    远离这几点：随机、即时、不必、匿名、免费、易得、广告、失范
+    做到这几点：多做事、乐观心、吃饭慢、心跳缓、有手劲、走路快、体重适、无三高、
+    衣着素、清淡食、租房住、乡间息、温度低、睡眠香、独处思、归自然、无名言、无社媒
+- 空腹光弱放松|整理计划|静暗凉累|精力充沛|恢复身体|提升大脑|增强免疫|调节激素|健康长寿
+- 避免受伤|养成运动习惯|兼顾力量有氧平衡柔韧|全天保持活动
+   走路|跑步|抡锤|俯卧撑|引体向上
+   摇摆|高拉|相扑|深蹲|拉起|侧拉|划船|起立|绕头|绕身|绕腿|风车
+   拉举|抓举|挺举|弯举|军推|实心推|借力推|单双手|单流水|双抓举|农夫行走
+- 少糖盐油脂加工食品，多绿豆果菜自然有机
+   [大豆|氢化|玉米|芥花]油|反式脂肪
+   [口香糖|高果糖|苏氯胺|阿斯巴甜]糖
+   [油炸|垃圾|高度加工]食品|面[包|条|饼]|奶酒咖
+   番茄|红薯|菜花|香菇|小萝卜|鹰嘴豆|牛油果|夏威夷果
+   肌酸|苹果醋|坚果奶|红曲米|发酵食品|胶原蛋白粉|墨西哥辣椒粉
+   蓝莓|葡萄|柠檬|香菜|大蒜|孜然|菊粉|可可粉|鱼油|特级初榨橄榄油
+- emacs = Evenings, Mornings, And a Couple of Saturdays
+   不随机(c-h/info，全部文档代码给你，你不服就改)
+   不即时(忍住上古体验需是延迟满足高手，编辑器挑人)
+   生存感(人生不过吃睡动和一颗极简又折腾的emacs心)
+   不匿名(写包/做实名贡献，代码为万人所用，成就感拉满)
+   不免费(自由不是免费，自由无私人文精神残存无限计算世界)
+   不易得(当今难得的有难度还有生活具体用处的编程素养积累感)
+   无广告(完全可控纯文本，空无至虚感宇宙计算禅意与人类崇高理想)
+   不失范(极具宗教感，去传教需冥想自省、禁欲克己来数十年如一日修道)
+- 刷leetgo|写project，无色无味不闻不问无欲无求禁游戏戒手机卸浏览器罢搜索恨视频
+   通过阅读lfs/lkd等相关英文文档和kernel最佳编程实践
+   在emacs中使用[c++|c|zig|rust|makefile|bash]-mode和compilation|magit开发:
+   基于多种SOC的linux|rtos的spi、can、wifi、audio、video相关驱动程序和
+   有良好的低功耗设计和稳定性优化的高性能|高并发|多线程|多进程|socket网络程序
+   然后在qemu|docker|k8s|nix环境中使用perf|ftrace|gprof|gdb工具调试程序
+   真实的技术哲学是亲身学会技术底层、真正的人生智慧是用技术找工作然后回到生活远离技术
+   生活是吃饭、睡觉、读书、编程、走路、壶铃，生命是健康、乐观、会意、精进、闲适、力量
+- While the world is tremendously large, the items are anomalously rich,
+   only me writting with leere feeling, ture happiness come from nothing but
+   within.

@@ -24,6 +24,7 @@
         hostname = "nixos";
         email = "llqingsong@qq.com";
         windowmanager = "sway";
+        sound = false;
       };
     in {
       nixosConfigurations = {
@@ -128,7 +129,7 @@
                   btop
                   # cachix
                   # ccls
-                  clang
+                  # clang
                   clang-tools
                   # codespell
                   # conan
@@ -220,6 +221,7 @@
                   # rustc
                   # rustlings
                   # unstable.nix-search-cli
+
                   # unstable.lldb
 
                   c-intro-and-ref
@@ -1658,7 +1660,7 @@ hr {
                 };
                 fonts.fontDir.enable = true; #  fc-cache -fv
                 fonts.packages = with pkgs;
-                  lib.mkForce [
+                  lib.mkForce [ # fc-list : family | sed 's/,/\n/g' | sort -u
                     nerd-fonts.fira-code
                     nerd-fonts.fira-mono
                     nerd-fonts.noto
@@ -1752,9 +1754,6 @@ hr {
                   # 这也是当今时代互联网正在加速实现的事情…
                   # 但这是以牺牲掌握任何技能为代价换来的，
                   # 我们沉迷得越深，想要掌握一项技能的愿望就会越来越淡化。
-                  127.0.0.1 c.doc
-                  127.0.0.1 cpp.doc
-                  127.0.0.1 linux.doc
                   0.0.0.0 emacs-china.org
                   0.0.0.0 chatgpt.com
                   0.0.0.0 www.google.com.hk
@@ -1787,11 +1786,11 @@ hr {
                   };
                   pulseaudio.enable = false;
                   pipewire = {
-                    enable = false; # turn off sound
-                    audio.enable = false;
-                    pulse.enable = false;
+                    enable = userSetting.sound;
+                    audio.enable = userSetting.sound;
+                    pulse.enable = userSetting.sound;
                     alsa = {
-                      enable = false; # false to here
+                      enable = userSetting.sound;
                       support32Bit = true;
                     };
                     jack.enable = false;
@@ -1851,7 +1850,7 @@ hr {
                     xkb.layout = "us";
                   };
                   nginx = {
-                    enable = true;
+                    enable = false;
                     virtualHosts = {
                       # "linux.doc" = {
                       #   listen = [{
@@ -1868,14 +1867,14 @@ hr {
                         root =
                           "${pkgs.cppreference-doc}/share/cppreference/doc/html/en/c";
                       };
-                      # "c-intro.doc" = {
-                      #   listen = [{
-                      #     addr = "0.0.0.0";
-                      #     port = 3004;
-                      #   }];
-                      #   root =
-                      #     "${pkgs.c-intro-and-ref}/share/doc/c-intro-and-ref/";
-                      # };
+                      "c-intro.doc" = {
+                        listen = [{
+                          addr = "0.0.0.0";
+                          port = 3004;
+                        }];
+                        root =
+                          "${pkgs.c-intro-and-ref}/share/doc/c-intro-and-ref/";
+                      };
                       "ccpp.doc" = {
                         listen = [{
                           addr = "0.0.0.0";
@@ -1907,7 +1906,7 @@ hr {
                   dictd = {
                     enable = false;
                     DBs = with pkgs.dictdDBs; [
-                      # wiktionary
+                      wiktionary
                       wordnet
                     ];
                   };
@@ -1919,12 +1918,12 @@ hr {
                       ++ (with epkgs.melpaPackages; [
 
                         ### black MAGIC to jumping everwhere
-                        rg
-                        dired-subtree
-                        ztree
-                        goto-chg
-                        dumb-jump
                         cff
+                        dired-subtree
+                        dumb-jump
+                        goto-chg
+                        rg
+                        ztree
 
                         ## expand & edit
                         move-text
@@ -1934,30 +1933,33 @@ hr {
                         iedit
                         avy
                         yasnippet
+                        # rotate-text # no on melpa
 
                         ### Do Anything In Emacs©
-
                         #### Service Manager
-                        docker
-                        kubernetes
+                        # docker
+                        # kubernetes
                         # ovpn-mode
+                        # journalctl-mode
+                        # syslog-mode
 
                         #### project manager
                         magit
                         magit-todos
-                        disproject
+                        # magit-commit-mark
+                        # magit-tbdiff
                         forge
                         consult-gh-embark
                         consult-gh-forge
                         consult-gh-with-pr-review
                         git-link
                         git-timemachine
-
+                        # disproject
 
                         #### get term
                         vterm
                         multi-vterm
-                        with-editor
+                        # with-editor
                         # eshell-toggle
 
                         #### read books
@@ -1975,36 +1977,34 @@ hr {
 
                         #### read log/manual/doc/dict/gpt/... in emacs
                         # doxymacs # anything relate to c++ is a f**ked mess.
-                        syslog-mode
-                        journalctl-mode
-                        quick-sdcv
-                        tldr
-                        gptel
-                        helpful
-                        # sicp
                         # posix-manual
+                        # sicp
                         devdocs-browser
+                        gptel # seems like doctor-plus. I think using woman is better.
+                        tldr
+                        # helpful # Just use orginal help-mode is better.
+                        quick-sdcv
 
                         ### the you-know-who guy created a huge list of amazing pkgs
                         consult
                         embark
-                        vertico
-                        marginalia
-                        cape
-                        corfu
-                        orderless
                         embark-consult
+                        vertico
+                        orderless
+                        # marginalia
+                        # cape
+                        # corfu
 
                         ### for Language FANBoys: "YOU DON'T HAVE TO LEARN THOSE"
 
-                        zig-mode
                         nix-mode
+                        # markdown-mode
+                        # cmake-mode
+                        # zig-mode
                         # cargo-mode
                         # rust-mode
-                        # cmake-mode
                         # go-mode
                         # go-template-mode
-
                         # bqn-mode
                         # capnp-mode
                         # circom-mode
@@ -2038,7 +2038,6 @@ hr {
                         # lfe-mode
                         # lua-mode
                         # lumos-mode
-                        # markdown-mode
                         # mermaid-mode
                         # mgmtconfig-mode
                         # minizinc-mode
@@ -2074,25 +2073,26 @@ hr {
                         # 但确实，注释完这些，启动时间从1.76变成了1.01
 
                         ### save and format
-                        aggressive-indent
-                        electric-operator
-                        elisp-autofmt
-                        super-save
+                        # electric-operator # 我再也不想要什么自动化了…
+                        aggressive-indent # Only for Elisp or some creepy lang.
+                        super-save # The greatest thing I ever see in my life.
+                        psession # 当然… 自动保存 还是必须的。
 
                         ### emacs look and feel
-                        hide-mode-line
-                        no-emoji
-                        ligature
-                        compile-angel
-                        envrc
+                        hide-mode-line # for my adhd
+                        no-emoji # for my autism
+                        ligature # for my lazy-eye
+                        real-mono-themes # it's my THEME
 
                         ### feel even better
-                        alert
+                        # alert
+                        # envrc
                         trashed
                         wgrep
                         undo-fu
+                        compile-angel
                         undo-fu-session
-
+                        c-eval
                         # smart-compile 算了吧，简单点，你一天写80种语言
                         # 可能连它们的hello world都写不出来。
                         # consult-notes 难道，哥们不知道写笔记不如写代码?
@@ -2108,6 +2108,8 @@ hr {
                         # 大概率是抖m的男娘吧，bro，get some help!
                         # 甩几下铁，不关心这些那些，只是用心做事…
                         # 那里需要管什么RAM和ROM的几百MB…
+                        # BTW, Org-mode is SHIT, just write done plain list.
+
                       ]) ++ (with epkgs.elpaPackages; [
                         plz # tavily-search
                       ])
@@ -2597,9 +2599,9 @@ hr {
                 hardware.enableAllFirmware = true;
                 time.timeZone = "Asia/Hong_Kong";
                 security.rtkit.enable = true;
-                programs.bash.undistractMe.playSound = false;
-                programs.soundmodem.enable = false;
-                xdg.sounds.enable = false;  # stop sound
+                programs.bash.undistractMe.playSound = userSetting.sound;
+                programs.soundmodem.enable = userSetting.sound;
+                xdg.sounds.enable = userSetting.sound;
                 environment.etc = {
                   "wireplumber/main.lua.d/90-suspend-timeout.lua".text = ''
                     apply_properties = {["session.suspend-timeout-seconds"] = 0;};

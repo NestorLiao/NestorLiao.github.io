@@ -27,11 +27,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1768418146,
-        "narHash": "sha256-PmMwvbetrVOpHCP/M2sqWbTmQiNgS5aj+c/31FY3d0Q=",
+        "lastModified": 1768889561,
+        "narHash": "sha256-oNkWIsCgk1Eu5JPJWyQ3qUhtmbixLH305q/YwZFgHSo=",
         "owner": "NestorLiao",
         "repo": "mhosts",
-        "rev": "9efa5768d1bcb036d48f0c316826f866315cf19b",
+        "rev": "4eaa75266d43764da20227c744c4631875ea8cce",
         "type": "github"
       },
       "original": {
