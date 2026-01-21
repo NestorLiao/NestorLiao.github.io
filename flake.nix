@@ -2000,72 +2000,7 @@ hr {
                         ### for Language FANBoys: "YOU DON'T HAVE TO LEARN THOSE"
 
                         nix-mode
-                        # markdown-mode
-                        # cmake-mode
-                        # zig-mode
-                        # cargo-mode
-                        # rust-mode
-                        # go-mode
-                        # go-template-mode
-                        # bqn-mode
-                        # capnp-mode
-                        # circom-mode
-                        # clojure-mode
-                        # csharp-mode
-                        # d-mode
-                        # dockerfile-mode
-                        # elixir-mode
-                        # enh-ruby-mode
-                        # erlang
-                        # fennel-mode
-                        # fsharp-mode
-                        # fstar-mode
-                        # gams-mode
-                        # gcode-mode
-                        # gdshader-mode
-                        # glsl-mode
-                        # graphviz-dot-mode
-                        # hack-mode
-                        # haskell-mode
-                        # haxe-mode
-                        # hoa-mode
-                        # ini-mode
-                        # jbeam-mode
-                        # jinja2-mode
-                        # just-mode
-                        # k8s-mode
-                        # kdl-mode
-                        # kotlin-mode
-                        # less-css-mode
-                        # lfe-mode
-                        # lua-mode
-                        # lumos-mode
-                        # mermaid-mode
-                        # mgmtconfig-mode
-                        # minizinc-mode
-                        # move-mode
-                        # nael
-                        # neut-mode
-                        # nginx-mode
-                        # nim-mode
-                        # php-mode
-                        # ponylang-mode
-                        # puppet-mode
-                        # purescript-mode
-                        # python-mode
-                        # qml-mode
-                        # racket-mode
-                        # rasi-mode
-                        # scala-mode
-                        # scallop-mode
-                        # terraform-mode
-                        # tuareg
-                        # typescript-mode
-                        # uv-mode
-                        # web-mode
-                        # yaml-imenu
-                        # yaml-mode
-
+                        # moved to index.org
                         # 我实在想不通，语言为什么这么多? 需求为什么停不了?
                         # 这些程序也就几百行… 为什么会产生这么大的“不简洁感”
                         # 随便配个浏览器就远远大过这些了…

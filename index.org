@@ -1,3 +1,47 @@
+* 以无为首，以生为屁股
+世界上大概会有人看到这个文字，
+所谓的文字不过是用来blogging，
+不是写诗不是写小说只是BGGing，
+在我看来blog是PIM的一种方式。
+和VIM(Vi IMproved)一样所谓PIM指是的Porn IMproved，通过blogging一些自认为明白的事物给世界多一点躁动，多一点自恋式的垃圾。
+通过头脑masterbating填满你的大脑，这就是我PIM的目标。
+
+blog应该少看，好了该关闭这个tab了，为的是别让你看到我不小心打上去的密码。
+
+好吧PIM的意思其实是Person Information Management。
+那我就把我怎么赚到第一笔一千万告诉你吧。
+
+- 去健身房通过抖音学习锻炼身体
+- 去钦点景点如哈尔滨淄博天水合川学习营销
+- 去twitter上看懂王和elon谈论bitcoin
+- 去囤一些Labubu和NFT以备下一次热潮
+- 去关注女性主义作者向每个人说自己是女权男
+- 学习前端，制作知乎b站小红书豆瓣热点聚合网站
+- 每天花10小时上网，收集链接再发到自己的博客上
+- 每日用30分钟用gpt生成30万字心得感悟到博客
+- 使用gpt生成文本到自己的obsidian第二大脑
+- 利用聚合网站的方法，制作色情网站入口
+- 和缅甸企业达成协议，接入赌博网站广告
+- 在公共厕所大量印刷网址和分发小卡片
+- 每天关注国际新闻，为中国发声，强调爱国
+- 大量投资低空经济与电动车产业的办证产业
+- 每天查阅三联等30个公众号了解世界新编热点
+- 大量投资团播/村超/城超/亚洲杯/世界杯等自发“热点”
+- 保证能量值，去吃火锅，零食，肯德基可乐和奶茶
+- 保证娱乐值，去看演唱会，逛商场，去三亚参与购物
+- 相信品牌，把自我认同放在品牌上，我用什么是什么人
+- 每天把名人名言放在桌面上，思考今天用什么签名
+- 每天要依赖500项工续才能正常生活，增加社会连系
+- 每天思的是车子房子奶子票子，保持自己的目标
+- 关心名人/世界/国家/地位/热点，买书/点赞/分享
+- 通过社交媒体学社交，通过新闻学习知识文化
+- 每天花10h思考使用什么工具才能让5s的事效率更高
+- 每天得用10h在电脑上用eletron浏览器和手机上用electron应用
+- 作为文化人得在久坐上花10h以上，每5小时休息一次
+- 多学习到需要眼镜，多久坐到需要小米su7, 多吃少动到去健身房
+- 必须在国家间站队，必须在编程语言间站队，必须在编程工具间站队
+- 少睡觉，少运动，多上网，多久坐，多比较 ，人生会更好
+
 * ZEN
 #+begin_Verse
 Delete your windows,
@@ -136,7 +180,6 @@ Busy-minds cause Less Mindful.
 #+cite_export: bibtex
 #+LATEX_HEADER: \mainmatter
 
-
 * 禅
 - 眼不见生物本能与工业革命驱动的越发泛滥的瘾品失范世界，心为净极简自然身心|黑白断网编程
     远离这几点：随机、即时、不必、匿名、免费、易得、广告、失范
@@ -174,3 +217,441 @@ Busy-minds cause Less Mindful.
 - While the world is tremendously large, the items are anomalously rich,
    only me writting with leere feeling, ture happiness come from nothing but
    within.
+
+* Bloated World
+
+#+caption: Some lang-package for emacs
+#+begin_src nix
+    markdown-mode
+      cmake-mode
+        zig-mode
+        cargo-mode
+        rust-mode
+        go-mode
+        go-template-mode
+        bqn-mode
+        capnp-mode
+        circom-mode
+        clojure-mode
+        csharp-mode
+        d-mode
+        dockerfile-mode
+        elixir-mode
+        enh-ruby-mode
+        erlang
+        fennel-mode
+        fsharp-mode
+        fstar-mode
+        gams-mode
+        gcode-mode
+        gdshader-mode
+        glsl-mode
+        graphviz-dot-mode
+        hack-mode
+        haskell-mode
+        haxe-mode
+        hoa-mode
+        ini-mode
+        jbeam-mode
+        jinja2-mode
+        just-mode
+        k8s-mode
+        kdl-mode
+        kotlin-mode
+        less-css-mode
+        lfe-mode
+        lua-mode
+        lumos-mode
+        mermaid-mode
+        mgmtconfig-mode
+        minizinc-mode
+        move-mode
+        nael
+        neut-mode
+        nginx-mode
+        nim-mode
+        php-mode
+        ponylang-mode
+        puppet-mode
+        purescript-mode
+        python-mode
+        qml-mode
+        racket-mode
+        rasi-mode
+        scala-mode
+        scallop-mode
+        terraform-mode
+        tuareg
+        typescript-mode
+        uv-mode
+        web-mode
+        yaml-imenu
+        yaml-mode
+
+#+end_src
+
+
+#+caption: Some useful link for C
+#+begin_verse
+"100.github.io"
+"250bpm.com"
+"adtinfo.org"
+"anjuta.org"
+"ansi.org"
+"apophenia.info"
+"apr.apache.org"
+"archlinux.org"
+"arduino.cc"
+"astyle.sourceforge.net"
+"attractivechaos.github.io"
+"avro.apache.org"
+"bitbucket.org"
+"blog.llvm.org"
+"blog.noctua-software.com"
+"blog.pkh.me"
+"blogs.oracle.com"
+"blosc.org"
+"brechtsanders.github.io"
+"c-faq.com"
+"c2html.sourceforge.net"
+"cairographics.org"
+"ccache.dev"
+"ccodearchive.net"
+"cdecl.org"
+"cedet.sourceforge.net"
+"cesanta.com"
+"chipmunk-physics.net"
+"clang.llvm.org"
+"cmake.org"
+"cmocka.org"
+"coap.technology"
+"codeforwin.org"
+"codeplea.com"
+"computing.llnl.gov"
+"conan.io"
+"concurrencykit.org"
+"contiki-ng.org"
+"cppcheck.sourceforge.net"
+"cppreference.com"
+"criterion.readthedocs.io"
+"criu.org"
+"cunit.sourceforge.net"
+"curl.haxx.se"
+"cyan4973.github.io"
+"cygwin.com"
+"czmq.zeromq.org"
+"danluu.com"
+"debian.org"
+"dl.acm.org"
+"docutils.sourceforge.net"
+"dotat.at"
+"download.libsodium.org"
+"duckdb.org"
+"duktape.org"
+"ebassi.github.io"
+"ed-von-schleck.github.io"
+"ejdb.org"
+"elixir-lang.org"
+"emacs-china.org"
+"embed.cs.utah.edu"
+"en.wikibooks.org"
+"en.wikipedia.org"
+"erlang.org"
+"esbmc.org"
+"espressif.com"
+"expat.sourceforge.net"
+"ezxml.sourceforge.net"
+"fabutil.org"
+"facebook.github.io"
+"facil.io"
+"faragon.github.io"
+"flintlib.org"
+"fragglet.github.io"
+"freeglut.sourceforge.net"
+"freertos.org"
+"freeweb.siol.net"
+"gcc.gnu.org"
+"gentoo.org"
+"gist.github.com"
+"git.mpich.org"
+"git.sr.ht"
+"github.com"
+"glade.gnome.org"
+"gmplib.org"
+"gmsl.sourceforge.net"
+"gnu.org"
+"gnupg.org"
+"google.github.io"
+"graphics.stanford.edu"
+"gstreamer.freedesktop.org"
+"gtk.org"
+"h2o.examp1e.net"
+"hal.science"
+"hardysimpson.github.io"
+"haskell.org"
+"hintjens.gitbooks.io"
+"hirrolot.github.io"
+"hplgit.github.io"
+"icculus.org"
+"ieee.org"
+"ietf.org"
+"igraph.org"
+"ioquake3.org"
+"iso.org"
+"jemalloc.net"
+"joaotavora.github.io"
+"jstimpfle.de"
+"jvns.ca"
+"kernel.org"
+"kitsune-dsu.com"
+"knking.com"
+"kore.io"
+"kristaps.bsd.lv"
+"liballeg.org"
+"libccv.org"
+"libcello.org"
+"libcheck.github.io"
+"libcork.readthedocs.io"
+"libcox.symisc.net"
+"libdill.org"
+"libevent.org"
+"libgit2.org"
+"libjpeg-turbo.virtualgl.org"
+"libjpeg.sourceforge.net"
+"liblfds.org"
+"libmill.org"
+"libsdl.org"
+"libsound.io"
+"libspng.org"
+"libtrading.org"
+"liburcu.org"
+"libusb.info"
+"libuv.org"
+"libvips.github.io"
+"libzip.org"
+"lionet.info"
+"lipforge.ens-lyon.fr"
+"lldb.llvm.org"
+"llhttp.org"
+"lloyd.github.io"
+"llvm.org"
+"locklessinc.com"
+"lodev.org"
+"logological.org"
+"lua.org"
+"lvgl.io"
+"lwan.ws"
+"lz4.github.io"
+"lzip.nongnu.org"
+"maciejczyzewski.github.io"
+"madmurphy.github.io"
+"man7.org"
+"marek.vavrusa.com"
+"math-atlas.sourceforge.net"
+"mesonbuild.com"
+"michaelrsweet.github.io?Z3"
+"mihl.sourceforge.net"
+"mike.steinert.ca"
+"mingw-w64.yaxm.org"
+"mingw.org"
+"mongoc.org"
+"mpfr.loria.fr"
+"mpitutorial.com"
+"mpv.io"
+"msgpack.org"
+"msune.github.io"
+"msys2.github.io"
+"musl-libc.org"
+"musl.libc.org"
+"mynewt.apache.org"
+"nanomsg.github.io"
+"nappgui.com"
+"nemequ.github.io"
+"netbeans.org"
+"nethack4.org"
+"newlib.sourceware.org"
+"news.ycombinator.com"
+"nullprogram.com"
+"nuttx.apache.org"
+"opencores.org"
+"openquantumsafe.org"
+"opensource.org"
+"opic.rocks"
+"oprofile.sourceforge.net"
+"orx-project.org"
+"pari.math.u-bordeaux.fr"
+"paulbatchelor.github.io"
+"pcc.ludd.ltu.se"
+"pdclib.e43.eu"
+"pdos.csail.mit.edu"
+"perf.wiki.kernel.org"
+"pngquant.org"
+"port70.net"
+"pp.ipd.kit.edu"
+"premake.github.io"
+"projects.malikania.fr"
+"proprogramming.org"
+"python.org"
+"qemu-project.org"
+"qt.io"
+"raspberrypi.org"
+"re2c.org"
+"redis.io"
+"remove-to-waste.info"
+"repo.hu"
+"riot-os.org"
+"riscv.org"
+"risoflora.github.io"
+"roaringbitmap.org"
+"rr-project.org"
+"rustcc.cn"
+"rustlang.org"
+"savannah.nongnu.org"
+"savedparadigms.files.wordpress.com"
+"scientificc.github.io"
+"sdl.org"
+"shop.oreilly.com"
+"sigrok.org"
+"site.icu-project.org"
+"sites.google.com"
+"slepc.upv.es"
+"snaipe.me"
+"sod.pixlab.io"
+"software.schmorp.de"
+"sophia.systems"
+"sourceforge.net"
+"sourceware.org"
+"spdx.org"
+"steve-yegge.blogspot.co.nz"
+"svn.msweet.org"
+"talloc.samba.org"
+"tartarus.org"
+"tatsuhiro-t.github.io"
+"tiny-rex.sourceforge.net"
+"tinycthread.github.io"
+"tls.mbed.org"
+"tools.ietf.org"
+"troydhanson.github.io"
+"trumpowen.github.io"
+"tulipindicators.org"
+"tuxfan.github.io"
+"uclibc-ng.org"
+"unqlite.org"
+"uriparser.github.io"
+"viewsourcecode.org"
+"w3.org"
+"web.archive.org"
+"webserver2.tecgraf.puc-rio.br"
+"wiki.gnome.org"
+"wiki.haskell.org"
+"wiki.sei.cmu.edu"
+"wiki.videolan.org"
+"wolkykim.github.io"
+"www.andre-simon.de"
+"www.bzip.org"
+"www.chiark.greenend.org.uk"
+"www.codeblocks.org"
+"www.codelite.org"
+"www.codeproject.com"
+"www.colm.net"
+"www.coralbits.com"
+"www.cprover.org"
+"www.crasseux.com"
+"www.digip.org"
+"www.doxygen.nl"
+"www.dyncall.org"
+"www.enlightenment.org"
+"www.eso.org"
+"www.etalabs.net"
+"www.etpan.org"
+"www.fefe.de"
+"www.feynarts.de"
+"www.ffmpeg.org"
+"www.fftw.org"
+"www.flourish.org"
+"www.freedesktop.org"
+"www.geany.org"
+"www.gedanken.org.uk"
+"www.gii.upv.es"
+"www.glfw.org"
+"www.gnu.org"
+"www.gnutls.org"
+"www.greenend.org.uk"
+"www.gtk.org"
+"www.hboehm.info"
+"www.hughes.com.au"
+"www.infradead.org"
+"www.kdevelop.org"
+"www.koanlogic.com"
+"www.learn-c.org"
+"www.libjpeg-turbo.org"
+"www.libpng.org"
+"www.libretro.com"
+"www.libsdl.org"
+"www.libsigil.com"
+"www.libtom.net"
+"www.mcs.anl.gov"
+"www.mega-nerd.com"
+"www.mission-base.com"
+"www.mongodb.org"
+"www.mpich.org"
+"www.multiprecision.org"
+"www.netlib.org"
+"www.nlnetlabs.nl"
+"www.oberhumer.com"
+"www.opengl.org"
+"www.openmp.org"
+"www.openssl.org"
+"www.oracle.com"
+"www.pcre.org"
+"www.pearson.com"
+"www.pell.portland.or.us"
+"www.planetpdf.com"
+"www.postgresql.org"
+"www.pyyaml.org"
+"www.rabbitmq.com"
+"www.raylib.com"
+"www.recurse.com"
+"www.saphir2.com"
+"www.scons.org"
+"www.sfml-dev.org"
+"www.sgi.com"
+"www.shlomifish.org"
+"www.spinellis.gr"
+"www.sqlite.org"
+"www.symas.com"
+"www.tcl.tk"
+"www.throwtheswitch.org"
+"www.valgrind.org"
+"www.webdav.org"
+"www.xiph.org"
+"xforms-toolkit.org"
+"xiph.org"
+"xmake.io"
+"xmlsoft.org"
+"zephyrproject.org"
+"zeromq.org"
+"ziglang.org"
+"zinjai.sourceforge.net"
+"zlib.net"
+"zserge.com"
+#+end_verse
+
+* 工业革命及其后果
+- 领导: 特朗普/金正恩/… All
+- 认同: LGBTQ++/左右翼/MBTI/xx党
+- 消费: Labubu/谷子/头像壁纸/比特币
+- 编程: C++/Rust/Java/Windows
+- 生殖: 处男/剩女/生育率/性病/约炮
+- 娱乐: Hentai/动漫/电影/电视剧
+- 成就: 健身房/网红景点/高等教育
+- 性欲: 戒色吧/吃瓜网/海角社区
+- 现在: Sora2/AI女友/社交媒体
+- 未来: 电车/机器人/低空经济
+- 青年: 教育/数学/计算机/传销
+- Such A Bloated and Noise World
+
+
+为什么人类发展成这样?
+
+答:  宇宙发展之必然。
