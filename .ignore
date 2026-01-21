@@ -1,7 +1,3 @@
-nixos/nosurf/**
-nixos/hosts06
-nixos/snippets/**
-nixos/snippets/
 index.html
 index.pdf
 index.bbl
@@ -11,4 +7,3 @@ index.aux
 index.fls
 index-blx.bib
 index.fdb_latexmk
-.keys.txt

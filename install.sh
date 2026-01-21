@@ -17,3 +17,4 @@ sudo nixos-rebuild switch --flake /home/$USER/.me#$hostname  --option substitute
 ln -sf $PWD/post-init.el ~/.emacs.d/;
 ln -sf $HOME/.local/share/mysource/init.el ~/.emacs.d/;
 ln -sf $HOME/.local/share/mysource/early-init.el ~/.emacs.d/;
+ln -sf $HOME/.local/share/mysource/pre-early-init.el ~/.emacs.d/;

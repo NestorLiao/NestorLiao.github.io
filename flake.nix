@@ -1,3 +1,4 @@
+## this is my nixos config for surrive in post-modern world ###################
 {
   description = "My Config";
   nixConfig = {
@@ -408,7 +409,7 @@
                           repo = "mutable-config";
                           rev = "master";
                           # sha256 = lib.fakeSha256;
-                          sha256 = "sha256-2kzLVqdT9STloYa8vOl3iZmcf20p4RZS/cIjibhFyBE=";
+                          sha256 = "sha256-GP0DGmOVb/T9PLMcprLeUCGsjSmbrvwtOJeafshNklE=";
                         };
                       };
                       home.file.".stardict/dic" = {
@@ -1652,7 +1653,8 @@ hr {
                 environment.variables = {
                   PATH = "$PATH:$HOME/.config/bin:$HOME/.local/bin";
                   SOPS_AGE_KEY_FILE = "/etc/nixos/keys.txt";
-                  EDITOR = "emacsclient -n -s 'server'";
+                  # EDITOR = "emacsclient -n -s 'server'";
+                  EDITOR = "emacsclient --socket-name=/run/user/1000/emacs/server";
                   RUSTUP_DIST_SERVER = "https://rsproxy.cn";
                   RUSTUP_UPDATE_ROOT = "https://rsproxy.cn/rustup";
                   GOPATH = "~/.go";
@@ -1723,7 +1725,7 @@ hr {
                   owner = userSetting.username;
                   path = "/home/${userSetting.username}/.config/gh/hosts.yml";
                 };
-                sops.secrets."github_token" = {
+                sops.secrets."gb" = {
                   owner = userSetting.username;
                   path = "/home/${userSetting.username}/.github_token";
                 };
@@ -1731,22 +1733,21 @@ hr {
                   owner = userSetting.username;
                   path = "/home/${userSetting.username}/.authinfo";
                 };
-                sops.secrets."git_credential" = {
+                sops.secrets."gc" = {
                   owner = userSetting.username;
                   path = "/home/${userSetting.username}/.git-credential";
                 };
-                sops.secrets.deepseek_apikey = {
+                sops.secrets.dk = {
                   owner = userSetting.username;
                 };
                 sops.secrets.nixAccessTokens = {
                   mode = "0440";
                   group = config.users.groups.keys.name;
                 };
-                sops.secrets.github_apikey = { owner = userSetting.username; };
-                sops.secrets.tavily_apikey = { owner = userSetting.username; };
-                sops.secrets.mojie = { owner = userSetting.username; };
-                sops.secrets.oney = { owner = userSetting.username; };
-                sops.secrets.ouo = { owner = userSetting.username; };
+                sops.secrets.ty = { owner = userSetting.username; };
+                sops.secrets.mj = { owner = userSetting.username; };
+                sops.secrets.oy = { owner = userSetting.username; };
+                sops.secrets.oo = { owner = userSetting.username; };
                 networking.extraHosts = ''
                   # 其嗜欲深者，其天机浅
                   # 消费主义让我们沉迷于物质/精神消费中，
@@ -2088,13 +2089,13 @@ hr {
 
                         ### feel even better
                         # alert
+                        # compile-angel
                         # envrc
-                        trashed
-                        wgrep
-                        undo-fu
-                        compile-angel
-                        undo-fu-session
                         c-eval
+                        trashed
+                        undo-fu
+                        undo-fu-session
+                        wgrep
                         # rotate
                         # smart-compile 算了吧，简单点，你一天写80种语言
                         # 可能连它们的hello world都写不出来。
@@ -2271,9 +2272,9 @@ hr {
                     }
 
                     subscription {
-                    sub_airport_1: \"$(cat ${config.sops.secrets.mojie.path})\"
-                    # sub_airport_2: \"$(cat ${config.sops.secrets.ouo.path})\"
-                    # sub_airport_3: \"$(cat ${config.sops.secrets.oney.path})\"
+                    sub_airport_1: \"$(cat ${config.sops.secrets.mj.path})\"
+                    # sub_airport_2: \"$(cat ${config.sops.secrets.oo.path})\"
+                    # sub_airport_3: \"$(cat ${config.sops.secrets.oy.path})\"
                     }
 
                     dns {
@@ -2519,7 +2520,7 @@ hr {
 
                       # Only create the file if it does not already exist
                       if [[ ! -f "$config_file" ]]; then
-                        echo "access-tokens = github.com = $(cat ${config.sops.secrets.github_token.path})" > $config_file
+                        echo "access-tokens = github.com = $(cat ${config.sops.secrets.gb.path})" > $config_file
                           # Set the ownership and permissions of the config file so the user can edit it
                           chown ${userSetting.username}: $config_file
                             fi
