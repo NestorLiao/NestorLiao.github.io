@@ -1917,23 +1917,25 @@ hr {
                       (with epkgs.melpaStablePackages; [ ])
                       ++ (with epkgs.melpaPackages; [
 
-                        ### black MAGIC to jumping everwhere
+                        ### black MAGIC to Jumping Everwhere
+                        # dired-rsync
+                        # ztree
                         cff
                         dired-subtree
                         dumb-jump
                         goto-chg
                         rg
-                        ztree
 
-                        ## expand & edit
-                        move-text
-                        surround
-                        expand-region
-                        multiple-cursors
-                        iedit
-                        avy
-                        yasnippet
+                        ## Expand & Edit
                         # rotate-text # no on melpa
+                        # tempel
+                        avy
+                        expand-region
+                        iedit
+                        move-text
+                        multiple-cursors
+                        surround
+                        yasnippet # use tempel?(wtf.. it's 31 year old)
 
                         ### Do Anything In Emacs©
                         #### Service Manager
@@ -1943,36 +1945,35 @@ hr {
                         # journalctl-mode
                         # syslog-mode
 
-                        #### project manager
-                        magit
-                        magit-todos
+                        #### Project Manager
+                        # disproject
                         # magit-commit-mark
                         # magit-tbdiff
-                        forge
+                        # magit-todos #why not just grep TODO??
                         consult-gh-embark
                         consult-gh-forge
                         consult-gh-with-pr-review
+                        forge # have magit already
                         git-link
                         git-timemachine
-                        # disproject
 
-                        #### get term
-                        vterm
+                        #### Get Term
+                        # eshell-toggle # still
+                        # with-editor # magit have it already
                         multi-vterm
-                        # with-editor
-                        # eshell-toggle
+                        vterm
 
-                        #### read books
+                        #### Read Books 文灭志，博溺心，少读书，多睡觉。
+                        # pandoc-mode
                         nov
                         pdf-tools
                         saveplace-pdf-view
-                        # pandoc-mode
 
-                        #### chinese input method
+                        #### Chinese Input Method
                         # 为什么有人需要让浏览器能用vim(连文本框也要)
-                        # tmd©，直接在emacs写全复制不就行了吗?
+                        # TMD©，直接在emacs写完再复制不就行了吗?
                         # vimium/tridactyl/vimium C/surfinger…
-                        # 去tm的浏览器，就呆在编程器!
+                        # 去TM的假装编辑器的浏览器插件们，我就呆在编辑器!
                         pyim
 
                         #### read log/manual/doc/dict/gpt/... in emacs
@@ -1982,7 +1983,7 @@ hr {
                         devdocs-browser
                         gptel # seems like doctor-plus. I think using woman is better.
                         tldr
-                        # helpful # Just use orginal help-mode is better.
+                        helpful # Just use orginal help-mode is better.
                         quick-sdcv
 
                         ### the you-know-who guy created a huge list of amazing pkgs
@@ -2073,14 +2074,15 @@ hr {
                         # 但确实，注释完这些，启动时间从1.76变成了1.01
 
                         ### save and format
-                        # electric-operator # 我再也不想要什么自动化了…
+                        electric-operator # 我再也不想要什么自动化了…
+                        smart-semicolon # 算了，我再试试，懒化更重要。
                         aggressive-indent # Only for Elisp or some creepy lang.
                         super-save # The greatest thing I ever see in my life.
                         psession # 当然… 自动保存 还是必须的。
 
                         ### emacs look and feel
                         hide-mode-line # for my adhd
-                        no-emoji # for my autism
+                        # no-emoji # for my autism
                         ligature # for my lazy-eye
                         real-mono-themes # it's my THEME
 
@@ -2093,6 +2095,7 @@ hr {
                         compile-angel
                         undo-fu-session
                         c-eval
+                        # rotate
                         # smart-compile 算了吧，简单点，你一天写80种语言
                         # 可能连它们的hello world都写不出来。
                         # consult-notes 难道，哥们不知道写笔记不如写代码?

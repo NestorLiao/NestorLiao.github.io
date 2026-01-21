@@ -1,21 +1,11 @@
 ;;; -*- lexical-binding: t -*-
-;; 2026-01-20 0.471880 seconds
-;;
-
-
-(setq user-emacs-directory (expand-file-name "var/" minimal-emacs-user-directory))
-(setq package-user-dir (expand-file-name "elpa" minimal-emacs-user-directory))
-
-(define-key key-translation-map (kbd "C-n") (kbd "C-x"))
-(define-key key-translation-map (kbd "C-x") (kbd "C-n"))
-(define-key key-translation-map (kbd "M-n") (kbd "M-x"))
-(define-key key-translation-map (kbd "M-x") (kbd "M-n"))
-(define-key key-translation-map (kbd "M-N") (kbd "M-X"))
-(define-key key-translation-map (kbd "M-X") (kbd "M-N"))
 
 (setq-default
  wake-up 0
  book-mode 1
+ hide-all 0
+ my-alternate-font "Ubuntu Mono Nerd Font"
+ my-default-font "bookerly"
  enable-dir-local-variables nil
  shell-file-name "bash"
  wc-regexp-chinese-char-and-punc (rx (category chinese))
@@ -77,9 +67,7 @@
  backup-directory-alist `(("." . ,(concat user-emacs-directory "backups")))
  ;; more useful frame title, that show either a file or a
  ;; buffer name (if the buffer isn't visiting a file)
- frame-title-format '((:eval (if (buffer-file-name)
-                                 (abbreviate-file-name (buffer-file-name))
-                               "%b")))
+ frame-title-format '((:eval (if (buffer-file-name) (abbreviate-file-name (buffer-file-name))"%b")))
  ;; warn when opening files bigger than 100MB
  large-file-warning-threshold 100000000
  ;; Don't create backup files
@@ -169,11 +157,42 @@
  buffer-file-coding-system 'utf-8
  indent-tabs-mode nil
  indicate-buffer-boundaries nil
+ ;; hs-hide-comments-when-hiding-all nil
  )
 
 (require 'use-package)
 
-(use-package consult :ensure t
+(use-package psession
+  :init
+  (let ((nonono "~/.emacs.d/var/elisp-objects/buffer-name-history.elc"))
+    (when (file-exists-p nonono) (delete-file nonono)))
+  :config
+  ;; (set-language-environment "UTF-8")
+  ;; (prefer-coding-system 'utf-8-unix)
+  (set-face-attribute 'default nil :font my-default-font :height 190)
+  ;; (add-hook 'prog-mode-hook 'hs-minor-mode)
+  ;; Why people keep folding and unfolding *shit*. we have imenu!
+  (add-hook 'after-make-frame-functions
+            (defun setup-blah-keys (frame)
+              (with-selected-frame frame
+                (when (display-graphic-p)
+                  (define-key input-decode-map (kbd "C-i") [CTRL-i])
+                  (define-key input-decode-map (kbd "C-S-i") [CTRL-Shift-i])
+                  (define-key input-decode-map (kbd "C-[") [CTRL-lsb]) ; left square bracket
+                  (define-key input-decode-map (kbd "C-m") [CTRL-m])
+                  (define-key input-decode-map (kbd "C-S-m") [CTRL-Shift-m])
+                  ))))
+  (setq psession-object-to-save-alist
+        (assq-delete-all 'buffer-name-history psession-object-to-save-alist))
+  (setf (alist-get 'truncation fringe-indicator-alist) '(nil nil))
+  (setf (alist-get 'continuation fringe-indicator-alist) '(nil nil))
+  (psession-mode 1)
+  (psession-savehist-mode 1)
+  (psession-autosave-mode 1))
+
+(use-package consult
+  :ensure t
+  :demand t
   :hook (completion-list-mode . consult-preview-at-point-mode)
   :init
   (setq register-preview-delay 0.5)
@@ -186,7 +205,9 @@
   (add-hook 'after-init-hook #'minibuffer-depth-indicate-mode)
   (rg-enable-default-bindings)
   (move-text-default-bindings)
-  (use-package surround :bind-keymap ("C-<tab>" . surround-keymap))
+  (use-package surround
+    :bind-keymap
+    ("C-<tab>" . surround-keymap))
   (setq consult-async-input-debounce 0.02
         consult-async-input-throttle 0.05
         consult-async-refresh-delay 0.02)
@@ -212,6 +233,11 @@
          ([remap switch-to-buffer] . consult-buffer)
          ([remap yank-pop] . consult-yank-pop)
          ;; stop hurt my finger girls here. 我的小姆指大约是废了。
+         ;; 防止右手内卷
+         ;; ("C-." . (lambda () (interactive) (message "别再内卷自己的右手姑娘了")))
+         ;; ("C-," . (lambda () (interactive) (message "别再内卷自己的右手姑娘了")))
+         ("M-." . (lambda () (interactive) (message "别再内卷自己的右手姑娘，用C-i")))
+         ("M-," . (lambda () (interactive) (message "别再内卷自己的右手姑娘，用s-u")))
          ;; 爱护我们的左手小拇指
          ("C-a" . (lambda () (interactive) (message "为了我的小姆指!!!!!!! 用 <Home>!!")))
          ("M-a" . (lambda () (interactive) (message "为了我的小姆指!!!!!!! 这玩意本来就没啥用吧! 用avy!")))
@@ -230,16 +256,19 @@
          ("M-o" . (lambda () (interactive) (message "为了我的小姆指!   别tm的用这个换窗口了，用M-e，反正我不是写小说的。")))
          ("M-O" . (lambda () (interactive) (message "为了我的小姆指!   别tm的用这个换窗口了，用M-E，后正我不是写论文的。")))
          ;; 也要爱护我们的食指，它可是各管着六个键的啊!
+         ("C-x k" . (lambda () (interactive) (message "别tm的kill-buffer癌了, Use Ibuffer 杀(窗)口 !!!")))
          ;; ("C-c C-; k" . (lambda () (interactive) (message "别tm的kill-buffer癌了, Use Ibuffer 杀(窗)口 !!!")))
          ("C-\\" . (lambda () (interactive) (message "别tm的用这个换输入法了，明明不用伸食指就行!")))
+         ("<WakeUp>". (lambda () (interactive) (if  (= wake-up 2) (monitor) (setq wake-up (1+ wake-up)))))
+         ("ESC <f5>". hibernatecall)    ;电脑用来睡觉的键
          ;; ----------------------------------------
          ;; No Need "qbj'" if in inner
          ;; No Need "qbj'vk"  if in middle
          ;; No Need all if in outter, take care of your thumb, they are finger killers
          ;; use less z/ ao q', because little finger are easy to get hurt.
          ;; mos arstb are specific to native emacs binding
-         ("<WakeUp>". (lambda () (interactive) (if  (= wake-up 2) (monitor) (setq wake-up (1+ wake-up)))))
-         ("ESC <f5>". (lambda () (interactive) (if (yes-or-no-p "(really hibernate ? yes or no)") (progn   (message "emacs睡着了，不要吵醒它。") (call-process "systemctl" nil nil nil "hibernate")) (keyboard-quit))))
+         ;; ("C-." . hs-toggle-hiding)
+         ;; ("C-," . (lambda () (interactive) (if  (= hide-all 0) (progn (hs-hide-all)(setq hide-all 1)) (progn (hs-show-all)(setq hide-all 0)))))
          ("C-f" . undo)              ;; 我也不用这个啥c-bnfp来上下左右啊
          ("C-b" . undo-redo)
          ("M-g n" . my-next-error)
@@ -254,7 +283,6 @@
          ("C-M-<return>" . avy-copy-region)
          ("C-S-<return>" . avy-goto-line)
          ("C-<return>" . avy-goto-word-0)
-         ("M-<return>" . dabbrev-expand) ; 和alt-tab 针锋相对
          ("S-<return>" . comment-indent-new-line) ; 下一行注释
          ;; ----------------------------------------
          ;; 想想 C-SPC C-SPC 就是做标记，而M-SPC就是去标记点，爽了吧。
@@ -270,6 +298,11 @@
          ;; ----------------------------------------
          ("C-v". (lambda() (interactive)(recenter-top-bottom 0))) ; use page up and down
          ("M-v". (lambda() (interactive)(recenter-top-bottom 38))) ; now, they are for top view and bottom view
+         ("<CTRL-m>" . (lambda () (interactive) (start-process "wtype" nil "wtype" ";")))
+         ;; all just for my little finger...
+         ("<CTRL-Shift-m>" . (lambda () (interactive) (start-process "wtype" nil "wtype" ":")))
+         ;; 中文: 我的小拇指很重要。 但是;就在小拇指处，elisp要用;注释，c要用;断句。
+         ;; BTW，c-i 是用于go-to的。
          ("M-i". imenu)
          ("M-I" . consult-imenu-multi)
          ("M-e". other-window)
@@ -277,7 +310,7 @@
          ("M-*". (lambda () (interactive) (my/leetcode-open (string-to-number(current-word)))))
          ("C-*" . toggle-solution-question)
          ("C-%". iedit-mode)
-         ("C-,". magit-diff-dwim)
+         ;; ("C-,". magit-diff-dwim)
          ("M-+" . rotate-text)
          ("M-_" . rotate-text-backward)
          ("C-n" . donothing)
@@ -289,7 +322,6 @@
          ("C-c C-; k" .  (lambda () (interactive) (save-selected-window (other-window 1) (isearch-forward))))
          ("C-c C-; f" . magit-dispatch)
          ("C-c C-; g" . er/expand-region)
-         ;; ("C-c C-; p" . disproject-dispatch)
          ("C-c C-; p" . consult-bookmark)
          ("C-c C-; m" . devdocs-browser-open)
          ("C-c C-; u" . delete-all-space)
@@ -311,12 +343,8 @@
          ("C-c C-~ c" .  split-window-below)
          ("C-c C-~ d" .  delete-window)
          ("C-c C-~ g" .  magit-status)
-         ("C-c C-~ j" .  magit-log-buffer-file)
-         ("C-c C-~ l" .   (lambda ()
-                            "Search for a line matching the symbol found near point."
-                            (interactive)
-                            (consult-line
-                             (or (thing-at-point 'symbol)))))
+         ("C-c C-~ j" .  consult-ripgrep-symbol-at-point)
+         ("C-c C-~ l" .   (lambda () "Search for a line matching the symbol found near point." (interactive) (consult-line (or (thing-at-point 'symbol)))))
          ("C-c C-~ u" . occur) ; it's better than consult-line-symbol-at-point
          ("C-c C-~ y" . (lambda () (interactive) (if (< (count-windows) 2) (progn (split-window) (other-window 1) (switch-to-buffer (cl-find-if (lambda (buf) (with-current-buffer buf (derived-mode-p '(eww-mode help-mode occur-mode compilation-mode Info-mode rg-mode man-mode woman-mode )))) (buffer-list))) (other-window 1)) (delete-other-windows) )))
          ("C-c C-~ f" . right-char)
@@ -324,11 +352,17 @@
          ("C-c C-~ k" . woman)
          ;; rg用在真实文件好用，但是不能用在虚文件中，occur可以
          ;; rg比起occur更灵活，能指定文件种类/路径，能非常好直接修改。
-         ("C-c C-~ m" . (lambda () (interactive) (if (get-buffer-window "*compilation*") (progn (recompile) (save-excursion (switch-to-buffer "*compilation*"))) (progn (recompile) (delete-window (get-buffer-window "*compilation*")) (switch-to-buffer "*compilation*") (previous-buffer)))))
+         ("C-c C-~ m" . (lambda () (interactive)
+                          (if (get-buffer-window "*compilation*")
+                              (recompile)
+                            (progn (recompile)
+                                   ;; (delete-window (get-buffer-window "*compilation*"))
+                                   (switch-to-buffer "*compilation*")
+                                   (previous-buffer)))))
          ("C-c C-~ p" . rg-dwim)        ; stop use WTF Occur, because rg is KING.
          ("C-c C-~ b" . rg-dwim-current-file)
          ;; 当其无，有心之用
-         ("C-c C-~ v" . donothing)
+         ("C-c C-~ v" . magit-log-buffer-file)
          ("C-c C-~ q" .  donothing)
          ("C-c C-~ '" .  donothing)
          ;; NAV-end---------------------------------------------------------
@@ -360,18 +394,21 @@
          ("M-#" . consult-register-load)
          ("M-$" . consult-register-store)
          ("C-M-#" . consult-register)
-         ("M-g g" . consult-goto-line)
-         ("M-g b" . magit-blame-addition)
          ("M-g M-g" . avy-goto-line)
+         ("M-g g" . consult-goto-line)
+         ("M-s b" . magit-blame-addition)
          ("M-s k" . flush-lines)
          ("M-s K" . consult-keep-lines)
          ("M-s M-k" . avy-kill-whole-line)
          ("M-s d" . delete-duplicate-lines)
          ("M-s u" . (lambda () "url-to-hosts, Convert a URL on the current line to '    0.0.0.0 hostname' format." (interactive) (let* ((line (thing-at-point 'line t)) (url (when line (string-match "https?://\\([^/]+\\)" line) (match-string 0 line))) (hostname (when url (replace-regexp-in-string "^https?://\\([^/]+\\).*" "\\1" url)))) (when hostname (beginning-of-line) (kill-line) (insert (concat "0.0.0.0 " hostname)) (beginning-of-line)))))
-         ("M-s p" .  (lambda () "Search GitHub code for current major mode's language. Uses word at point as default, or prompts for input." (interactive) (let* ( (language (pcase major-mode ('zig-mode "zig") ('rust-mode "rust") ('python-mode "python") ('emacs-lisp-mode "emacs-lisp") ('go-mode "go") ('javascript-mode "javascript") ('typescript-mode "typescript") (_ (read-string "Language: ")))) (input (read-string (format "Search %s code: " language) ))) (consult-gh-search-code (format "%s -- --language=%s --limit 7" input language) nil nil nil nil))))
+         ("M-s w" .  (lambda () "Search GitHub code for current major mode's language. Uses word at point as default, or prompts for input." (interactive) (let* ( (language (pcase major-mode ('zig-mode "zig") ('rust-mode "rust") ('python-mode "python") ('emacs-lisp-mode "emacs-lisp") ('go-mode "go") ('javascript-mode "javascript") ('typescript-mode "typescript") (_ (read-string "Language: ")))) (input (read-string (format "Search %s code: " language) ))) (consult-gh-search-code (format "%s -- --language=%s --limit 7" input language) nil nil nil nil))))
          ("M-s f" . consult-fd)
+         ("M-s o" . multi-occur)
          ("M-s SPC" . consult-global-mark)
-         ("<f19>" . (lambda () "Rotate your windows." (interactive) (cond ((not (> (count-windows)1)) (message "You can't rotate a single window!")) (t (setq i 1) (setq numWindows (count-windows)) (while  (< i numWindows) (let* ( (w1 (elt (window-list) i)) (w2 (elt (window-list) (+ (% i numWindows) 1))) (b1 (window-buffer w1)) (b2 (window-buffer w2)) (s1 (window-start w1)) (s2 (window-start w2)) ) (set-window-buffer w1 b2) (set-window-buffer w2 b1) (set-window-start w1 s2) (set-window-start w2 s1) (setq i (1+ i))))))))
+         ;; ("<f19>" . (lambda () "Rotate your windows." (interactive) (cond ((not (> (count-windows)1)) (message "You can't rotate a single window!")) (t (setq i 1) (setq numWindows (count-windows)) (while  (< i numWindows) (let* ( (w1 (elt (window-list) i)) (w2 (elt (window-list) (+ (% i numWindows) 1))) (b1 (window-buffer w1)) (b2 (window-buffer w2)) (s1 (window-start w1)) (s2 (window-start w2)) ) (set-window-buffer w1 b2) (set-window-buffer w2 b1) (set-window-start w1 s2) (set-window-start w2 s1) (setq i (1+ i))))))))
+         :map prog-mode-map
+         ("M-<return>" . dabbrev-expand) ; 和alt-tab 针锋相对
          :map isearch-mode-map
          ("C-\\" . (lambda () (interactive) (message "别拉伸宝贵的食指了")))
          ("M-r" . consult-isearch-history)
@@ -441,6 +478,7 @@
   (when (file-exists-p "~/.local/share/mysource/hmdz.pyim") (add-to-list 'pyim-dicts '(:name "hmdz" :file "~/.local/share/mysource/hmdz.pyim"))))
 
 (use-package quick-sdcv
+  :defer t
   :bind ( :map quick-sdcv-mode-map
           ("SPC" . scroll-up-command)
           ("DEL" . scroll-down-command)
@@ -462,22 +500,25 @@
          "\\.\\(?:gz\\|gif\\|svg\\|png\\|jpe?g\\|bmp\\|xpm\\)$"
          "-autoloads\\.el$" "autoload\\.el$"))
   :config
-  (defun my/suppress-recentf-messages (orig-fun &rest args)
-    "Run `recentf-cleanup` without showing messages in the echo area."
-    (let ((inhibit-message t)
-          (message-log-max nil))
-      (apply orig-fun args)))
+  ;; (defun my/suppress-recentf-messages (orig-fun &rest args)
+  ;;   "Run `recentf-cleanup` without showing messages in the echo area."
+  ;;   (let ((inhibit-message t)
+  ;;         (message-log-max nil))
+  ;;     (apply orig-fun args)))
   (add-hook 'kill-emacs-hook #'recentf-cleanup -90)
-  (advice-add 'recentf-cleanup :around #'my/suppress-recentf-messages))
+  ;; (advice-add 'recentf-cleanup :around #'my/suppress-recentf-messages)
+  )
 
 (use-package super-save
   :config
   (super-save-mode 1)
-  (setq super-save-auto-save-when-idle t
-        super-save-silent t
-        super-save-all-buffers  t
-        super-save-remote-files nil
-        super-save-idle-duration 4))
+  (setq
+   super-save-silent t
+   super-save-all-buffers  t
+   super-save-idle-duration 4
+   super-save-remote-files nil
+   super-save-auto-save-when-idle t
+   ))
 
 (use-package autorevert
   :ensure nil
@@ -514,27 +555,10 @@
   :hook
   (after-init . save-place-mode)
   :custom
+  (save-place-forget-unreadable-files nil)
   (save-place-limit 400)
-  (save-place-file (expand-file-name "saveplace" user-emacs-directory)))
-
-(use-package yasnippet
-  :ensure t
-  :hook
-  (after-init . yas-global-mode)
-
-  :custom
-  (yas-snippet-dirs '("~/.emacs.d/snippets"))
-  (yas-also-auto-indent-first-line t)  ; Indent first line of snippet
-  (yas-also-indent-empty-lines t)
-  (yas-snippet-revival nil)  ; Setting this to t causes issues with undo
-  (yas-wrap-around-region nil) ; Do not wrap region when expanding snippets
-  ;; (yas-triggers-in-field nil)  ; Disable nested snippet expansion
-  ;; (yas-indent-line 'fixed) ; Do not auto-indent snippet content
-  ;; (yas-prompt-functions '(yas-no-prompt))  ; No prompt for snippet choices
-
-  :init
-  ;; Suppress verbose messages
-  (setq yas-verbosity 0))
+  (save-place-file
+   (expand-file-name "saveplace" user-emacs-directory)))
 
 (use-package vterm
   :ensure t
@@ -553,18 +577,24 @@
   (setq vterm-shell "fish")
   (setq vterm-always-compile-module t)
   (setq vterm-timer-delay 0.01)
-  (add-hook 'vterm-mode-hook (lambda () (compilation-shell-minor-mode 1) (define-key vterm-copy-mode-map (kbd "C-<return>") 'compile-goto-error)))
-  (with-eval-after-load 'vterm
-    (setq vterm-kill-buffer-on-exit t)
-    (advice-add 'vterm :after
-                (lambda (buf)
-                  (with-current-buffer buf
-                    (set-process-query-on-exit-flag
-                     (get-buffer-process (current-buffer)) nil))))))
+  (setq vterm-kill-buffer-on-exit t)
+  (add-hook 'vterm-mode-hook #'compilation-shell-minor-mode 1)
+  ;; (with-eval-after-load 'vterm
+  ;;   ;; (advice-add 'vterm :after
+  ;;   ;;             (lambda (buf)
+  ;;   ;;               (with-current-buffer buf
+  ;;   ;;                 (set-process-query-on-exit-flag
+  ;;   ;;                  (get-buffer-process (current-buffer)) nil))))
+  ;;   )
+  )
 
 (use-package magit
-  :demand t
+  :defer t
   :config
+  ;; (use-package magit-todos
+  ;;   :after magit
+  ;;   :config
+  ;;   (magit-todos-mode 1))
   (use-package forge
     :after magit)
   (use-package diff-mode
@@ -575,7 +605,6 @@
   (setq magit-bury-buffer-function 'magit-restore-window-configuration)
   (setq magit-display-buffer-function 'magit-display-buffer-same-window-except-diff-v1)
   (setq magit-diff-refine-hunk  'all)
-  (magit-todos-mode 1)
   (setq hl-todo-keyword-faces
         '(("HOLD"   . "#000000")
           ("TODO"   . "#000000")
@@ -613,18 +642,7 @@
   (setq trashed-action-confirmer 'y-or-n-p
         trashed-use-header-line t
         trashed-sort-key '("Date deleted" . t)
-        trashed-date-format "%Y-%m-%d %H:%M:%S"))
-
-(use-package vertico-directory
-  :after vertico
-  :ensure nil
-  ;; More convenient directory navigation commands
-  :bind (:map vertico-map
-              ("RET" . vertico-directory-enter)
-              ("DEL" . vertico-directory-delete-char)
-              ("M-DEL" . vertico-directory-delete-word))
-  ;; Tidy shadowed file names
-  :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
+        trashed-date-format "%m-%d %H:%M:%S"))
 
 (use-package dired
   :ensure nil
@@ -635,11 +653,16 @@
     ("p" . (lambda () (interactive)(dired-find-file-other-window) (other-window 1)(next-line)))
     ("DEL" . scroll-down-command)
     ("," . dired-omit-mode)
+    ("h" . dired-do-eww)
+    ("<tab>" . dired-subtree-toggle)
     ("e" . wdired-change-to-wdired-mode))
   :hook
   ((dired-mode . dired-hide-details-mode)
    (dired-mode . dired-omit-mode))
   :config
+  ;; (use-package dired-rsync
+  ;;   :bind (:map dired-mode-map
+  ;;               ("C-c C-r" . dired-rsync)))
   (defun foot-default-directory (&optional arg)
     (interactive "P")
     (let ((curr-dir (if-let* ((curr-line (dired-get-filename nil t)))
@@ -659,8 +682,6 @@
     :after dired
     :defer t
     :commands (dired)
-    :bind ( :map dired-mode-map
-            ("<tab>" . dired-subtree-toggle))
     :config
     (setq dired-subtree-use-backgrounds nil))
   (setq dired-recursive-copies 'always)
@@ -678,43 +699,43 @@
   :custom
   (dired-omit-files
    (rx (or (seq bol ".")                      ; dotfiles
-           (seq ".js" (? ".meta") eos)        ; .js.meta
-           (seq "." (or "elc" "cls" "fls" "bib" "fdb_latexmk" "log" "aux" "a" "bbl" "o" "pyc" "pyo" "swp" "class") eos)
-           (seq bol ".DS_Store")
+           ;; (seq ".js" (? ".meta") eos)        ; .js.meta
+           ;; (seq "." (or "elc" "cls" "fls" "bib" "fdb_latexmk" "log" "aux" "a" "bbl" "o" "pyc" "pyo" "swp" "class") eos)
+           ;; (seq bol ".DS_Store")
+           ;; (seq bol ".ccls-cach" eos)
+           ;; (seq bol "__pycache__" eos)
+           ;; (seq bol ".project" (? "ile") eos)
+           ;; (seq bol (or "flycheck_" "flymake_"))
            (seq bol "." (or "svn" "git") eos)
-           (seq bol ".ccls-cach" eos)
-           (seq bol "Downloads" eos)
-           (seq bol "LICENCE" eos)
-           (seq bol "__pycache__" eos)
-           (seq bol ".project" (? "ile") eos)
-           (seq bol (or "flake.lock" "Cargo.lock" "LICENSE") eos)
-           (seq bol (or "flycheck_" "flymake_"))))))
+           (seq bol (or "flake.lock" "Cargo.lock" "LICENSE" "LICENCE" "Downloads") eos)
+           ))))
 
 (use-package aggressive-indent
+  :defer t
   :ensure t
   :config
   (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode))
 
-(use-package psession
-  :init
-  (psession-mode 1)
-  (psession-savehist-mode 1)
-  (psession-autosave-mode 1))
-
 (use-package compile
   :config
-  (defun my/nix-store-shorten-paths ()
-    "Replace long /nix/store paths with shortened ...-pkg-version."
-    (let ((inhibit-read-only t))
-      (goto-char (point-min))
-      (while (re-search-forward
-              "/nix/store/[a-z0-9]+-\\([^[:space:]]+\\)" nil t)
-        (replace-match "...-\\1" t nil))))
-  (with-eval-after-load 'compile
-    ;; (add-to-list 'compilation-environment "TERM=dumb-emacs-ansi")
-    ;;   (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
-    (add-hook 'compilation-filter-hook #'my/nix-store-shorten-paths)
-    ))
+  ;; (defun my/nix-store-shorten-paths ()
+  ;;   "Replace long /nix/store paths with shortened ...-pkg-version."
+  ;;   (let ((inhibit-read-only t))
+  ;;     (goto-char (point-min))
+  ;;     (delete-region (line-beginning-position) (1+ (line-end-position)))
+  ;;     (while (re-search-forward
+  ;;             "/nix/store/[a-z0-9]+-\\([^[:space:]]+\\)" nil t)
+  ;;       (replace-match "...-\\1" t nil)))
+  ;;   (goto-char (point-max))
+  ;;   (next-line)
+  ;;   (delete-region (line-beginning-position) (line-end-position)))
+  (defun compilation-start (command &optional mode name-function highlight-regexp continue) "Run compilation command COMMAND (low level interface). If COMMAND starts with a cd command, that becomes the `default-directory'. The rest of the arguments are optional; for them, nil means use the default. MODE is the major mode to set in the compilation buffer.  Mode may also be t meaning use `compilation-shell-minor-mode' under `comint-mode'. If NAME-FUNCTION is non-nil, call it with one argument (the mode name) to determine the buffer name.  Otherwise, the default is to reuses the current buffer if it has the proper major mode, else use or create a buffer with name based on the major mode. If HIGHLIGHT-REGEXP is non-nil, `next-error' will temporarily highlight the matching section of the visited source line; the default is to use the global value of `compilation-highlight-regexp'. If CONTINUE is non-nil, the buffer won't be emptied before compilation is started.  This can be useful if you wish to combine the output from several compilation commands in the same buffer.  The new output will be at the end of the buffer, and point is not changed. Returns the compilation buffer created." (or mode (setq mode 'compilation-mode)) (let* ((name-of-mode (if (eq mode t) "compilation" (replace-regexp-in-string "-mode\\'" "" (symbol-name mode)))) (thisdir default-directory) (thisenv compilation-environment) (buffer-path (and (local-variable-p 'exec-path) exec-path)) (buffer-env (and (local-variable-p 'process-environment) process-environment)) outwin outbuf) (with-current-buffer (setq outbuf (get-buffer-create (compilation-buffer-name name-of-mode mode name-function))) (let ((comp-proc (get-buffer-process (current-buffer)))) (if comp-proc (if (or (not (eq (process-status comp-proc) 'run)) (eq (process-query-on-exit-flag comp-proc) nil) (yes-or-no-p (format "A %s process is running; kill it? " name-of-mode))) (condition-case () (progn (interrupt-process comp-proc) (sit-for 1) (delete-process comp-proc)) (error nil)) (error "Cannot have two processes in `%s' at once" (buffer-name))))) (setq default-directory thisdir) (let ((inhibit-read-only t) (default-directory thisdir)) (cd (cond ((not (string-match "\\`\\s *cd\\(?:\\s +\\(\\S +?\\|'[^']*'\\|\"\\(?:[^\"`$\\]\\|\\\\.\\)*\"\\)\\)?\\s *[;&\n]" command)) default-directory) ((not (match-end 1)) "~") ((eq (aref command (match-beginning 1)) ?\') (substring command (1+ (match-beginning 1)) (1- (match-end 1)))) ((eq (aref command (match-beginning 1)) ?\") (replace-regexp-in-string "\\\\\\(.\\)" "\\1" (substring command (1+ (match-beginning 1)) (1- (match-end 1))))) (t (let* ((substituted-dir (substitute-env-vars (match-string 1 command))) (expanded-dir (file-expand-wildcards substituted-dir))) (if (= (length expanded-dir) 1) (car expanded-dir) substituted-dir))))) (if continue (progn (setq continue (point)) (goto-char (point-max))) (erase-buffer)) (if (not (eq mode t)) (progn (buffer-disable-undo) (funcall mode)) (setq buffer-read-only nil) (with-no-warnings (comint-mode)) (compilation-shell-minor-mode)) (setq-local compilation-directory thisdir) (setq-local compilation-environment thisenv) (if buffer-path (setq-local exec-path buffer-path) (kill-local-variable 'exec-path)) (if buffer-env (setq-local process-environment buffer-env) (kill-local-variable 'process-environment)) (if highlight-regexp (setq-local compilation-highlight-regexp highlight-regexp)) (if (or compilation-auto-jump-to-first-error (eq compilation-scroll-output 'first-error)) (setq-local compilation-auto-jump-to-next t))  (compilation-insert-annotation command "\n") (setq compilation--start-time (float-time)) (setq thisdir default-directory)) (set-buffer-modified-p nil)) (setq outwin (display-buffer outbuf '(nil (allow-no-window . t)))) (with-current-buffer outbuf (let ((process-environment (append compilation-environment (and (derived-mode-p 'comint-mode) (comint-term-environment)) (list (format "INSIDE_EMACS=%s,compile" emacs-version)) (list "PAGER=") (copy-sequence process-environment)))) (setq-local compilation-arguments (list command mode name-function highlight-regexp)) (setq-local revert-buffer-function 'compilation-revert-buffer) (when (and outwin (not continue) (not compilation-scroll-output)) (set-window-start outwin (point-min))) (let ((desired-visible-point (cond (continue continue) (compilation-scroll-output (point-max)) (t (point-min))))) (goto-char desired-visible-point) (when (and outwin (not (eq outwin (selected-window)))) (set-window-point outwin desired-visible-point))) (if compilation-process-setup-function (funcall compilation-process-setup-function)) (and outwin (compilation-set-window-height outwin)) (if (fboundp 'make-process) (let ((proc (if (eq mode t) (with-connection-local-variables (get-buffer-process (with-no-warnings (comint-exec outbuf (compilation--downcase-mode-name mode-name) shell-file-name nil `(,shell-command-switch ,command))))) (start-file-process-shell-command (compilation--downcase-mode-name mode-name) outbuf command)))) (setq mode-line-process '((:propertize ":%s" face compilation-mode-line-run) compilation-mode-line-errors)) (when compilation-always-kill (set-process-query-on-exit-flag proc nil)) (set-process-sentinel proc #'compilation-sentinel) (unless (eq mode t) (set-process-filter proc #'compilation-filter)) (set-marker (process-mark proc) (point-max) outbuf) (when compilation-disable-input (condition-case nil (process-send-eof proc) (error nil))) (run-hook-with-args 'compilation-start-hook proc) (compilation--update-in-progress-mode-line) (push proc compilation-in-progress)) (message "Executing `%s'..." command) (setq mode-line-process '((:propertize ":run" face compilation-mode-line-run) compilation-mode-line-errors)) (force-mode-line-update) (sit-for 0) (save-excursion (goto-char (point-max)) (let* ((inhibit-read-only t) (compilation-filter-start (point)) (status (call-process shell-file-name nil outbuf nil "-c" command))) (run-hooks 'compilation-filter-hook) (cond ((numberp status) (compilation-handle-exit 'exit status (if (zerop status) "finished\n" (format "exited abnormally with code %d\n" status)))) ((stringp status) (compilation-handle-exit 'signal status (concat status "\n"))) (t (compilation-handle-exit 'bizarre status status))))) (set-buffer-modified-p nil) (message "Executing `%s'...done" command))) (setq default-directory thisdir) (when compilation-scroll-output (goto-char (point-max)))) (setq next-error-last-buffer outbuf))) (defun compilation-handle-exit (process-status exit-status msg) "Write MSG in the current buffer and hack its `mode-line-process'." (let ((inhibit-read-only t) (status (if compilation-exit-message-function (funcall compilation-exit-message-function process-status exit-status msg) (cons msg exit-status))) (omax (point-max)) (opoint (point)) (cur-buffer (current-buffer))) (goto-char omax) (compilation-insert-annotation ?\n mode-name " " (car status)) (if (and (numberp compilation-window-height) (zerop compilation-window-height)) (message "%s" (cdr status))) (if (bolp) (forward-char -1)) (compilation-insert-annotation ", duration " (let ((elapsed (- (float-time) compilation--start-time))) (cond ((< elapsed 10) (format "%.2f s" elapsed)) ((< elapsed 60) (format "%.1f s" elapsed)) (t (format-seconds "%h:%02m:%02s" elapsed))))) (goto-char (point-max)) (add-text-properties omax (point) (append '(compilation-handle-exit t) nil)) (setq mode-line-process (list (let ((out-string (format ":%s [%s]" process-status (cdr status))) (msg (format "%s %s" mode-name (replace-regexp-in-string "\n?$" "" (car status))))) (message "%s" msg) (propertize out-string 'help-echo msg 'face (if (> exit-status 0) 'compilation-mode-line-fail 'compilation-mode-line-exit))) compilation-mode-line-errors)) (force-mode-line-update) (if (and opoint (< opoint omax)) (goto-char opoint)) (run-hook-with-args 'compilation-finish-functions cur-buffer msg)))
+  ;; (with-eval-after-load 'compile
+  ;;   ;; (add-to-list 'compilation-environment "TERM=dumb-emacs-ansi")
+  ;;   ;;   (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
+  ;;   (remove-hook 'compilation-filter-hook #'my/nix-store-shorten-paths)
+  ;;   )
+  )
 
 (use-package cc-mode
   :mode (("\\.\\(cc\\|hh\\)\\'" . c++-mode)
@@ -733,10 +754,8 @@
    c-default-style '((java-mode . "java")
                      (awk-mode . "awk")
                      (other . "bsd")))
-  (add-hook 'c-mode-common-hook (lambda ()
-                                  (interactive)
-                                  (c-toggle-comment-style -1)))
 
+  ;; begin of linus monkey typing recommend  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (defun c-lineup-arglist-tabs-only (ignored)
     "Line up argument lists by tabs, not spaces"
     (let* ((anchor (c-langelem-pos c-syntactic-element))
@@ -779,11 +798,10 @@
                 (indent-tabs-mode . t)
                 (show-trailing-whitespace . t)
                 ))))
-
   (dir-locals-set-directory-class
    (expand-file-name "~/linux-trees")
    'linux-kernel)
-
+  ;; end of monkey typing ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (advice-add 'c-update-modeline :override #'ignore)
   (defun addheader()
     (interactive)
@@ -796,30 +814,15 @@
                (c-get-current-file)
                (concat (c-get-current-file) ".c")
                (c-get-current-file)))(save-buffer)(revert-buffer)))
-  (defun c-compile-current-file ()
-    (interactive)
-    (unless (file-exists-p "Makefile")
-      (let ((file (file-name-nondirectory buffer-file-name)))
-        (compile (format "%s -o %s.out %s %s %s"
-                         (or (getenv "CC") "gcc")
-                         (file-name-sans-extension file)
-                         (or (getenv "CPPFLAGS") "")
-                         (or (getenv "CFLAGS") "-Wall -g")
-                         file)))))
   (dolist (hook '(c-mode-common-hook zig-mode-hook asm-mode-hook))
     (add-hook hook (lambda ()
-                     (define-key c-mode-base-map (kbd "M-o") 'cff-find-other-file)
-                     (define-key c-mode-base-map (kbd "C-c C-c") 'c-compile-current-file)
-                     (define-key c-mode-base-map (kbd "C-c C-M-c") (lambda () (interactive)
-                                                                     (setq-local compilation-read-command nil)
-                                                                     (call-interactively 'compile)))
-                     (define-key c-mode-base-map (kbd "C-M-q") nil)
-                     (define-key c-mode-base-map (kbd "(") nil)
-                     (define-key c-mode-base-map (kbd "{") nil)
-                     ;; (electric-operator-mode)
+                     (define-key c-mode-base-map (kbd "C-,") 'cff-find-other-file)
+                     (electric-operator-mode)
+                     (smart-semicolon-mode)
                      ))))
 
 (use-package ligature
+  :demand t
   :config
   (let ((ligs '("ff" "fi" "ffi" "fl" "ffl")))
     (ligature-set-ligatures 't ligs))
@@ -830,58 +833,6 @@
   (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
   (setq dumb-jump-force-searcher 'rg)
   (setq dumb-jump-default-project "/home/leeao/.local/bin/lib/std"))
-
-(use-package rotate-text
-  :vc (:url "https://github.com/debug-ito/rotate-text.el"
-            :rev :newest)
-  :config
-  (autoload 'rotate-text "rotate-text" nil t)
-  (autoload 'rotate-text-backward "rotate-text" nil t)
-  (setq rotate-text-symbols '(
-                              ("t" "nil")
-                              ("in" "out" "err" "io")
-                              ("a" "b" "c" "d")
-                              ("i" "j" "k")
-                              ("private" "protected" "public")
-                              ("break" "continue")
-                              ("x" "y" "z")))
-  (setq rotate-text-words '(
-                            ("argc" "argv")
-                            ("column" "line")
-                            ("const" "statis")
-                            ("cos" "sin")
-                            ("enable" "disable")
-                            ("fixme" "todo" "okay" "temp")
-                            ("float" "double")
-                            ("init" "creat" "close")
-                            ("input" "output")
-                            ("left" "right" "top" "bottom")
-                            ("max" "min")
-                            ("new" "old")
-                            ("printf" "fprintf" "sprintf" "snprintf")
-                            ("size" "uint")
-                            ("start" "end")
-                            ("stdout" "stdin" "stderr" "stdio")
-                            ("str" "list")
-                            ("timer" "keyboard" "display")
-                            ("true" "false")
-                            ("void" "bool" "char" "int")
-                            ("width" "height")
-                            ("yes" "no")
-                            )))
-
-(use-package info
-  :bind (:map Info-mode-map
-              ("C-M-i" . Info-history-back)
-              ("<prior>" . Info-scroll-down)
-              ("<next>" . Info-scroll-up)
-              ("DEL" . Info-scroll-down)
-              ("SPC" . Info-scroll-up)
-              ;; ("<prior>" . (lambda () (interactive)(Info-scroll-down)(bookmark-set (string-trim Info-current-file "/run/current-system/sw/share/info/"))(donothing)))
-              ;; ("<next>" . (lambda () (interactive)(Info-scroll-up)(bookmark-set (string-trim Info-current-file "/run/current-system/sw/share/info/"))(donothing)))
-              ;; ("DEL" . (lambda () (interactive)(Info-scroll-down)(bookmark-set (string-trim Info-current-file "/run/current-system/sw/share/info/"))(donothing)))
-              ;; ("SPC" . (lambda () (interactive)(Info-scroll-up)(bookmark-set (string-trim Info-current-file "/run/current-system/sw/share/info/"))(donothing)))
-              ("b" . Info-next-preorder)))
 
 (use-package multiple-cursors
   :bind (
@@ -895,20 +846,23 @@
          ("<return>" . electric-newline-and-maybe-indent)))
 
 (use-package tldr
+  :defer t
   :bind ( :map tldr-mode-map
           ("SPC" . scroll-up-command)
           ("DEL" . scroll-down-command)
           ("t" . tldr)))
 
-(use-package embark :ensure t :defer t
+(use-package embark
+  :ensure t
+  :defer t
   :commands (embark-act
              embark-dwim
              embark-export
              embark-collect
              embark-bindings
              embark-prefix-help-command)
-  :bind (("C-." . embark-act)
-         ("M-." . embark-dwim)
+  :bind (("<CTRL-i>" . embark-dwim)
+         ("C-." . embark-act)
          ("C-h B" . embark-bindings))
   :init (setq prefix-help-command #'embark-prefix-help-command)
   :config
@@ -916,7 +870,9 @@
                '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
                  nil
                  (window-parameters (mode-line-format . none))))
-  (use-package embark-consult :ensure t :hook
+  (use-package embark-consult
+    :ensure t
+    :hook
     (embark-collect-mode . consult-preview-at-point-mode)))
 
 (use-package real-mono-themes
@@ -944,27 +900,116 @@
         :map vertico-map
         ("<next>" . scroll-up-command)
         ("<prior>" . scroll-down-command)
-        ("<right>" . sayshit)
+        ("<right>" . donothing)
         ("M-<next>" . vertico-next-group)
         ("M-<prior>" . vertico-previous-group))
   :custom
   (vertico-scroll-margin 0)
-  (vertico-count 5)
+  (vertico-count 8)
   (vertico-resize nil)
   (vertico-cycle nil)
   :config
-  (use-package orderless :ensure t :custom
+  (use-package orderless
+    :ensure t
+    :custom
     (completion-styles '(orderless basic))
     (completion-category-defaults nil)
     (completion-category-overrides '((file (styles partial-completion)))))
   (use-package vertico-flat
     :after vertico
     :ensure nil)
+  (use-package vertico-directory
+    :after vertico
+    :ensure nil
+    ;; More convenient directory navigation commands
+    :bind (:map vertico-map
+                ("RET" . vertico-directory-enter)
+                ("DEL" . vertico-directory-delete-char)
+                ("M-DEL" . vertico-directory-delete-word))
+    ;; Tidy shadowed file names
+    :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
   ;; (use-package vertico-repeat
   ;;   :ensure nil
   ;;   :after vertico
   ;;   :hook (minibuffer-setup . vertico-repeat-save))
   :hook (after-init . vertico-mode))
+
+(use-package yasnippet
+  :ensure t
+  :hook
+  (after-init . yas-global-mode)
+
+  :custom
+  (yas-snippet-dirs '("~/.emacs.d/snippets"))
+  (yas-also-auto-indent-first-line t)  ; Indent first line of snippet
+  (yas-also-indent-empty-lines t)
+  (yas-snippet-revival nil)  ; Setting this to t causes issues with undo
+  (yas-wrap-around-region nil) ; Do not wrap region when expanding snippets
+  ;; (yas-triggers-in-field nil)  ; Disable nested snippet expansion
+  ;; (yas-indent-line 'fixed) ; Do not auto-indent snippet content
+  ;; (yas-prompt-functions '(yas-no-prompt))  ; No prompt for snippet choices
+
+  :init
+  ;; Suppress verbose messages
+  (setq yas-verbosity 0))
+
+(use-package helpful
+  :ensure t
+  :defer t
+  :commands (helpful-callable
+             helpful-variable
+             helpful-key
+             helpful-command
+             helpful-at-point
+             helpful-function)
+  :bind
+  ([remap describe-command] . helpful-command)
+  ([remap describe-function] . helpful-callable)
+  ([remap describe-key] . helpful-key)
+  ([remap describe-symbol] . helpful-symbol)
+  ([remap describe-variable] . helpful-variable)
+  :custom
+  (helpful-max-buffers 7))
+
+;; (use-package compile-angel
+;;   :ensure t
+;;   :demand t
+;;   :custom
+;;   (compile-angel-verbose nil)
+;;   :config
+;;   (push "/post-init.el" compile-angel-excluded-files)
+;;   (add-hook 'emacs-lisp-mode-hook #'compile-angel-on-save-local-mode)
+;;   (compile-angel-on-load-mode))
+
+;; (use-package rotate-text
+;;   :vc (:url "https://github.com/debug-ito/rotate-text.el"
+;;             :rev :newest)
+;;   ;; I wish anything can be download though melpa.. but oh, no, so I copy it's source into this file.
+;;   )))
+
+;; (use-package info
+;;   :bind (:map Info-mode-map
+;;               ("C-M-i" . Info-history-back)
+;;               ("<prior>" . Info-scroll-down)
+;;               ("<next>" . Info-scroll-up)
+;;               ("DEL" . Info-scroll-down)
+;;               ("SPC" . Info-scroll-up)
+;;               ;; ("<prior>" . (lambda () (interactive)(Info-scroll-down)(bookmark-set (string-trim Info-current-file "/run/current-system/sw/share/info/"))(donothing)))
+;;               ;; ("<next>" . (lambda () (interactive)(Info-scroll-up)(bookmark-set (string-trim Info-current-file "/run/current-system/sw/share/info/"))(donothing)))
+;;               ;; ("DEL" . (lambda () (interactive)(Info-scroll-down)(bookmark-set (string-trim Info-current-file "/run/current-system/sw/share/info/"))(donothing)))
+;;               ;; ("SPC" . (lambda () (interactive)(Info-scroll-up)(bookmark-set (string-trim Info-current-file "/run/current-system/sw/share/info/"))(donothing)))
+;;               ("b" . Info-next-preorder)))
+
+;; (use-package tempel
+;;   :bind
+;;   (:map tempel-map
+;;         ("C-c C-c" . tempel-done)
+;;         ("<tab>" . tempel-expand))
+;;   :config
+;;   (use-package tempel-snippets
+;;     :after tempel
+;;     :vc (:url "https://github.com/gs-101/tempel-snippets")
+;;     ))
 
 ;; (use-package markdown-mode
 ;;   :defer t
@@ -979,14 +1024,20 @@
 ;;   (:map markdown-mode-map
 ;;         ("C-c C-e" . markdown-do)))
 
-;; (use-package envrc :defer 2 :config (envrc-global-mode 1)
+;; (use-package envrc
+;;   :defer 2
+;;   :config (envrc-global-mode 1)
 ;;   (advice-add 'org-babel-eval :around #'envrc-propagate-environment))
 
-;; (use-package marginalia :ensure t :defer t
+;; (use-package marginalia
+;;   :ensure t
+;;   :defer t
 ;;   :commands (marginalia-mode marginalia-cycle)
 ;;   :hook (after-init . marginalia-mode))
 
-;; (use-package eglot :ensure nil :defer t
+;; (use-package eglot
+;;   :ensure nil
+;;   :defer t
 ;;   :hook (eglot-managed-mode . (lambda ()
 ;;                                 (eglot-inlay-hints-mode -1) ; bloate
 ;;                                 (eldoc-mode -1) ; bloate
@@ -1019,23 +1070,6 @@
 ;;           (zig-mode . ("zls"))
 ;;           (latex-mode . ("texlab"))
 ;;           (rust-mode . ("rust-analyzer")))))
-
-;; (use-package helpful
-;;   :ensure t
-;;   :commands (helpful-callable
-;;              helpful-variable
-;;              helpful-key
-;;              helpful-command
-;;              helpful-at-point
-;;              helpful-function)
-;;   :bind
-;;   ([remap describe-command] . helpful-command)
-;;   ([remap describe-function] . helpful-callable)
-;;   ([remap describe-key] . helpful-key)
-;;   ([remap describe-symbol] . helpful-symbol)
-;;   ([remap describe-variable] . helpful-variable)
-;;   :custom
-;;   (helpful-max-buffers 7))
 
 ;; (use-package corfu
 ;;   :ensure t
@@ -1071,7 +1105,9 @@
 ;;   (tab-always-indent 'complete)
 ;;   :config (global-corfu-mode))
 
-;; (use-package cape :ensure t :defer t
+;; (use-package cape
+;;   :ensure t
+;;   :defer t
 ;;   :commands (cape-dabbrev cape-file cape-elisp-block)
 ;;   :bind ("C-c p" . cape-prefix-map)
 ;;   :init
@@ -1323,8 +1359,8 @@
 ;;               ("p" . 'scroll-down-command)
 ;;               ("n" . 'scroll-up-command)
 ;;               ("s" . occur)
-;;               ("ESC <prior>" . (lambda () (interactive) (bookmark-set "epub")))
-;;               ("C-M-i" .              (lambda () (interactive) (bookmark-jump "epub")))
+;;               ;; ("ESC <prior>" . (lambda () (interactive) (bookmark-set "epub")))
+;;               ;; ("C-M-i" .              (lambda () (interactive) (bookmark-jump "epub")))
 ;;               ("<prior>" . nov-scroll-down)
 ;;               ("<next>" . nov-scroll-up)))
 
@@ -1490,27 +1526,28 @@
 ;;   ;;   (devdocs-browser-download-offline-data doc))
 ;;   )
 
-(use-package gptel
-  :init
-  (setq deepseek-api-key
-        (with-temp-buffer
-          (insert-file-contents "/run/secrets/deepseek_apikey")
-          (buffer-string)))
-  (require 'gptel-org)
-  :config
-  (setq  gptel-default-mode 'org-mode)
-  (setq gptel-model   'deepseek-chat
-        gptel-backend (gptel-make-deepseek "deepseek"
-                        :stream t
-                        :key deepseek-api-key))
-  (require 'url-util)
-  (setq-default gptel-directives
-                '((default . "You are a large language model living in Emacs and a helpful assistant. 编程规范（少于70字符一行），中文文本24行×34字（少于约800字/页）")
-                  (programming . "You are a large language model and a careful programmer. Provide code and only code as output without any additional text, prompt or note.")
-                  (writing . "You are a large language model and a writing assistant. Respond concisely.")
-                  (chat . "You are a large language model and a conversation partner. Respond concisely.")
-                  (bug . "You are a large language model and a careful programmer. The supplied code doesn't work, or contains bugs. Describe each problem using only one sentence. Provide fixes without changing the old behavior.")))
-  (setq  gptel-stream nil))
+;; (use-package gptel
+;;   :init
+;;   (defalias 'dee 'gptel)
+;;   (setq deepseek-api-key
+;;         (with-temp-buffer
+;;           (insert-file-contents "/run/secrets/deepseek_apikey")
+;;           (buffer-string)))
+;;   (require 'gptel-org)
+;;   :config
+;;   (setq  gptel-default-mode 'org-mode)
+;;   (setq gptel-model   'deepseek-chat
+;;         gptel-backend (gptel-make-deepseek "deepseek"
+;;                         :stream t
+;;                         :key deepseek-api-key))
+;;   (require 'url-util)
+;;   (setq-default gptel-directives
+;;                 '((default . "You are a large language model living in Emacs and a helpful assistant. 编程规范（少于70字符一行），中文文本24行×34字（少于约800字/页）")
+;;                   (programming . "You are a large language model and a careful programmer. Provide code and only code as output without any additional text, prompt or note.")
+;;                   (writing . "You are a large language model and a writing assistant. Respond concisely.")
+;;                   (chat . "You are a large language model and a conversation partner. Respond concisely.")
+;;                   (bug . "You are a large language model and a careful programmer. The supplied code doesn't work, or contains bugs. Describe each problem using only one sentence. Provide fixes without changing the old behavior.")))
+;;   (setq  gptel-stream nil))
 
 ;; (use-package consult-gh
 ;;   :defer t
@@ -2188,8 +2225,6 @@ Optional MAX-RESULTS is the maximum number of results (default 5)."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;                            begin of toggle-font                            ;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defvar my-alternate-font "Ubuntu Mono Nerd Font")
-(defvar my-default-font "bookerly")
 (defvar font-scale-list '((130 165)(140 190)(150 200)(160 210)(170 225)(180 240)(190 250)(200 270)(210 280)(220 285)(230 310)(240 315)(250 320)(260 350)))
 (defvar fontfont 1)
 (defun my-toggle-font (&optional size)
@@ -2201,18 +2236,6 @@ Optional MAX-RESULTS is the maximum number of results (default 5)."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;                            end of toggle-font                              ;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defvar my-last-buffer nil
-  "Stores the last buffer before switching.")
-(defun my-toggle-buffer ()
-  "Toggle between current buffer and last visited buffer."
-  (interactive)
-  (let ((current (current-buffer)))
-    (when (and my-last-buffer
-               (buffer-live-p my-last-buffer)
-               (not (eq current my-last-buffer)))
-      (switch-to-buffer my-last-buffer))
-    (setq my-last-buffer current)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;                              begin of monitor                              ;
@@ -2257,59 +2280,324 @@ Optional MAX-RESULTS is the maximum number of results (default 5)."
 ;;                               end of monitor                               ;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun my/delete-all-duplicate-lines ()
-  "Delete all lines in the buffer that appear more than once."
-  (interactive)
-  (let ((seen (make-hash-table :test 'equal))
-        (dups (make-hash-table :test 'equal)))
-    ;; 第一次遍历：找重复行
-    (save-excursion
-      (goto-char (point-min))
-      (while (not (eobp))
-        (let ((line (string-trim-right
-                     (buffer-substring-no-properties
-                      (line-beginning-position)
-                      (line-end-position)))))
-          (if (gethash line seen)
-              (puthash line t dups)
-            (puthash line t seen)))
-        (forward-line 1)))
-    ;; 第二次遍历：删掉所有出现过多次的行
-    (save-excursion
-      (goto-char (point-min))
-      (while (not (eobp))
-        (let* ((beg (line-beginning-position))
-               (end (line-end-position))
-               (line (string-trim-right
-                      (buffer-substring-no-properties beg end))))
-          (if (gethash line dups)
-              (delete-region beg (1+ end)) ;; 删除整行
-            (forward-line 1)))))))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;                               begin of rotate                              ;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Commentary:
+;;
+;; rotate-text allows you cycle through commonly interchanged text with a single
+;; keystroke.  For example, you can toggle between "frame-width" and
+;; "frame-height", between "public", "protected" and "private" and between
+;; "variable1", "variable2" through "variableN".
+;;
+;; Add the following to your .emacs:
+;;
+;; (add-to-list 'load-path "/path/to/rotate-text")
+;; (autoload 'rotate-text "rotate-text" nil t)
+;; (autoload 'rotate-text-backward "rotate-text" nil t)
+;;
+;; Customize the variables `rotate-text-patterns', `rotate-text-symbols' and
+;; `rotate-text-words'.  You can make buffer-local additions in
+;; `rotate-text-local-patterns', `rotate-text-local-symbols' and
+;; `rotate-text-local-words'.
+;;
+;; Use the commands `rotate-text' and `rotate-text-backward' to rotate the
+;; text.
+;;
+;;; Change Log:
+;;
+;; 2009-04-13 (0.1)
+;;    Initial release.
+;;
+;;; Code:
 
-(defun my/delete-line-and-append-to-hhh ()
-"Delete the current line and append it to a file named 'hhh' in the current directory."
-(interactive)
-(let* ((current-file (buffer-file-name))
-       (dir (if current-file
-                (file-name-directory current-file)
-              default-directory))     ;; fallback when buffer has no file
-       (target-file (expand-file-name "hhh" dir))
-       (line (thing-at-point 'line t)))
-  ;; Append line to file
-  (with-temp-buffer
-    (insert line)
-    (write-region (point-min) (point-max) target-file t))
-  ;; Delete the current line in original buffer
-  (delete-region (line-beginning-position)
-                 (line-beginning-position 2))))
+(eval-when-compile (require 'cl))
+
+(add-to-list 'debug-ignored-errors "^Nothing to rotate$")
+
+(defgroup rotate-text nil
+  "Cycle through words, symbols and patterns."
+  :group 'abbrev
+  :group 'convenience
+  :group 'matching)
+
+(defcustom rotate-text-patterns
+  '(("\\_<[^-]\\(\\sw\\|\\s_\\)*[0-9]+" rotate-text-increment-number-in-symbol)
+    ("-?0x?[0-9a-fA-F]+" rotate-text-increment-hex-number)
+    ("-?[0-9]+" rotate-text-increment-number))
+  "*Patterns and functions to rotate them.
+Each entry is a list.  Its first element should be the regular expression to
+replace, the second element is a function.  When rotating, it is called with the
+matching text and an integer determining the rotation amount and direction."
+  :group 'rotate-text
+  :type '(repeat (list (string :tag "Regular expression")
+                       (function :tag "Rotation function"))))
+
+(defcustom rotate-text-symbols '(("private" "protected" "public"))
+  "*List of symbol names to rotate.
+Each element is a list of symbols that should be cycled through."
+  :group 'rotate-text
+  :type '(repeat (repeat :tag "Rotation group" (string :tag "Symbol"))))
+
+(defcustom rotate-text-words '(("width" "height")
+                               ("left" "right" "top" "bottom"))
+  "*List of words to rotate.
+Each element is a list of words that should be cycled through.  Individual
+segments in symbol names are recognized as words, i.e. windowWidth can be
+replaced with windowHeight.
+All entries must be in lower case. The case is determined by the rotated
+text."
+  :group 'rotate-text
+  :type '(repeat (repeat :tag "Rotation group" (string :tag "Word"))))
+
+(defvar rotate-text-local-patterns nil
+  "*Buffer local additions to `rotate-text-patterns'.")
+(make-variable-buffer-local 'rotate-text-local-patterns)
+
+(defvar rotate-text-local-symbols nil
+  "*Buffer local additions to `rotate-text-symbols'.")
+(make-variable-buffer-local 'rotate-text-local-symbols)
+
+(defvar rotate-text-local-words nil
+  "*Buffer local additions to `rotate-text-words'.")
+(make-variable-buffer-local 'rotate-text-local-words)
+
+;;; numbers ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun rotate-text-increment-number (original arg &optional minimum)
+  (number-to-string (max (+ (string-to-number original) arg)
+                         (or minimum most-negative-fixnum))))
+
+(defun rotate-text-increment-hex-number (original arg)
+  (when (string-match "\\`-?\\(0x\\)" original)
+    (setq original (replace-match "" t t original 1)))
+  (let ((result (+ (string-to-number original 16) arg)))
+    (format "%s0x%x" (if (< result 0) "-" "") (abs result))))
+
+(defun rotate-text-increment-number-in-symbol (original arg)
+  (when (string-match "[0-9]+" original)
+    (replace-match (rotate-text-increment-number (match-string 0 original)
+                                                 arg 0)
+                   t t original)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun rotate-text-replacement (replacements original dir)
+  "Find the replacement for ORIGINAL in REPLACEMENTS."
+  (save-match-data
+    (if (functionp (car replacements))
+        ;; function
+        (if (and (< dir 0) (functionp (cadr replacements)))
+            (funcall (cadr replacements) original (- dir))
+          (funcall (car replacements) original dir))
+      ;; list
+      (let ((rest-pattern (member original replacements)))
+        (when rest-pattern
+          (car (nthcdr (mod (- dir (length rest-pattern)) (length replacements))
+                       replacements)))))))
+
+(defun rotate-text-match-at-point (regexp)
+  (save-excursion
+    (let ((pos (point)))
+      (goto-char (point-at-bol))
+      (catch 'match
+        (while (re-search-forward regexp (1+ (point-at-eol)) t)
+          (and (>= pos (match-beginning 0))
+               (<= pos (match-end 0))
+               (throw 'match (match-string-no-properties 0))))))))
+
+(defun rotate-text-symbol-at-point ()
+  "Rotate the symbol at point."
+  (rotate-text-match-at-point "\\_<\\(\\s_\\|\\sw\\)+\\_>"))
+
+(defun rotate-text-word-at-point ()
+  "Rotate the word at point."
+  (let ((case-fold-search nil))
+    (or (rotate-text-match-at-point "\\(\\<\\|[[:upper:]]\\)[[:lower:]]+")
+        (rotate-text-match-at-point "\\<[[:upper:]]+"))))
+
+(defun rotate-text-match-case (original new)
+  "Match the case of ORIGINAL in NEW."
+  (let ((case-fold-search nil))
+    (save-match-data
+      (cond
+       ((string-match "\\`[[:upper:]][[:lower:]]" original) (capitalize new))
+       ((string-match "\\`[[:upper:]][[:upper:]]" original) (upcase new))
+       (t new)))))
+
+(defvar rotate-text-last-offset nil)
+
+;;;###autoload
+(defun rotate-text (arg &optional default-string com-symbols com-words com-patterns)
+  "Rotate the text at point. If there is nothing to rotate at point and DEFAULT-STRING is non-nil,
+DEFAULT-STRING is inserted at point.
+
+COM-SYMBOLS, COM-WORDS and COM-PATTERNS are per-command addition to `rotate-text-symbols',
+`rotate-text-words' and `rotate-text-patterns', respectively."
+  (interactive (list (if (consp current-prefix-arg)
+                         -1
+                       (prefix-numeric-value current-prefix-arg))))
+  (let ((pos (point))
+        (offset 0)
+        match replacement)
+    (or ;; symbols
+     (when (setq match (rotate-text-symbol-at-point))
+       (dolist (symbols (append com-symbols rotate-text-local-symbols
+                                rotate-text-symbols))
+         (when (setq replacement
+                     (rotate-text-replacement symbols match arg))
+           (return t))))
+     ;; words
+     (when (setq match (rotate-text-word-at-point))
+       (dolist (words (append com-words rotate-text-local-words
+                              rotate-text-words))
+         (when (setq replacement
+                     (rotate-text-replacement words (downcase match) arg))
+           (setq replacement (rotate-text-match-case match replacement))
+           (return t))))
+     ;; regexp
+     (dolist (pattern (append com-patterns rotate-text-local-patterns
+                              rotate-text-patterns))
+       (when (setq match (rotate-text-match-at-point (car pattern)))
+         (setq replacement (rotate-text-replacement (cdr pattern) match arg))
+         (return t))))
+
+    (if (not replacement)
+        (progn (unless default-string
+                 (error "Nothing to rotate"))
+               (insert default-string)
+               (setq rotate-text-last-offset nil))
+
+      (progn
+        (unless (and rotate-text-last-offset
+                     (eq last-command this-command))
+          (setq rotate-text-last-offset
+                (if (eq pos (match-end 0))
+                    'end
+                  (- pos (match-beginning 0)))))
+
+        (replace-match replacement nil t)
+
+        (goto-char (if (eq rotate-text-last-offset 'end)
+                       (match-end 0)
+                     (min (+ (match-beginning 0) rotate-text-last-offset)
+                          (match-end 0))))))))
+
+;;;###autoload
+(defun rotate-text-backward (arg &optional default-string com-symbols com-words com-patterns)
+  "Rotate the text at point backwards. If there is nothing to rotate at point and DEFAULT-STRING is non-nil,
+DEFAULT-STRING is inserted at point.
+
+COM-SYMBOLS, COM-WORDS and COM-PATTERNS are per-command addition to `rotate-text-symbols',
+`rotate-text-words' and `rotate-text-patterns', respectively."
+  (interactive (list (if (consp current-prefix-arg)
+                         -1
+                       (prefix-numeric-value current-prefix-arg))))
+  (rotate-text (- arg) default-string com-symbols com-words com-patterns))
+
+(autoload 'rotate-text "rotate-text" nil t)
+(autoload 'rotate-text-backward "rotate-text" nil t)
+;; the best way to config it is to see it's lang-mode's key words.
+(setq rotate-text-symbols '(
+                            ("t" "nil")
+                            ("in" "out" "err" "io")
+                            ("a" "b" "c" "d")
+                            ("i" "j" "k")
+                            ("private" "protected" "public")
+                            ("break" "continue")
+                            ("x" "y" "z")))
+(setq rotate-text-words '(
+                          ("argc" "argv")
+                          ("column" "line")
+                          ("const" "statis")
+                          ("cos" "sin")
+                          ("enable" "disable")
+                          ("fixme" "todo" "okay" "temp")
+                          ("float" "double")
+                          ("init" "creat" "close")
+                          ("input" "output")
+                          ("left" "right" "top" "bottom")
+                          ("max" "min")
+                          ("new" "old")
+                          ("printf" "fprintf" "sprintf" "snprintf")
+                          ("size" "uint")
+                          ("start" "end")
+                          ("stdout" "stdin" "stderr" "stdio")
+                          ("str" "list")
+                          ("timer" "keyboard" "display")
+                          ("true" "false")
+                          ("void" "bool" "char" "int")
+                          ("width" "height")
+                          ("yes" "no")))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;                                end of rotate                               ;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;                               begin of minor                               ;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; (defvar my-last-buffer nil
+;;   "Stores the last buffer before switching.")
+;; (defun my-toggle-buffer ()
+;;   "Toggle between current buffer and last visited buffer."
+;;   (interactive)
+;;   (let ((current (current-buffer)))
+;;     (when (and my-last-buffer
+;;                (buffer-live-p my-last-buffer)
+;;                (not (eq current my-last-buffer)))
+;;       (switch-to-buffer my-last-buffer))
+;;     (setq my-last-buffer current)))
+
+;; (defun my/delete-all-duplicate-lines ()
+;;   "Delete all lines in the buffer that appear more than once."
+;;   (interactive)
+;;   (let ((seen (make-hash-table :test 'equal))
+;;         (dups (make-hash-table :test 'equal)))
+;;     ;; 第一次遍历：找重复行
+;;     (save-excursion
+;;       (goto-char (point-min))
+;;       (while (not (eobp))
+;;         (let ((line (string-trim-right
+;;                      (buffer-substring-no-properties
+;;                       (line-beginning-position)
+;;                       (line-end-position)))))
+;;           (if (gethash line seen)
+;;               (puthash line t dups)
+;;             (puthash line t seen)))
+;;         (forward-line 1)))
+;;     ;; 第二次遍历：删掉所有出现过多次的行
+;;     (save-excursion
+;;       (goto-char (point-min))
+;;       (while (not (eobp))
+;;         (let* ((beg (line-beginning-position))
+;;                (end (line-end-position))
+;;                (line (string-trim-right
+;;                       (buffer-substring-no-properties beg end))))
+;;           (if (gethash line dups)
+;;               (delete-region beg (1+ end)) ;; 删除整行
+;;             (forward-line 1)))))))
+
+;; (defun my/delete-line-and-append-to-hhh ()
+;;   "Delete the current line and append it to a file named 'hhh' in the current directory."
+;;   (interactive)
+;;   (let* ((current-file (buffer-file-name))
+;;          (dir (if current-file
+;;                   (file-name-directory current-file)
+;;                 default-directory))     ;; fallback when buffer has no file
+;;          (target-file (expand-file-name "hhh" dir))
+;;          (line (thing-at-point 'line t)))
+;;     ;; Append line to file
+;;     (with-temp-buffer
+;;       (insert line)
+;;       (write-region (point-min) (point-max) target-file t))
+;;     ;; Delete the current line in original buffer
+;;     (delete-region (line-beginning-position)
+;;                    (line-beginning-position 2))))
 
 (defun donothing () (interactive)(message ""))
-(defun sayshit () (interactive)(message "You Are Note Suppose To Use This Key!"))
-
-(tooltip-mode -1)(delete-selection-mode 1)(global-font-lock-mode 1)
-(global-eldoc-mode -1)(show-paren-mode -1)(window-divider-mode 1)
-(winner-mode -1)(repeat-mode -1)(display-time-mode -1)
-(display-line-numbers-mode -1)(global-hide-mode-line-mode 1)
+;; (defun sayshit () (interactive)(message "You Are Note Suppose To Use This Key!"))
 
 (defvar compilation-show 1
   "Current compilation buffer mode, either 0 for show or  1 for close.")
@@ -2340,18 +2628,34 @@ Optional MAX-RESULTS is the maximum number of results (default 5)."
                                          (other-window -1)
                                          (delete-window (get-buffer-window "*compilation*")))))))
 
-;; (use-package compile-angel
-;;   :ensure t
-;;   :demand t
-;;   :custom
-;;   (compile-angel-verbose nil)
-;;   :config
-;;   (push "/post-init.el" compile-angel-excluded-files)
-;;   (add-hook 'emacs-lisp-mode-hook #'compile-angel-on-save-local-mode)
-;;   (compile-angel-on-load-mode))
+(defun consult-ripgrep-symbol-at-point  ()
+  "Search for a line matching the symbol found near point."
+  (interactive)
+  (consult-ripgrep  (project-root (project-current t))
+                    (or (thing-at-point 'symbol))))
 
+;; (consult-ripgrep "/home/leeao/.me/post-init.el" "ensure")
 
-(setq psession-object-to-save-alist
-      (assq-delete-all 'buffer-name-history psession-object-to-save-alist))
-(setf (alist-get 'truncation fringe-indicator-alist) '(nil nil))
-(setf (alist-get 'continuation fringe-indicator-alist) '(nil nil))
+(defun hibernatecall()
+  (interactive)
+  (if (yes-or-no-p "(really hibernate ? yes or no)")
+      (progn   (message "emacs睡着了，不要吵醒它。")
+               (call-process "systemctl" nil nil nil "hibernate"))
+    (keyboard-quit)))
+
+(delete-selection-mode 1)
+(display-line-numbers-mode -1)
+(display-time-mode -1)
+(electric-pair-mode 1)
+(global-eldoc-mode -1)
+(global-font-lock-mode 1)
+(global-hide-mode-line-mode 1)
+(repeat-mode -1)
+(show-paren-mode -1)
+(tooltip-mode -1)
+(window-divider-mode 1)
+(winner-mode -1)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;                                end of minor                                ;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
