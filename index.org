@@ -18,10 +18,11 @@ blog应该少看，好了该关闭这个tab了，为的是别让你看到我不�
 - 去关注女性主义作者向每个人说自己是女权男
 - 学习前端，制作知乎b站小红书豆瓣热点聚合网站
 - 每天花10小时上网，收集链接再发到自己的博客上
+- 每天花10小时上网，复制一遍教程发到自己博客上
 - 每日用30分钟用gpt生成30万字心得感悟到博客
-- 使用gpt生成文本到自己的obsidian第二大脑
+- 使用LLM生成文本到自己的obsidian第二大脑
 - 利用聚合网站的方法，制作色情网站入口
-- 和缅甸企业达成协议，接入赌博网站广告
+- 和缅甸太子达成协议，接入赌博网站广告
 - 在公共厕所大量印刷网址和分发小卡片
 - 每天关注国际新闻，为中国发声，强调爱国
 - 大量投资低空经济与电动车产业的办证产业
@@ -41,6 +42,13 @@ blog应该少看，好了该关闭这个tab了，为的是别让你看到我不�
 - 多学习到需要眼镜，多久坐到需要小米su7, 多吃少动到去健身房
 - 必须在国家间站队，必须在编程语言间站队，必须在编程工具间站队
 - 少睡觉，少运动，多上网，多久坐，多比较 ，人生会更好
+- Zig 比 C 更好，我听别人blogging说的
+- Rust 比 C++ 更好，我听别人blogging说的
+- Golang 比 Java 更好，我听别人blogging说的
+- Mojo 比 Python 更好，我听别人blogging说的
+- Common Lisp 比 Emacs Lisp 更好，我听别人blogging说的
+- 新的东西一定是比旧的东西好! 别人的话一定比自己想的对!
+- 学历很重要，每天关心大学排名，啥qs啥校友会什么抖音排行榜
 
 * ZEN
 #+begin_Verse
@@ -71,7 +79,6 @@ You know "the industira revolution and it's consequence has been a disaster for 
 You choose linux/emacs, because it's hard way for fun, that's all life about, Pain give us a purpose.
 Simple and Sinister. Sleep and Love. Leere and Learn.
 #+end_verse
-
 
 世界嘈杂、瘾品横流、随机与即时构成新的枷锁，而真正的自由来自主动的剥离。当目光离开诱惑、离开广告、离开无意义的瞬息刺激，心才开始变得干净。生活越简，能量越纯；越慢，感受越深；越少，越能看见真正的自己。
 
@@ -104,11 +111,9 @@ come out to be.
 - Accumulate a codebase, Use Erlang/Zig/Rust to creat project You Like.
 #+end_Verse
 
-
 A 20s Old man yell at Cloud.
 
 ---------------------------------------------------------------------------------------
-
 
 Phone is about 24h slaving human close-source which full of spyware made by Jews/Chinese, they make consumers arguing over and over about brand/chips/products/new fasion/new shitty color.
 
@@ -126,16 +131,11 @@ Come and consume new phones, we have Back Screen to bring back feeling of 90s wh
 
 ---------------------------------------------------------------------------------------
 
-
 Actually, No Internet, there will be no Browser/Phone, But Internet is not totally evil, so you can see this blogging. Internet is aboubt blogging garbage, spread fear. All in all, Freedom Cause Compulsive Abuse.
-
-
 
 ---------------------------------------------------------------------------------------
 
-
 Browser is gateway of porn and doomscroll, you search, jerk off, comment, browsing, blogging, ship electron app with chromium to everyone's phone and pc to help phone brand sell more new phones.  Just make living for javascript web devs by share your pravicy to shopping tech company.
-
 
 ---------------------------------------------------------------------------------------
 
@@ -148,7 +148,6 @@ LSP and 100 fancy color themes with 1 million panels and Javascript Extensions, 
 
 Busy-minds cause Less Mindful.
 
-
 #+ATTR_LATEX: :environment quotation
 #+BEGIN_QUOTE
        Most of these tools are distractions. I don't want suggestions
@@ -157,28 +156,54 @@ Busy-minds cause Less Mindful.
        write and think. Focus is essential.
 #+END_QUOTE
 
-
-#+TITLE: TL;DR
-#+OPTIONS: toc:2
-#+language: cn
+# #+LATEX_HEADER: \addbibresource[location=local]{reference.bib}
+# #+LATEX_HEADER: \logo{.jpg}
+# add any extra raw HTML you want in <head> (fonts, meta, scripts)
+# additional export tweaks
+# bibliography / citation export (org-cite + exporter will pick this up)
+# cover / social preview image
+# custom CSS (replace the href with your stylesheet or inline styles below)
+# small inline CSS snippet to mimic LaTeX color settings / cover line color
+#+AUTHOR: NestorLiao
+#+EMAIL: llqingsong@qq.com
+#+HTML_CONTAINER_CLASS: container
+#+HTML_DOCTYPE: html5
+#+HTML_HEAD: <link rel="icon" href="file:///home/USERNAME/.local/share/mysource/meditate.jpg">
+#+HTML_HEAD: <link rel="stylesheet" href="./mystyle.css">
+#+HTML_HEAD: <meta charset="utf-8">
+#+HTML_HEAD: <meta name="author" content="NestorLiao">
+#+HTML_HEAD: <meta name="description" content="NestorLiao, Emacs, Linux, ZMK, Eink, Rust, Zig, C, C++, OS, embedded, tutorial">
+#+HTML_HEAD: <meta name="institute" content="Free Club">
+#+HTML_HEAD: <meta name="keywords" content="Tech, NestorLiao, FSF, Emacs, Linux, ZMK, Eink, Rust, Zig, C, C++, OS">
+#+HTML_HEAD: <meta name="subtitle" content="Simplicity Is The Key">
+#+HTML_HEAD: <meta name="viewport" content="width=device-width, initial-scale=1">
+#+HTML_HEAD: <meta property="og:image" content="file:///home/USERNAME/.local/share/mysource/meditate.jpg">
+#+HTML_HEAD: <style> :root{--customcolor: #ffffff} .coverline{color:var(--customcolor);} </style>
+#+HTML_HEAD_EXTRA: <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+#+HTML_HTML5_FANCY: t
+#+LANGUAGE: cn
 #+LATEX_CLASS: elegantbook
 #+LATEX_CLASS_OPTIONS: [color=black, citestyle=gb7714-2015, bibstyle=gb7714-2015,lang=cn,math=cm,10pt, scheme=chinese,toc=twocol,bibend=bibtex]
+#+LATEX_HEADER: \bioinfo{邮箱}{llqingsong@qq.com}
+#+LATEX_HEADER: \colorlet{coverlinecolor}{customcolor}
+#+LATEX_HEADER: \cover{~/.local/share/mysource/meditate.jpg}
+#+LATEX_HEADER: \definecolor{customcolor}{RGB}{255,255,255}
+#+LATEX_HEADER: \institute{Free Club}
+#+LATEX_HEADER: \mainmatter
+#+LATEX_HEADER: \setcounter{tocdepth}{2}
 #+LATEX_HEADER: \subtitle{Simplicity Is The Key}
 #+LATEX_HEADER: \title{My TL;DR Notes}
-#+LATEX_HEADER: \institute{Free Club}
-#+LATEX_HEADER: \bioinfo{邮箱}{llqingsong@qq.com}
-#+LATEX_HEADER: \setcounter{tocdepth}{2}
-# #+LATEX_HEADER: \logo{.jpg}
-#+LATEX_HEADER: \cover{~/.local/share/mysource/meditate.jpg}
 #+LATEX_HEADER: \usepackage{array}
 #+LATEX_HEADER: \usepackage{cprotect}
-#+LATEX_HEADER: \definecolor{customcolor}{RGB}{255,255,255}
-#+LATEX_HEADER: \colorlet{coverlinecolor}{customcolor}
-# #+LATEX_HEADER: \addbibresource[location=local]{reference.bib}
-#+keywords: Tech, NestorLiao, FSF, Emacs, Linux, ZMK, Eink, Rust, Zig, C, C++, OS
-#+description: NestorLiao, Emacs, Linux, ZMK, Eink, Rust, Zig, C, C++, OS, embedded, tutoria
+#+OPTIONS: toc:2
+#+OPTIONS: toc:2 num:nil
+#+SUBTITLE: Simplicity Is The Key
+#+TITLE: TL;DR
+#+bibliography: reference.bib
 #+cite_export: bibtex
-#+LATEX_HEADER: \mainmatter
+#+description: NestorLiao, Emacs, Linux, ZMK, Eink, Rust, Zig, C, C++, OS, embedded, tutoria
+#+keywords: Tech, NestorLiao, FSF, Emacs, Linux, ZMK, Eink, Rust, Zig, C, C++, OS
+#+language: cn
 
 * 禅
 - 眼不见生物本能与工业革命驱动的越发泛滥的瘾品失范世界，心为净极简自然身心|黑白断网编程
@@ -289,7 +314,6 @@ Busy-minds cause Less Mindful.
         yaml-mode
 
 #+end_src
-
 
 #+caption: Some useful link for C
 #+begin_verse
@@ -651,7 +675,99 @@ Busy-minds cause Less Mindful.
 - 青年: 教育/数学/计算机/传销
 - Such A Bloated and Noise World
 
-
 为什么人类发展成这样?
 
 答:  宇宙发展之必然。
+
+* 小拇指
+根据人类国际惯例，手指的耐用性: 大>中>食>无>>>小。
+根据人类国际惯例，标准键盘使用的是QWERTY，无边打游戏还是写代码，99%的人大约都是这样的布局。
+变化的只有90% 60%， 或者alice这样的弯曲，还有的是用青轴或是加点RGB。
+
+但这些通通对我们的小拇指没有一点帮助!
+
+如果你用的是qwerty，来那么你的小拇指的使用就很可能让你后面50年面临腕管综合症。
+你要用的有:
+- modifier: shift/win/alt/ctrl/capslock
+- symbols: "'[]<>,.a
+然后你的两个最耐用的大拇指只是用来打同一个空格??
+hey， you know, that's shitty design。
+
+对我而言:
+- colemak(更优化高频按键分布在homerow)
+- 分体式(改善体态)
+- 粉轴(减少按压需要的力度)
+- homerow(分摊modifier key到四个手指)
+- 虎码(减少按键与分心)
+- 分层(让左右大拇指选层，减少键数到36个)
+- emacs(定制化最小拇指轻量级快捷键)
+
+己经大幅减少了小拇指的使用。
+但还远远不够~ 因为一些符号与按键存在在colemak和emacs中，
+如使用homerow的右方向，meta键，还有如q’;o这样的在外围小拇指区域，
+这样就让，小拇指承担很多需要使用符号，如右手的“”‘’ 和左手的{[
+不只是小拇指，同样的也让食指也需要拉伸去按]}… 更不用说 ; 键，在c语言中它是分隔，在elisp中它是注释，
+没它万万不能，但是它正好在我的左手小拇指上，还有M-; C-;通通需要我用三个手指才能按出。
+;本就是在symbol层，需要大拇指参与才能按到，也就是2指按;，
+而emacs实在是太，c-v，c-h c-abcdefg 全都是有用的… 一时间我竟不知道该怎么改了。
+
+不过有一天，我在看别人bloging出来的配置上看到了这个!
+#+caption: 这个意思就是将在c-i/c-m中的tab/enter解邦而成为可以使用的按键。
+#+begin_src emacs-lisp :tangle yes
+(add-hook 'after-make-frame-functions
+            (defun setup-blah-keys (frame)
+              (with-selected-frame frame
+                (when (display-graphic-p)
+                  (define-key input-decode-map (kbd "C-i") [CTRL-i])
+                  (define-key input-decode-map (kbd "C-S-i") [CTRL-Shift-i])
+                  (define-key input-decode-map (kbd "C-[") [CTRL-lsb])
+                  (define-key input-decode-map (kbd "C-m") [CTRL-m])
+                  (define-key input-decode-map (kbd "C-S-m") [CTRL-Shift-m])
+                  ))))
+#+end_src
+
+办法出来了! 也就是加上homerow，将原,.使用的按键移到c-m中，
+shift+，/。本身就是<>，
+将用ctrl+，/。成为()，
+将用alt+，/。成为{}，
+将用alt+ctrl+，/。成为“”，
+将用meta+，/。成为[]，
+
+至于我为什么这样分，请看我从一些代码文件中得到的各符号占比:
+
+在  flag.h(C语言)中
+
+({"'[一般是成对出现的，
+其中()在C中作为函数调用声名定义大量使用。
+而<>是单独出现的。
+以;作为语义分隔也占了大量的使用。
+[]使用稀少。
+
+858 ()
+399 ;
+69 :
+278 {}
+193 <>
+158 ""
+26 '
+41 []
+
+在 post-init-el(elisp语言)中
+
+({"'[一般是成对出现的，
+其中()在为函数式语言elisp中大量使用，
+而<>是成对出现的。
+以;作为注释也占了大量的使用。
+[]使用稀少。
+
+ 6186 ()
+ 4308 ;
+ 434 :
+ 26 {}
+ 164 <>
+ 2014 "
+ 391 '
+ 182 [
+
+ 当然其它语言如rust/zig的使用情况也不一样，但大致都是这样，
+ (用于函数，;用于分隔，>用于case，“用于字符串，‘用于字符，[用于数组。

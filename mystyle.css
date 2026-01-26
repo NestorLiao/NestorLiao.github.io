@@ -1,0 +1,640 @@
+/* mystyle.css
+   A large, fancy, and intentionally "weird" stylesheet tailored for Org-mode HTML export.
+   Targets many of the classes and elements produced by Org's html export and the snippets
+   you provided. Drop this file next to your exported HTML (or host on GitHub Pages).
+   - Place <link rel="stylesheet" href="./mystyle.css"> in the <head>
+   - Supports light/dark themes, print styles, accessibility fallbacks.
+*/
+
+/* =========================
+   Config / CSS Variables
+   ========================= */
+:root{
+  --bg: #0f1115;                     /* page background (dark theme default) */
+  --paper: linear-gradient(180deg,#0e0f14 0%, #14151a 100%);
+  --card: rgba(255,255,255,0.04);
+  --muted: rgba(255,255,255,0.55);
+  --text: #e6eef3;
+  --accent: #7bd389;
+  --accent-2: #7ad0ff;
+  --accent-3: #ffa94d;
+  --coverline: #ffffff;
+  --toc-bg: rgba(255,255,255,0.02);
+  --glass: rgba(255,255,255,0.03);
+  --glass-border: rgba(255,255,255,0.06);
+  --mono: Menlo, Monaco, "SFMono-Regular", "Roboto Mono", "Courier New", monospace;
+  --sans: Inter, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --serif: "Merriweather", Georgia, "Times New Roman", serif;
+  --radius: 14px;
+  --gutter: 22px;
+  --max-width: 980px;
+  --toc-width: 300px;
+  --shadow-1: 0 6px 30px rgba(0,0,0,0.55);
+  --glass-frost: rgba(255,255,255,0.02);
+  --reading-rhythm: 1.65;
+  --ui-speed: 240ms;
+}
+
+/* Light theme (opt-in by adding data-theme="light" on <html> or <body>) */
+[data-theme="light"]{
+  --bg: #f6f7f9;
+  --paper: linear-gradient(180deg,#fff 0%, #fbfbfd 100%);
+  --card: rgba(0,0,0,0.03);
+  --muted: rgba(0,0,0,0.55);
+  --text: #0b1220;
+  --accent: #006b5f;
+  --accent-2: #0b63c6;
+  --accent-3: #f08b2d;
+  --coverline: #000000;
+  --toc-bg: rgba(0,0,0,0.02);
+  --glass: rgba(0,0,0,0.02);
+  --glass-border: rgba(0,0,0,0.06);
+  --shadow-1: 0 10px 28px rgba(20,20,20,0.06);
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce){
+  * { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+}
+
+/* =========================
+   Global Reset & Layout
+   ========================= */
+* { box-sizing: border-box; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+html,body { height:100%; margin:0; background:var(--paper); color:var(--text); font-family:var(--sans); }
+body {
+  display:flex;
+  justify-content:center;
+  padding:40px 20px;
+  line-height: var(--reading-rhythm);
+  -webkit-tap-highlight-color: transparent;
+}
+#content.content {
+  --pad: clamp(18px, 2.6vw, 48px);
+  width: min(var(--max-width), 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));
+  border-radius: 18px;
+  padding: var(--pad);
+  box-shadow: var(--shadow-1);
+  border: 1px solid rgba(255,255,255,0.02);
+  position: relative;
+  overflow: visible;
+}
+
+/* Handy container for outlines */
+.outline-2, .outline-1, .outline-3 { margin: 28px 0; }
+
+/* =========================
+   Cover / Title / Subtitle
+   ========================= */
+.title {
+  display:block;
+  text-align:center;
+  margin: 6px 0 12px;
+  font-family: var(--serif);
+  font-size: clamp(26px, 4.6vw, 44px);
+  letter-spacing: -0.02em;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.05;
+  text-transform: none;
+}
+.title .subtitle, .subtitle {
+  display:inline-block;
+  margin-top: 8px;
+  font-family: var(--sans);
+  font-size: clamp(12px, 2.2vw, 16px);
+  color: var(--muted);
+  font-weight:500;
+  background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.03));
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.03);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.12) inset;
+}
+
+/* Decorative cover band */
+#content::before {
+  content: "";
+  position: absolute;
+  top: -36px;
+  left: 20px;
+  right: 20px;
+  height: 96px;
+  border-radius: 12px;
+  background: linear-gradient(90deg, rgba(123,211,137,0.06), rgba(122,208,255,0.03));
+  filter: blur(10px);
+  z-index: -1;
+  opacity: 0.8;
+}
+
+/* Cover image (if you want to create a hero) */
+.cover {
+  width:100%;
+  max-height: 320px;
+  overflow:hidden;
+  border-radius: 12px;
+  margin-bottom: 18px;
+  background-size: cover;
+  background-position: center;
+  border: 1px solid rgba(255,255,255,0.03);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+}
+/* Example: <div class="cover" style="background-image:url(/path/to/meditate.jpg)"></div> */
+
+/* =========================
+   Table of Contents
+   ========================= */
+#table-of-contents {
+  margin: 12px 0 18px;
+  padding: 12px;
+  border-radius: 12px;
+  background: var(--toc-bg);
+  border: 1px solid rgba(255,255,255,0.025);
+}
+#table-of-contents h2 { font-size: 1.05rem; margin: 6px 0 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em; }
+#text-table-of-contents { font-size: 0.96rem; max-height: 260px; overflow:auto; padding-right: 8px; }
+#text-table-of-contents ul { margin: 0; padding-left: 18px; }
+#text-table-of-contents li { margin: 6px 0; }
+#text-table-of-contents a {
+  display:inline-flex;
+  gap:8px;
+  align-items:center;
+  color: var(--accent-2);
+  text-decoration: none;
+  padding: 6px 8px;
+  border-radius: 8px;
+  transition: all var(--ui-speed) cubic-bezier(.2,.9,.2,1);
+}
+#text-table-of-contents a:hover {
+  transform: translateX(6px);
+  background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+}
+
+/* =========================
+   Headings & Outline
+   ========================= */
+h1,h2,h3,h4,h5,h6 { font-family: var(--serif); color: var(--text); margin: 18px 0 8px; line-height:1.12; }
+h2 { font-size: clamp(18px, 2.9vw, 26px); display:flex; align-items:center; gap:12px; }
+h2:before {
+  content: "";
+  width: 12px;
+  height: 12px;
+  border-radius: 4px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  box-shadow: 0 4px 18px rgba(0,0,0,0.4);
+  transform: rotate(25deg) translateY(-2px);
+}
+
+/* Outline text containers */
+.outline-text-2, .outline-text-1 {
+  color: var(--text);
+  padding: 12px 10px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.00), rgba(255,255,255,0.01));
+  border-radius: 10px;
+}
+
+/* Fancy section divider */
+hr {
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.03), rgba(255,255,255,0));
+  margin: 26px 0;
+}
+
+/* =========================
+   Paragraph, Verse, and Prose
+   ========================= */
+p { margin: 0 0 14px; font-size: 1rem; }
+.verse { font-style: italic; color: var(--muted); background: rgba(255,255,255,0.01); padding: 12px 14px; border-left: 3px solid rgba(255,255,255,0.03); border-radius: 8px; }
+
+/* =========================
+   Lists & Special Bullet styles
+   ========================= */
+.org-ul, ul.org-ul, ul {
+  padding-left: 18px;
+  margin: 10px 0 14px;
+  list-style: none;
+}
+.org-ul li, ul.org-ul li, ol li {
+  position: relative;
+  padding-left: 18px;
+  margin: 8px 0;
+  line-height: 1.45;
+}
+.org-ul li:before, ul.org-ul li:before {
+  content: counter(item) "•";
+  counter-increment: item;
+  display:inline-block;
+  width: 10px;
+  height: 10px;
+  margin-left: -18px;
+  margin-right: 8px;
+  background: radial-gradient(circle at 30% 30%, var(--accent), var(--accent-2));
+  color: rgba(0,0,0,0.0);
+  border-radius: 4px;
+  transform: translateY(2px);
+  opacity:0.95;
+}
+
+/* Ordered list counters (fancy) */
+ol {
+  counter-reset:list;
+  list-style:none;
+  padding-left: 32px;
+}
+ol li {
+  counter-increment: list;
+  margin: 8px 0;
+}
+ol li:before {
+  content: counter(list) ".";
+  display:inline-block;
+  width: 20px;
+  text-align:center;
+  margin-left:-32px;
+  color: var(--muted);
+  font-weight:600;
+}
+
+/* =========================
+   Code blocks, Syntax & Line numbers
+   ========================= */
+pre, code, kbd {
+  font-family: var(--mono);
+  font-size: 0.92rem;
+}
+pre {
+  background: linear-gradient(180deg, rgba(0,0,0,0.36), rgba(0,0,0,0.2));
+  padding: 14px;
+  border-radius: 12px;
+  overflow:auto;
+  border: 1px solid rgba(255,255,255,0.03);
+  box-shadow: inset 0 -6px 30px rgba(0,0,0,0.5);
+  margin: 12px 0;
+  position: relative;
+  white-space: pre;
+}
+
+/* language label badges via class selectors (these will be shown on top-right of blocks) */
+pre[class*="src-"] {
+  position: relative;
+  padding-top: 36px;
+}
+pre[class*="src-"]::before {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  color: #0b1220;
+  background: linear-gradient(90deg,var(--accent-2),var(--accent));
+  box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+  font-weight:700;
+  text-transform: none;
+  letter-spacing: 0.02em;
+  z-index: 6;
+}
+
+/* Specific content: mirror the small snippets you provided */
+pre.src-tcl:before { content: 'tcl'; color:#072; }
+pre.src-tex:before { content: 'TeX'; }
+pre.src-plain-tex:before { content: 'Plain TeX'; }
+pre.src-verilog:before { content: 'Verilog'; }
+pre.src-vhdl:before { content: 'VHDL'; }
+pre.src-xml:before { content: 'XML'; }
+pre.src-nxml:before { content: 'XML'; }
+pre.src-conf:before { content: 'Configuration File'; }
+
+/* monospace inline code */
+code {
+  background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  padding: 2px 6px;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.02);
+}
+
+/* "faux" line numbers on pre elements (when markup contains .linenr spans) */
+pre .linenr {
+  color: rgba(255,255,255,0.40);
+  user-select: none;
+  display:inline-block;
+  min-width:38px;
+  margin-right:12px;
+  text-align:right;
+  padding-right:12px;
+  border-right:1px dashed rgba(255,255,255,0.02);
+  font-size:0.85rem;
+}
+
+/* highlighted inline code (when Org sets .code-highlighted) */
+.code-highlighted { background-color:#fff2a8; color:#000; }
+
+/* =========================
+   Tables & Figures
+   ========================= */
+table { border-collapse: collapse; width:100%; margin: 14px 0; font-size: 0.95rem; }
+th, td { padding: 10px 12px; border-bottom: 1px dashed rgba(255,255,255,0.03); vertical-align: top; }
+th { background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); color:var(--muted); font-weight:600; }
+caption.t-above { caption-side: top; text-align:left; font-weight:600; margin-bottom:6px; color:var(--muted); }
+caption.t-bottom { caption-side: bottom; margin-top: 6px; color:var(--muted); }
+td.org-right, th.org-right { text-align:center; }
+td.org-left, th.org-left { text-align:left; }
+td.org-center, th.org-center { text-align:center; }
+
+/* responsive table */
+@media (max-width:720px){
+  table, thead, tbody, th, td, tr { display:block; }
+  th { display:none; }
+  td { border:none; padding:8px 0; position:relative; padding-left: 50%; }
+  td:before {
+    position:absolute;
+    left: 10px;
+    top: 8px;
+    width: 40%;
+    white-space:nowrap;
+    font-weight:600;
+    color:var(--muted);
+  }
+}
+
+/* Figure styles */
+.figure { padding: 10px; background: rgba(255,255,255,0.01); border-radius: 8px; margin: 12px 0; }
+.figure p { text-align:center; font-size:0.95rem; color:var(--muted); }
+
+/* =========================
+   Equations & Math
+   ========================= */
+.equation-container { display: table; text-align:center; width:100%; margin: 12px 0; }
+.equation { display: table-cell; vertical-align: middle; padding: 14px 8px; }
+.equation-label { display: table-cell; text-align:right; padding-left: 10px; color:var(--muted); }
+
+/* MathJax adjustments */
+.math, .mjx-container, .MathJax { max-width:100%; display:block; margin: 6px 0; }
+
+/* =========================
+   Footnotes & Definitions
+   ========================= */
+.footpara { display:inline; }
+.footdef { margin-bottom: 1em; font-size:0.9rem; color:var(--muted); }
+.dt { font-weight: 700; }
+dl dt { font-weight:700; margin-top:8px; }
+dl dd { margin-left:0; margin-bottom:12px; color:var(--muted); }
+
+/* =========================
+   Inline task / Admonitions
+   ========================= */
+.inlinetask {
+  padding: 12px;
+  border-radius: 12px;
+  margin: 12px 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border: 1px solid rgba(255,255,255,0.03);
+  display:flex; gap:12px; align-items:center;
+  box-shadow: 0 6px 30px rgba(0,0,0,0.2) inset;
+}
+.inlinetask::before {
+  content: "⚑";
+  font-size:18px;
+  color: var(--accent-3);
+  margin-left:6px;
+}
+
+/* =========================
+   Callouts & Quotes
+   ========================= */
+blockquote {
+  margin: 0 0 18px;
+  padding: 12px 18px;
+  border-left: 4px solid var(--accent-2);
+  background: linear-gradient(90deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));
+  color: var(--muted);
+  border-radius: 8px;
+  font-style: italic;
+}
+
+/* =========================
+   Navigation / Home Links
+   ========================= */
+#org-div-home-and-up {
+  text-align:right;
+  font-size: 70%;
+  white-space:nowrap;
+  color:var(--muted);
+}
+
+/* =========================
+   Org Info JS / Search Highlight / Console
+   ========================= */
+.org-info-js_info-navigation { border-style:none; display:flex; gap:8px; align-items:center; }
+#org-info-js_console-label { font-size:10px; font-weight:bold; white-space:nowrap; color:var(--muted); }
+.org-info-js_search-highlight { background-color: #ffff00; color:#000; font-weight:bold; padding:2px 4px; border-radius:4px; }
+
+/* =========================
+   SVG & Images
+   ========================= */
+.org-svg { max-width: 100%; height: auto; display:block; margin: 12px 0; }
+
+/* =========================
+   Misc controls (checkboxes, keys, etc)
+   ========================= */
+input[type="checkbox"] { transform: scale(1.12); accent-color: var(--accent); margin-right:8px; }
+kbd {
+  display:inline-block;
+  padding: 4px 8px;
+  border-radius:6px;
+  border:1px solid rgba(255,255,255,0.06);
+  background: rgba(0,0,0,0.15);
+  color:var(--text);
+  font-weight:700;
+  font-family:var(--mono);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3) inset;
+  margin:0 2px;
+}
+
+/* =========================
+   Search box & top-bar (floating)
+   ========================= */
+.org-floating-controls {
+  position: fixed;
+  top: 14px;
+  right: 20px;
+  z-index: 99;
+  display:flex;
+  gap: 8px;
+}
+.org-floating-controls button {
+  background: var(--glass);
+  color: var(--text);
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--glass-border);
+  cursor:pointer;
+  transition: transform var(--ui-speed) ease;
+  font-weight:600;
+}
+.org-floating-controls button:hover { transform: translateY(-3px); }
+
+/* =========================
+   Fancy toggles: Reading mode & Dark/Light
+   ========================= */
+.reading-mode {
+  max-width: 66ch;
+  margin-left:auto;
+  margin-right:auto;
+  padding: 30px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));
+  border-radius: 12px;
+}
+
+/* Small utility */
+.center { text-align:center; }
+.small { font-size: 0.9rem; color: var(--muted); }
+
+/* =========================
+   Print Styles
+   ========================= */
+@media print {
+  body, #content { background: white !important; color: black !important; box-shadow:none !important; }
+  pre, code { background: #f8f8f8 !important; color: #111 !important; border: 1px solid #ddd !important; }
+  .org-floating-controls, #table-of-contents { display:none !important; }
+  .title, .subtitle { color: #111 !important; }
+}
+
+/* =========================
+   Animations and micro-interactions
+   ========================= */
+@keyframes floaty {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-6px) rotate(-0.2deg); }
+  100% { transform: translateY(0px); }
+}
+.title { animation: floaty 8s ease-in-out infinite; }
+
+/* =========================
+   Accessibility helpers
+   ========================= */
+.skip-to-content {
+  position:absolute;
+  left:-9999px;
+  top:auto;
+  width:1px;
+  height:1px;
+  overflow:hidden;
+}
+.skip-to-content:focus {
+  left: 10px;
+  top: 10px;
+  width: auto;
+  height: auto;
+  background: var(--glass);
+  padding: 8px 12px;
+  z-index: 99;
+  border-radius: 8px;
+}
+
+/* =========================
+   "Weird" extras — spirals, noise, neon frames
+   ========================= */
+
+/* Neon border around some figures - only if backdrop filters are supported */
+@supports ((-webkit-backdrop-filter: blur(4px)) or (backdrop-filter: blur(4px))) {
+  .neon-frame {
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.00));
+    border-radius: 14px;
+    padding: 12px;
+    position: relative;
+    overflow: visible;
+  }
+  .neon-frame::after {
+    content: "";
+    position: absolute;
+    inset: 2px;
+    border-radius: 12px;
+    pointer-events:none;
+    background: linear-gradient(90deg, rgba(123,211,137,0.06), rgba(122,208,255,0.04));
+    -webkit-backdrop-filter: blur(6px) saturate(120%);
+    backdrop-filter: blur(6px) saturate(120%);
+    mix-blend-mode: screen;
+  }
+}
+
+/* Noise overlay — subtle textured look */
+.noise {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,\
+    <svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence baseFrequency='0.9' stitchTiles='stitch' numOctaves='1'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.02'/></svg>");
+  mix-blend-mode: overlay;
+  opacity: .85;
+  border-radius: 12px;
+}
+
+/* Decorative rotating corner glyph */
+.corner-glyph {
+  position:absolute;
+  right: 18px;
+  top: -26px;
+  font-size: 18px;
+  color: rgba(255,255,255,0.06);
+  transform: rotate(14deg);
+  pointer-events:none;
+}
+
+/* =========================
+   Additional fine-grained selectors from your export
+   ========================= */
+
+/* console label */
+#org-info-js_console-label { padding: 6px 8px; border-radius: 6px; background: rgba(0,0,0,0.25); }
+
+/* org search highlight */
+.org-info-js_search-highlight { border-radius: 4px; padding: 1px 3px; }
+
+/* make block quotes with author mark */
+blockquote p:last-child::after { content: " —"; opacity: 0.8; }
+
+/* tiny code boxes for inline examples */
+pre.inline { display:inline-block; padding:6px 8px; border-radius:6px; background: rgba(0,0,0,0.28); }
+
+/* fancy bibliography block (if you use #+bibliography) */
+.bibliography, .org-bib {
+  padding: 12px;
+  background: rgba(255,255,255,0.01);
+  border-radius: 8px;
+  border: 1px dashed rgba(255,255,255,0.02);
+  margin: 12px 0;
+}
+.bibliography li {
+  margin: 8px 0;
+  padding-left: 8px;
+  color: var(--muted);
+}
+
+/* make details elements pretty */
+details { background: var(--glass); padding: 10px; border-radius: 8px; border: 1px solid var(--glass-border); margin: 12px 0; }
+details summary { cursor:pointer; font-weight:700; color:var(--accent-2); }
+
+/* =========================
+   Responsiveness & mobile tweaks
+   ========================= */
+@media (max-width:900px){
+  body { padding: 20px 8px; }
+  #content { padding: 18px; }
+  #text-table-of-contents { max-height: 140px; }
+  .title { font-size: clamp(20px, 8vw, 28px); }
+}
+
+/* =========================
+   End note: helpers you can use inline
+   ========================= */
+/*
+  Useful class combos for content authors:
+  - <div class="cover neon-frame" style="background-image:url('meditate.jpg')"></div>
+  - <pre class="src-tex neon-frame"> ... </pre>
+  - <div class="inlinetask neon-frame">...</div>
+  - <div class="noise"></div>  (put inside the #content to get textured look)
+  - <div class="corner-glyph">✧</div>
+*/

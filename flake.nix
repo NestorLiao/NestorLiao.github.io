@@ -82,12 +82,14 @@
               in {
                 imports = [ inputs.hosts.nixosModule ];
                 # 我得道了，在怡凉乡间独自过着悠然的生活，在蓝天绿树巨石间…
-                networking.stevenBlackHosts = { # 从来都没有什么戒色…
+                networking.stevenBlackHosts = {#一切都在网络上，编写人类。
+                  enableIPv6 = false; # 文明演IPv6为传色情，文明演Hosts为戒色
+                  enable = true; # 从来都没有什么戒色… 只不过是文明把玩自然本性
                   # 城市、单身、独生、男性、大学生、亚洲、
                   # 网瘾、中产、游戏瘾、计算机相关专业人群
                   # 一切只是“生物本性”与“传统文化”带来的欲望
                   # 配合“工业革命”与“数字革命”带来的富饶假象
-                  enable = true; enableIPv6 = false; # 开着不会影响学习编程
+                  # 开着不会影响学习编程，使用计算机不是为了让别人编程你。
                   blockPorn = true; # 你知道的，虚假的情欲只会让你溺身
                   blockSocial = true; # 你知道的，虚假的参与只会让你躁心
                 }; # 不依赖外物，不物物于物，
@@ -121,6 +123,11 @@
                   # # security
                   # pass gopass
 
+
+                  (writeShellScriptBin "wtypefix" ''
+                  #!/usr/bin/env bash
+                  wtype \"
+                  '')
                   (writeShellScriptBin "onlyemacs" onlyemacsScript)
                   # alsa-utils
                   # bear
@@ -284,7 +291,7 @@
                   nd = "pwd | wl-copy; pwd";
                   ls = "ls --color=never";
                   weather = "curl -s 'wttr.in/chongqing?T0'";
-                  ff = "fd  | fzf | zoxide";
+                  # ff = "fd  | fzf | zoxide";
                   c = "clear";
                   # unzip = "unzip -O gb18030";
                   unrar = "unrar-free";
@@ -342,7 +349,7 @@
                   mkd = "mkdir -pv";
                 };
                 programs.bash.interactiveShellInit = ''
-                  eval "$(zoxide init bash)"
+                  # eval "$(zoxide init bash)"
                   '';
                 programs.foot = {
                   enable = true;
@@ -433,7 +440,7 @@
                       };
                       programs.gh = {
                         enable = true;
-                        gitCredentialHelper = {
+                        gitCredentialHelper ={
                           enable = true;
                           hosts = [ "https://github.com" ];
                         };
@@ -445,6 +452,7 @@
                       };
                       home.packages = with pkgs; [ git-credential-manager ];
                       programs.git = {
+                        enable = true;
                         ignores =
                           [ "*~" "*.swp" "*result*" ".direnv" "node_modules" ];
                         settings = {
@@ -457,21 +465,21 @@
                             "${userSetting.gitusername}";
                           credential.credentialStore = "cache";
                         };
-                        enable = true;
                       };
                       programs.nix-index = {
-                        enable = true;
+                        enable = false;
                         enableFishIntegration = true;
                         enableBashIntegration = true;
                       };
                       programs.direnv = {
-                        enable = true;
+                        enable = false;
                         enableBashIntegration = true;
                         enableFishIntegration = true;
                         nix-direnv.enable = true;
                         silent = true;
                       };
                       programs.helix = {
+                        enable = false;
                         settings = {
                           theme = "eink";
                           editor = {
@@ -524,19 +532,12 @@
                             scrolloff = 0;
                           };
                         };
-                        enable = true;
-                        defaultEditor = true;
+                        defaultEditor = false; # I have emacs now, sorry!
                         themes = {
                           eink = let
                             white = "#FFFFFF";
                             black = "#000000";
                           in {
-                            # line
-                            # curl
-                            # dashed
-                            # dotted
-                            # double_line
-
                             "ui.background" = { bg = white; };
                             "ui.text" = black;
                             "ui.selection" = {
@@ -684,7 +685,7 @@
                         };
                       };
                       programs.zoxide = {
-                        enable = true;
+                        enable = false;
                         enableBashIntegration = true;
                         enableFishIntegration = true;
                       };
@@ -775,8 +776,8 @@
                         };
                       };
                       qt = {
-                        platformTheme.name = "gtk";
                         enable = true;
+                        platformTheme.name = "gtk";
                         style.name = "adwaita-highcontrast";
                         style.package = pkgs.adwaita-qt6;
                       };
@@ -797,8 +798,8 @@
                       # Path=default
                       ### xxxx
                       programs.firefox = {
-                        package = pkgs.firefox-beta;
                         enable = false;
+                        package = pkgs.firefox-beta;
 
                         # 浏览器就像是大脑的信息化改造工具
                         # 它让人感觉良好，全是浏览/点击，很少修改/写作
@@ -1653,7 +1654,6 @@ hr {
                 environment.variables = {
                   PATH = "$PATH:$HOME/.config/bin:$HOME/.local/bin";
                   SOPS_AGE_KEY_FILE = "/etc/nixos/keys.txt";
-                  # EDITOR = "emacsclient -n -s 'server'";
                   EDITOR = "emacsclient --socket-name=/run/user/1000/emacs/server";
                   RUSTUP_DIST_SERVER = "https://rsproxy.cn";
                   RUSTUP_UPDATE_ROOT = "https://rsproxy.cn/rustup";
@@ -1665,8 +1665,8 @@ hr {
                   lib.mkForce [ # fc-list : family | sed 's/,/\n/g' | sort -u
                     nerd-fonts.fira-code
                     nerd-fonts.fira-mono
-                    nerd-fonts.noto
-                    nerd-fonts.terminess-ttf
+                    # nerd-fonts.noto
+                    # nerd-fonts.terminess-ttf
                     nerd-fonts.ubuntu
                     nerd-fonts.ubuntu-mono
                     noto-fonts-emoji-blob-bin
@@ -1768,12 +1768,12 @@ hr {
                   xserver.videoDrivers = [ "modesetting" ];
                   udisks2.mountOnMedia = true;
                   udisks2.enable = true;
-                  gvfs.enable = true;
-                  devmon.enable = true;
+                  # gvfs.enable = true;
+                  # devmon.enable = true;
                   # 修改音频设备在空闲时自动挂起（suspend）的行为
                   power-profiles-daemon.enable = true; # false 为不自动挂起
                   openssh = {
-                    enable = true;
+                    enable = false;
                     ports = [ 443 ];
                     settings = {
                       PasswordAuthentication = true;
@@ -1951,10 +1951,11 @@ hr {
                         # magit-commit-mark
                         # magit-tbdiff
                         # magit-todos #why not just grep TODO??
-                        consult-gh-embark
+                        consult-gh-embark # 集 emacs 牛包之大成
                         consult-gh-forge
                         consult-gh-with-pr-review
-                        forge # have magit already
+                        magit
+                        forge
                         git-link
                         git-timemachine
 
@@ -1983,7 +1984,7 @@ hr {
                         # sicp
                         devdocs-browser
                         gptel # seems like doctor-plus. I think using woman is better.
-                        tldr
+                        # tldr # I just don't want to use it because it's too bloate.. which fetch 140mb just for 50 countries's languages...
                         helpful # Just use orginal help-mode is better.
                         quick-sdcv
 
@@ -2017,8 +2018,8 @@ hr {
                         psession # 当然… 自动保存 还是必须的。
 
                         ### emacs look and feel
-                        hide-mode-line # for my adhd
                         # no-emoji # for my autism
+                        hide-mode-line # for my adhd
                         ligature # for my lazy-eye
                         real-mono-themes # it's my THEME
 
@@ -2031,7 +2032,6 @@ hr {
                         undo-fu
                         undo-fu-session
                         wgrep
-                        # rotate
                         # smart-compile 算了吧，简单点，你一天写80种语言
                         # 可能连它们的hello world都写不出来。
                         # consult-notes 难道，哥们不知道写笔记不如写代码?
@@ -2048,7 +2048,7 @@ hr {
                         # 甩几下铁，不关心这些那些，只是用心做事…
                         # 那里需要管什么RAM和ROM的几百MB…
                         # BTW, Org-mode is SHIT, just write done plain list.
-
+                        # Markdown > Org > Latex
                       ]) ++ (with epkgs.elpaPackages; [
                         plz # tavily-search
                       ])
@@ -2158,10 +2158,7 @@ hr {
                   ];
                 };
                 console = {
-                  useXkbConfig = true;
-                  earlySetup = true;
-                  font = "${pkgs.terminus_font}/share/consolefonts/ter-132n.psf.gz";
-                  packages = with pkgs; [ terminus_font ];
+                  font = "latarcyrheb-sun32";
                   colors = [
                     "FFFFFF" # Black → Off-White (Background)
                     "202124" # Red → Dark Gray (Text)
@@ -2285,154 +2282,143 @@ hr {
                                                         config_file="/home/${userSetting.username}/.config/sway/config"
                                                           if [[ ! -f "$config_file" ]]; then
                                                             echo "
-                    # -*- mode: conf-space -*-
-                    # Logo key. Use Mod1 for Alt.
-                    set \$mod Mod4
+# -*- mode: conf-space -*-
+set \$mod Mod4
+set \$term foot
+set \$menu wmenu-run -N '#ffffff' -n '#000000' -M '#000000' -m '#ffffff' -S '#000000' -s '#ffffff' -f 'monospace 18' -b -i
+input type:keyboard xkb_options fkeys:basic_13-24
+output * bg ~/.local/share/mysource/meditate.jpg center #FFFFFF
+output * transform 270
 
-                    # Preferred terminal and launcher
-                    set \$term foot
-                    set \$menu wmenu-run -N '#ffffff' -n '#000000' -M '#000000' -m '#ffffff' -S '#000000' -s '#ffffff' -f 'monospace 16' -b -i
-                    # Background and output configuration
+exec swayidle -w timeout 1140 'notify-send \"left 1min to Hibernate\"'   timeout 1200 'systemctl hibernate'      before-sleep 'notify-send \"In Hibernated\"'
 
-                    output * bg /run/current-system/sw/share/backgrounds/sway/Sway_Wallpaper_Blue_768x1024_Portrait.png fill
-                    output * transform 270
+bindsym Print exec grim -g \"\$(slurp)\" - | wl-copy && wl-paste > ~/Downloads/Screenshot-\$(date +%F%T).png | notify-send \"Screenshot of the region taken\"
+bindsym Shift+Print exec grim -g \"\$(slurp -o -r -c '#ff0000ff')\" -t ppm - | satty --filename - --fullscreen --output-filename ~/Downloads/satty-\$(date '+%Y%m%d-%H:%M:%S').png
+bindsym Mod1+Shift+Print exec wf-recorder
 
-                    exec swayidle -w \
-                         timeout 1100 'emacsclient --eval \"(about-emacs)\"' \
-                         timeout 1200 'systemctl hibernate' \
-                         before-sleep 'notify-send \"I am sleeping\"'
+bindsym \$mod+p exec bash -c 'paperlike-cli -i2c /dev/i2c-4 -clear;swaylock -i ~/.local/share/mysource/meditate.jpg fill #FFFFFF;'
 
-                    # Screenshots and screen recording
-                    bindsym Print exec grim -g '\$(slurp)' - | wl-copy && wl-paste > ~/Downloads/Screenshot-\$(date +%F%T).png | notify-send \"Screenshot of the region taken\"
-                    bindsym Shift+Print exec grim -g '\$(slurp -o -r -c '#ff0000ff')' -t ppm - | satty --filename - --fullscreen --output-filename ~/Downloads/satty-\$(date '+%Y%m%d-%H:%M:%S').png
-                    bindsym Mod1+Shift+Print exec wf-recorder
+bindsym \$mod+Shift+q exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit' --background '#ffffff' --border '#ffffff' --text  '#000000' --button-text '#000000' --button-background '#ffffff'
 
-                    # bindsym \$mod+Shift+j exec bash -c 'paperlike-cli -i2c /dev/i2c-4 -clear;swaylock -i ~/.config/sway/white.jpg;'
+bindsym \$mod+Shift+r reload
+bindsym \$mod+Shift+h fullscreen
+bindsym \$mod+Shift+comma exec emacsclient --eval \"(swaywindow)\";
+bindsym \$mod+t fullscreen
+bindsym \$mod+s exec emacsclient --eval \"(swaywindow)\";
+bindsym \$mod+r  exec emacsclient --eval \"(swayrotate)\";
 
-                    # Exit sway (logs you out of your Wayland session)
-                    bindsym \$mod+Shift+q exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
+# xremap is just shit... just use wtype.
+bindsym Ctrl+comma   exec wtype \"(\";
+bindsym Ctrl+period   exec wtype \")\";
+bindsym Ctrl+i    exec wtype \";\";
+bindsym Ctrl+Shift+i    exec wtype \":\";
+bindsym Mod1+comma    exec wtype \"{\";
+bindsym Mod1+period    exec wtype \"}\";
+bindsym Mod4+comma    exec wtype \"[\";
+bindsym Mod4+period    exec wtype \"]\";
+bindsym Mod1+Ctrl+comma    exec wtypefix;
+bindsym Mod1+Ctrl+period    exec wtypefix;
+bindsym Mod1+Ctrl+i    exec wtype \"-M\" \"ctrl\" \"n\" \"-m\" \"ctrl\"  \"-M\" \"ctrl\" \";\" \"-m\" \"ctrl\"
 
-                    # Reload config
-                    bindsym \$mod+Shift+r reload
-                    # bindsym \$mod+Shift+l reload
-                    # 一个工作区，两个窗口，只能全屏上下横竖
-                    bindsym \$mod+Shift+h fullscreen
-                    bindsym \$mod+Shift+m exec emacsclient --eval \"(type-explain-in-chinese)\";
-                    bindsym \$mod+Shift+comma exec emacsclient --eval \"(swaywindow)\";
-                    bindsym \$mod+Shift+period  exec emacsclient --eval \"(swayrotate)\";
+bindsym F13 exec  wtype llqingsong@qq.com;
+bindsym F14 exec  wtype 13308329242;
+bindsym F15 exec  wtype explain in chinese thank you!;
+bindsym F16 exec  wtype explain the code in chinese line by line;
 
-                    # bindsym \$mod+Shift+period  exec toggle-workspace 4 5
-                    # bindsym \$mod+Shift+slash layout toggle split
-                    # bindsym \$mod+Shift+apostrophe exec \$menu
+bindsym \$mod+Shift+slash exec \$menu
+bindsym \$mod+Shift+space floating toggle
+bindsym \$mod+space focus mode_toggle
 
-                    # bindsym \$mod+Shift+period  layout toggle split
-                    bindsym \$mod+Shift+slash exec \$menu
-                    bindsym \$mod+Shift+space floating toggle
-                    bindsym \$mod+space focus mode_toggle
+bindsym \$mod+Shift+w kill
+bindsym \$mod+Return exec \$term
 
-                    # Basic window management
-                    bindsym \$mod+Shift+w kill
-                    # bindsym \$mod+Shift+k kill
-                    bindsym \$mod+Return exec \$term
+bindsym \$mod+Shift+y exec cliphist list | wmenu -N '#ffffff' -n '#000000' -M '#000000' -m '#ffffff' -S '#000000' -s '#ffffff' -f 'monospace 18' -b -i -l 16  | cliphist decode | wl-copy
+bindsym \$mod+Shift+d exec cliphist list | wmenu -N '#ffffff' -n '#000000' -M '#000000' -m '#ffffff' -S '#000000' -s '#ffffff' -f 'monospace 18' -b -i -l 10  | cliphist delete
 
-                    # Application launcher and clipboard history
-                    # bindsym \$mod+Shift+apostrophe exec \$menu -show drun
-                    bindsym \$mod+Shift+y exec cliphist list | wmenu -N '#ffffff' -n '#000000' -M '#000000' -m '#ffffff' -S '#000000' -s '#ffffff' -f 'monospace 16' -b -i -l 16  | cliphist decode | wl-copy
-                    # bindsym \$mod+Shift+d exec cliphist list | wmenu -N '#ffffff' -n '#000000' -M '#000000' -m '#ffffff' -S '#000000' -s '#ffffff' -f 'monospace 16' -b -i -l 10  | cliphist delete
+floating_modifier \$mod normal
 
-                    floating_modifier \$mod normal
+seat * hide_cursor 888
 
-                    # Hide cursor after 1 second of inactivity
-                    seat * hide_cursor 888
+gaps top 0
+gaps outer 0
+gaps inner 0
 
-                    # Gaps
-                    gaps top 0
-                    gaps outer 0
-                    gaps inner 0
+bar {
+position bottom
+tray_output none
+status_command while true; do date +'%H:%M'; sleep 1; done
+mode hide
+swaybar_command true
+colors {
+background #ffffff
+statusline #000000
+separator  #000000
+focused_background #ffffff
+focused_statusline #000000
+focused_separator  #000000
+focused_workspace  #ffffff #ffffff #000000
+active_workspace   #ffffff #ffffff #000000
+inactive_workspace #ffffff #000000 #ffffff
+urgent_workspace   #ffffff #ffffff #000000
+binding_mode       #ffffff #ffffff #000000
+}
+}
+bindsym \$mod+Shift+b exec swaymsg bar mode toggle
 
-                    # Bar configuration
-                    bar {
-                    position bottom
-                    tray_output none
-                    status_command while true; do date +'%H:%M'; sleep 1; done
-                    mode hide
-                    swaybar_command true
-                    colors {
-                    background #ffffff
-                    statusline #000000
-                    separator  #000000
-                    focused_background #ffffff
-                    focused_statusline #000000
-                    focused_separator  #000000
-                    focused_workspace  #ffffff #ffffff #000000
-                    active_workspace   #ffffff #ffffff #000000
-                    inactive_workspace #ffffff #000000 #ffffff
-                    urgent_workspace   #ffffff #ffffff #000000
-                    binding_mode       #ffffff #ffffff #000000
-                    }
-                    }
-                    bindsym \$mod+Shift+b exec swaymsg bar mode toggle
+client.focused #ffffff  #ffffff  #000000  #ffffff  #ffffff
+client.focused_inactive  #ffffff  #000000  #ffffff  #ffffff  #ffffff
+client.focused_tab_title #ffffff  #ffffff  #000000
+client.unfocused         #ffffff  #000000  #ffffff  #ffffff  #ffffff
+client.urgent #ffffff  #ffffff  #000000  #ffffff  #ffffff
+client.placeholder       #ffffff  #ffffff  #000000  #ffffff  #ffffff
+client.background        #ffffff
 
-                    # Client window styles
-                    client.focused #ffffff  #ffffff  #000000  #ffffff  #ffffff
-                    client.focused_inactive  #ffffff  #000000  #ffffff  #ffffff  #ffffff
-                    client.focused_tab_title #ffffff  #ffffff  #000000
-                    client.unfocused         #ffffff  #000000  #ffffff  #ffffff  #ffffff
-                    client.urgent #ffffff  #ffffff  #000000  #ffffff  #ffffff
-                    client.placeholder       #ffffff  #ffffff  #000000  #ffffff  #ffffff
-                    client.background        #ffffff
+font pango:Bookerly 1
+titlebar_padding 1
+titlebar_border_thickness 0
 
-                    # UI styling
-                    font pango:Bookerly 1
-                    titlebar_padding 1
-                    titlebar_border_thickness 0
+exec swaymsg workspace number 5
 
-                    exec swaymsg workspace number 5
+bindsym KP_1 workspace 1
+bindsym KP_2 workspace 2
+bindsym KP_3 workspace 3
+bindsym KP_4 workspace 4
+bindsym KP_5 workspace 5
+bindsym KP_6 workspace 6
+bindsym KP_7 workspace 7
+bindsym KP_8 workspace 8
+bindsym KP_9 workspace 9
+bindsym KP_0 workspace next
 
-                    # Workspace bindings (keypad)
-                    bindsym KP_1 workspace 1
-                    bindsym KP_2 workspace 2
-                    bindsym KP_3 workspace 3
-                    bindsym KP_4 workspace 4
-                    bindsym KP_5 workspace 5
-                    bindsym KP_6 workspace 6
-                    bindsym KP_7 workspace 7
-                    bindsym KP_8 workspace 8
-                    bindsym KP_9 workspace 9
-                    bindsym KP_0 workspace next
+bindsym \$mod+Shift+e exec  emacs --debug-init
+bindsym \$mod+e exec  emacsclient -n -c -s server
 
-                    bindsym \$mod+Shift+e exec  emacs
-                    bindsym \$mod+e exec  emacsclient -n -c -s server
+for_window [app_id=\"emacs\"] border none
+for_window [app_id=\"emacs\"] titlebar_padding 0
+for_window [app_id=\"emacs\"] titlebar_border_thickness 0
 
-                    for_window [app_id=\"emacs\"] border none
-                    for_window [app_id=\"emacs\"] titlebar_padding 0
-                    for_window [app_id=\"emacs\"] titlebar_border_thickness 0
+for_window [app_id=\"emacsclient\"] border none
+for_window [app_id=\"emacsclient\"] titlebar_padding 0
+for_window [app_id=\"emacsclient\"] titlebar_border_thickness 0
 
-                    for_window [app_id=\"emacsclient\"] border none
-                    for_window [app_id=\"emacsclient\"] titlebar_padding 0
-                    for_window [app_id=\"emacsclient\"] titlebar_border_thickness 0
+for_window [app_id=\"foot\"] border none
+for_window [app_id=\"foot\"] titlebar_padding 0
+for_window [app_id=\"foot\"] titlebar_border_thickness 0
 
-                    # Foot terminal styling
-                    for_window [app_id=\"foot\"] border none
-                    for_window [app_id=\"foot\"] titlebar_padding 0
-                    for_window [app_id=\"foot\"] titlebar_border_thickness 0
+for_window [app_id=\"firefox\"] border none
+for_window [app_id=\"firefox\"] titlebar_padding 0
+for_window [app_id=\"firefox\"] titlebar_border_thickness 0
 
-                    # Firefox beta styling
-                    for_window [app_id=\"firefox\"] border none
-                    for_window [app_id=\"firefox\"] titlebar_padding 0
-                    for_window [app_id=\"firefox\"] titlebar_border_thickness 0
+for_window [app_id=\"firefox-beta\"] border none
+for_window [app_id=\"firefox-beta\"] titlebar_padding 0
+for_window [app_id=\"firefox-beta\"] titlebar_border_thickness 0
 
-                    # Firefox beta styling
-                    for_window [app_id=\"firefox-beta\"] border none
-                    for_window [app_id=\"firefox-beta\"] titlebar_padding 0
-                    for_window [app_id=\"firefox-beta\"] titlebar_border_thickness 0
+for_window [app_id=\"xdg-desktop-portal-gtk\"] floating enable
+for_window [app_id=\"xdg-desktop-portal-gtk\"] resize set 800 600
+for_window [app_id=\"xdg-desktop-portal-gtk\"] move position center
 
-                    for_window [app_id=\"xdg-desktop-portal-gtk\"] floating enable
-                    for_window [app_id=\"xdg-desktop-portal-gtk\"] resize set 800 600
-                    for_window [app_id=\"xdg-desktop-portal-gtk\"] move position center
-
-                    # Include additional config files
-                    include /etc/sway/config.d/*
+# Include additional config files
+include /etc/sway/config.d/*
                                                             " > "$config_file"
                                                               # Set the ownership and permissions of the config file so the user can edit it
                                                               chown ${userSetting.username}: "$config_file"
@@ -2479,7 +2465,7 @@ hr {
                 networking = {
                   hostName = userSetting.hostname;
                   networkmanager.enable = false;
-                  firewall.enable = true;
+                  firewall.enable = false;
                 };
                 system.nssModules = lib.mkForce [ ]; # for dnsmasq
                 hardware.i2c.enable = true;
@@ -2517,15 +2503,12 @@ hr {
                   info.enable = true;
                   man = {
                     enable = true;
-                    # generateCaches = true; # will take little time
-                    generateCaches = false; # will take little time
+                    generateCaches = false; # I hate take time
                   };
                   dev.enable = true;
                 };
-                hardware = {
-                  bluetooth.enable = true;
+                hardware = { bluetooth.enable = true;
                   bluetooth.powerOnBoot = true;
-                  # always enable graphics drivers and enable a bunch of layers for it (including vulkan validation)
                   graphics = {
                     enable = true;
                     extraPackages = with pkgs; [
@@ -2552,9 +2535,9 @@ hr {
                 programs.fish = {
                   enable = true;
                   interactiveShellInit = ''
-                          fish_add_path $HOME/bin
-                          fish_add_path $HOME/.local/bin/
-                        zoxide init fish | source;
+                          # fish_add_path $HOME/bin
+                          # fish_add_path $HOME/.local/bin/
+                        # zoxide init fish | source;
                     clear
                       set fish_greeting
                       function vterm_prompt_end;
