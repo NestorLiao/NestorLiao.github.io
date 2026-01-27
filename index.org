@@ -1,3 +1,52 @@
+# #+LATEX_HEADER: \addbibresource[location=local]{reference.bib}
+#+LATEX_HEADER: \logo{~/.local/share/mysource/meditate.jpg}
+# add any extra raw HTML you want in <head> (fonts, meta, scripts)
+# additional export tweaks
+# bibliography / citation export (org-cite + exporter will pick this up)
+# cover / social preview image
+# custom CSS (replace the href with your stylesheet or inline styles below)
+# small inline CSS snippet to mimic LaTeX color settings / cover line color
+#+AUTHOR: NestorLiao
+#+EMAIL: llqingsong@qq.com
+#+HTML_CONTAINER_CLASS: container
+#+HTML_DOCTYPE: html5
+#+HTML_HEAD: <link rel="icon" href="file:///home/USERNAME/.local/share/mysource/fly.jpg">
+#+HTML_HEAD: <link rel="stylesheet" href="./mystyle.css">
+#+HTML_HEAD: <meta charset="utf-8">
+#+HTML_HEAD: <meta name="author" content="NestorLiao">
+#+HTML_HEAD: <meta name="description" content="NestorLiao, Emacs, Linux, ZMK, Eink, Rust, Zig, C, C++, OS, embedded, tutorial">
+#+HTML_HEAD: <meta name="institute" content="Free Club">
+#+HTML_HEAD: <meta name="keywords" content="Tech, NestorLiao, FSF, Emacs, Linux, ZMK, Eink, Rust, Zig, C, C++, OS">
+#+HTML_HEAD: <meta name="subtitle" content="Simplicity Is The Key">
+#+HTML_HEAD: <meta name="viewport" content="width=device-width, initial-scale=1">
+#+HTML_HEAD: <meta property="og:image" content="file:///home/USERNAME/.local/share/mysource/fly.jpg">
+#+HTML_HEAD: <style> :root{--customcolor: #ffffff} .coverline{color:var(--customcolor);} </style>
+#+HTML_HEAD_EXTRA: <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+#+HTML_HTML5_FANCY: t
+#+LANGUAGE: cn
+#+LATEX_CLASS: elegantbook
+#+LATEX_CLASS_OPTIONS: [color=black, citestyle=gb7714-2015, bibstyle=gb7714-2015,lang=cn,math=cm,10pt, scheme=chinese,toc=twocol,bibend=bibtex]
+#+LATEX_HEADER: \bioinfo{邮箱}{llqingsong@qq.com}
+#+LATEX_HEADER: \definecolor{customcolor}{RGB}{255,255,255}
+#+LATEX_HEADER: \cover{~/.local/share/mysource/fly.jpg}
+#+LATEX_HEADER: \institute{Free Club}
+#+LATEX_HEADER: \colorlet{coverlinecolor}{customcolor}
+#+LATEX_HEADER: \setcounter{tocdepth}{2}
+#+LATEX_HEADER: \subtitle{Simplicity Is The Key}
+#+LATEX_HEADER: \title{My TL;DR Notes}
+#+LATEX_HEADER: \usepackage{array}
+#+LATEX_HEADER: \usepackage{cprotect}
+#+OPTIONS: toc:2
+# #+OPTIONS: toc:2 num:nil
+# #+SUBTITLE: Simplicity Is The Key
+#+TITLE: TL;DR
+#+bibliography: reference.bib
+#+cite_export: bibtex
+#+description: NestorLiao, Emacs, Linux, ZMK, Eink, Rust, Zig, C, C++, OS, embedded, tutoria
+#+keywords: Tech, NestorLiao, FSF, Emacs, Linux, ZMK, Eink, Rust, Zig, C, C++, OS
+#+language: cn
+#+LATEX_HEADER: \mainmatter
+
 * 以无为首，以生为屁股
 世界上大概会有人看到这个文字，
 所谓的文字不过是用来blogging，
@@ -156,54 +205,6 @@ Busy-minds cause Less Mindful.
        write and think. Focus is essential.
 #+END_QUOTE
 
-# #+LATEX_HEADER: \addbibresource[location=local]{reference.bib}
-# #+LATEX_HEADER: \logo{.jpg}
-# add any extra raw HTML you want in <head> (fonts, meta, scripts)
-# additional export tweaks
-# bibliography / citation export (org-cite + exporter will pick this up)
-# cover / social preview image
-# custom CSS (replace the href with your stylesheet or inline styles below)
-# small inline CSS snippet to mimic LaTeX color settings / cover line color
-#+AUTHOR: NestorLiao
-#+EMAIL: llqingsong@qq.com
-#+HTML_CONTAINER_CLASS: container
-#+HTML_DOCTYPE: html5
-#+HTML_HEAD: <link rel="icon" href="file:///home/USERNAME/.local/share/mysource/meditate.jpg">
-#+HTML_HEAD: <link rel="stylesheet" href="./mystyle.css">
-#+HTML_HEAD: <meta charset="utf-8">
-#+HTML_HEAD: <meta name="author" content="NestorLiao">
-#+HTML_HEAD: <meta name="description" content="NestorLiao, Emacs, Linux, ZMK, Eink, Rust, Zig, C, C++, OS, embedded, tutorial">
-#+HTML_HEAD: <meta name="institute" content="Free Club">
-#+HTML_HEAD: <meta name="keywords" content="Tech, NestorLiao, FSF, Emacs, Linux, ZMK, Eink, Rust, Zig, C, C++, OS">
-#+HTML_HEAD: <meta name="subtitle" content="Simplicity Is The Key">
-#+HTML_HEAD: <meta name="viewport" content="width=device-width, initial-scale=1">
-#+HTML_HEAD: <meta property="og:image" content="file:///home/USERNAME/.local/share/mysource/meditate.jpg">
-#+HTML_HEAD: <style> :root{--customcolor: #ffffff} .coverline{color:var(--customcolor);} </style>
-#+HTML_HEAD_EXTRA: <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
-#+HTML_HTML5_FANCY: t
-#+LANGUAGE: cn
-#+LATEX_CLASS: elegantbook
-#+LATEX_CLASS_OPTIONS: [color=black, citestyle=gb7714-2015, bibstyle=gb7714-2015,lang=cn,math=cm,10pt, scheme=chinese,toc=twocol,bibend=bibtex]
-#+LATEX_HEADER: \bioinfo{邮箱}{llqingsong@qq.com}
-#+LATEX_HEADER: \colorlet{coverlinecolor}{customcolor}
-#+LATEX_HEADER: \cover{~/.local/share/mysource/meditate.jpg}
-#+LATEX_HEADER: \definecolor{customcolor}{RGB}{255,255,255}
-#+LATEX_HEADER: \institute{Free Club}
-#+LATEX_HEADER: \mainmatter
-#+LATEX_HEADER: \setcounter{tocdepth}{2}
-#+LATEX_HEADER: \subtitle{Simplicity Is The Key}
-#+LATEX_HEADER: \title{My TL;DR Notes}
-#+LATEX_HEADER: \usepackage{array}
-#+LATEX_HEADER: \usepackage{cprotect}
-#+OPTIONS: toc:2
-#+OPTIONS: toc:2 num:nil
-#+SUBTITLE: Simplicity Is The Key
-#+TITLE: TL;DR
-#+bibliography: reference.bib
-#+cite_export: bibtex
-#+description: NestorLiao, Emacs, Linux, ZMK, Eink, Rust, Zig, C, C++, OS, embedded, tutoria
-#+keywords: Tech, NestorLiao, FSF, Emacs, Linux, ZMK, Eink, Rust, Zig, C, C++, OS
-#+language: cn
 
 * 禅
 - 眼不见生物本能与工业革命驱动的越发泛滥的瘾品失范世界，心为净极简自然身心|黑白断网编程
@@ -246,8 +247,8 @@ Busy-minds cause Less Mindful.
 * Bloated World
 
 #+caption: Some lang-package for emacs
-#+begin_src nix
-    markdown-mode
+#+begin_verse
+markdown-mode
       cmake-mode
         zig-mode
         cargo-mode
@@ -713,7 +714,7 @@ hey， you know, that's shitty design。
 
 不过有一天，我在看别人bloging出来的配置上看到了这个!
 #+caption: 这个意思就是将在c-i/c-m中的tab/enter解邦而成为可以使用的按键。
-#+begin_src emacs-lisp :tangle yes
+#+begin_verse
 (add-hook 'after-make-frame-functions
             (defun setup-blah-keys (frame)
               (with-selected-frame frame

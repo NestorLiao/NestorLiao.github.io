@@ -84,7 +84,7 @@
                 # 我得道了，在怡凉乡间独自过着悠然的生活，在蓝天绿树巨石间…
                 networking.stevenBlackHosts = {#一切都在网络上，编写人类。
                   enableIPv6 = false; # 文明演IPv6为传色情，文明演Hosts为戒色
-                  enable = true; # 从来都没有什么戒色… 只不过是文明把玩自然本性
+                  enable = false; # 从来都没有什么戒色… 只不过是文明把玩自然本性
                   # 城市、单身、独生、男性、大学生、亚洲、
                   # 网瘾、中产、游戏瘾、计算机相关专业人群
                   # 一切只是“生物本性”与“传统文化”带来的欲望
@@ -95,15 +95,145 @@
                 }; # 不依赖外物，不物物于物，
                 # 内心拒绝即是自由
                 # 外物自由即是强迫
-                environment.etc = {
-                  "nixos/flake.nix" = {
-                    source = ./flake.nix;
-                    mode = "0777";
-                  };
-                };
+
                 environment.systemPackages = with pkgs; [
 
-                  # # utilities
+                  (texlive.combine ({
+                    inherit (texlive) scheme-small;
+                    "adforn" = texlive."adforn";
+                    "amsfonts" = texlive."amsfonts";
+                    "amsmath" = texlive."amsmath";
+                    "anyfontsize" = texlive."anyfontsize";
+                    "appendix" = texlive."appendix";
+                    "apptools" = texlive."apptools";
+                    "atbegshi" = texlive."atbegshi";
+                    "atveryend" = texlive."atveryend";
+                    "auxhook" = texlive."auxhook";
+                    "babel" = texlive."babel";
+                    "bbding" = texlive."bbding";
+                    "bidi" = texlive."bidi";
+                    "bigintcalc" = texlive."bigintcalc";
+                    "bitset" = texlive."bitset";
+                    "blindtext" = texlive."blindtext";
+                    "booktabs" = texlive."booktabs";
+                    "caption" = texlive."caption";
+                    "catchfile" = texlive."catchfile";
+                    "changepage" = texlive."changepage";
+                    "collcell" = texlive."collcell";
+                    "comment" = texlive."comment";
+                    "csquotes" = texlive."csquotes";
+                    "ctablestack" = texlive."ctablestack";
+                    "ctex" = texlive."ctex";
+                    "currfile" = texlive."currfile";
+                    "enumitem" = texlive."enumitem";
+                    "environ" = texlive."environ";
+                    "esint" = texlive."esint";
+                    "etex" = texlive."etex";
+                    "etexcmds" = texlive."etexcmds";
+                    "etoolbox" = texlive."etoolbox";
+                    "everysel" = texlive."everysel";
+                    "everyshi" = texlive."everyshi";
+                    "fancyhdr" = texlive."fancyhdr";
+                    "fancyvrb" = texlive."fancyvrb";
+                    "filehook" = texlive."filehook";
+                    "finstrut" = texlive."finstrut";
+                    "float" = texlive."float";
+                    "fontspec" = texlive."fontspec";
+                    "footmisc" = texlive."footmisc";
+                    "framed" = texlive."framed";
+                    "fvextra" = texlive."fvextra";
+                    "geometry" = texlive."geometry";
+                    "gettitlestring" = texlive."gettitlestring";
+                    "hologo" = texlive."hologo";
+                    "hopatch" = texlive."hopatch";
+                    "hycolor" = texlive."hycolor";
+                    "hyperref" = texlive."hyperref";
+                    "ifmtarg" = texlive."ifmtarg";
+                    "ifplatform" = texlive."ifplatform";
+                    "iftex" = texlive."iftex";
+                    "incgraph" = texlive."incgraph";
+                    "infwarerr" = texlive."infwarerr";
+                    "intcalc" = texlive."intcalc";
+                    "kvdefinekeys" = texlive."kvdefinekeys";
+                    "kvoptions" = texlive."kvoptions";
+                    "kvsetkeys" = texlive."kvsetkeys";
+                    "latex2pydata" = texlive."latex2pydata";
+                    "lineno" = texlive."lineno";
+                    "lipsum" = texlive."lipsum";
+                    "listings" = texlive."listings";
+                    "listingsutf8" = texlive."listingsutf8";
+                    "ltxcmds" = texlive."ltxcmds";
+                    "luacode" = texlive."luacode";
+                    "lualatex-math" = texlive."lualatex-math";
+                    "luaotfload" = texlive."luaotfload";
+                    "luatexbase" = texlive."luatexbase";
+                    "luatexja" = texlive."luatexja";
+                    "makecell" = texlive."makecell";
+                    "manfnt" = texlive."manfnt";
+                    "marvosym" = texlive."marvosym";
+                    "minitoc" = texlive."minitoc";
+                    "minted" = texlive."minted";
+                    "multirow" = texlive."multirow";
+                    "multitoc" = texlive."multitoc";
+                    "mwe" = texlive."mwe";
+                    "natbib" = texlive."natbib";
+                    "newfloat" = texlive."newfloat";
+                    "notoccite" = texlive."notoccite";
+                    "ntheorem" = texlive."ntheorem";
+                    "paralist" = texlive."paralist";
+                    "pdfcol" = texlive."pdfcol";
+                    "pdfescape" = texlive."pdfescape";
+                    "pdftexcmds" = texlive."pdftexcmds";
+                    "pgf" = texlive."pgf";
+                    "pgfopts" = texlive."pgfopts";
+                    "placeins" = texlive."placeins";
+                    "preview" = texlive."preview";
+                    "ragged2e" = texlive."ragged2e";
+                    "refcount" = texlive."refcount";
+                    "relsize" = texlive."relsize";
+                    "rerunfilecheck" = texlive."rerunfilecheck";
+                    "setspace" = texlive."setspace";
+                    "showexpl" = texlive."showexpl";
+                    "siunitx" = texlive."siunitx";
+                    "stringenc" = texlive."stringenc";
+                    "svn-prov" = texlive."svn-prov";
+                    "tcolorbox" = texlive."tcolorbox";
+                    "tex4ht" = texlive."tex4ht";
+                    "threeparttable" = texlive."threeparttable";
+                    "titlesec" = texlive."titlesec";
+                    "tocloft" = texlive."tocloft";
+                    "translations" = texlive."translations";
+                    "translator" = texlive."translator";
+                    "trimspaces" = texlive."trimspaces";
+                    "type1cm" = texlive."type1cm";
+                    "unicode-math" = texlive."unicode-math";
+                    "uniquecounter" = texlive."uniquecounter";
+                    "upquote" = texlive."upquote";
+                    "url" = texlive."url";
+                    "varwidth" = texlive."varwidth";
+                    "xcolor" = texlive."xcolor";
+                    "xifthen" = texlive."xifthen";
+                    "xkeyval" = texlive."xkeyval";
+                    "xstring" = texlive."xstring";
+                    "xunicode" = texlive."xunicode";
+                    "xurl" = texlive."xurl";
+                    "zhnumber" = texlive."zhnumber";
+
+                    "capt-of" = texlive."capt-of";
+                    "cprotect" = texlive."cprotect";
+                    "ulem" = texlive."ulem";
+                    "wrapfig" = texlive."wrapfig";
+                    "esvect" = texlive."esvect";
+                    "yhmath" =texlive."yhmath";
+                    "biblatex-gb7714-2015" =texlive."biblatex-gb7714-2015";
+                    "biblatex" =texlive."biblatex";
+                    "tikzfill" =texlive."tikzfill";
+                    "bigfoot" =texlive."bigfoot";
+                    "rsfs" =texlive."rsfs";
+                    "tex-gyre" =texlive."tex-gyre";
+                  } ))
+
+                  # utilities
                   # file bash man-pages sudo sd bc pv rename vimv
                   # lsb-release moreutils unzip zip unrar envsubst
                   # # processes
@@ -123,13 +253,13 @@
                   # # security
                   # pass gopass
 
-
                   (writeShellScriptBin "wtypefix" ''
                   #!/usr/bin/env bash
                   wtype \"
                   '')
+
                   (writeShellScriptBin "onlyemacs" onlyemacsScript)
-                  # alsa-utils
+                  alsa-utils
                   # bear
                   # binutils
                   # bison
@@ -248,7 +378,7 @@
                     "x-directory/normal" = [ "thunar.desktop" ];
                   };
                 };# trust me bro, run  xdg-user-dirs-update --force after
-                environment.etc = {
+                environment.etc = { # Just follow the wtf firefox auto creat.
                   "xdg/user-dirs.defaults".text = ''
                     DESKTOP=Downloads
                     DOCUMENTS=Downloads
@@ -260,11 +390,18 @@
                     VIDEOS=Downloads
                   '';
                 };
+                environment.etc = {
+                  "nixos/flake.nix" = {
+                    source = ./flake.nix;
+                    mode = "0777";
+                  };
+                };
                 environment.sessionVariables = {
                   XDG_CACHE_HOME = "$HOME/.cache";
                   XDG_CONFIG_HOME = "$HOME/.config";
                   XDG_DATA_HOME = "$HOME/.local/share";
                   XDG_BIN_HOME = "$HOME/.local/bin/";
+                  XDG_DOWNLOAD_HOME = "$HOME/Downloads";
                 };
                 security.polkit.extraConfig = ''
                   /* Allow users in wheel group to manage systemd units without authentication */
@@ -296,7 +433,13 @@
                   # unzip = "unzip -O gb18030";
                   unrar = "unrar-free";
                   win =
-                    "quickemu --vm windows-10.conf --display spice; sleep 480; notify-send -t 1000  'out of windows, now!';sleep 10; pkill windows;";
+                   ''
+                    quickemu --vm windows-10.conf --display spice
+                     sleep 480
+                      notify-send -t 1000  'out of windows, now!'
+                      sleep 10
+                       pkill windows
+                     '';
                   garbage = "nix-collect-garbage -d";
                   sgarbage = ''
                     sudo rm /tmp/tmp.* -rf
@@ -416,7 +559,7 @@
                           repo = "mutable-config";
                           rev = "master";
                           # sha256 = lib.fakeSha256;
-                          sha256 = "sha256-GP0DGmOVb/T9PLMcprLeUCGsjSmbrvwtOJeafshNklE=";
+                          sha256 = "sha256-cauJLSk3dWSV98QmHj7cAbyUoeT5y8oXC3e1dpnxxOU=";
                         };
                       };
                       home.file.".stardict/dic" = {
@@ -450,7 +593,9 @@
                           prompt = "enabled";
                         };
                       };
-                      home.packages = with pkgs; [ git-credential-manager ];
+                      home.packages = with pkgs; [
+                        git-credential-manager
+                      ];
                       programs.git = {
                         enable = true;
                         ignores =
@@ -798,7 +943,7 @@
                       # Path=default
                       ### xxxx
                       programs.firefox = {
-                        enable = false;
+                        enable = true;
                         package = pkgs.firefox-beta;
 
                         # 浏览器就像是大脑的信息化改造工具
@@ -854,6 +999,8 @@
                         # 国内程序员多为web领域，大大加重和信息的网际过载与监管能力
                         # 成瘾算法 如temu/tiktok，擅长操控用户的行为，使其成瘾
                         #
+                        # 中美，左右，百事可口可乐… 口中争吵，实则伸手向消费者
+                        # 自媒体像寻觅腐肉秃鹫或吃剩饭的苍蝇…
 
                         languagePacks = ["en-US"];
                         profiles = {
@@ -1663,6 +1810,19 @@ hr {
                 fonts.fontDir.enable = true; #  fc-cache -fv
                 fonts.packages = with pkgs;
                   lib.mkForce [ # fc-list : family | sed 's/,/\n/g' | sort -u
+
+                    # Math fonts
+                    tex-gyre.adventor
+                    tex-gyre.bonum
+                    tex-gyre.chorus
+                    tex-gyre.cursor
+                    tex-gyre.heros
+                    tex-gyre.pagella
+                    tex-gyre.schola
+                    tex-gyre.termes
+
+                    wqy_zenhei
+
                     nerd-fonts.fira-code
                     nerd-fonts.fira-mono
                     # nerd-fonts.noto
@@ -1746,6 +1906,7 @@ hr {
                 };
                 sops.secrets.ty = { owner = userSetting.username; };
                 sops.secrets.mj = { owner = userSetting.username; };
+                sops.secrets.ph = { owner = userSetting.username; };
                 sops.secrets.oy = { owner = userSetting.username; };
                 sops.secrets.oo = { owner = userSetting.username; };
                 networking.extraHosts = ''
@@ -1755,10 +1916,12 @@ hr {
                   # 这也是当今时代互联网正在加速实现的事情…
                   # 但这是以牺牲掌握任何技能为代价换来的，
                   # 我们沉迷得越深，想要掌握一项技能的愿望就会越来越淡化。
-                  0.0.0.0 emacs-china.org
-                  0.0.0.0 chatgpt.com
-                  0.0.0.0 www.google.com.hk
-                  0.0.0.0 google.com.hk
+                  # 0.0.0.0 emacs-china.org
+                  # 0.0.0.0 chatgpt.com
+                  # 0.0.0.0 www.google.com.hk
+                  # 0.0.0.0 www.google.com
+                  # 0.0.0.0 google.com.hk
+                  # 0.0.0.0 google.com
                 '';
                 services = {
                   irqbalance.enable = false;
@@ -1768,8 +1931,8 @@ hr {
                   xserver.videoDrivers = [ "modesetting" ];
                   udisks2.mountOnMedia = true;
                   udisks2.enable = true;
-                  # gvfs.enable = true;
-                  # devmon.enable = true;
+                  gvfs.enable = true;
+                  devmon.enable = true;
                   # 修改音频设备在空闲时自动挂起（suspend）的行为
                   power-profiles-daemon.enable = true; # false 为不自动挂起
                   openssh = {
@@ -1994,9 +2157,9 @@ hr {
                         embark-consult
                         vertico
                         orderless
-                        # marginalia
-                        # cape
-                        # corfu
+                        marginalia
+                        cape
+                        corfu
 
                         ### for Language FANBoys: "YOU DON'T HAVE TO LEARN THOSE"
 
@@ -2018,20 +2181,22 @@ hr {
                         psession # 当然… 自动保存 还是必须的。
 
                         ### emacs look and feel
-                        # no-emoji # for my autism
+                        no-emoji # for my autism
                         hide-mode-line # for my adhd
                         ligature # for my lazy-eye
                         real-mono-themes # it's my THEME
 
                         ### feel even better
-                        # alert
+                        alert
                         # compile-angel
-                        # envrc
+                        envrc
                         c-eval
+                        basic-c-compile
                         trashed
                         undo-fu
                         undo-fu-session
                         wgrep
+
                         # smart-compile 算了吧，简单点，你一天写80种语言
                         # 可能连它们的hello world都写不出来。
                         # consult-notes 难道，哥们不知道写笔记不如写代码?
@@ -2059,6 +2224,7 @@ hr {
                 programs.nix-ld = {
                   enable = true;
                   libraries = with pkgs; [
+
                     # stdenv.cc.cc
                     # openssl.dev
                     # pkg-config
@@ -2097,64 +2263,65 @@ hr {
                     # libsoup_3
                     # pango
 
-                    # xorg.libXinerama
-                    # xorg.libXcursor
-                    # xorg.libXrender
-                    # xorg.libXScrnSaver
-                    # xorg.libXi
-                    # xorg.libSM
-                    # xorg.libICE
-                    # nspr
-                    # nss
-                    # cups
-                    # libcap
-                    # SDL2
-                    # libusb1
-                    # dbus-glib
-                    # ffmpeg
-                    # xorg.libXt
-                    # xorg.libXmu
-                    # libogg
-                    # libvorbis
-                    # SDL
-                    # SDL2_image
-                    # glew110
-                    # libidn
-                    # tbb
-                    # flac
-                    # freeglut
-                    # libjpeg
-                    # libpng
-                    # libpng12
-                    # libsamplerate
-                    # libmikmod
-                    # libtheora
-                    # libtiff
-                    # pixman
-                    # speex
-                    # SDL_image
-                    # SDL_mixer
-                    # SDL2_mixer
-                    # libappindicator-gtk2
-                    # libappindicator-gtk3
-                    # libdbusmenu-gtk2
-                    # libindicator-gtk2
-                    # libdbusmenu-gtk3
-                    # libindicator-gtk3
-                    # libcaca
-                    # libcanberra
-                    # libgcrypt
-                    # util-linux
-                    # libvpx
-                    # xorg.libXft
-                    # libvdpau
-                    # atk
-                    # fontconfig
-                    # freetype
-                    # dbus
-                    # alsa-lib
-                    # expat
-                    # ncurses
+                    xorg.libXinerama
+                    xorg.libXcursor
+                    xorg.libXrender
+                    xorg.libXScrnSaver
+                    xorg.libXi
+                    xorg.libSM
+                    xorg.libICE
+                    nspr
+                    nss
+                    cups
+                    libcap
+                    SDL2
+                    libusb1
+                    dbus-glib
+                    ffmpeg
+                    xorg.libXt
+                    xorg.libXmu
+                    libogg
+                    libvorbis
+                    SDL
+                    SDL2_image
+                    glew110
+                    libidn
+                    tbb
+                    flac
+                    freeglut
+                    libjpeg
+                    libpng
+                    libpng12
+                    libsamplerate
+                    libmikmod
+                    libtheora
+                    libtiff
+                    pixman
+                    speex
+                    SDL_image
+                    SDL_mixer
+                    SDL2_mixer
+                    libappindicator-gtk2
+                    libappindicator-gtk3
+                    libdbusmenu-gtk2
+                    libindicator-gtk2
+                    libdbusmenu-gtk3
+                    libindicator-gtk3
+                    libcaca
+                    libcanberra
+                    libgcrypt
+                    util-linux
+                    libvpx
+                    xorg.libXft
+                    libvdpau
+                    atk
+                    fontconfig
+                    freetype
+                    dbus
+                    alsa-lib
+                    expat
+                    ncurses
+
                   ];
                 };
                 console = {
@@ -2321,7 +2488,7 @@ bindsym Mod1+Ctrl+period    exec wtypefix;
 bindsym Mod1+Ctrl+i    exec wtype \"-M\" \"ctrl\" \"n\" \"-m\" \"ctrl\"  \"-M\" \"ctrl\" \";\" \"-m\" \"ctrl\"
 
 bindsym F13 exec  wtype llqingsong@qq.com;
-bindsym F14 exec  wtype 13308329242;
+bindsym F14 exec  wtype  $(cat ${config.sops.secrets.ph.path});
 bindsym F15 exec  wtype explain in chinese thank you!;
 bindsym F16 exec  wtype explain the code in chinese line by line;
 

@@ -4,7 +4,7 @@
 %%
 %% This work may be distributed and/or modified freely
 %% available at https://github.com/ElegantLaTeX/ElegantBook
-% 
+%
 %%%%%%%%%%%%%%%%%%%%%
 % % !Mode:: "TeX:UTF-8"
 \NeedsTeXFormat{LaTeX2e}
@@ -147,7 +147,7 @@
 
 \ifdefstring{\ELEGANT@device}{pad}{
 \geometry{
-  paperwidth=7.5in, 
+  paperwidth=7.5in,
   paperheight=10in,
   margin=16mm,
   headheight=2.17cm,
@@ -174,21 +174,22 @@
   \RequirePackage[scaled=.90]{helvet}
 \else
   \RequirePackage[no-math]{fontspec}
-  \setmainfont{TeXGyreTermesX}[
-    UprightFont = *-Regular ,
-    BoldFont = *-Bold ,
-    ItalicFont = *-Italic ,
-    BoldItalicFont = *-BoldItalic ,
-    Extension = .otf ,
-    Scale = 1.0]
-    
-  \setsansfont{texgyreheros}[
-    UprightFont = *-regular ,
-    BoldFont = *-bold ,
-    ItalicFont = *-italic ,
-    BoldItalicFont = *-bolditalic ,
-    Extension = .otf ,
-    Scale = 0.9]
+  %% \setmainfont{TeXGyreTermesX}[
+
+\setmainfont{TeXGyreTermes-Regular}[
+    BoldFont = TeXGyreTermes-Bold,
+    ItalicFont = TeXGyreTermes-Italic,
+    BoldItalicFont = TeXGyreTermes-BoldItalic,
+    Scale = 1.0
+]
+
+\setsansfont{TeXGyreHeros-Regular}[
+    BoldFont = TeXGyreHeros-Bold,
+    ItalicFont = TeXGyreHeros-Italic,
+    BoldItalicFont = TeXGyreHeros-BoldItalic,
+    Scale = 0.9
+]
+
 \fi
 
 \ifdefstring{\ELEGANT@lang}{cn}{
@@ -205,7 +206,7 @@
     \newcommand*{\heiti}{\CJKfamily{zhhei}}
     \newcommand*{\kaishu}{\CJKfamily{zhkai}}
     \newcommand*{\fangsong}{\CJKfamily{zhfs}}}{\relax}
-  
+
   \ifdefstring{\ELEGANT@chinesefont}{nofont}{
     \RequirePackage[UTF8,scheme=plain,fontset=none]{ctex}
     \xeCJKsetup{AutoFakeBold=true}
@@ -215,7 +216,7 @@
     \RequirePackage[UTF8,scheme=plain]{ctex}
     \xeCJKsetup{AutoFakeBold=true}
     }{\relax}
-  
+
   \AfterEndPreamble{
     \setlength\parindent{2\ccwd}}
 }{\relax}
@@ -348,7 +349,7 @@
 \ifdefstring{\ELEGANT@titlestyle}{hang}{\def\style{hang}}{\relax}
 \ifdefstring{\ELEGANT@titlestyle}{display}{\def\style{display}}{\relax}
 
-% reference: 
+% reference:
 % https://tex.stackexchange.com/questions/58506/how-to-make-a-new-command-similar-to-author
 % https://pastebin.com/C8W4axzV
 \newcommand\email[1]{\href{mailto:#1}{\nolinkurl{#1}}}
@@ -372,7 +373,7 @@
 \RequirePackage[shortlabels,inline]{enumitem}
 \setlist{nolistsep}
 
-\RequirePackage[labelfont={bf,color=structurecolor}]{caption} 
+\RequirePackage[labelfont={bf,color=structurecolor}]{caption}
 \captionsetup[table]{skip=3pt}
 \captionsetup[figure]{skip=3pt}
 
@@ -854,13 +855,13 @@
     \newcommand{\xchaptertitle}{第\zhnumber{\arabic{chapter}}章} }{
     \newcommand{\xchaptertitle}{第 \thechapter{} 章}}
 % Hyperref 2022/05/16's changelog.txt said
-% * nameref is loaded always and earlier (issue#235) 
+% * nameref is loaded always and earlier (issue#235)
     \AtBeginDocument{
       \ifELEGANT@Hy@later
         \patchcmd{\NR@chapter}%
           {\numberline{\thechapter}}{\numberline{\xchaptertitle}}%
           {}{\fail}
-      \else    
+      \else
         \patchcmd{\Hy@org@chapter}%
           {\numberline{\thechapter}}{\numberline{\xchaptertitle}}%
           {}{\fail}
@@ -888,8 +889,8 @@
 
 
 
-%%define the 
-%%definition theorem postulate axiom corollary lemma proposition 
+%%define the
+%%definition theorem postulate axiom corollary lemma proposition
 %%and proof environment
 \RequirePackage{pifont,manfnt,bbding}
 \RequirePackage[many]{tcolorbox}
@@ -933,25 +934,25 @@
       separator sign={.},},
     defstyle/.style={
       common,
-      colframe=main,  
+      colframe=main,
       colback=main!5,
-      colbacktitle=main, 
+      colbacktitle=main,
       overlay unbroken and last={
         \node[anchor=south east, outer sep=0pt] at (\linewidth-width,0) {
           \textcolor{main}{$\clubsuit$}};}},
     thmstyle/.style={
       common,
-      colframe=second,  
+      colframe=second,
       colback=second!5,
-      colbacktitle=second, 
+      colbacktitle=second,
       overlay unbroken and last={
         \node[anchor=south east, outer sep=0pt] at (\linewidth-width,0) {
           \textcolor{second}{$\heartsuit$}};}},
     prostyle/.style={
       common,
-      colframe=third,  
+      colframe=third,
       colback=third!5,
-      colbacktitle=third, 
+      colbacktitle=third,
       overlay unbroken and last={
         \node[anchor=south east, outer sep=0pt] at (\linewidth-width,0) {
           \textcolor{third}{$\spadesuit$}};}},
@@ -974,7 +975,7 @@
           {}{\tcbset{label={#1:#2}}}
       }
     }
-  
+
   % define an internal control sequence \ELEGANT@newtheorem for fancy mode's newtheorem
   % #1 is the environment name, #2 is the prefix of label, #3 is the style
   % style: thmstyle, defstyle, prostyle
@@ -1025,7 +1026,7 @@
           },
       }
   }
-  % define several environment 
+  % define several environment
   % we define headers like \definitionname before
   \ELEGANT@newtheorem{theorem}{thm}{thmstyle}
   \ELEGANT@newtheorem{definition}{def}{defstyle}
@@ -1063,7 +1064,7 @@
     \theoremstyle{#2}
     \ifELEGANT@usesamecnt
       \newtheorem{#1}[ELEGANT@samecnt]{\csname #1name\endcsname}
-    \else 
+    \else
       \ifblank{#3}{
         \newtheorem{#1}{\csname #1name\endcsname}[\ELEGANT@thmcnt]
       }{
@@ -1073,7 +1074,7 @@
     \newtheorem*{#1*}{\csname #1name\endcsname}
   }
 
-  % define several environment 
+  % define several environment
   % we define headers like \definitionname before
   \ELEGANT@newtheorem{theorem}{thmstyle}
   \ELEGANT@newtheorem{definition}{defstyle}
@@ -1152,7 +1153,7 @@
   }
 
 % main（green-def): example exercise problem solution
-% second（orange-thm）: proof note remark  
+% second（orange-thm）: proof note remark
 % third（blue-prop):  assumptions property conclusion custom
 
 %% Example with counter
@@ -1304,7 +1305,7 @@
   \vskip-2ex
   \hspace{2em}
   \parbox{0.8\textwidth}{
-    \bfseries\Huge 
+    \bfseries\Huge
       \ifcsname @title\endcsname \@title \fi
     \par}
   \vfill
@@ -1340,7 +1341,7 @@
   \vfill
   \begin{center}
     \setstretch{1.3}
-    \parbox[t]{0.7\textwidth}{\centering \citshape 
+    \parbox[t]{0.7\textwidth}{\centering \citshape
       \ifcsname @extrainfo\endcsname\@extrainfo\fi}
   \end{center}
   \vfill
@@ -1455,11 +1456,11 @@
     \ifELEGANT@Hy@later
       \patchcmd{\NR@chapter}%
         {\numberline{\xchaptertitle}}{\numberline{\thechapter}}%
-        {}{\fail}      
+        {}{\fail}
     \else
       \patchcmd{\Hy@org@chapter}%
         {\numberline{\xchaptertitle}}{\numberline{\thechapter}}%
-        {}{\fail}  
+        {}{\fail}
     \fi
     \addtocontents{toc}{%
       \protect\renewcommand{\protect\cftchappresnum}{\appendixname\space}%

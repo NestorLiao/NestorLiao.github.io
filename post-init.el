@@ -1,69 +1,51 @@
-;;; post-init.el --- emacs as my yak-shaving daily -*- lexical-binding: t; -*-
+;;; post-init.el --- emacs as my Yak-Shaving daily -*- lexical-binding: t; -*-
 (require 'use-package)
-
-(use-package psession
+(use-package saveplace
   :bind (
-         ("<WakeUp>". wakeupcall)
-         ("ESC <f5>". hibernatecall)
-         ;; 爱护我们的左手小拇指
-         ("C-a" . sayshit) ("M-a" . sayshit) ("M-z" . sayshit) ("C-c C-; z" . sayshit) ("C-c C-~ z" . sayshit) ("C-x C-;" . sayshit)
-         ;; 爱护我们的右手小拇指
-         ("<end>" . sayshit) ("<right>" . sayshit) ("C-<right>" . sayshit) ("C-S-<right>" . sayshit) ("C-M-S-<right>" . sayshit)
-         ("C-/" . sayshit) ("C-?" . sayshit) ("M-/" . sayshit) ("M-o" . sayshit) ("M-O" . sayshit)
-         ;; 也要爱护我们的食指，它可是各管着六个键的啊!
-         ("C-x k" . sayshit) ("C-\\" . sayshit)  ;; ("C-c C-; k" . sayshit)
-         ([remap comment-line] . comment-or-uncomment-region-or-line)
-         ([remap completion-at-point] . hippie-expand)
-         ([remap complete-symbol] . hippie-expand)
-         ([remap imenu] . consult-imenu)
-         ([remap indent-rigidly] . cleanup-buffer)
-         ([remap list-buffers] . ibuffer)
-         ([remap project-switch-to-buffer] . consult-project-buffer)
-         ([remap kill-buffer] . kill-current-buffer)
-         ([remap switch-to-buffer] . consult-buffer)
-         ([remap yank-pop] . consult-yank-pop)
-         ([remap yank] . delete-region-and-yank)
-         ;; ----------------------------------------
+         ;; 通过Ctrl/Alt/Meta/Shift快捷使用功能
+         ;; -------------------------------------------------------------------------------------------------------------         ("C-f" . undo)
          ("C-f" . undo)
          ("C-b" . undo-redo)
          ("M-g n" . my-next-error)
          ("M-g p" . my-previous-error)
          ("C-p" . goto-last-change)
          ("M-p". goto-last-change-reverse)
-         ("C-n " . sayshit) ;; due to the c-x c-x make computer slow.
-         ("M-n". sayshit)
-         ;; ----------------------------------------
-         ("C-<backspace>" . duplicate-dwim)
-         ("S-<backspace>" . kill-sexp)
-         ;; M-<backspace>，backward-kill-word
-         ;; C-S-<backspace>，kill-whole-line
-         ;; C-M-<backspace>，backward-kill-sexp
-         ;; ----------------------------------------
-         ("C-M-<return>" . avy-copy-region)
-         ("C-S-<return>" . avy-goto-line)
-         ;; ("M-<return>" . dabbrev-expand)
-         ("C-<return>" . avy-goto-word-0)
-         ("S-<return>" . comment-indent-new-line) ; 下一行注释
-         ;; ----------------------------------------
          ;; ("C-SPC C-SPC" . set-mark-command)
          ("M-SPC" . consult-mark)
-         ;; ----------------------------------------
-         ;; M-<tab>用来Hippie补全，M-<return>用来Dabbrev补全
+         ;; -------------------------------------------------------------------------------------------------------------
+         ("C-<backspace>" . duplicate-dwim)
+         ("C-M-<backspace>" . backward-kill-sexp)
+         ("C-S-<backspace>" . kill-whole-line)
+         ("M-<backspace>" . backward-kill-word)
+         ("S-<backspace>" . kill-sexp)
+         ;; -------------------------------------------------------------------------------------------------------------         ("C-<return>" . avy-goto-word-0)
+         ("C-M-<return>" . avy-copy-region)
+         ("C-S-<return>" . avy-goto-line)
+         ("C-<return>" . avy-goto-word-0)
+         ("S-<return>" . comment-indent-new-line)
+         ("M-<return>" . dabbrev-expand)
+         ;; -------------------------------------------------------------------------------------------------------------
+         ("M-<tab>" . hippie-expand)
          ;; ("C-<tab>" . surround-mark)          ;; mark括号
          ("<backtab>" . surround-insert)       ;; 加括号
          ("C-<iso-lefttab>" . surround-delete) ;; 删括号
          ("C-M-<tab>" . surround-kill)         ;; 删括号内外(根据左右定内外)
          ("s-<tab>" . surround-change)         ;; 换括号
-         ;; ----------------------------------------
-         ("C-v"         . (lambda() (interactive)(recenter-top-bottom 0)))
-         ("M-v"         . (lambda() (interactive)(recenter-top-bottom 38)))
+         ;; -------------------------------------------------------------------------------------------------------------
+         ;; C-i  for type ; C-S-i for type :
          ("M-i"         . comment-or-uncomment-region-or-line)
          ("M-I"         . consult-imenu)
          ("M-g I"       . consult-imenu-multi)
+         ;; -------------------------------------------------------------------------------------------------------------
+         ("C-v"           . (lambda ()(interactive) (recenter-top-bottom 0)))
+         ("M-v"         . (lambda ()(interactive) (recenter-top-bottom 38)))
          ("M-e"         . other-window)
-         ("M-E"         . (lambda () (interactive) (other-window -1)))
+         ("M-E"         . (lambda ()(interactive)  (other-window -1)))
+         ;; -------------------------------------------------------------------------------------------------------------
          ("M-*"         . leetcode-open-cursor)
+         ("s-*"         . my/leetcode-open)
          ("C-*"         . toggle-solution-question)
+         ;; -------------------------------------------------------------------------------------------------------------
          ("C-%"         . iedit-mode)
          ("C-S-c C-S-c" . mc/edit-lines)
          ("C->"         . mc/mark-next-like-this)
@@ -71,31 +53,32 @@
          ("C-c C-$"     . mc/mark-all-like-this)
          ("C-$"         . mc/skip-to-next-like-this)
          ("C-^"         . mc/skip-to-previous-like-this)
+         ;; -------------------------------------------------------------------------------------------------------------
          ("<C-m>"    . embark-dwim)
          ("<C-S-m>" . embark-act)
          ("C-h B" . embark-bindings)
+         ;; -------------------------------------------------------------------------------------------------------------
          ("M-+". rotate-text)
          ("M-_". rotate-text-backward)
+         ;; -------------------------------------------------------------------------------------------------------------
 
-         ;;;; 我有主要有NAV/MOS/SYM/(NUM: 通过Sway调用:not anymore, I just all emacs now!) who need wtf os/wm... just using Shitty emacs.
+         ;;;; 通过ZMK的NAV/MOS/SYM/NUM层来快捷使用功能
          ;; MOS-begin-----------------------------------------------------------------
          ("C-c C-; d" .  dired)
-         ("C-c C-; k" .  isearch-other-window)
+         ("C-c C-; k" .  kill-current-buffer)
          ("C-c C-; f" . magit-dispatch)
          ("C-c C-; g" . er/expand-region)
          ("C-c C-; p" . consult-bookmark)
          ("C-c C-; m" . devdocs-browser-open)
          ("C-c C-; u" . delete-all-space)
+         ("C-c C-; h" . woman)
          ("C-c C-; v" . multi-vterm-project)
          ("C-c C-; y" . yas-insert-snippet)
-         ("C-c C-; x" . multi-vterm-dedicated-toggle)
+         ("C-c C-; x" . quick-sdcv-search-at-point)
          ("C-c C-; c" . compile)
          ("C-c C-; l" . git-link-dispatch)
          ("C-c C-; w" . show-useful-list)
-         ;; 当其无，有手之用
-         ("C-c C-; q" . quick-sdcv-search-at-point)
-         ("C-c C-; j" . sayshit)
-         ("C-c C-; '" . sayshit)
+         ("C-c C-; j" . magit-log-buffer-file)
          ;; MOS-end-----------------------------------------------------------------
 
          ;; NAV-begin--------------------------------------------------------------
@@ -108,17 +91,12 @@
          ("C-c C-~ u" . occur) ; it's better than consult-line-symbol-at-point
          ("C-c C-~ y" . toggle-special-buffer)
          ("C-c C-~ f" . right-char)
-         ("C-c C-~ w" . right-word) ;论我为什么要用occur和这么多rg
-         ("C-c C-~ k" . woman)
-         ;; rg用在真实文件好用，但是不能用在虚文件中，occur可以
-         ;; rg比起occur更灵活，能指定文件种类/路径，能非常好直接修改。
+         ("C-c C-~ w" . right-word)
+         ("C-c C-~ k" . switch-to-man)
          ("C-c C-~ m" . my-recompile)
-         ("C-c C-~ p" . rg-dwim)        ; stop use WTF Occur, because rg is KING.
+         ("C-c C-~ p" . rg-dwim)
          ("C-c C-~ b" . rg-dwim-current-file)
-         ;; 当其无，有心之用
-         ("C-c C-~ v" . magit-log-buffer-file)
-         ("C-c C-~ q" .  sayshit)
-         ("C-c C-~ '" .  sayshit)
+         ("C-c C-~ v" . switch-to-eww)
          ;; NAV-end---------------------------------------------------------
 
          ;; SYM-begin-------------------------------------------------------
@@ -132,69 +110,502 @@
          ("C-c C-& ," . toggle-input-method)
          ("C-c C-& ." . toggle-letter-case)
          ("C-c C-& DEL" . xah-clean-whitespace)
-         ;; 得之心而运之于手
-         ("C-c C-& /" . sayshit)
-         ("C-c C-& '" . sayshit)
          ;; SYM-end-------------------------------------------------------
 
          ;; NUM-begin--------------------------------------------
          ("s-m" . switch-to-output)
-         ("s-k" . (lambda () (interactive)(project-list-buffers-ibuffer (project-current t))))
-         ("s-h" . switch-to-eww)
-         ("s-<" . switch-to-man)
+         ("s-k" . (lambda () (interactive) (project-list-buffers-ibuffer (project-current t))))
+         ;; s-h, s-< 由sway使用
          ("s->" . switch-to-code)
-         ("s-j" . (lambda () (interactive)(find-file "~/.emacs.d/post-init.el")))
-         ("s-\"" . (lambda () (interactive)(find-file "~/.me/flake.nix")))
+         ("s-j" . (lambda ()(interactive)  (find-file "~/.emacs.d/post-init.el")))
+         ("s-\"" . (lambda () (interactive) (find-file "~/.me/flake.nix")))
          ("s-u" . previous-buffer)
          ("s-l" . next-buffer)
          ;; NUM-end--------------------------------------------
 
-         ;; minor keycut ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+         ;; Minor-begin--------------------------------------------
          ("M-#" . consult-register-load)
          ("M-$" . consult-register-store)
          ("C-M-#" . consult-register)
          ("M-g M-g" . avy-goto-line)
          ("M-g g" . consult-goto-line)
+         ("<f19>" . rotate-windows)
+         ("<f20>" . record-time)
+         ("M-s <backspace>" . comment-kill)
          ("M-s K" . consult-keep-lines)
          ("M-s M-k" . avy-kill-whole-line)
+         ("M-s SPC" . consult-global-mark)
+         ("M-s b" . magit-blame-addition)
+         ("M-s d" . delete-duplicate-lines)
+         ("M-s e" . ediff)
+         ("M-s f" . consult-fd)
+         ("M-s i" . irc)
+         ("M-s k" . delete-this-buffer-and-file)
+         ("M-s n" . flush-lines)
+         ("M-s o" . buffer-occur)
+         ("M-s p" . consult-gh)
          ("M-s r" . rg-menu)
          ("M-s s" . sort-lines)
          ("M-s t" . check-parens)
-         ("M-s <backspace>" . comment-kill)
-         ("M-s d" . delete-duplicate-lines)
-         ("M-s n" . flush-lines)
-         ("M-s e" . ediff)
-         ("M-s i" . irc)
-         ("M-s o" . buffer-occur)
          ("M-s u" . url-to-hosts-line)
          ("M-s w" .  search-github-code)
-         ("M-s b" . magit-blame-addition)
-         ("M-s f" . consult-fd)
-         ("M-s p" . consult-gh)
-         ("M-s SPC" . consult-global-mark)
-         ("<f19>" . rotate-windows)
-         ("<f20>" . record-time)
-         ("C-c k" . delete-this-buffer-and-file)
-         ("M-<return>" . dabbrev-expand)
-         ;; :map prog-mode-map
-         :map isearch-mode-map
-         ("C-\\" . sayshit)
-         ("M-r" . consult-isearch-history)
-         :map minibuffer-local-map
-         ("M-r" . consult-history)
+         ("<WakeUp>". wakeupcall) ("ESC <f5>". hibernatecall)
+         ;; Minor-end--------------------------------------------
+
+         ;; 为防止左手右手小拇指/食指的过度使用，我禁止了这些键:
+         ("C-a" . sayshit) ("M-a" . sayshit) ("M-z" . sayshit) ("C-c C-; z" . sayshit) ("C-c C-~ z" . sayshit) ("C-x C-;" . sayshit)("<end>" . sayshit)("C-S-<right>" . sayshit) ("C-M-S-<right>" . sayshit)("C-/" . sayshit) ("C-?" . sayshit) ("M-/" . sayshit) ("M-o" . sayshit) ("M-O" . sayshit) ("C-x k" . sayshit) ("C-\\" . sayshit) ("C-n " . sayshit) ("M-n". sayshit) ("C-c C-& /" . sayshit) ("C-c C-& '" . sayshit) ("C-c C-~ q" .  sayshit) ("C-c C-~ '" .  sayshit) ("C-c C-; q" . sayshit) ("C-c C-; '" . sayshit) ("C-c C-; /" . sayshit);; ("<right>" . sayshit) ("C-<right>" . sayshit)
          )
+  :ensure nil
+  :commands (save-place-mode save-place-local-mode)
+  :hook (after-init . save-place-mode)
+  :custom
+  (save-place-forget-unreadable-files nil)
+  (save-place-limit 400)
+  (save-place-file
+   (expand-file-name "saveplace" user-emacs-directory)))
+
+(use-package recentf
+  :ensure nil
+  :commands (recentf-mode recentf-cleanup)
+  :hook (after-init . recentf-mode)
+  :custom
+  (recentf-auto-cleanup (if (daemonp) 300 'never))
+  (recentf-exclude
+   (list "\\.tar$" "\\.tbz2$" "\\.tbz$" "\\.tgz$" "\\.bz2$"
+         "\\.bz$" "\\.gz$" "\\.gzip$" "\\.xz$" "\\.zip$"
+         "\\.7z$" "\\.rar$"
+         "COMMIT_EDITMSG\\'"
+         "\\.\\(?:gz\\|gif\\|svg\\|png\\|jpe?g\\|bmp\\|xpm\\)$"
+         "-autoloads\\.el$" "autoload\\.el$"))
+  :config
+  (defun my/suppress-recentf-messages (orig-fun &rest args)
+    "Run `recentf-cleanup` without showing messages in the echo area."
+    (let ((inhibit-message t)
+          (message-log-max nil))
+      (apply orig-fun args)))
+  (advice-add 'recentf-cleanup :around #'my/suppress-recentf-messages)
+  (add-hook 'kill-emacs-hook #'recentf-cleanup -90))
+
+(use-package autorevert
+  :ensure nil
+  :commands (auto-revert-mode global-auto-revert-mode)
+  :hook (after-init . global-auto-revert-mode)
+  :custom
+  (auto-revert-interval 3)
+  (auto-revert-remote-files nil)
+  (auto-revert-use-notify t)
+  (auto-revert-avoid-polling nil)
+  (auto-revert-verbose nil))
+
+(use-package which-key
+  :ensure nil
+  :commands which-key-mode
+  :hook (after-init . which-key-mode)
+  :custom
+  (which-key-idle-delay 1.5)
+  (which-key-idle-secondary-delay 0.25)
+  (which-key-add-column-padding 1)
+  (which-key-max-description-length 40)
+  (which-key-use-C-h-commands nil))
+
+(use-package uniquify
+  :ensure nil
+  :custom
+  (uniquify-buffer-name-style 'reverse)
+  (uniquify-separator "•")
+  (uniquify-after-kill-buffer-p t))
+
+(use-package image-mode
+  :ensure nil
+  :defer t
+  :bind(:map image-mode-map
+             ([remap scroll-down-command] . image-previous-file)
+             ([remap scroll-up-command] . image-next-file)))
+
+(use-package cc-mode
+  :ensure nil
+  :defer t
+  :mode (("\\.\\(cc\\|hh\\)\\'" . c++-mode)
+         ("\\.[ch]\\(pp\\|xx\\|\\+\\+\\)\\'" . c++-mode)
+         ("\\.\\(CC?\\|HH?\\)\\'" . c++-mode)
+         ("\\.[ch]\\'" . c-mode)
+         ("\\.y\\(acc\\)?\\'" . c-mode)
+         ("\\.lex\\'" . c-mode)
+         ("\\.i\\'" . c-mode)
+         ("\\.ii\\'" . c++-mode))
+  :init
+  (setq-default
+   ;; c-basic-offset 4
+   ;; c-backslash-column 99
+   ;; c-backslash-max-column 99
+   c-default-style '((java-mode . "java")
+                     (awk-mode . "awk")
+                     (other . "bsd")))
+
+  ;; begin of linus monkey typing recommend  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (defun c-lineup-arglist-tabs-only (ignored)
+    "Line up argument lists by tabs, not spaces"
+    (let* ((anchor (c-langelem-pos c-syntactic-element))
+           (column (c-langelem-2nd-pos c-syntactic-element))
+           (offset (- (1+ column) anchor))
+           (steps (floor offset c-basic-offset)))
+      (* (max steps 1)
+         c-basic-offset)))
+
+  (dir-locals-set-class-variables
+   'linux-kernel
+   '((c-mode . (
+                (c-basic-offset . 8)
+                (c-label-minimum-indentation . 0)
+                (c-offsets-alist . (
+                                    (arglist-close         . c-lineup-arglist-tabs-only)
+                                    (arglist-cont-nonempty .
+                                                           (c-lineup-gcc-asm-reg c-lineup-arglist-tabs-only))
+                                    (arglist-intro         . +)
+                                    (brace-list-intro      . +)
+                                    (c                     . c-lineup-C-comments)
+                                    (case-label            . 0)
+                                    (comment-intro         . c-lineup-comment)
+                                    (cpp-define-intro      . +)
+                                    (cpp-macro             . -1000)
+                                    (cpp-macro-cont        . +)
+                                    (defun-block-intro     . +)
+                                    (else-clause           . 0)
+                                    (func-decl-cont        . +)
+                                    (inclass               . +)
+                                    (inher-cont            . c-lineup-multi-inher)
+                                    (knr-argdecl-intro     . 0)
+                                    (label                 . -1000)
+                                    (statement             . 0)
+                                    (statement-block-intro . +)
+                                    (statement-case-intro  . +)
+                                    (statement-cont        . +)
+                                    (substatement          . +)
+                                    ))
+                (indent-tabs-mode . t)
+                (show-trailing-whitespace . t)
+                ))))
+  (dir-locals-set-directory-class
+   (expand-file-name "~/linux-trees")
+   'linux-kernel)
+  ;; end of monkey typing ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (advice-add 'c-update-modeline :override #'ignore)
+  (defun addheader()
+    (interactive)
+    (save-excursion
+      (goto-line 1)
+      (newline)
+      (previous-line)
+      (insert
+       (format "// -*- compile-command: \"gcc -Wall -o %s %s;./%s\" -*-"
+               (c-get-current-file)
+               (concat (c-get-current-file) ".c")
+               (c-get-current-file)))(save-buffer)(revert-buffer)))
+  (dolist (hook '(c-mode-common-hook zig-mode-hook asm-mode-hook))
+    (add-hook hook (lambda ()
+                     (define-key c-mode-base-map (kbd "M-o") 'cff-find-other-file)
+                     (electric-operator-mode)
+                     (smart-semicolon-mode)
+                     (c-toggle-comment-style -1)
+                     ))))
+
+(use-package compile
+  :ensure nil
+  :custom
+  (compilation-window-height 8)
+  (compilation-scroll-output nil)
+  (compilation-auto-jump-to-first-error nil)
+  :config
+  ;; (defun my/nix-store-shorten-paths ()
+  ;;   "Replace long /nix/store paths with shortened ...-pkg-version."
+  ;;   (let ((inhibit-read-only t))
+  ;;     (goto-char (point-min))
+  ;;     (delete-region (line-beginning-position) (1+ (line-end-position)))
+  ;;     (while (re-search-forward
+  ;;             "/nix/store/[a-z0-9]+-\\([^[:space:]]+\\)" nil t)
+  ;;       (replace-match "...-\\1" t nil)))
+  ;;   (goto-char (point-max))
+  ;;   (next-line)
+  ;;   (delete-region (line-beginning-position) (line-end-position)))
+  (defun compilation-start (command &optional mode name-function highlight-regexp continue) "Run compilation command COMMAND (low level interface). If COMMAND starts with a cd command, that becomes the `default-directory'. The rest of the arguments are optional; for them, nil means use the default. MODE is the major mode to set in the compilation buffer.  Mode may also be t meaning use `compilation-shell-minor-mode' under `comint-mode'. If NAME-FUNCTION is non-nil, call it with one argument (the mode name) to determine the buffer name.  Otherwise, the default is to reuses the current buffer if it has the proper major mode, else use or create a buffer with name based on the major mode. If HIGHLIGHT-REGEXP is non-nil, `next-error' will temporarily highlight the matching section of the visited source line; the default is to use the global value of `compilation-highlight-regexp'. If CONTINUE is non-nil, the buffer won't be emptied before compilation is started.  This can be useful if you wish to combine the output from several compilation commands in the same buffer.  The new output will be at the end of the buffer, and point is not changed. Returns the compilation buffer created." (or mode (setq mode 'compilation-mode)) (let* ((name-of-mode (if (eq mode t) "compilation" (replace-regexp-in-string "-mode\\'" "" (symbol-name mode)))) (thisdir default-directory) (thisenv compilation-environment) (buffer-path (and (local-variable-p 'exec-path) exec-path)) (buffer-env (and (local-variable-p 'process-environment) process-environment)) outwin outbuf) (with-current-buffer (setq outbuf (get-buffer-create (compilation-buffer-name name-of-mode mode name-function))) (let ((comp-proc (get-buffer-process (current-buffer)))) (if comp-proc (if (or (not (eq (process-status comp-proc) 'run)) (eq (process-query-on-exit-flag comp-proc) nil) (yes-or-no-p (format "A %s process is running; kill it? " name-of-mode))) (condition-case () (progn (interrupt-process comp-proc) (sit-for 1) (delete-process comp-proc)) (error nil)) (error "Cannot have two processes in `%s' at once" (buffer-name))))) (setq default-directory thisdir) (let ((inhibit-read-only t) (default-directory thisdir)) (cd (cond ((not (string-match "\\`\\s *cd\\(?:\\s +\\(\\S +?\\|'[^']*'\\|\"\\(?:[^\"`$\\]\\|\\\\.\\)*\"\\)\\)?\\s *[;&\n]" command)) default-directory) ((not (match-end 1)) "~") ((eq (aref command (match-beginning 1)) ?\') (substring command (1+ (match-beginning 1)) (1- (match-end 1)))) ((eq (aref command (match-beginning 1)) ?\") (replace-regexp-in-string "\\\\\\(.\\)" "\\1" (substring command (1+ (match-beginning 1)) (1- (match-end 1))))) (t (let* ((substituted-dir (substitute-env-vars (match-string 1 command))) (expanded-dir (file-expand-wildcards substituted-dir))) (if (= (length expanded-dir) 1) (car expanded-dir) substituted-dir))))) (if continue (progn (setq continue (point)) (goto-char (point-max))) (erase-buffer)) (if (not (eq mode t)) (progn (buffer-disable-undo) (funcall mode)) (setq buffer-read-only nil) (with-no-warnings (comint-mode)) (compilation-shell-minor-mode)) (setq-local compilation-directory thisdir) (setq-local compilation-environment thisenv) (if buffer-path (setq-local exec-path buffer-path) (kill-local-variable 'exec-path)) (if buffer-env (setq-local process-environment buffer-env) (kill-local-variable 'process-environment)) (if highlight-regexp (setq-local compilation-highlight-regexp highlight-regexp)) (if (or compilation-auto-jump-to-first-error (eq compilation-scroll-output 'first-error)) (setq-local compilation-auto-jump-to-next t))  (compilation-insert-annotation command "\n") (setq compilation--start-time (float-time)) (setq thisdir default-directory)) (set-buffer-modified-p nil)) (setq outwin (display-buffer outbuf '(nil (allow-no-window . t)))) (with-current-buffer outbuf (let ((process-environment (append compilation-environment (and (derived-mode-p 'comint-mode) (comint-term-environment)) (list (format "INSIDE_EMACS=%s,compile" emacs-version)) (list "PAGER=") (copy-sequence process-environment)))) (setq-local compilation-arguments (list command mode name-function highlight-regexp)) (setq-local revert-buffer-function 'compilation-revert-buffer) (when (and outwin (not continue) (not compilation-scroll-output)) (set-window-start outwin (point-min))) (let ((desired-visible-point (cond (continue continue) (compilation-scroll-output (point-max)) (t (point-min))))) (goto-char desired-visible-point) (when (and outwin (not (eq outwin (selected-window)))) (set-window-point outwin desired-visible-point))) (if compilation-process-setup-function (funcall compilation-process-setup-function)) (and outwin (compilation-set-window-height outwin)) (if (fboundp 'make-process) (let ((proc (if (eq mode t) (with-connection-local-variables (get-buffer-process (with-no-warnings (comint-exec outbuf (compilation--downcase-mode-name mode-name) shell-file-name nil `(,shell-command-switch ,command))))) (start-file-process-shell-command (compilation--downcase-mode-name mode-name) outbuf command)))) (setq mode-line-process '((:propertize ":%s" face compilation-mode-line-run) compilation-mode-line-errors)) (when compilation-always-kill (set-process-query-on-exit-flag proc nil)) (set-process-sentinel proc #'compilation-sentinel) (unless (eq mode t) (set-process-filter proc #'compilation-filter)) (set-marker (process-mark proc) (point-max) outbuf) (when compilation-disable-input (condition-case nil (process-send-eof proc) (error nil))) (run-hook-with-args 'compilation-start-hook proc) (compilation--update-in-progress-mode-line) (push proc compilation-in-progress)) (message "Executing `%s'..." command) (setq mode-line-process '((:propertize ":run" face compilation-mode-line-run) compilation-mode-line-errors)) (force-mode-line-update) (sit-for 0) (save-excursion (goto-char (point-max)) (let* ((inhibit-read-only t) (compilation-filter-start (point)) (status (call-process shell-file-name nil outbuf nil "-c" command))) (run-hooks 'compilation-filter-hook) (cond ((numberp status) (compilation-handle-exit 'exit status (if (zerop status) "finished\n" (format "exited abnormally with code %d\n" status)))) ((stringp status) (compilation-handle-exit 'signal status (concat status "\n"))) (t (compilation-handle-exit 'bizarre status status))))) (set-buffer-modified-p nil) (message "Executing `%s'...done" command))) (setq default-directory thisdir) (when compilation-scroll-output (goto-char (point-max)))) (setq next-error-last-buffer outbuf))) (defun compilation-handle-exit (process-status exit-status msg) "Write MSG in the current buffer and hack its `mode-line-process'." (let ((inhibit-read-only t) (status (if compilation-exit-message-function (funcall compilation-exit-message-function process-status exit-status msg) (cons msg exit-status))) (omax (point-max)) (opoint (point)) (cur-buffer (current-buffer))) (goto-char omax) (compilation-insert-annotation ?\n mode-name " " (car status)) (if (and (numberp compilation-window-height) (zerop compilation-window-height)) (message "%s" (cdr status))) (if (bolp) (forward-char -1)) (compilation-insert-annotation ", duration " (let ((elapsed (- (float-time) compilation--start-time))) (cond ((< elapsed 10) (format "%.2f s" elapsed)) ((< elapsed 60) (format "%.1f s" elapsed)) (t (format-seconds "%h:%02m:%02s" elapsed))))) (goto-char (point-max)) (add-text-properties omax (point) (append '(compilation-handle-exit t) nil)) (setq mode-line-process (list (let ((out-string (format ":%s [%s]" process-status (cdr status))) (msg (format "%s %s" mode-name (replace-regexp-in-string "\n?$" "" (car status))))) (message "%s" msg) (propertize out-string 'help-echo msg 'face (if (> exit-status 0) 'compilation-mode-line-fail 'compilation-mode-line-exit))) compilation-mode-line-errors)) (force-mode-line-update) (if (and opoint (< opoint omax)) (goto-char opoint)) (run-hook-with-args 'compilation-finish-functions cur-buffer msg)))
+  ;; (with-eval-after-load 'compile
+  ;;   ;; (add-to-list 'compilation-environment "TERM=dumb-emacs-ansi")
+  ;;   ;;   (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
+  ;;   (remove-hook 'compilation-filter-hook #'my/nix-store-shorten-paths)
+  ;;   )
+  )
+
+(use-package eww
+  :ensure nil
+  :init
+  (setq
+   browse-url-browser-function 'browse-url-firefox
+   shr-use-colors nil
+   eww-header-line-format nil
+   eww-form-checkbox-selected-symbol "[X]"
+   eww-form-checkbox-symbol "[ ]"
+   shr-bullet "- "
+   shr-folding-mode t
+   shr-use-fonts t
+   shr-inhibit-images t
+   shr-width nil
+   shr-max-image-proportion 0.6
+   eww-search-prefix nil
+   eww-default-download-directory "~/"
+   url-privacy-level 'none
+   eww-auto-rename-buffer 'url
+   eww-prompt-history '(
+                        "https://learnxinyminutes.com/"
+                        ;; "https://ziggit.dev/"
+                        ;; "http://c.doc:3001/" ; "https://en.cppreference.com/w/c"
+                        ;; "http://cpp.doc:3002/" ; "https://en.cppreference.com/w/cpp"
+                        ;; "http://linux.doc:3000/" ;"https://www.kernel.org/doc/html/latest/"
+                        ;; C-h I "https://www.gnu.org/software/emacs/manual/"
+                        ))
+
+  :config
+  (defun my-eww-edit-url ()
+    "Edit the current EWW URL and reload the page."
+    (interactive)
+    (unless (derived-mode-p 'eww-mode)
+      (user-error "Not in EWW buffer"))
+    (let ((current-url (plist-get eww-data :url)))
+      (setq eww-data (plist-put eww-data :url
+                                (read-string "Edit URL: " current-url)))
+      (eww-reload)))
+  (defun my-eww-forward-url()   (interactive) (eww-forward-url) (recenter-top-bottom 0))
+  (defun my-eww-back-url()   (interactive) (eww-back-url) (recenter-top-bottom 0))
+  (defun eww-follow-link (&optional external mouse-event)
+    "Browse the URL under point.
+    If EXTERNAL is single prefix, browse the URL using
+    `browse-url-secondary-browser-function'.
+    If EXTERNAL is double prefix, browse in new buffer."
+    (interactive
+     (list current-prefix-arg last-nonmenu-event)
+     eww-mode)
+    (mouse-set-point mouse-event)
+    (let* ((orig-url (get-text-property (point) 'shr-url))
+           (url (eww--transform-url orig-url))
+           target)
+      (cond
+       ((not url)
+        (message "No link under point"))
+       ((string-match-p eww-use-browse-url url)
+        ;; This respects the user options `browse-url-handlers'
+        ;; and `browse-url-mailto-function'.
+        (browse-url url))
+       ((and (consp external) (<= (car external) 4))
+        (funcall browse-url-secondary-browser-function url)
+        (shr--blink-link))
+       ;; This is a #target url in the same page as the current one.
+       ((and (setq target (url-target (url-generic-parse-url url)))
+             (eww-same-page-p url (plist-get eww-data :url)))
+        (let ((point (point)))
+          (eww-save-history)
+          (eww--before-browse)
+          (plist-put eww-data :url url)
+          (goto-char (point-min))
+          (if-let ((match (text-property-search-forward 'shr-target-id target #'member)))
+              (goto-char (prop-match-beginning match))
+            (goto-char (if (equal target "top")
+                           (point-min)
+                         point))))
+        (recenter-top-bottom 0))
+       (t
+        (eww-browse-url orig-url external)))))
+  (defun extract-base-urls ()
+    "Extract base URLs from the current buffer containing text file links."
+    (interactive)
+    (save-excursion
+      (goto-char (point-min))
+      (let ((urls '()))
+        (while (re-search-forward "https?://\\([^:/]+\\)" nil t)
+          (push (match-string 0) urls))
+        (with-output-to-temp-buffer "*Base URLs*"
+          (dolist (url (delete-dups (nreverse urls)))
+            (princ url)
+            (princ "\n"))))))
+  ;; (remove-hook 'eww-after-render-hook 'eww-readable)
+  :bind (:map eww-mode-map
+              ("L" . eww-list-bookmarks)
+              ("r" . my-eww-forward-url)
+              ("l" . my-eww-back-url)
+              ("<return>" . eww-follow-link)
+              ("C-M-i" . my-eww-back-url)
+              ("b" . my-eww-forward-url)
+              ("E" . my-eww-edit-url)))
+
+(use-package eglot
+  :ensure nil
+  :defer t
+  :hook (eglot-managed-mode .
+                            (lambda ()
+                              (eglot-inlay-hints-mode -1)
+                              (eldoc-mode -1)
+                              (flymake-mode -1)))
+  :custom
+  (eglot-sync-connect 0)
+  (eldoc-mode -1)
+  (eglot-autoshutdown t)
+  (eglot-extend-to-xref t)
+  (eglot-events-buffer-config '(:size 0 :format short))
+  (eglot-ignored-server-capabilities '(:documentLinkProvider
+                                       :documentOnTypeFormattingProvider
+                                       :foldingRangeProvider
+                                       :colorProvider
+                                       :inlayHintProvider))
+  :init
+  (setq flymake-no-changes-timeout nil)  ; Don't run on idle
+  (setq flymake-start-on-flymake-mode nil) ; Don't auto-start
+  (setq flymake-start-on-save-buffer nil)
+  (setq flymake-fringe-indicator-position nil)
+  (setq flymake-margin-indicator-position nil)
+  (setq flymake-margin-indicators-string
+        '((error "" compilation-error) (warning "" compilation-warning)
+          (note "" compilation-info)))
+  (setq flymake-indicator-type nil)
+  (setq eglot-server-programs
+        '((c-mode . ("clangd"))
+          (c++-mode . ("clangd"))
+          (zig-mode . ("zls"))
+          (latex-mode . ("texlab"))
+          (rust-mode . ("rust-analyzer")))))
+
+(use-package org
+  :ensure t
+  :defer t
+  :commands (org-mode org-version)
+  :mode
+  ("\\.org\\'" . org-mode)
+  :custom
+  ;; (org-agenda-files (directory-files-recursively "~/.me/" "\\.org$"))
+  (org-support-shift-select t)
+  (org-latex-compiler "xelatex")
+  (org-latex-src-block-backend 'listings)
+  (org-export-with-broken-links t)
+  (org-export-with-tags nil)
+  (org-export-with-drawers nil)
+  (org-export-with-toc nil)
+  (org-hide-leading-stars nil)
+  (org-startup-folded 'showeverything)
+  (org-agenda-span 'week)
+  (org-log-into-drawer t)
+  (org-startup-indented nil)
+  (org-adapt-indentation nil)
+  (org-edit-src-content-indentation 0)
+  (org-startup-truncated t)
+  (org-fontify-done-headline nil)
+  (org-fontify-todo-headline nil)
+  (org-hide-emphasis-markers nil)
+  (org-fontify-whole-heading-line nil)
+  (org-fontify-quote-and-verse-blocks nil)
+  (org-confirm-babel-evaluate nil)
+  (org-startup-with-inline-images t)
+  (org-link-descriptive nil)
+  (org-todo-keywords ;; t要做的，f要修的，e暂时的，a失败的，k有缺陷的，o就这样吧
+   '((sequence  "TODO(t)" "DONE(d)" "|" "FIXME(f)")
+     (sequence "TEMP(e)" "FAIL(a)" "KLUDGE(k)"    "|" "OKAY(o)")))
+  :config
+  (with-eval-after-load 'ox-latex
+    (add-to-list 'org-latex-classes
+                 '("elegantbook"
+                   "\\documentclass[lang=cn,math=cm,10pt,scheme=chinese,toc=twocol,bibend=bibtex]{elegantbook}"
+                   ("\\chapter{%s}" . "\\chapter*{%s}")
+                   ("\\section{%s}" . "\\section*{%s}")
+                   ("\\subsection{%s}" . "\\subsection*{%s}")
+                   ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))))
+  (with-eval-after-load 'org
+    (define-key org-mode-map (kbd "<f20>")
+                (lambda () (interactive)
+                  (org-latex-export-to-pdf)
+                  (org-html-export-to-html)
+                  (delete-file "./index-blx.bib" nil)
+                  (delete-file "./index.bbl" nil)
+                  (delete-file "./index.tex" nil)
+                  (find-file "index.pdf")
+                  )))
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((C . t)
+     (emacs-lisp . t)
+     (shell . t)
+     (python . t))))
+
+(use-package info
+  :custom
+  (Info-use-header-line nil)
+  :bind (:map Info-mode-map
+              ([remap scroll-up-command] . Info-scroll-up)
+              ([remap scroll-down-command] . Info-scroll-down)
+              ("C-M-i" . Info-history-back)
+              ("b" . Info-next-preorder)))
+
+(use-package dired
+  :ensure nil
+  :commands (dired)
+  :bind( :map dired-mode-map
+         ("SPC" . scroll-up-command)
+         ("p" . (lambda () (interactive)(dired-find-file-other-window) (other-window 1)(next-line)))
+         ("DEL" . scroll-down-command)
+         ("," . dired-omit-mode)
+         ("h" . dired-do-eww)
+         ("<tab>" . dired-subtree-toggle)
+         ("e" . wdired-change-to-wdired-mode))
+  :hook ((dired-mode . dired-hide-details-mode) (dired-mode . dired-omit-mode))
+  :config
+  (defun foot-default-directory (&optional arg)
+    (interactive "P")
+    (let ((curr-dir (if-let* ((curr-line (dired-get-filename nil t)))
+                        (file-name-directory curr-line)
+                      default-directory)))
+      (start-process "Foot" nil shell-file-name shell-command-switch
+                     (concat "foot  -D" "\"" (expand-file-name curr-dir) "\"" ))))
+  (defun thunar-open-default-directory ()
+    (interactive)
+    (let ((curr-dir (if-let* ((curr-line (dired-get-filename nil t)))
+                        (file-name-directory curr-line)
+                      default-directory)))
+      (start-process-shell-command
+       "thunar" "*thunar*"
+       (concat "thunar " curr-dir))))
+  (use-package dired-subtree
+    :defer t
+    :custom
+    (dired-subtree-use-backgrounds nil)
+    :after dired)
+  (with-eval-after-load 'dired
+    (let ((args "--group-directories-first -ahlv"))
+      (when (or (eq system-type 'darwin) (eq system-type 'berkeley-unix))
+        (if-let* ((gls (executable-find "gls")))
+            (setq insert-directory-program gls)
+          (setq args nil)))
+      (when args
+        (setq dired-listing-switches args))))
+  :custom
+  (dired-movement-style 'bounded-files)
+  (delete-by-moving-to-trash t)
+  (dired-recursive-deletes 'always)
+  (dired-omit-files
+   (rx (or (seq bol ".")
+           (seq "." (or "css" "cls") eos)
+           (seq bol "." (or "svn" "git" "lock") eos)
+           (seq bol (or "LICENSE" "LICENCE" "Downloads") eos)
+           ))))
+
+(use-package psession
   :init
   (let ((nonono (concat user-emacs-directory "elisp-objects/buffer-name-history.elc")))
     (when (file-exists-p nonono) (delete-file nonono)))
   (defconst emacs-start-time (format-time-string "%c"))
   (fset #'display-startup-echo-area-message #'ignore)
   (add-hook 'emacs-startup-hook (lambda () (message "")))
+  (add-hook 'temp-buffer-window-show-hook #'window-divider-mode)
+  (add-hook 'Info-mode-hook (lambda () (text-scale-set -0.2)))
   (setq-default
    face-font-rescale-alist '(("Source Han Sans". 0.95))
    tab-bar-new-button-show nil
    tab-bar-close-button-show nil
    text-scale-mode-amount 0
-   debug-on-error t
    bookmark-fringe-mark nil
    browse-url-firefox-program "firefox-beta"
    calendar-latitude +29.5
@@ -254,12 +665,11 @@
    x-stretch-cursor t
 
    )
-
+  (global-font-lock-mode -1)
   (global-hide-mode-line-mode 1)
   (repeat-mode -1)
   (show-paren-mode -1)
   (global-eldoc-mode -1)
-  (global-font-lock-mode -1)
   (dolist (my-font-lock-list   '(
                                  dired-mode-hook
                                  rg-mode-hook
@@ -282,458 +692,32 @@
             (defun setup-blah-keys (frame)
               (with-selected-frame frame
                 (when (display-graphic-p)
-                  ;; (define-key input-decode-map (kbd "C-i") [C-i])
-                  ;; (define-key input-decode-map (kbd "C-S-i") [C-S-i])
-                  ;; (define-key input-decode-map (kbd "C-[") [C-lsb])
+                  (define-key input-decode-map (kbd "C-i") [C-i])
+                  (define-key input-decode-map (kbd "C-S-i") [C-S-i])
+                  (define-key input-decode-map (kbd "C-[") [C-lsb])
                   (define-key input-decode-map (kbd "C-m") [C-m])
                   (define-key input-decode-map (kbd "C-S-m") [C-S-m])
                   (global-unset-key (kbd "C-z"))
                   ))))
-  :demand t
   :config
   (setq psession-object-to-save-alist
         (assq-delete-all 'buffer-name-history psession-object-to-save-alist))
   (setf (alist-get 'truncation fringe-indicator-alist) '(nil nil))
   (setf (alist-get 'continuation fringe-indicator-alist) '(nil nil))
-  (psession-mode 1)
-  (psession-savehist-mode 1)
-
-  (use-package saveplace
-    :ensure nil
-    :commands (save-place-mode save-place-local-mode)
-    :hook
-    (after-init . save-place-mode)
-    :custom
-    (save-place-forget-unreadable-files nil)
-    (save-place-limit 400)
-    (save-place-file
-     (expand-file-name "saveplace" user-emacs-directory)))
-
-  (use-package recentf
-    :ensure nil
-    :commands (recentf-mode recentf-cleanup)
-    :hook
-    (after-init . recentf-mode)
-    :custom
-    (recentf-auto-cleanup (if (daemonp) 300 'never))
-    (recentf-exclude
-     (list "\\.tar$" "\\.tbz2$" "\\.tbz$" "\\.tgz$" "\\.bz2$"
-           "\\.bz$" "\\.gz$" "\\.gzip$" "\\.xz$" "\\.zip$"
-           "\\.7z$" "\\.rar$"
-           "COMMIT_EDITMSG\\'"
-           "\\.\\(?:gz\\|gif\\|svg\\|png\\|jpe?g\\|bmp\\|xpm\\)$"
-           "-autoloads\\.el$" "autoload\\.el$"))
-    :config
-    (add-hook 'kill-emacs-hook #'recentf-cleanup -90))
-
-  (use-package autorevert
-    :ensure nil
-    :commands (auto-revert-mode global-auto-revert-mode)
-    :hook
-    (after-init . global-auto-revert-mode)
-    :custom
-    (auto-revert-interval 3)
-    (auto-revert-remote-files nil)
-    (auto-revert-use-notify t)
-    (auto-revert-avoid-polling nil)
-    (auto-revert-verbose nil))
-
-  (use-package which-key
-    :ensure nil
-    :commands which-key-mode
-    :hook (after-init . which-key-mode)
-    :custom
-    (which-key-idle-delay 1.5)
-    (which-key-idle-secondary-delay 0.25)
-    (which-key-add-column-padding 1)
-    (which-key-max-description-length 40)
-    (which-key-use-C-h-commands nil))
-
-  (use-package uniquify
-    :ensure nil
-    :custom
-    (uniquify-buffer-name-style 'reverse)
-    (uniquify-separator "•")
-    (uniquify-after-kill-buffer-p t))
-
-  (use-package image-mode
-    :ensure nil
-    :defer t
-    :bind(:map image-mode-map
-               ([remap scroll-down-command] . image-previous-file)
-               ([remap scroll-up-command] . image-next-file)))
-
-  (use-package cc-mode
-    :ensure nil
-    :defer t
-    :mode (("\\.\\(cc\\|hh\\)\\'" . c++-mode)
-           ("\\.[ch]\\(pp\\|xx\\|\\+\\+\\)\\'" . c++-mode)
-           ("\\.\\(CC?\\|HH?\\)\\'" . c++-mode)
-           ("\\.[ch]\\'" . c-mode)
-           ("\\.y\\(acc\\)?\\'" . c-mode)
-           ("\\.lex\\'" . c-mode)
-           ("\\.i\\'" . c-mode)
-           ("\\.ii\\'" . c++-mode))
-    :init
-    (setq-default
-     ;; c-basic-offset 4
-     ;; c-backslash-column 99
-     ;; c-backslash-max-column 99
-     c-default-style '((java-mode . "java")
-                       (awk-mode . "awk")
-                       (other . "bsd")))
-
-    ;; begin of linus monkey typing recommend  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-    (defun c-lineup-arglist-tabs-only (ignored)
-      "Line up argument lists by tabs, not spaces"
-      (let* ((anchor (c-langelem-pos c-syntactic-element))
-             (column (c-langelem-2nd-pos c-syntactic-element))
-             (offset (- (1+ column) anchor))
-             (steps (floor offset c-basic-offset)))
-        (* (max steps 1)
-           c-basic-offset)))
-
-    (dir-locals-set-class-variables
-     'linux-kernel
-     '((c-mode . (
-                  (c-basic-offset . 8)
-                  (c-label-minimum-indentation . 0)
-                  (c-offsets-alist . (
-                                      (arglist-close         . c-lineup-arglist-tabs-only)
-                                      (arglist-cont-nonempty .
-                                                             (c-lineup-gcc-asm-reg c-lineup-arglist-tabs-only))
-                                      (arglist-intro         . +)
-                                      (brace-list-intro      . +)
-                                      (c                     . c-lineup-C-comments)
-                                      (case-label            . 0)
-                                      (comment-intro         . c-lineup-comment)
-                                      (cpp-define-intro      . +)
-                                      (cpp-macro             . -1000)
-                                      (cpp-macro-cont        . +)
-                                      (defun-block-intro     . +)
-                                      (else-clause           . 0)
-                                      (func-decl-cont        . +)
-                                      (inclass               . +)
-                                      (inher-cont            . c-lineup-multi-inher)
-                                      (knr-argdecl-intro     . 0)
-                                      (label                 . -1000)
-                                      (statement             . 0)
-                                      (statement-block-intro . +)
-                                      (statement-case-intro  . +)
-                                      (statement-cont        . +)
-                                      (substatement          . +)
-                                      ))
-                  (indent-tabs-mode . t)
-                  (show-trailing-whitespace . t)
-                  ))))
-    (dir-locals-set-directory-class
-     (expand-file-name "~/linux-trees")
-     'linux-kernel)
-    ;; end of monkey typing ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-    (advice-add 'c-update-modeline :override #'ignore)
-    (defun addheader()
-      (interactive)
-      (save-excursion
-        (goto-line 1)
-        (newline)
-        (previous-line)
-        (insert
-         (format "// -*- compile-command: \"gcc -Wall -o %s %s;./%s\" -*-"
-                 (c-get-current-file)
-                 (concat (c-get-current-file) ".c")
-                 (c-get-current-file)))(save-buffer)(revert-buffer)))
-    (dolist (hook '(c-mode-common-hook zig-mode-hook asm-mode-hook))
-      (add-hook hook (lambda ()
-                       (define-key c-mode-base-map (kbd "M-o") 'cff-find-other-file)
-                       (electric-operator-mode)
-                       (smart-semicolon-mode)
-                       (c-toggle-comment-style -1)
-                       ))))
-
-  (use-package compile
-    :ensure nil
-    :custom
-    (compilation-window-height 8)
-    (compilation-scroll-output nil)
-    (compilation-auto-jump-to-first-error nil)
-    :config
-    ;; (defun my/nix-store-shorten-paths ()
-    ;;   "Replace long /nix/store paths with shortened ...-pkg-version."
-    ;;   (let ((inhibit-read-only t))
-    ;;     (goto-char (point-min))
-    ;;     (delete-region (line-beginning-position) (1+ (line-end-position)))
-    ;;     (while (re-search-forward
-    ;;             "/nix/store/[a-z0-9]+-\\([^[:space:]]+\\)" nil t)
-    ;;       (replace-match "...-\\1" t nil)))
-    ;;   (goto-char (point-max))
-    ;;   (next-line)
-    ;;   (delete-region (line-beginning-position) (line-end-position)))
-    (defun compilation-start (command &optional mode name-function highlight-regexp continue) "Run compilation command COMMAND (low level interface). If COMMAND starts with a cd command, that becomes the `default-directory'. The rest of the arguments are optional; for them, nil means use the default. MODE is the major mode to set in the compilation buffer.  Mode may also be t meaning use `compilation-shell-minor-mode' under `comint-mode'. If NAME-FUNCTION is non-nil, call it with one argument (the mode name) to determine the buffer name.  Otherwise, the default is to reuses the current buffer if it has the proper major mode, else use or create a buffer with name based on the major mode. If HIGHLIGHT-REGEXP is non-nil, `next-error' will temporarily highlight the matching section of the visited source line; the default is to use the global value of `compilation-highlight-regexp'. If CONTINUE is non-nil, the buffer won't be emptied before compilation is started.  This can be useful if you wish to combine the output from several compilation commands in the same buffer.  The new output will be at the end of the buffer, and point is not changed. Returns the compilation buffer created." (or mode (setq mode 'compilation-mode)) (let* ((name-of-mode (if (eq mode t) "compilation" (replace-regexp-in-string "-mode\\'" "" (symbol-name mode)))) (thisdir default-directory) (thisenv compilation-environment) (buffer-path (and (local-variable-p 'exec-path) exec-path)) (buffer-env (and (local-variable-p 'process-environment) process-environment)) outwin outbuf) (with-current-buffer (setq outbuf (get-buffer-create (compilation-buffer-name name-of-mode mode name-function))) (let ((comp-proc (get-buffer-process (current-buffer)))) (if comp-proc (if (or (not (eq (process-status comp-proc) 'run)) (eq (process-query-on-exit-flag comp-proc) nil) (yes-or-no-p (format "A %s process is running; kill it? " name-of-mode))) (condition-case () (progn (interrupt-process comp-proc) (sit-for 1) (delete-process comp-proc)) (error nil)) (error "Cannot have two processes in `%s' at once" (buffer-name))))) (setq default-directory thisdir) (let ((inhibit-read-only t) (default-directory thisdir)) (cd (cond ((not (string-match "\\`\\s *cd\\(?:\\s +\\(\\S +?\\|'[^']*'\\|\"\\(?:[^\"`$\\]\\|\\\\.\\)*\"\\)\\)?\\s *[;&\n]" command)) default-directory) ((not (match-end 1)) "~") ((eq (aref command (match-beginning 1)) ?\') (substring command (1+ (match-beginning 1)) (1- (match-end 1)))) ((eq (aref command (match-beginning 1)) ?\") (replace-regexp-in-string "\\\\\\(.\\)" "\\1" (substring command (1+ (match-beginning 1)) (1- (match-end 1))))) (t (let* ((substituted-dir (substitute-env-vars (match-string 1 command))) (expanded-dir (file-expand-wildcards substituted-dir))) (if (= (length expanded-dir) 1) (car expanded-dir) substituted-dir))))) (if continue (progn (setq continue (point)) (goto-char (point-max))) (erase-buffer)) (if (not (eq mode t)) (progn (buffer-disable-undo) (funcall mode)) (setq buffer-read-only nil) (with-no-warnings (comint-mode)) (compilation-shell-minor-mode)) (setq-local compilation-directory thisdir) (setq-local compilation-environment thisenv) (if buffer-path (setq-local exec-path buffer-path) (kill-local-variable 'exec-path)) (if buffer-env (setq-local process-environment buffer-env) (kill-local-variable 'process-environment)) (if highlight-regexp (setq-local compilation-highlight-regexp highlight-regexp)) (if (or compilation-auto-jump-to-first-error (eq compilation-scroll-output 'first-error)) (setq-local compilation-auto-jump-to-next t))  (compilation-insert-annotation command "\n") (setq compilation--start-time (float-time)) (setq thisdir default-directory)) (set-buffer-modified-p nil)) (setq outwin (display-buffer outbuf '(nil (allow-no-window . t)))) (with-current-buffer outbuf (let ((process-environment (append compilation-environment (and (derived-mode-p 'comint-mode) (comint-term-environment)) (list (format "INSIDE_EMACS=%s,compile" emacs-version)) (list "PAGER=") (copy-sequence process-environment)))) (setq-local compilation-arguments (list command mode name-function highlight-regexp)) (setq-local revert-buffer-function 'compilation-revert-buffer) (when (and outwin (not continue) (not compilation-scroll-output)) (set-window-start outwin (point-min))) (let ((desired-visible-point (cond (continue continue) (compilation-scroll-output (point-max)) (t (point-min))))) (goto-char desired-visible-point) (when (and outwin (not (eq outwin (selected-window)))) (set-window-point outwin desired-visible-point))) (if compilation-process-setup-function (funcall compilation-process-setup-function)) (and outwin (compilation-set-window-height outwin)) (if (fboundp 'make-process) (let ((proc (if (eq mode t) (with-connection-local-variables (get-buffer-process (with-no-warnings (comint-exec outbuf (compilation--downcase-mode-name mode-name) shell-file-name nil `(,shell-command-switch ,command))))) (start-file-process-shell-command (compilation--downcase-mode-name mode-name) outbuf command)))) (setq mode-line-process '((:propertize ":%s" face compilation-mode-line-run) compilation-mode-line-errors)) (when compilation-always-kill (set-process-query-on-exit-flag proc nil)) (set-process-sentinel proc #'compilation-sentinel) (unless (eq mode t) (set-process-filter proc #'compilation-filter)) (set-marker (process-mark proc) (point-max) outbuf) (when compilation-disable-input (condition-case nil (process-send-eof proc) (error nil))) (run-hook-with-args 'compilation-start-hook proc) (compilation--update-in-progress-mode-line) (push proc compilation-in-progress)) (message "Executing `%s'..." command) (setq mode-line-process '((:propertize ":run" face compilation-mode-line-run) compilation-mode-line-errors)) (force-mode-line-update) (sit-for 0) (save-excursion (goto-char (point-max)) (let* ((inhibit-read-only t) (compilation-filter-start (point)) (status (call-process shell-file-name nil outbuf nil "-c" command))) (run-hooks 'compilation-filter-hook) (cond ((numberp status) (compilation-handle-exit 'exit status (if (zerop status) "finished\n" (format "exited abnormally with code %d\n" status)))) ((stringp status) (compilation-handle-exit 'signal status (concat status "\n"))) (t (compilation-handle-exit 'bizarre status status))))) (set-buffer-modified-p nil) (message "Executing `%s'...done" command))) (setq default-directory thisdir) (when compilation-scroll-output (goto-char (point-max)))) (setq next-error-last-buffer outbuf))) (defun compilation-handle-exit (process-status exit-status msg) "Write MSG in the current buffer and hack its `mode-line-process'." (let ((inhibit-read-only t) (status (if compilation-exit-message-function (funcall compilation-exit-message-function process-status exit-status msg) (cons msg exit-status))) (omax (point-max)) (opoint (point)) (cur-buffer (current-buffer))) (goto-char omax) (compilation-insert-annotation ?\n mode-name " " (car status)) (if (and (numberp compilation-window-height) (zerop compilation-window-height)) (message "%s" (cdr status))) (if (bolp) (forward-char -1)) (compilation-insert-annotation ", duration " (let ((elapsed (- (float-time) compilation--start-time))) (cond ((< elapsed 10) (format "%.2f s" elapsed)) ((< elapsed 60) (format "%.1f s" elapsed)) (t (format-seconds "%h:%02m:%02s" elapsed))))) (goto-char (point-max)) (add-text-properties omax (point) (append '(compilation-handle-exit t) nil)) (setq mode-line-process (list (let ((out-string (format ":%s [%s]" process-status (cdr status))) (msg (format "%s %s" mode-name (replace-regexp-in-string "\n?$" "" (car status))))) (message "%s" msg) (propertize out-string 'help-echo msg 'face (if (> exit-status 0) 'compilation-mode-line-fail 'compilation-mode-line-exit))) compilation-mode-line-errors)) (force-mode-line-update) (if (and opoint (< opoint omax)) (goto-char opoint)) (run-hook-with-args 'compilation-finish-functions cur-buffer msg)))
-    ;; (with-eval-after-load 'compile
-    ;;   ;; (add-to-list 'compilation-environment "TERM=dumb-emacs-ansi")
-    ;;   ;;   (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
-    ;;   (remove-hook 'compilation-filter-hook #'my/nix-store-shorten-paths)
-    ;;   )
-    )
-
-  (use-package eww
-    :ensure nil
-    :init
-    (setq browse-url-browser-function 'eww-browse-url
-          shr-use-colors nil
-          eww-header-line-format nil
-          eww-form-checkbox-selected-symbol "[X]"
-          eww-form-checkbox-symbol "[ ]"
-          shr-bullet "- "
-          shr-folding-mode t
-          shr-use-fonts t
-          shr-inhibit-images t
-          shr-width nil
-          shr-max-image-proportion 0.6
-          eww-search-prefix nil
-          eww-default-download-directory "~/"
-          url-privacy-level 'low
-          eww-auto-rename-buffer 'url
-          eww-prompt-history '(
-                               "https://learnxinyminutes.com/"
-                               ;; "https://ziggit.dev/"
-                               ;; "http://c.doc:3001/" ; "https://en.cppreference.com/w/c"
-                               ;; "http://cpp.doc:3002/" ; "https://en.cppreference.com/w/cpp"
-                               ;; "http://linux.doc:3000/" ;"https://www.kernel.org/doc/html/latest/"
-                               ;; C-h I "https://www.gnu.org/software/emacs/manual/"
-                               ))
-
-    :config
-    (defun my-eww-edit-url ()
-      "Edit the current EWW URL and reload the page."
-      (interactive)
-      (unless (derived-mode-p 'eww-mode)
-        (user-error "Not in EWW buffer"))
-      (let ((current-url (plist-get eww-data :url)))
-        (setq eww-data (plist-put eww-data :url
-                                  (read-string "Edit URL: " current-url)))
-        (eww-reload)))
-    (defun my-eww-forward-url()   (interactive) (eww-forward-url) (recenter-top-bottom 0))
-    (defun my-eww-back-url()   (interactive) (eww-back-url) (recenter-top-bottom 0))
-    (defun eww-follow-link (&optional external mouse-event)
-      "Browse the URL under point.
-    If EXTERNAL is single prefix, browse the URL using
-    `browse-url-secondary-browser-function'.
-    If EXTERNAL is double prefix, browse in new buffer."
-      (interactive
-       (list current-prefix-arg last-nonmenu-event)
-       eww-mode)
-      (mouse-set-point mouse-event)
-      (let* ((orig-url (get-text-property (point) 'shr-url))
-             (url (eww--transform-url orig-url))
-             target)
-        (cond
-         ((not url)
-          (message "No link under point"))
-         ((string-match-p eww-use-browse-url url)
-          ;; This respects the user options `browse-url-handlers'
-          ;; and `browse-url-mailto-function'.
-          (browse-url url))
-         ((and (consp external) (<= (car external) 4))
-          (funcall browse-url-secondary-browser-function url)
-          (shr--blink-link))
-         ;; This is a #target url in the same page as the current one.
-         ((and (setq target (url-target (url-generic-parse-url url)))
-               (eww-same-page-p url (plist-get eww-data :url)))
-          (let ((point (point)))
-            (eww-save-history)
-            (eww--before-browse)
-            (plist-put eww-data :url url)
-            (goto-char (point-min))
-            (if-let ((match (text-property-search-forward 'shr-target-id target #'member)))
-                (goto-char (prop-match-beginning match))
-              (goto-char (if (equal target "top")
-                             (point-min)
-                           point))))
-          (recenter-top-bottom 0))
-         (t
-          (eww-browse-url orig-url external)))))
-    (defun extract-base-urls ()
-      "Extract base URLs from the current buffer containing text file links."
-      (interactive)
-      (save-excursion
-        (goto-char (point-min))
-        (let ((urls '()))
-          (while (re-search-forward "https?://\\([^:/]+\\)" nil t)
-            (push (match-string 0) urls))
-          (with-output-to-temp-buffer "*Base URLs*"
-            (dolist (url (delete-dups (nreverse urls)))
-              (princ url)
-              (princ "\n"))))))
-    ;; (remove-hook 'eww-after-render-hook 'eww-readable)
-    :bind (:map eww-mode-map
-                ("L" . eww-list-bookmarks)
-                ("r" . my-eww-forward-url)
-                ("l" . my-eww-back-url)
-                ("<return>" . eww-follow-link)
-                ("C-M-i" . my-eww-back-url)
-                ("b" . my-eww-forward-url)
-                ("E" . my-eww-edit-url)))
-
-  (use-package eglot
-    :ensure nil
-    :defer t
-    :hook (eglot-managed-mode . (lambda ()
-                                  (eglot-inlay-hints-mode -1) ; bloate
-                                  (eldoc-mode -1) ; bloate
-                                  (flymake-mode -1) ; bloate
-                                  ))
-    :custom
-    (eglot-sync-connect 0)
-    (eldoc-mode -1)
-    (eglot-autoshutdown t)
-    (eglot-extend-to-xref t)
-    (eglot-events-buffer-config '(:size 0 :format short))
-    (eglot-ignored-server-capabilities '(:documentLinkProvider
-                                         :documentOnTypeFormattingProvider
-                                         :foldingRangeProvider
-                                         :colorProvider
-                                         :inlayHintProvider))
-    :init
-    (setq flymake-no-changes-timeout nil)  ; Don't run on idle
-    (setq flymake-start-on-flymake-mode nil) ; Don't auto-start
-    (setq flymake-start-on-save-buffer nil)
-    (setq flymake-fringe-indicator-position nil)
-    (setq flymake-margin-indicator-position nil)
-    (setq flymake-margin-indicators-string
-          '((error "" compilation-error) (warning "" compilation-warning)
-            (note "" compilation-info)))
-    (setq flymake-indicator-type nil)
-    (setq eglot-server-programs
-          '((c-mode . ("clangd"))
-            (c++-mode . ("clangd"))
-            (zig-mode . ("zls"))
-            (latex-mode . ("texlab"))
-            (rust-mode . ("rust-analyzer")))))
-
-  (use-package org
-    :ensure t
-    :defer t
-    :commands (org-mode org-version)
-    :mode
-    ("\\.org\\'" . org-mode)
-    :custom
-    ;; (org-agenda-files (directory-files-recursively "~/.me/" "\\.org$"))
-    (org-support-shift-select t)
-    (org-latex-compiler "xelatex")
-    (org-latex-src-block-backend 'listings)
-    (org-export-with-broken-links t)
-    (org-export-with-tags nil)
-    (org-export-with-drawers nil)
-    (org-export-with-toc nil)
-    (org-hide-leading-stars nil)
-    (org-startup-folded 'showeverything)
-    (org-agenda-span 'week)
-    (org-log-into-drawer t)
-    (org-startup-indented nil)
-    (org-adapt-indentation nil)
-    (org-edit-src-content-indentation 0)
-    (org-startup-truncated t)
-    (org-fontify-done-headline nil)
-    (org-fontify-todo-headline nil)
-    (org-hide-emphasis-markers nil)
-    (org-fontify-whole-heading-line nil)
-    (org-fontify-quote-and-verse-blocks nil)
-    (org-confirm-babel-evaluate nil)
-    (org-startup-with-inline-images t)
-    (org-link-descriptive nil)
-    (org-todo-keywords ;; t要做的，f要修的，e暂时的，a失败的，k有缺陷的，o就这样吧
-     '((sequence  "TODO(t)" "DONE(d)" "|" "FIXME(f)")
-       (sequence "TEMP(e)" "FAIL(a)" "KLUDGE(k)"    "|" "OKAY(o)")))
-    :config
-    (with-eval-after-load 'ox-latex
-      (add-to-list 'org-latex-classes
-                   '("elegantbook"
-                     "\\documentclass[lang=cn,math=cm,10pt,scheme=chinese,toc=twocol,bibend=bibtex]{elegantbook}"
-                     ("\\chapter{%s}" . "\\chapter*{%s}")
-                     ("\\section{%s}" . "\\section*{%s}")
-                     ("\\subsection{%s}" . "\\subsection*{%s}")
-                     ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))))
-    (with-eval-after-load 'org
-      (define-key org-mode-map (kbd "<f20>")
-                  (lambda () (interactive)
-                    (org-latex-export-to-pdf)
-                    (org-html-export-to-html)
-                    (delete-file "./index-blx.bib" nil)
-                    (delete-file "./index.bbl" nil)
-                    (delete-file "./index.tex" nil)
-                    (find-file "index.pdf")
-                    )))
-    (org-babel-do-load-languages
-     'org-babel-load-languages
-     '((C . t)
-       (emacs-lisp . t)
-       (shell . t)
-       (python . t))))
-
-  (use-package info
-    :custom
-    (Info-use-header-line nil)
-    :bind (:map Info-mode-map
-                ([remap scroll-up-command] . Info-scroll-up)
-                ([remap scroll-down-command] . Info-scroll-down)
-                ("C-M-i" . Info-history-back)
-                ("b" . Info-next-preorder)))
-
-  (use-package dired
-    :ensure nil
-    :commands (dired)
-    :bind( :map dired-mode-map
-           ("SPC" . scroll-up-command)
-           ("p" . (lambda () (interactive)(dired-find-file-other-window) (other-window 1)(next-line)))
-           ("DEL" . scroll-down-command)
-           ("," . dired-omit-mode)
-           ("h" . dired-do-eww)
-           ("<tab>" . dired-subtree-toggle)
-           ("e" . wdired-change-to-wdired-mode))
-    :hook
-    ((dired-mode . dired-hide-details-mode)
-     (dired-mode . dired-omit-mode))
-    :config
-    (defun foot-default-directory (&optional arg)
-      (interactive "P")
-      (let ((curr-dir (if-let* ((curr-line (dired-get-filename nil t)))
-                          (file-name-directory curr-line)
-                        default-directory)))
-        (start-process "Foot" nil shell-file-name shell-command-switch
-                       (concat "foot  -D" "\"" (expand-file-name curr-dir) "\"" ))))
-    (defun thunar-open-default-directory ()
-      (interactive)
-      (let ((curr-dir (if-let* ((curr-line (dired-get-filename nil t)))
-                          (file-name-directory curr-line)
-                        default-directory)))
-        (start-process-shell-command
-         "thunar" "*thunar*"
-         (concat "thunar " curr-dir))))
-    (use-package dired-subtree
-      :defer t
-      :custom
-      (dired-subtree-use-backgrounds nil)
-      :after dired)
-    (with-eval-after-load 'dired
-      (let ((args "--group-directories-first -ahlv"))
-        (when (or (eq system-type 'darwin) (eq system-type 'berkeley-unix))
-          (if-let* ((gls (executable-find "gls")))
-              (setq insert-directory-program gls)
-            (setq args nil)))
-        (when args
-          (setq dired-listing-switches args))))
-    :custom
-    (dired-movement-style 'bounded-files)
-    (delete-by-moving-to-trash t)
-    (dired-omit-files
-     (rx (or (seq bol ".")
-             (seq "." (or "css" "cls") eos)
-             (seq bol "." (or "svn" "git" "lock") eos)
-             (seq bol (or "LICENSE" "LICENCE" "Downloads") eos)
-             )))))
+  :hook
+  ((after-init . psession-mode)
+   (after-init . psession-savehist-mode)))
 
 (use-package consult
+  :bind(
+        ([remap completion-at-point] . hippie-expand)
+        ([remap complete-symbol] . hippie-expand)
+        ([remap imenu] . consult-imenu)
+        ([remap switch-to-buffer] . consult-buffer)
+        ([remap yank-pop] . consult-yank-pop)
+        ([remap indent-rigidly] . cleanup-buffer)
+        ([remap list-buffers] . ibuffer)
+        )
   :ensure t
   :demand t
   :hook
@@ -806,19 +790,24 @@
           (sayshit))
         (kill-buffer)
         (switch-to-buffer old))))
-  (pyim-scheme-add
-   '(hmdz
-     :document "虎码单字"
-     :class xingma
-     :code-prefix "hmdz/"
-     :first-chars "abcdefghijklmnopqrstuvwxyz"
-     :rest-chars "abcdefghijklmnopqrstuvwxyz"
-     :code-prefix-history ("_")
-     :code-split-length 4
-     :code-maximum-length 100 ;; 不要把我的英文消灭掉: )
-     ))
-  (pyim-default-scheme 'hmdz)
-  (when (file-exists-p "~/.local/share/mysource/hmdz.pyim") (add-to-list 'pyim-dicts '(:name "hmdz" :file "~/.local/share/mysource/hmdz.pyim"))(donothing))
+
+  (when
+      (file-exists-p "~/.local/share/mysource/hmdz.pyim")
+    (add-to-list 'pyim-dicts '(:name "hmdz" :file "~/.local/share/mysource/hmdz.pyim"))
+    (pyim-scheme-add
+     '(hmdz
+       :document "虎码单字"
+       :class xingma
+       :code-prefix "hmdz/"
+       :first-chars "abcdefghijklmnopqrstuvwxyz"
+       :rest-chars "abcdefghijklmnopqrstuvwxyz"
+       :code-prefix-history ("_")
+       :code-split-length 100  ;; 不要自动按我的空格: )
+       :code-maximum-length 100 ;; 不要把我的英文消灭掉: )
+       ))
+    (pyim-default-scheme 'hmdz)
+    (donothing))
+
   :custom
   (pyim-indicator-list (list #'my-pyim-indicator-with-cursor-color #'pyim-indicator-with-modeline))
   (pyim-english-input-switch-functions nil)
@@ -836,7 +825,7 @@
   :bind ( :map quick-sdcv-mode-map
           ("SPC" . scroll-up-command)
           ("DEL" . scroll-down-command)
-          ("y" . (lambda () (interactive) (previous-buffer) (other-window 1)))
+          ("y" . (lambda () (interactive)(previous-buffer) (other-window 1)))
           ("u" . delete-window)))
 
 (use-package undo-fu-session
@@ -845,6 +834,8 @@
   :config
   (use-package undo-fu
     :ensure t
+    :bind(([remap undo] . undo-fu-only-undo)
+          ([remap redo] . undo-fu-only-redo))
     :commands (undo-fu-only-undo
                undo-fu-only-redo
                undo-fu-only-redo-all
@@ -861,8 +852,6 @@
   :bind (:map vterm-mode-map
               ("C-p" . vterm-copy-mode)
               ("M-e" . other-window)
-              ("C-c C-~ f" . (lambda () (interactive) (start-process "wtype" nil "wtype" "-M" "ctrl" "f" "-m" "ctrl")))
-              ("C-c C-~ w" . (lambda () (interactive) (start-process "wtype" nil "wtype" "-M" "alt" "f" "-m" "alt"))) ;论我为什么要用occur和这么多rg
               :map vterm-copy-mode-map
               ("C-p" . vterm-previous-prompt)
               ("C-f" . vterm-next-prompt )
@@ -878,7 +867,6 @@
 (use-package magit
   :defer t
   :config
-
   (use-package diff-mode
     :defer t
     :custom
@@ -952,9 +940,8 @@
   (global-ligature-mode 1))
 
 (use-package dumb-jump
-  :defer t
-  :hook
-  (xref-backend-functions . dumb-jump-xref-activate)
+  :config
+  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
   :custom
   (dumb-jump-force-searcher 'rg)
   (dumb-jump-default-project "/home/leeao/lib"))
@@ -1008,12 +995,15 @@
    '(rst-level-6 ((t )))
    '(region ((t (:extend t :underline (:color foreground-color :style double-line :position 5)))))
    '(trailing-whitespace ((t )))
+   '(tab-bar-tab ((t (:inherit tab-bar))))
+   '(tab-bar-tab-inactive ((t (:box (:line-width (-1 . -1) :color "black" :style flat-button)))))
    '(makefile-space ((t (:underline t))))
    '(dictionary-word-definition-face ((t )))
    '(dictionary-word-entry-face ((t )))))
 
 (use-package vertico
   :ensure t
+  :demand t
   :hook
   (after-init . vertico-mode)
   :commands vertico-mode
@@ -1031,16 +1021,20 @@
   :config
   (use-package orderless
     :ensure t
+    :demand t
     :custom
     (completion-styles '(orderless basic))
     (completion-category-defaults nil)
     (completion-category-overrides '((file (styles partial-completion)))))
   (use-package vertico-flat
     :ensure nil
+    :demand t
     :after vertico)
+
   (use-package vertico-directory
     :ensure nil
     :after vertico
+    :demand t
     :bind (:map vertico-map
                 ("RET" . vertico-directory-enter)
                 ("DEL" . vertico-directory-delete-char)
@@ -1182,10 +1176,187 @@
     :config
     (consult-gh-embark-mode +1)
     (setq consult-gh-forge-timeout-seconds 20)))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;                            begin of rotate-text                            ;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(require 'cl)
 
-(add-to-list 'load-path package-user-dir)
-(autoload 'rotate-text "rotate-text" nil t)
-(autoload 'rotate-text-backward "rotate-text" nil t)
+(defgroup rotate-text nil
+  "Cycle through words, symbols and patterns."
+  :group 'abbrev
+  :group 'convenience
+  :group 'matching)
+
+(defcustom rotate-text-patterns
+  '(("\\_<[^-]\\(\\sw\\|\\s_\\)*[0-9]+" rotate-text-increment-number-in-symbol)
+    ("-?0x?[0-9a-fA-F]+" rotate-text-increment-hex-number)
+    ("-?[0-9]+" rotate-text-increment-number))
+  "*Patterns and functions to rotate them.
+Each entry is a list.  Its first element should be the regular expression to
+replace, the second element is a function.  When rotating, it is called with the
+matching text and an integer determining the rotation amount and direction."
+  :group 'rotate-text
+  :type '(repeat (list (string :tag "Regular expression")
+                       (function :tag "Rotation function"))))
+
+(defcustom rotate-text-symbols '(("private" "protected" "public"))
+  "*List of symbol names to rotate.
+Each element is a list of symbols that should be cycled through."
+  :group 'rotate-text
+  :type '(repeat (repeat :tag "Rotation group" (string :tag "Symbol"))))
+
+(defcustom rotate-text-words '(("width" "height")
+                               ("left" "right" "top" "bottom"))
+  "*List of words to rotate.
+Each element is a list of words that should be cycled through.  Individual
+segments in symbol names are recognized as words, i.e. windowWidth can be
+replaced with windowHeight.
+All entries must be in lower case. The case is determined by the rotated
+text."
+  :group 'rotate-text
+  :type '(repeat (repeat :tag "Rotation group" (string :tag "Word"))))
+
+(defvar rotate-text-local-patterns nil
+  "*Buffer local additions to `rotate-text-patterns'.")
+(make-variable-buffer-local 'rotate-text-local-patterns)
+
+(defvar rotate-text-local-symbols nil
+  "*Buffer local additions to `rotate-text-symbols'.")
+(make-variable-buffer-local 'rotate-text-local-symbols)
+
+(defvar rotate-text-local-words nil
+  "*Buffer local additions to `rotate-text-words'.")
+(make-variable-buffer-local 'rotate-text-local-words)
+
+;;; numbers ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defun rotate-text-increment-number (original arg &optional minimum)
+  (number-to-string (max (+ (string-to-number original) arg)
+                         (or minimum most-negative-fixnum))))
+
+(defun rotate-text-increment-hex-number (original arg)
+  (when (string-match "\\`-?\\(0x\\)" original)
+    (setq original (replace-match "" t t original 1)))
+  (let ((result (+ (string-to-number original 16) arg)))
+    (format "%s0x%x" (if (< result 0) "-" "") (abs result))))
+
+(defun rotate-text-increment-number-in-symbol (original arg)
+  (when (string-match "[0-9]+" original)
+    (replace-match (rotate-text-increment-number (match-string 0 original)
+                                                 arg 0)
+                   t t original)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun rotate-text-replacement (replacements original dir)
+  "Find the replacement for ORIGINAL in REPLACEMENTS."
+  (save-match-data
+    (if (functionp (car replacements))
+        ;; function
+        (if (and (< dir 0) (functionp (cadr replacements)))
+            (funcall (cadr replacements) original (- dir))
+          (funcall (car replacements) original dir))
+      ;; list
+      (let ((rest-pattern (member original replacements)))
+        (when rest-pattern
+          (car (nthcdr (mod (- dir (length rest-pattern)) (length replacements))
+                       replacements)))))))
+
+(defun rotate-text-match-at-point (regexp)
+  (save-excursion
+    (let ((pos (point)))
+      (goto-char (point-at-bol))
+      (catch 'match
+        (while (re-search-forward regexp (1+ (point-at-eol)) t)
+          (and (>= pos (match-beginning 0))
+               (<= pos (match-end 0))
+               (throw 'match (match-string-no-properties 0))))))))
+
+(defun rotate-text-symbol-at-point ()
+  "Rotate the symbol at point."
+  (rotate-text-match-at-point "\\_<\\(\\s_\\|\\sw\\)+\\_>"))
+
+(defun rotate-text-word-at-point ()
+  "Rotate the word at point."
+  (let ((case-fold-search nil))
+    (or (rotate-text-match-at-point "\\(\\<\\|[[:upper:]]\\)[[:lower:]]+")
+        (rotate-text-match-at-point "\\<[[:upper:]]+"))))
+
+(defun rotate-text-match-case (original new)
+  "Match the case of ORIGINAL in NEW."
+  (let ((case-fold-search nil))
+    (save-match-data
+      (cond
+       ((string-match "\\`[[:upper:]][[:lower:]]" original) (capitalize new))
+       ((string-match "\\`[[:upper:]][[:upper:]]" original) (upcase new))
+       (t new)))))
+
+(defvar rotate-text-last-offset nil)
+
+(defun rotate-text (arg &optional default-string com-symbols com-words com-patterns)
+  "Rotate the text at point. If there is nothing to rotate at point and DEFAULT-STRING is non-nil,
+DEFAULT-STRING is inserted at point.
+
+COM-SYMBOLS, COM-WORDS and COM-PATTERNS are per-command addition to `rotate-text-symbols',
+`rotate-text-words' and `rotate-text-patterns', respectively."
+  (interactive (list (if (consp current-prefix-arg)
+                         -1
+                       (prefix-numeric-value current-prefix-arg))))
+  (let ((pos (point))
+        (offset 0)
+        match replacement)
+    (or ;; symbols
+     (when (setq match (rotate-text-symbol-at-point))
+       (dolist (symbols (append com-symbols rotate-text-local-symbols
+                                rotate-text-symbols))
+         (when (setq replacement
+                     (rotate-text-replacement symbols match arg))
+           (cl-return t))))
+     ;; words
+     (when (setq match (rotate-text-word-at-point))
+       (dolist (words (append com-words rotate-text-local-words
+                              rotate-text-words))
+         (when (setq replacement
+                     (rotate-text-replacement words (downcase match) arg))
+           (setq replacement (rotate-text-match-case match replacement))
+           (cl-return t))))
+     ;; regexp
+     (dolist (pattern (append com-patterns rotate-text-local-patterns
+                              rotate-text-patterns))
+       (when (setq match (rotate-text-match-at-point (car pattern)))
+         (setq replacement (rotate-text-replacement (cdr pattern) match arg))
+         (cl-return t))))
+
+    (if (not replacement)
+        (progn (unless default-string
+                 (error "Nothing to rotate"))
+               (insert default-string)
+               (setq rotate-text-last-offset nil))
+
+      (progn
+        (unless (and rotate-text-last-offset
+                     (eq last-command this-command))
+          (setq rotate-text-last-offset
+                (if (eq pos (match-end 0))
+                    'end
+                  (- pos (match-beginning 0)))))
+
+        (replace-match replacement nil t)
+
+        (goto-char (if (eq rotate-text-last-offset 'end)
+                       (match-end 0)
+                     (min (+ (match-beginning 0) rotate-text-last-offset)
+                          (match-end 0))))))))
+
+(defun rotate-text-backward (arg &optional default-string com-symbols com-words com-patterns)
+  "Rotate the text at point backwards. If there is nothing to rotate at point and DEFAULT-STRING is non-nil,
+DEFAULT-STRING is inserted at point.
+
+COM-SYMBOLS, COM-WORDS and COM-PATTERNS are per-command addition to `rotate-text-symbols',
+`rotate-text-words' and `rotate-text-patterns', respectively."
+  (interactive (list (if (consp current-prefix-arg)
+                         -1
+                       (prefix-numeric-value current-prefix-arg))))
+  (rotate-text (- arg) default-string com-symbols com-words com-patterns))
 
 (setq rotate-text-symbols '(
                             ("t" "nil")
@@ -1195,6 +1366,7 @@
                             ("private" "protected" "public")
                             ("break" "continue")
                             ("x" "y" "z")))
+
 (setq rotate-text-words '(
                           ("argc" "argv")
                           ("add" "remove")
@@ -1219,7 +1391,9 @@
                           ("void" "bool" "char" "int")
                           ("width" "height")
                           ("yes" "no")))
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;                             end of rotate-text                             ;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;                               begin of tavily                              ;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1849,16 +2023,7 @@ usage 个人一般每日使用的流量,used(可选) 己经使用的流量"
         (while (re-search-forward "\n\n\n+" nil 1) (replace-match "\n\n"))
         (goto-char (point-max))
         (while (eq (char-before) 32) (delete-char -1)))))
-  (message "%s done" real-this-command))
-
-(defun toggle-vertico ()
-  "toggle vertico unobtrusive"
-  (interactive)
-  (if vertico-unobtrusive-mode
-      (vertico-unobtrusive-mode 1)
-    (vertico-unobtrusive-mode -1))
-  (setq vertico-unobtrusive-mode
-        (not vertico-unobtrusive-mode)))
+  (save-buffer))
 
 (defun my-recompile ()
   (interactive)
@@ -1911,13 +2076,17 @@ usage 个人一般每日使用的流量,used(可选) 己经使用的流量"
   "切换去eww/help"
   (interactive)
   (if (derived-mode-p
-       '(eww-mode help-mode))
+       '(eww-mode
+         gfm-mode
+         help-mode))
       (previous-buffer)
     (switch-to-buffer (cl-find-if
                        (lambda (buf)
                          (with-current-buffer buf
                            (derived-mode-p
-                            '(eww-mode help-mode))))
+                            '(eww-mode
+                              gfm-mode
+                              help-mode))))
                        (buffer-list)))))
 
 (defun switch-to-eww ()
@@ -1942,8 +2111,7 @@ usage 个人一般每日使用的流量,used(可选) 己经使用的流量"
          man-mode))
       (previous-buffer)
     (switch-to-buffer
-     (cl-find-if (lambda
-                   (buf)
+     (cl-find-if (lambda (buf)
                    (with-current-buffer
                        buf (derived-mode-p
                             '(Info-mode
@@ -2080,7 +2248,9 @@ Uses word at point as default, or prompts for input."
     (untabify start end)
     (indent-region start end)
     (call-interactively 'delete-trailing-whitespace)
-    (set-buffer-file-coding-system 'utf-8)))
+    (set-buffer-file-coding-system 'utf-8))
+  (save-buffer)
+  (donothing))
 
 (defun show-useful-list ()
   (interactive)
@@ -2146,12 +2316,6 @@ Uses word at point as default, or prompts for input."
   (interactive "sRegex: ")
   (multi-occur (buffer-list (selected-frame)) regex))
 
-(defun delete-region-and-yank ()
-  (interactive)
-  (when (use-region-p)
-    (delete-region (region-beginning) (region-end)))
-  (yank 1))
-
 (defun dec-to-hex (dec)
   (format "%02X" dec))
 
@@ -2189,17 +2353,86 @@ Uses word at point as default, or prompts for input."
 (defun split-window-below-window-divider()
   (interactive)
   (window-divider-mode 1)
-  (split-window-below)
-  )
+  (split-window-below))
 
 (defun delete-other-windows-window-divider()
   (interactive)
   (window-divider-mode -1)
-  (delete-other-windows)
-  )
+  (delete-other-windows))
 
 (defun delete-window-window-divider()
   (interactive)
   (window-divider-mode -1)
-  (delete-window)
-  )
+  (delete-window))
+
+(defun toggle-vertico ()
+  "toggle vertico unobtrusive"
+  (interactive)
+  (if vertico-unobtrusive-mode
+      (vertico-unobtrusive-mode 1)
+    (vertico-unobtrusive-mode -1))
+  (setq vertico-unobtrusive-mode
+        (not vertico-unobtrusive-mode)))
+
+(toggle-vertico)
+(toggle-vertico)
+
+
+
+(use-package webjump
+  :bind (("C-M-?" . spike-leung/webjump-symbol-at-point))
+  :config
+  (setq webjump-sites
+        '(("Rust Crates" . [simple-query "lib.rs" "https://lib.rs/search?q=" ""])
+          ("Rust Std Docs" . [simple-query "doc.rust-lang.org" "https://doc.rust-lang.org/std/?search=" ""])
+          ("Crates.io" . [simple-query "crates.io" "https://crates.io/crates/" ""])
+          ("Wikipedia" . [simple-query "wikipedia.org" "wikipedia.org/wiki/" ""])
+          ("MDN" . [simple-query "developer.mozilla.org" "developer.mozilla.org/en-US/search?q=" ""])
+          ("Google" . [simple-query "google.com" "https://www.google.com/ncr?q=" ""])
+          ("Google CN Filtered" . [simple-query "google.com.hk" "https://www.google.com.hk/search?q=-youtube+-reddit+-dailymotion+-pbslearningmedia+-dcnewsnow+-ted+-facebook+-douyin+-cctv+-bilibili+-iqiyi+-youku+-tencentvideo+-tiktok+-instagram+-twitter+-cnn+-yahoo+-aljazeera+-foxnews+" ""])
+          ("Nix Packages" . [simple-query "search.nixos.org/packages" "https://search.nixos.org/packages?channel=unstable&size=50&sort=relevance&type=packages&query=" ""])
+          ("NixOS Options" . [simple-query "search.nixos.org/options" "https://search.nixos.org/options?channel=unstable&from=0&size=50&sort=relevance&type=packages&query=" ""])
+          ("NixOS Discourse" . [simple-query "discourse.nixos.org" "https://discourse.nixos.org/search?q=" ""])
+          ("PR Tracker" . [simple-query "nixpk.gs" "https://nixpk.gs/pr-tracker.html?pr=" ""])
+          ("Arch Wiki" . [simple-query "wiki.archlinux.org" "https://wiki.archlinux.org/title/" ""])
+          ("NixOS Wiki" . [simple-query "wiki.nixos.org" "https://wiki.nixos.org/wiki/" ""])
+          ("Python Docs" . [simple-query "docs.python.org" "https://docs.python.org/zh-cn/3/search.html?q=" ""])
+          ("StackOverflow" . [simple-query "stackoverflow.com" "https://stackoverflow.com/search?q=" ""])
+          ("GitHub Repos" . [simple-query "github.com" "https://github.com/search?q=" ""])
+          ("GitHub Nix Code" . [simple-query "github.com" "https://github.com/search?q=language%3Anix+" ""])
+          ("GitHub Emacs Lisp Code" . [simple-query "github.com" "https://github.com/search?q=language%3A%22Emacs+Lisp%22+" ""])
+          ("GitHub Rust Code" . [simple-query "github.com" "https://github.com/search?q=language%3A%22Rust%22+" ""])
+          ("GitHub Lua Code" . [simple-query "github.com" "https://github.com/search?q=language%3A%22Lua%22+" ""])
+          ("GitHub Python Code" . [simple-query "github.com" "https://github.com/search?q=language%3A%22Python%22+" ""])
+          ("GitHub C Code" . [simple-query "github.com" "https://github.com/search?q=language%3A%22C%22+" ""])
+          ("GitHub C++ Code" . [simple-query "github.com" "https://github.com/search?q=language%3AC%2B%2B+" ""])
+          ("GitHub Issues" . [simple-query "github.com" "https://github.com/search?type=issues&q=" ""])
+          ("GitHub nixpkgs Code" . [simple-query "github.com" "https://github.com/search?q=repo%3ANixOS%2Fnixpkgs+" ""])
+          ("Taobao" . [simple-query "taobao.com" "https://s.taobao.com/search?q=" ""])
+          ("Tiger Code" . [simple-query "tiger-code.com" "https://tiger-code.com/search?query=" ""])
+          ("OSHWhub" . [simple-query "oshwhub.com" "https://oshwhub.com/search?wd=" ""])
+          ("Thingiverse" . [simple-query "thingiverse.com" "https://www.thingiverse.com/search?q=" ""])
+          ("Cambridge Dictionary" . [simple-query "dictionary.cambridge.org" "https://dictionary.cambridge.org/zhs/词典/英语-汉语-简体/" ""])))
+  (defun spike-leung/webjump-symbol-at-point ()
+    "获取光标下的 symbol 并通过 webjump 搜索。"
+    (interactive)
+    (let* ((completion-ignore-case t)
+           (content (if (use-region-p)
+                        (buffer-substring-no-properties (region-beginning) (region-end))
+                      (thing-at-point 'symbol t)))
+           (query (read-string (format "Webjump search (%s): " (or content ""))
+                               nil nil content))
+           (item (assoc-string
+                  (completing-read "WebJump to site: " webjump-sites nil t)
+                  webjump-sites t))
+           (name (car item))
+           (expr (cdr item))
+           (query-prefix (aref expr 2))
+           (query-suffix (aref expr 3))
+           (fun (if webjump-use-internal-browser
+                    (apply-partially #'browse-url-with-browser-kind 'internal)
+                  #'browse-url)))
+      (funcall fun (webjump-url-fix
+                    (cond ((concat query-prefix (webjump-url-encode query) query-suffix))
+                          (t (error "WebJump URL expression for \"%s\" invalid"
+                                    name))))))))
