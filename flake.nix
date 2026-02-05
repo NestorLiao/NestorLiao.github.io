@@ -1,20 +1,5 @@
 ## this is my nixos config for surrive in post-modern world ###################
 {
-  description = "My Config";
-  nixConfig = {
-    builders-use-substitutes = true;
-    experimental-features = [ "nix-command" "flakes" ];
-    trusted-substituters = [
-      "https://cache.nixos.org" "https://nix-community.cachix.org"
-      "https://mirrors.ustc.edu.cn/nix-channels/store"
-    ];
-    extra-trusted-substituters =
-      [ "https://cache.nixos.org" "https://nix-community.cachix.org" ];
-    extra-trusted-public-keys = [
-      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-    ];
-  };
   outputs = { self, nixpkgs, home-manager, sops-nix, ... }@inputs:
     let
       inherit (self) outputs;
@@ -35,13 +20,234 @@
             ./hardware-configuration.nix
             ({ pkgs, config, userSetting, sops, inputs, lib, outputs, ... }:
               let
-                myEmacs = pkgs.unstable.emacs-pgtk.override {
-                  withNativeCompilation = true;
-                  withSQLite3 = true;
+                #   template= ''
+                #     #!/usr/bin/env bash
+                # '';
+                lock-false = {Value = false; Status = "locked";};
+                lock-true = {Value = true; Status = "locked";};
+              in {
+                imports = [ inputs.hosts.nixosModule ];
+                # 我得道了，在怡凉乡间独自过着悠然的生活，在蓝天绿树巨石间…
+                networking.stevenBlackHosts = {#一切都在网络上，编写人类。
+                  enableIPv6 = false; # 文明演IPv6为传色情，文明演Hosts为戒色
+                  enable = true; # 从来都没有什么戒色… 只不过是文明把玩自然本性
+                  # 城市、单身、独生、男性、大学生、亚洲、
+                  # 网瘾、中产、游戏瘾、计算机相关专业人群
+                  # 一切只是“生物本性”与“传统文化”带来的欲望
+                  # 配合“工业革命”与“数字革命”带来的富饶假象
+                  # 开着不会影响学习编程，使用计算机不是为了让别人编程你。
+                  blockPorn = true; # 你知道的，虚假的情欲只会让你溺身
+                  blockSocial = true; # 你知道的，虚假的参与只会让你躁心
+                }; # 不依赖外物，不物物于物，
+                # 内心拒绝即是自由
+                # 外物自由即是强迫
+                programs.nix-ld = {
+                  enable = true;
+                  libraries = with pkgs; [
+                  ];
                 };
-                emacsWithPackages =
-                  (pkgs.unstable.emacsPackagesFor myEmacs).emacsWithPackages;
-                onlyemacsScript = ''
+                environment.systemPackages = with pkgs; [
+
+                  # (pkgs.buildFHSEnv {
+                  #   name = "kernel-env";
+                  #   targetPkgs = pkgs:
+                  #     with pkgs; [
+                  #       bear
+                  #       bc
+                  #       gcc
+                  #       flex
+                  #       bison
+                  #       openssl
+                  #       openssl.dev
+                  #       elfutils.dev
+                  #       elfutils
+                  #       libelf
+                  #       ncurses.dev
+                  #       binutils
+                  #       gnumake
+                  #       ncurses
+                  #       kmod
+                  #     ];
+                  # })
+
+                  # alsa-utils
+                  # bear
+                  # binutils
+                  # bison
+                  # bpftrace
+                  # cachix
+                  # ccls
+                  # clang
+                  # codespell
+                  # conan
+                  # cpio
+                  # doxygen
+                  # elfutils.dev
+                  # flex
+                  # foliate
+                  # fzf
+                  # gcc-arm-embedded
+                  # gtest
+                  # kmod
+                  # lcov
+                  # meson
+                  # nil
+                  # ninja
+                  btop
+                  clang-tools
+                  cppcheck
+                  ctags
+                  elfutils
+                  file
+
+                  # nixfmt-classic
+                  # opencc
+                  # openvpn
+                  # pahole
+                  # pandoc
+                  # pciutils
+                  # qemu
+                  # qemu-utils
+                  # quickemu
+                  # samba
+                  # texlab
+                  # texliveFull
+                  # tree
+                  # unstable.gemini-cli-bin
+                  # usbutils
+                  # util-linux
+                  # vcpkg
+                  # vcpkg-tool
+                  # vim-full
+                  age
+                  bc
+                  cliphist
+                  cmake
+                  coreutils-full
+                  curl
+                  dash
+                  fd
+                  fishPlugins.done
+                  gcc
+                  gdb
+                  gnumake
+                  just
+                  poppler-utils
+                  python3
+                  ripgrep
+                  rr
+                  scc
+                  sdcv
+                  thunderbird
+                  trashy
+                  unrar-free
+                  unstable.leetgo
+                  unstable.sops
+                  unzipNLS
+                  wget
+
+                  grim
+                  jq
+                  libnotify
+                  mako
+                  paperlike-go
+                  satty
+                  slurp
+                  wf-recorder
+                  wl-clipboard
+                  wl-color-picker
+                  wmenu
+                  wtype
+                  zip
+
+                  # cargo
+                  # rust-analyzer
+                  # rustc
+                  # rustlings
+                  # unstable.nix-search-cli
+                  # unstable.lldb
+
+                  c-intro-and-ref
+                  glibcInfo
+                  man-pages
+                  man-pages-posix
+                  # stdmanpages
+                  # clang-manpages
+                  # linux-manual
+
+                  (texlive.combine ({ # For Writting my Book.
+                    inherit (texlive) scheme-small;
+                    "adforn" = texlive."adforn"; "amsfonts" = texlive."amsfonts";
+                    "amsmath" = texlive."amsmath"; "anyfontsize" = texlive."anyfontsize";
+                    "appendix" = texlive."appendix"; "apptools" = texlive."apptools";
+                    "atbegshi" = texlive."atbegshi"; "atveryend" = texlive."atveryend";
+                    "auxhook" = texlive."auxhook"; "babel" = texlive."babel";
+                    "bbding" = texlive."bbding"; "bidi" = texlive."bidi";
+                    "bigintcalc" = texlive."bigintcalc"; "bitset" = texlive."bitset";
+                    "blindtext" = texlive."blindtext"; "booktabs" = texlive."booktabs";
+                    "caption" = texlive."caption"; "catchfile" = texlive."catchfile";
+                    "changepage" = texlive."changepage"; "collcell" = texlive."collcell";
+                    "comment" = texlive."comment"; "csquotes" = texlive."csquotes";
+                    "ctablestack" = texlive."ctablestack"; "ctex" = texlive."ctex";
+                    "currfile" = texlive."currfile"; "enumitem" = texlive."enumitem";
+                    "environ" = texlive."environ"; "esint" = texlive."esint";
+                    "etex" = texlive."etex"; "etexcmds" = texlive."etexcmds";
+                    "etoolbox" = texlive."etoolbox"; "everysel" = texlive."everysel";
+                    "everyshi" = texlive."everyshi"; "fancyhdr" = texlive."fancyhdr";
+                    "fancyvrb" = texlive."fancyvrb"; "filehook" = texlive."filehook";
+                    "finstrut" = texlive."finstrut"; "float" = texlive."float";
+                    "fontspec" = texlive."fontspec"; "footmisc" = texlive."footmisc";
+                    "framed" = texlive."framed"; "fvextra" = texlive."fvextra";
+                    "geometry" = texlive."geometry"; "gettitlestring" = texlive."gettitlestring";
+                    "hologo" = texlive."hologo"; "hopatch" = texlive."hopatch";
+                    "hycolor" = texlive."hycolor"; "hyperref" = texlive."hyperref";
+                    "ifmtarg" = texlive."ifmtarg"; "ifplatform" = texlive."ifplatform";
+                    "iftex" = texlive."iftex"; "incgraph" = texlive."incgraph";
+                    "infwarerr" = texlive."infwarerr"; "intcalc" = texlive."intcalc";
+                    "kvdefinekeys" = texlive."kvdefinekeys"; "kvoptions" = texlive."kvoptions";
+                    "kvsetkeys" = texlive."kvsetkeys"; "latex2pydata" = texlive."latex2pydata";
+                    "lineno" = texlive."lineno"; "lipsum" = texlive."lipsum";
+                    "listings" = texlive."listings"; "listingsutf8" = texlive."listingsutf8";
+                    "ltxcmds" = texlive."ltxcmds"; "luacode" = texlive."luacode";
+                    "lualatex-math" = texlive."lualatex-math"; "luaotfload" = texlive."luaotfload";
+                    "luatexbase" = texlive."luatexbase"; "luatexja" = texlive."luatexja";
+                    "makecell" = texlive."makecell"; "manfnt" = texlive."manfnt";
+                    "marvosym" = texlive."marvosym"; "minitoc" = texlive."minitoc";
+                    "minted" = texlive."minted"; "multirow" = texlive."multirow";
+                    "multitoc" = texlive."multitoc"; "mwe" = texlive."mwe";
+                    "natbib" = texlive."natbib"; "newfloat" = texlive."newfloat";
+                    "notoccite" = texlive."notoccite"; "ntheorem" = texlive."ntheorem";
+                    "paralist" = texlive."paralist"; "pdfcol" = texlive."pdfcol";
+                    "pdfescape" = texlive."pdfescape"; "pdftexcmds" = texlive."pdftexcmds";
+                    "pgf" = texlive."pgf"; "pgfopts" = texlive."pgfopts";
+                    "placeins" = texlive."placeins"; "preview" = texlive."preview";
+                    "ragged2e" = texlive."ragged2e"; "refcount" = texlive."refcount";
+                    "relsize" = texlive."relsize"; "rerunfilecheck" = texlive."rerunfilecheck";
+                    "setspace" = texlive."setspace"; "showexpl" = texlive."showexpl";
+                    "siunitx" = texlive."siunitx"; "stringenc" = texlive."stringenc";
+                    "svn-prov" = texlive."svn-prov"; "tcolorbox" = texlive."tcolorbox";
+                    "tex4ht" = texlive."tex4ht"; "threeparttable" = texlive."threeparttable";
+                    "titlesec" = texlive."titlesec"; "tocloft" = texlive."tocloft";
+                    "translations" = texlive."translations"; "translator" = texlive."translator";
+                    "trimspaces" = texlive."trimspaces"; "type1cm" = texlive."type1cm";
+                    "unicode-math" = texlive."unicode-math"; "uniquecounter" = texlive."uniquecounter";
+                    "upquote" = texlive."upquote"; "url" = texlive."url";
+                    "varwidth" = texlive."varwidth"; "xcolor" = texlive."xcolor";
+                    "xifthen" = texlive."xifthen"; "xkeyval" = texlive."xkeyval";
+                    "xstring" = texlive."xstring"; "xunicode" = texlive."xunicode";
+                    "xurl" = texlive."xurl"; "zhnumber" = texlive."zhnumber";
+                    "capt-of" = texlive."capt-of"; "cprotect" = texlive."cprotect";
+                    "ulem" = texlive."ulem"; "wrapfig" = texlive."wrapfig";
+                    "esvect" = texlive."esvect"; "yhmath" =texlive."yhmath";
+                    "biblatex-gb7714-2015" =texlive."biblatex-gb7714-2015"; "biblatex" =texlive."biblatex";
+                    "tikzfill" =texlive."tikzfill"; "bigfoot" =texlive."bigfoot";
+                    "rsfs" =texlive."rsfs"; "tex-gyre" =texlive."tex-gyre";
+                  } ))
+                  (writeShellScriptBin "wtypefix" ''
+                  #!/usr/bin/env bash
+                  wtype \"
+                  '')
+                  (writeShellScriptBin "onlyemacs" ''
                   #!/usr/bin/env bash
                   swaymsg workspace number 5
                   EMACS_SERVER=server
@@ -73,302 +279,7 @@
                   sleep 1.0
                   swaymsg fullscreen
                   sleep 0.5
-                '';
-                #   template= ''
-                #     #!/usr/bin/env bash
-                # '';
-                lock-false = {Value = false; Status = "locked";};
-                lock-true = {Value = true; Status = "locked";};
-              in {
-                imports = [ inputs.hosts.nixosModule ];
-                # 我得道了，在怡凉乡间独自过着悠然的生活，在蓝天绿树巨石间…
-                networking.stevenBlackHosts = {#一切都在网络上，编写人类。
-                  enableIPv6 = false; # 文明演IPv6为传色情，文明演Hosts为戒色
-                  enable = false; # 从来都没有什么戒色… 只不过是文明把玩自然本性
-                  # 城市、单身、独生、男性、大学生、亚洲、
-                  # 网瘾、中产、游戏瘾、计算机相关专业人群
-                  # 一切只是“生物本性”与“传统文化”带来的欲望
-                  # 配合“工业革命”与“数字革命”带来的富饶假象
-                  # 开着不会影响学习编程，使用计算机不是为了让别人编程你。
-                  blockPorn = true; # 你知道的，虚假的情欲只会让你溺身
-                  blockSocial = true; # 你知道的，虚假的参与只会让你躁心
-                }; # 不依赖外物，不物物于物，
-                # 内心拒绝即是自由
-                # 外物自由即是强迫
-
-                environment.systemPackages = with pkgs; [
-
-                  (texlive.combine ({
-                    inherit (texlive) scheme-small;
-                    "adforn" = texlive."adforn";
-                    "amsfonts" = texlive."amsfonts";
-                    "amsmath" = texlive."amsmath";
-                    "anyfontsize" = texlive."anyfontsize";
-                    "appendix" = texlive."appendix";
-                    "apptools" = texlive."apptools";
-                    "atbegshi" = texlive."atbegshi";
-                    "atveryend" = texlive."atveryend";
-                    "auxhook" = texlive."auxhook";
-                    "babel" = texlive."babel";
-                    "bbding" = texlive."bbding";
-                    "bidi" = texlive."bidi";
-                    "bigintcalc" = texlive."bigintcalc";
-                    "bitset" = texlive."bitset";
-                    "blindtext" = texlive."blindtext";
-                    "booktabs" = texlive."booktabs";
-                    "caption" = texlive."caption";
-                    "catchfile" = texlive."catchfile";
-                    "changepage" = texlive."changepage";
-                    "collcell" = texlive."collcell";
-                    "comment" = texlive."comment";
-                    "csquotes" = texlive."csquotes";
-                    "ctablestack" = texlive."ctablestack";
-                    "ctex" = texlive."ctex";
-                    "currfile" = texlive."currfile";
-                    "enumitem" = texlive."enumitem";
-                    "environ" = texlive."environ";
-                    "esint" = texlive."esint";
-                    "etex" = texlive."etex";
-                    "etexcmds" = texlive."etexcmds";
-                    "etoolbox" = texlive."etoolbox";
-                    "everysel" = texlive."everysel";
-                    "everyshi" = texlive."everyshi";
-                    "fancyhdr" = texlive."fancyhdr";
-                    "fancyvrb" = texlive."fancyvrb";
-                    "filehook" = texlive."filehook";
-                    "finstrut" = texlive."finstrut";
-                    "float" = texlive."float";
-                    "fontspec" = texlive."fontspec";
-                    "footmisc" = texlive."footmisc";
-                    "framed" = texlive."framed";
-                    "fvextra" = texlive."fvextra";
-                    "geometry" = texlive."geometry";
-                    "gettitlestring" = texlive."gettitlestring";
-                    "hologo" = texlive."hologo";
-                    "hopatch" = texlive."hopatch";
-                    "hycolor" = texlive."hycolor";
-                    "hyperref" = texlive."hyperref";
-                    "ifmtarg" = texlive."ifmtarg";
-                    "ifplatform" = texlive."ifplatform";
-                    "iftex" = texlive."iftex";
-                    "incgraph" = texlive."incgraph";
-                    "infwarerr" = texlive."infwarerr";
-                    "intcalc" = texlive."intcalc";
-                    "kvdefinekeys" = texlive."kvdefinekeys";
-                    "kvoptions" = texlive."kvoptions";
-                    "kvsetkeys" = texlive."kvsetkeys";
-                    "latex2pydata" = texlive."latex2pydata";
-                    "lineno" = texlive."lineno";
-                    "lipsum" = texlive."lipsum";
-                    "listings" = texlive."listings";
-                    "listingsutf8" = texlive."listingsutf8";
-                    "ltxcmds" = texlive."ltxcmds";
-                    "luacode" = texlive."luacode";
-                    "lualatex-math" = texlive."lualatex-math";
-                    "luaotfload" = texlive."luaotfload";
-                    "luatexbase" = texlive."luatexbase";
-                    "luatexja" = texlive."luatexja";
-                    "makecell" = texlive."makecell";
-                    "manfnt" = texlive."manfnt";
-                    "marvosym" = texlive."marvosym";
-                    "minitoc" = texlive."minitoc";
-                    "minted" = texlive."minted";
-                    "multirow" = texlive."multirow";
-                    "multitoc" = texlive."multitoc";
-                    "mwe" = texlive."mwe";
-                    "natbib" = texlive."natbib";
-                    "newfloat" = texlive."newfloat";
-                    "notoccite" = texlive."notoccite";
-                    "ntheorem" = texlive."ntheorem";
-                    "paralist" = texlive."paralist";
-                    "pdfcol" = texlive."pdfcol";
-                    "pdfescape" = texlive."pdfescape";
-                    "pdftexcmds" = texlive."pdftexcmds";
-                    "pgf" = texlive."pgf";
-                    "pgfopts" = texlive."pgfopts";
-                    "placeins" = texlive."placeins";
-                    "preview" = texlive."preview";
-                    "ragged2e" = texlive."ragged2e";
-                    "refcount" = texlive."refcount";
-                    "relsize" = texlive."relsize";
-                    "rerunfilecheck" = texlive."rerunfilecheck";
-                    "setspace" = texlive."setspace";
-                    "showexpl" = texlive."showexpl";
-                    "siunitx" = texlive."siunitx";
-                    "stringenc" = texlive."stringenc";
-                    "svn-prov" = texlive."svn-prov";
-                    "tcolorbox" = texlive."tcolorbox";
-                    "tex4ht" = texlive."tex4ht";
-                    "threeparttable" = texlive."threeparttable";
-                    "titlesec" = texlive."titlesec";
-                    "tocloft" = texlive."tocloft";
-                    "translations" = texlive."translations";
-                    "translator" = texlive."translator";
-                    "trimspaces" = texlive."trimspaces";
-                    "type1cm" = texlive."type1cm";
-                    "unicode-math" = texlive."unicode-math";
-                    "uniquecounter" = texlive."uniquecounter";
-                    "upquote" = texlive."upquote";
-                    "url" = texlive."url";
-                    "varwidth" = texlive."varwidth";
-                    "xcolor" = texlive."xcolor";
-                    "xifthen" = texlive."xifthen";
-                    "xkeyval" = texlive."xkeyval";
-                    "xstring" = texlive."xstring";
-                    "xunicode" = texlive."xunicode";
-                    "xurl" = texlive."xurl";
-                    "zhnumber" = texlive."zhnumber";
-
-                    "capt-of" = texlive."capt-of";
-                    "cprotect" = texlive."cprotect";
-                    "ulem" = texlive."ulem";
-                    "wrapfig" = texlive."wrapfig";
-                    "esvect" = texlive."esvect";
-                    "yhmath" =texlive."yhmath";
-                    "biblatex-gb7714-2015" =texlive."biblatex-gb7714-2015";
-                    "biblatex" =texlive."biblatex";
-                    "tikzfill" =texlive."tikzfill";
-                    "bigfoot" =texlive."bigfoot";
-                    "rsfs" =texlive."rsfs";
-                    "tex-gyre" =texlive."tex-gyre";
-                  } ))
-
-                  # utilities
-                  # file bash man-pages sudo sd bc pv rename vimv
-                  # lsb-release moreutils unzip zip unrar envsubst
-                  # # processes
-                  # dtach pstree killall sysstat
-                  # # monitoring
-                  # htop btop iotop iftop s-tui multitail entr
-                  # # dev tools
-                  # jq tmux fzf silver-searcher git
-                  # # hardware tools
-                  # pciutils lm_sensors acpi pmutils usbutils dmidecode
-                  # # networking
-                  # wget curl nmap nettools traceroute dnsutils iperf
-                  # # filesystems
-                  # ncdu ranger lsof ntfs3g nfs-utils
-                  # # hard drive management
-                  # lsscsi hddtemp hdparm perf-tools parted gptfdisk
-                  # # security
-                  # pass gopass
-
-                  (writeShellScriptBin "wtypefix" ''
-                  #!/usr/bin/env bash
-                  wtype \"
-                  '')
-
-                  (writeShellScriptBin "onlyemacs" onlyemacsScript)
-                  alsa-utils
-                  # bear
-                  # binutils
-                  # bison
-                  # bpftrace
-                  btop
-                  # cachix
-                  # ccls
-                  # clang
-                  clang-tools
-                  # codespell
-                  # conan
-                  # cpio
-                  # cppcheck
-                  ctags
-                  # doxygen
-                  # elfutils
-                  # elfutils.dev
-                  file
-                  # flex
-                  # foliate
-                  # fzf
-                  # gcc-arm-embedded
-                  # gtest
-                  # kmod
-                  # lcov
-                  # libelf
-                  # libtool
-                  # libvterm
-                  # meson
-                  # ncurses
-                  # ncurses.dev
-                  # nil
-                  # ninja
-                  # nixfmt-classic
-                  # opencc
-                  # openssl
-                  # openssl.dev
-                  # pahole
-                  # pandoc
-                  # openvpn
-                  # pciutils
-                  # qemu
-                  # qemu-utils
-                  # rr
-                  # samba
-                  satty
-                  scc
-                  # texlab
-                  # texliveFull
-                  # tree
-                  # unstable.gemini-cli-bin
-                  # unstable.quickemu
-                  # usbutils
-                  # util-linux
-                  # vcpkg
-                  # vcpkg-tool
-                  # vim-full
-                  age
-                  bc
-                  cliphist
-                  cmake
-                  coreutils-full
-                  curl
-                  dash
-                  fd
-                  fishPlugins.done
-                  gcc
-                  gdb
-                  gnumake
-                  grim
-                  jq
-                  just
-                  libnotify
-                  mako
-                  paperlike-go
-                  poppler-utils
-                  python3
-                  ripgrep
-                  sdcv
-                  slurp
-                  thunderbird
-                  trashy
-                  unrar-free
-                  unstable.leetgo
-                  unstable.sops
-                  unzipNLS
-                  wf-recorder
-                  wget
-                  wl-clipboard
-                  wl-color-picker
-                  wmenu
-                  wtype
-                  zip
-
-                  # cargo
-                  # rust-analyzer
-                  # rustc
-                  # rustlings
-                  # unstable.nix-search-cli
-
-                  # unstable.lldb
-
-                  c-intro-and-ref
-                  glibcInfo
-                  man-pages
-                  man-pages-posix
-                  # stdmanpages
-                  # clang-manpages
-                  # linux-manual
+                '')
 
                 ];
                 xdg.mime = {
@@ -442,14 +353,18 @@
                      '';
                   garbage = "nix-collect-garbage -d";
                   sgarbage = ''
-                    sudo rm /tmp/tmp.* -rf
+                    sudo rm /tmp/* -rf
                      sudo nix-collect-garbage -d
                      nix-collect-garbage -d
-                    sudo nix-store --optimise'';
+                    sudo nix-store --optimise
+                    '';
                   # sudo nix-collect-garbage -d
                   # sudo nix-store --optimise
                   # nix-store --query --roots
                   # ls -l /var/run/current-system
+                  # nix develop .#default --profile ~/.nix-profiles/game-dev
+                  # rm -rf ~/.nix-profiles/game-dev
+                  # nix profile remove 0 --profile ~/.nix-profiles/game-dev
                   nixh = "nix-prefetch-url";
                   nixhu = "nix-prefetch-url --unpack";
                   rsap=
@@ -617,7 +532,7 @@
                         enableBashIntegration = true;
                       };
                       programs.direnv = {
-                        enable = false;
+                        enable = true;
                         enableBashIntegration = true;
                         enableFishIntegration = true;
                         nix-direnv.enable = true;
@@ -943,7 +858,7 @@
                       # Path=default
                       ### xxxx
                       programs.firefox = {
-                        enable = true;
+                        enable = false;
                         package = pkgs.firefox-beta;
 
                         # 浏览器就像是大脑的信息化改造工具
@@ -1078,9 +993,9 @@
 
                               "NixOS Wiki" = {
                                 urls = [{
-                                  template = "https://nixos.wiki/index.php?search={searchTerms}";
+                                  template = "https://wiki.nixos.org/index.php?search={searchTerms}";
                                 }];
-                                icon = "https://nixos.wiki/favicon.png";
+                                icon = "https://wiki.nixos.org/favicon.png";
                                 updateInterval = 24 * 60 * 60 * 1000;
                                 definedAliases = [ "@nw" ];
                               };
@@ -1209,6 +1124,11 @@
 
                             userChrome =''
 @-moz-document url(chrome://browser/content/browser.xhtml) {
+/* Example for userContent.css (web pages) */
+input, textarea, [contenteditable] {
+  caret-color: black !important;    /* ensure a visible caret color */
+  /* Note: caret-shape and caret-animation properties are not implemented in Firefox */
+}
     /* ########  Sidetabs Styles  ######### */
     /* Set Bookerly for all Firefox UI */
     * {
@@ -1338,6 +1258,7 @@
   #titlebar{ order: 2 }
 */
 }
+
                           '';
                             userContent = ''
 /* =========================================================
@@ -1346,6 +1267,12 @@
    ========================================================= */
 
 /* -------- Global reset -------- */
+
+/* Example for userContent.css (web pages) */
+input, textarea, [contenteditable] {
+  caret-color: black !important;    /* ensure a visible caret color */
+  /* Note: caret-shape and caret-animation properties are not implemented in Firefox */
+}
 
 * {
 	scrollbar-width: none !important;
@@ -1602,8 +1529,8 @@ hr {
                           Preferences = {
                             "accessibility.force_disabled" =1;
                             "app.update.auto" = lock-false;
-                            "app.update.download.promptMaxAttempts" = 0;
-                            "app.update.elevation.promptMaxAttempts" = 0;
+                            "app.update.download.promptMaxAttempts" = "0";
+                            "app.update.elevation.promptMaxAttempts" = "0";
                             "app.update.service.enabled" = lock-false;
                             "browser.aboutConfig.showWarning" = lock-false;
                             "browser.aboutwelcome.enabled" = lock-false;
@@ -1612,7 +1539,7 @@ hr {
                             "browser.cache.disk.enable" =lock-true;
                             "browser.ctrlTab.recentlyUsedOrder" = lock-true;
                             "browser.display.document_color_use" = 2;
-                            "browser.display.use_document_fonts" = 0;
+                            "browser.display.use_document_fonts" = "0";
                             "browser.download.dir" = "/home/${userSetting.username}/Downloads";
                             "browser.download.forbid_open_with" = lock-true;
                             "widget.use-xdg-desktop-portal.file-picker" = 1;
@@ -1661,9 +1588,9 @@ hr {
                             "extensions.webextensions.restrictedDomains" = "";
                             "font.name-list.emoji" = "";
                             "font.name.monospace.x-western" ="JetBrainsMono Nerd Font Mono";
-                            "full-screen-api.transition.timeout" = 0;
-                            "full-screen-api.warning.delay" = 0;
-                            "full-screen-api.warning.timeout" = 0;
+                            "full-screen-api.transition.timeout" = "0";
+                            "full-screen-api.warning.delay" = "0";
+                            "full-screen-api.warning.timeout" = "0";
                             "general.smoothScroll" = lock-false;
                             "general.useragent.compatMode.firefox" = lock-true;
                             "geo.enabled" = lock-false;
@@ -1707,7 +1634,7 @@ hr {
                             "network.dns.http3_echconfig.enabled" = lock-true;
                             "permissions.default.image" = 2;
                             "places.history.enabled" = lock-true;
-                            "plugin.state.flash" = 0 ;
+                            "plugin.state.flash" = "0";
                             "privacy.donottrackheader.enabled" = lock-true;
                             "privacy.resistFingerprinting" = lock-true;
                             "privacy.resistFingerprinting.block_mozAddonManager" = lock-true;
@@ -1759,9 +1686,13 @@ hr {
                             # # "dom.security.https_only_mode" = lock-true;
                             "ui.key.menuAccessKey" = 17;
                             "ui.key.menuAccessKeyFocuses" = lock-false;
+                            "ui.caretBlinkTime" = "0";
+                            "ui.caretBlinkCount" = -1;
+                            "ui.caretWidth" = 3;
                             "webgl.disabled" = lock-true;
                             "widget.non-native-theme.scrollbar.style" = 3;
                             "xpinstall.signatures.required" = lock-false;
+
                           };
                         };
                       };
@@ -1821,7 +1752,7 @@ hr {
                     tex-gyre.schola
                     tex-gyre.termes
 
-                    wqy_zenhei
+                    # wqy_zenhei
 
                     nerd-fonts.fira-code
                     nerd-fonts.fira-mono
@@ -1916,12 +1847,19 @@ hr {
                   # 这也是当今时代互联网正在加速实现的事情…
                   # 但这是以牺牲掌握任何技能为代价换来的，
                   # 我们沉迷得越深，想要掌握一项技能的愿望就会越来越淡化。
-                  # 0.0.0.0 emacs-china.org
-                  # 0.0.0.0 chatgpt.com
-                  # 0.0.0.0 www.google.com.hk
-                  # 0.0.0.0 www.google.com
-                  # 0.0.0.0 google.com.hk
-                  # 0.0.0.0 google.com
+                  0.0.0.0 emacs-china.org
+                  0.0.0.0 hackaday.com
+                  0.0.0.0 ziggit.dev
+                  0.0.0.0 chatgpt.com
+                  0.0.0.0 www.google.com.hk
+                  0.0.0.0 www.google.com
+                  0.0.0.0 google.com.hk
+                  0.0.0.0 google.com
+
+                  # new
+                  0.0.0.0 www.singtao.ca
+                  0.0.0.0 www.chinadaily.com.cn
+                  0.0.0.0 zh.zlib.li
                 '';
                 services = {
                   irqbalance.enable = false;
@@ -2077,13 +2015,18 @@ hr {
                   xserver.dpi = 192;
                   emacs = {
                     enable = true;
-                    package = emacsWithPackages (epkgs:
-                      (with epkgs.melpaStablePackages; [ ])
+                    package =
+                      (pkgs.unstable.emacsPackagesFor
+                        (pkgs.unstable.emacs-pgtk.override {
+                          withNativeCompilation = true;
+                          withSQLite3 = true;
+                        })).emacsWithPackages
+                        (epkgs: (with epkgs.melpaStablePackages; [ ])
                       ++ (with epkgs.melpaPackages; [
 
                         ### black MAGIC to Jumping Everwhere
                         # dired-rsync
-                        # ztree
+                        ztree
                         cff
                         dired-subtree
                         dumb-jump
@@ -2092,7 +2035,6 @@ hr {
 
                         ## Expand & Edit
                         # rotate-text # no on melpa
-                        # tempel
                         avy
                         expand-region
                         iedit
@@ -2221,109 +2163,6 @@ hr {
                       ]));
                   };
                 };
-                programs.nix-ld = {
-                  enable = true;
-                  libraries = with pkgs; [
-
-                    # stdenv.cc.cc
-                    # openssl.dev
-                    # pkg-config
-                    # autotools
-                    # libxml2
-                    # openssl
-                    # openssl_3_4
-                    # gcc13
-                    # xorg.libXcomposite
-                    # xorg.libXtst
-                    # xorg.libXrandr
-                    # xorg.libXext
-                    # xorg.libX11
-                    # xorg.libXfixes
-                    # libGL
-                    # libva
-                    # pipewire.lib
-                    # xorg.libxcb
-                    # xorg.libXdamage
-                    # xorg.libxshmfence
-                    # xorg.libXxf86vm
-                    # sqlite
-                    # libelf
-                    # libayatana-appindicator
-                    # webkitgtk_4_1
-                    # glib
-                    # gtk2
-                    # gtk3
-                    # bzip2
-                    # at-spi2-atk
-                    # atkmm
-                    # cairo
-                    # gdk-pixbuf
-                    # harfbuzz
-                    # librsvg
-                    # libsoup_3
-                    # pango
-
-                    xorg.libXinerama
-                    xorg.libXcursor
-                    xorg.libXrender
-                    xorg.libXScrnSaver
-                    xorg.libXi
-                    xorg.libSM
-                    xorg.libICE
-                    nspr
-                    nss
-                    cups
-                    libcap
-                    SDL2
-                    libusb1
-                    dbus-glib
-                    ffmpeg
-                    xorg.libXt
-                    xorg.libXmu
-                    libogg
-                    libvorbis
-                    SDL
-                    SDL2_image
-                    glew110
-                    libidn
-                    tbb
-                    flac
-                    freeglut
-                    libjpeg
-                    libpng
-                    libpng12
-                    libsamplerate
-                    libmikmod
-                    libtheora
-                    libtiff
-                    pixman
-                    speex
-                    SDL_image
-                    SDL_mixer
-                    SDL2_mixer
-                    libappindicator-gtk2
-                    libappindicator-gtk3
-                    libdbusmenu-gtk2
-                    libindicator-gtk2
-                    libdbusmenu-gtk3
-                    libindicator-gtk3
-                    libcaca
-                    libcanberra
-                    libgcrypt
-                    util-linux
-                    libvpx
-                    xorg.libXft
-                    libvdpau
-                    atk
-                    fontconfig
-                    freetype
-                    dbus
-                    alsa-lib
-                    expat
-                    ncurses
-
-                  ];
-                };
                 console = {
                   font = "latarcyrheb-sun32";
                   colors = [
@@ -2350,11 +2189,6 @@ hr {
                   enable = true;
                   wrapperFeatures.gtk = true;
                 };
-                programs.clash-verge = {
-                  enable = false;
-                  package = pkgs.unstable.clash-verge-rev;
-                };
-                services.mihomo.tunMode = false;
                 systemd.services."getdaeconfig" = {
                   script = ''
                                           mkdir -p "/home/${userSetting.username}/.config/dae"
@@ -2856,5 +2690,20 @@ include /etc/sway/config.d/*
     # sudo nix-channel --add https://nixos.org/channels/nixos-unstable
     # sudo nix-channel --update
     sops-nix.url = "github:Mic92/sops-nix";
+  };
+  description = "My Config";
+  nixConfig = {
+    builders-use-substitutes = true;
+    experimental-features = [ "nix-command" "flakes" ];
+    trusted-substituters = [
+      "https://cache.nixos.org" "https://nix-community.cachix.org"
+      "https://mirrors.ustc.edu.cn/nix-channels/store"
+    ];
+    extra-trusted-substituters =
+      [ "https://cache.nixos.org" "https://nix-community.cachix.org" ];
+    extra-trusted-public-keys = [
+      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+    ];
   };
 }
