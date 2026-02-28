@@ -5,7 +5,6 @@
          ;; 通过Ctrl/Alt/Meta/Shift快捷使用功能
          ;; -------------------------------------------------------------------------------------------------------------
          ("C-f" . undo)
-         ("C-f" . undo)
          ("C-b" . undo-redo)
          ("C-p" . goto-last-change)
          ("M-p". goto-last-change-reverse)
@@ -13,17 +12,16 @@
          ("M-SPC" . consult-mark)
          ;; -------------------------------------------------------------------------------------------------------------
          ("C-<backspace>" . duplicate-dwim)
-         ("C-M-<backspace>" . backward-kill-sexp)
-         ("C-S-<backspace>" . kill-whole-line)
-         ("M-<backspace>" . backward-kill-word)
+         ;; ("C-M-<backspace>" . backward-kill-sexp)
+         ;; ("C-S-<backspace>" . kill-whole-line)
+         ;; ("M-<backspace>" . backward-kill-word)
          ("S-<backspace>" . kill-sexp)
          ;; -------------------------------------------------------------------------------------------------------------
+         ("S-<return>" . comment-indent-new-line)
+         ("M-<return>" . dabbrev-expand)
          ("C-<return>" . avy-goto-word-0)
          ("C-S-<return>" . avy-copy-line)
          ("C-M-<return>" . avy-goto-line)
-         ("C-<return>" . avy-goto-word-0)
-         ("S-<return>" . comment-indent-new-line)
-         ("M-<return>" . dabbrev-expand)
          ;; -------------------------------------------------------------------------------------------------------------
          ("M-<tab>" . hippie-expand)
          ;; ("C-<tab>" . surround-mark)          ;; mark括号
@@ -51,7 +49,7 @@
          ("C-S-c C-S-c" . mc/edit-lines)
          ("C->"         . mc/mark-next-like-this)
          ("C-<"         . mc/mark-previous-like-this)
-         ("C-c C-$"     . mc/mark-all-like-this)
+         ("C-c C-%"     . mc/mark-all-like-this)
          ("C-$"         . mc/skip-to-next-like-this)
          ("C-^"         . mc/skip-to-previous-like-this)
          ;; -------------------------------------------------------------------------------------------------------------
@@ -67,17 +65,17 @@
          ;; MOS-begin-----------------------------------------------------------------
          ("C-c C-; d" .  dired)
          ("C-c C-; k" .  kill-current-buffer)
-         ("C-c C-; f" . magit-dispatch)
+         ("C-c C-; p" . magit-status)
          ("C-c C-; g" . er/expand-region)
-         ("C-c C-; p" . consult-bookmark)
-         ("C-c C-; m" . devdocs-browser-open)
-         ("C-c C-; u" . delete-all-space)
+         ("C-c C-; f" . consult-bookmark)
+         ("C-c C-; m" . compile)
+         ("C-c C-; u" . bookmark-set)
          ("C-c C-; h" . woman)
          ("C-c C-; v" . multi-vterm-project)
          ("C-c C-; y" . yas-insert-snippet)
-         ("C-c C-; x" . multi-vterm-dedicated-open)
+         ("C-c C-; x" . multi-vterm-dedicated-toggle)
          ("C-c C-; q" . quick-sdcv-search-at-point)
-         ("C-c C-; c" . compile)
+         ("C-c C-; c" . devdocs-browser-open)
          ("C-c C-; l" . git-link-dispatch)
          ("C-c C-; j" . magit-log-buffer-file)
          ("C-c C-; w" . show-useful-list)
@@ -87,16 +85,16 @@
          ("C-c C-~ x" .  delete-other-windows)
          ("C-c C-~ c" .  split-window-below)
          ("C-c C-~ d" .  delete-window)
-         ("C-c C-~ g" .  magit-status)
+         ("C-c C-~ g" .  er/expand-region)
          ("C-c C-~ j" .  consult-ripgrep-symbol-at-point)
          ("C-c C-~ l" .   consult-line-symbol-at-point)
          ("C-c C-~ u" . occur)
          ("C-c C-~ y" . toggle-special-buffer)
          ("C-c C-~ k" . switch-to-man)
+         ("C-c C-~ v" . switch-to-eww)
          ("C-c C-~ m" . recompile)
          ("C-c C-~ p" . rg-dwim)
          ("C-c C-~ b" . rg-dwim-current-file)
-         ("C-c C-~ v" . switch-to-eww)
          ;; NAV-end---------------------------------------------------------
 
          ;; SYM-begin-------------------------------------------------------
@@ -128,13 +126,14 @@
          ("M-$" . consult-register-store)
          ("C-M-#" . consult-register)
          ("M-g g" . consult-goto-line)
-         ("<f19>" . rotate-windows)
+         ("<f20>" . rotate-windows)
          ("<f21>" . export-my-book)
          ("<f22>" . record-time)
-         ("M-s <backspace>" . comment-kill)
+         ("M-s SPC" . consult-global-mark)
+         ("M-s <backspace>" . delete-all-space)
+         ("M-s <return>" . comment-kill)
          ("M-s K" . consult-keep-lines)
          ("M-s M-k" . avy-kill-whole-line)
-         ("M-s SPC" . consult-global-mark)
          ("M-s b" . magit-blame-addition)
          ("M-s d" . delete-duplicate-lines)
          ("M-s e" . ediff)
@@ -235,7 +234,7 @@
          ("\\.ii\\'" . c++-mode))
   :init
   (setq-default
-   c-basic-offset 4
+   c-basic-offset 8
    c-backslash-column 99
    c-backslash-max-column 99
    c-default-style '((java-mode . "java")
@@ -327,9 +326,9 @@
     )
   (defun compilation-start (command &optional mode name-function highlight-regexp continue) "Run compilation command COMMAND (low level interface). If COMMAND starts with a cd command, that becomes the `default-directory'. The rest of the arguments are optional; for them, nil means use the default. MODE is the major mode to set in the compilation buffer.  Mode may also be t meaning use `compilation-shell-minor-mode' under `comint-mode'. If NAME-FUNCTION is non-nil, call it with one argument (the mode name) to determine the buffer name.  Otherwise, the default is to reuses the current buffer if it has the proper major mode, else use or create a buffer with name based on the major mode. If HIGHLIGHT-REGEXP is non-nil, `next-error' will temporarily highlight the matching section of the visited source line; the default is to use the global value of `compilation-highlight-regexp'. If CONTINUE is non-nil, the buffer won't be emptied before compilation is started.  This can be useful if you wish to combine the output from several compilation commands in the same buffer.  The new output will be at the end of the buffer, and point is not changed. Returns the compilation buffer created." (or mode (setq mode 'compilation-mode)) (let* ((name-of-mode (if (eq mode t) "compilation" (replace-regexp-in-string "-mode\\'" "" (symbol-name mode)))) (thisdir default-directory) (thisenv compilation-environment) (buffer-path (and (local-variable-p 'exec-path) exec-path)) (buffer-env (and (local-variable-p 'process-environment) process-environment)) outwin outbuf) (with-current-buffer (setq outbuf (get-buffer-create (compilation-buffer-name name-of-mode mode name-function))) (let ((comp-proc (get-buffer-process (current-buffer)))) (if comp-proc (if (or (not (eq (process-status comp-proc) 'run)) (eq (process-query-on-exit-flag comp-proc) nil) (yes-or-no-p (format "A %s process is running; kill it? " name-of-mode))) (condition-case () (progn (interrupt-process comp-proc) (sit-for 1) (delete-process comp-proc)) (error nil)) (error "Cannot have two processes in `%s' at once" (buffer-name))))) (setq default-directory thisdir) (let ((inhibit-read-only t) (default-directory thisdir)) (cd (cond ((not (string-match "\\`\\s *cd\\(?:\\s +\\(\\S +?\\|'[^']*'\\|\"\\(?:[^\"`$\\]\\|\\\\.\\)*\"\\)\\)?\\s *[;&\n]" command)) default-directory) ((not (match-end 1)) "~") ((eq (aref command (match-beginning 1)) ?\') (substring command (1+ (match-beginning 1)) (1- (match-end 1)))) ((eq (aref command (match-beginning 1)) ?\") (replace-regexp-in-string "\\\\\\(.\\)" "\\1" (substring command (1+ (match-beginning 1)) (1- (match-end 1))))) (t (let* ((substituted-dir (substitute-env-vars (match-string 1 command))) (expanded-dir (file-expand-wildcards substituted-dir))) (if (= (length expanded-dir) 1) (car expanded-dir) substituted-dir))))) (if continue (progn (setq continue (point)) (goto-char (point-max))) (erase-buffer)) (if (not (eq mode t)) (progn (buffer-disable-undo) (funcall mode)) (setq buffer-read-only nil) (with-no-warnings (comint-mode)) (compilation-shell-minor-mode)) (setq-local compilation-directory thisdir) (setq-local compilation-environment thisenv) (if buffer-path (setq-local exec-path buffer-path) (kill-local-variable 'exec-path)) (if buffer-env (setq-local process-environment buffer-env) (kill-local-variable 'process-environment)) (if highlight-regexp (setq-local compilation-highlight-regexp highlight-regexp)) (if (or compilation-auto-jump-to-first-error (eq compilation-scroll-output 'first-error)) (setq-local compilation-auto-jump-to-next t))  (compilation-insert-annotation command "\n") (setq compilation--start-time (float-time)) (setq thisdir default-directory)) (set-buffer-modified-p nil)) (setq outwin (display-buffer outbuf '(nil (allow-no-window . t)))) (with-current-buffer outbuf (let ((process-environment (append compilation-environment (and (derived-mode-p 'comint-mode) (comint-term-environment)) (list (format "INSIDE_EMACS=%s,compile" emacs-version)) (list "PAGER=") (copy-sequence process-environment)))) (setq-local compilation-arguments (list command mode name-function highlight-regexp)) (setq-local revert-buffer-function 'compilation-revert-buffer) (when (and outwin (not continue) (not compilation-scroll-output)) (set-window-start outwin (point-min))) (let ((desired-visible-point (cond (continue continue) (compilation-scroll-output (point-max)) (t (point-min))))) (goto-char desired-visible-point) (when (and outwin (not (eq outwin (selected-window)))) (set-window-point outwin desired-visible-point))) (if compilation-process-setup-function (funcall compilation-process-setup-function)) (and outwin (compilation-set-window-height outwin)) (if (fboundp 'make-process) (let ((proc (if (eq mode t) (with-connection-local-variables (get-buffer-process (with-no-warnings (comint-exec outbuf (compilation--downcase-mode-name mode-name) shell-file-name nil `(,shell-command-switch ,command))))) (start-file-process-shell-command (compilation--downcase-mode-name mode-name) outbuf command)))) (setq mode-line-process '((:propertize ":%s" face compilation-mode-line-run) compilation-mode-line-errors)) (when compilation-always-kill (set-process-query-on-exit-flag proc nil)) (set-process-sentinel proc #'compilation-sentinel) (unless (eq mode t) (set-process-filter proc #'compilation-filter)) (set-marker (process-mark proc) (point-max) outbuf) (when compilation-disable-input (condition-case nil (process-send-eof proc) (error nil))) (run-hook-with-args 'compilation-start-hook proc) (compilation--update-in-progress-mode-line) (push proc compilation-in-progress)) (message "Executing `%s'..." command) (setq mode-line-process '((:propertize ":run" face compilation-mode-line-run) compilation-mode-line-errors)) (force-mode-line-update) (sit-for 0) (save-excursion (goto-char (point-max)) (let* ((inhibit-read-only t) (compilation-filter-start (point)) (status (call-process shell-file-name nil outbuf nil "-c" command))) (run-hooks 'compilation-filter-hook) (cond ((numberp status) (compilation-handle-exit 'exit status (if (zerop status) "finished\n" (format "exited abnormally with code %d\n" status)))) ((stringp status) (compilation-handle-exit 'signal status (concat status "\n"))) (t (compilation-handle-exit 'bizarre status status))))) (set-buffer-modified-p nil) (message "Executing `%s'...done" command))) (setq default-directory thisdir) (when compilation-scroll-output (goto-char (point-max)))) (setq next-error-last-buffer outbuf))) (defun compilation-handle-exit (process-status exit-status msg) "Write MSG in the current buffer and hack its `mode-line-process'." (let ((inhibit-read-only t) (status (if compilation-exit-message-function (funcall compilation-exit-message-function process-status exit-status msg) (cons msg exit-status))) (omax (point-max)) (opoint (point)) (cur-buffer (current-buffer))) (goto-char omax) (compilation-insert-annotation ?\n mode-name " " (car status)) (if (and (numberp compilation-window-height) (zerop compilation-window-height)) (message "%s" (cdr status))) (if (bolp) (forward-char -1)) (compilation-insert-annotation ", duration " (let ((elapsed (- (float-time) compilation--start-time))) (cond ((< elapsed 10) (format "%.2f s" elapsed)) ((< elapsed 60) (format "%.1f s" elapsed)) (t (format-seconds "%h:%02m:%02s" elapsed))))) (goto-char (point-max)) (add-text-properties omax (point) (append '(compilation-handle-exit t) nil)) (setq mode-line-process (list (let ((out-string (format ":%s [%s]" process-status (cdr status))) (msg (format "%s %s" mode-name (replace-regexp-in-string "\n?$" "" (car status))))) (message "%s" msg) (propertize out-string 'help-echo msg 'face (if (> exit-status 0) 'compilation-mode-line-fail 'compilation-mode-line-exit))) compilation-mode-line-errors)) (force-mode-line-update) (if (and opoint (< opoint omax)) (goto-char opoint)) (run-hook-with-args 'compilation-finish-functions cur-buffer msg)))
   (with-eval-after-load 'compile
-    (add-to-list 'compilation-environment "TERM=dumb-emacs-ansi")
-    (remove-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
-    (add-hook 'compilation-filter-hook #'my/nix-store-shorten-paths)
+    ;; (add-to-list 'compilation-environment "TERM=dumb-emacs-ansi")
+    ;; (remove-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
+    ;; (add-hook 'compilation-filter-hook #'my/nix-store-shorten-paths)
     )
   )
 
@@ -424,7 +423,7 @@
           (dolist (url (delete-dups (nreverse urls)))
             (princ url)
             (princ "\n"))))))
-  (add-hook 'eww-after-render-hook 'eww-readable)
+  ;; (add-hook 'eww-after-render-hook 'eww-readable)
   :bind (:map eww-mode-map
               ("L" . eww-list-bookmarks)
               ("r" . my-eww-forward-url)
@@ -739,87 +738,88 @@
   (setq consult-async-input-debounce 0.02
         consult-async-input-throttle 0.05
         consult-async-refresh-delay 0.02)
+
   :config
   (consult-customize
    consult-theme :preview-key '(:debounce 0.2 any)
    consult-ripgrep consult-git-grep consult-grep
    consult-bookmark consult-recent-file consult-xref
-   consult--source-bookmark consult--source-file-register
-   consult--source-recent-file consult--source-project-recent-file
+   consult-source-bookmark consult-source-file-register
+   consult-source-recent-file consult-source-project-recent-file
+   ;; :preview-key "M-."
    :preview-key '(:debounce 0.4 any))
-  (setq consult-narrow-key "<")
-  )
+  (setq consult-narrow-key "<"))
 
-(use-package pyim
-  :ensure t
-  :defer t
-  :bind(:map pyim-mode-map
-             ("<up>" . pyim-quit-no-clear)
-             ("<down>" . pyim-quit-no-clear)
-             ("<left>" . pyim-quit-no-clear)
-             ("<right>" . pyim-quit-no-clear))
-  :commands (toggle-input-method)
-  :custom
-  (default-input-method "pyim")
-  :config
-  (cl-defmethod pyim-page-info-format ((_style (eql minibuffer)) page-info)
-    (string-replace ")" ""
-                    (string-replace "(" "" (format "%s %s"
-                                                   ;; (if (plist-get page-info :assistant-enable) " P|" "")
-                                                   (if (plist-get page-info :assistant-enable)  (plist-get page-info :candidates) "")
-                                                   (if (plist-get page-info :assistant-enable)  (plist-get page-info :current-page) "")))))
-  (defun hd()
-    "Show hmdz for the word at point."
-    (interactive)
-    (let ((char (char-after)))
-      (if char
-          (search-hmdz (char-to-string  char)))))
-  (defun search-hmdz(char)
-    "search hmdz for the input"
-    (interactive "p\ncChar: ")
-    (let ((old (current-buffer))
-          (exsist 0))
-      (save-excursion
-        (find-file "~/.local/share/mysource/hmdz.pyim")
-        (beginning-of-buffer)
-        (search-forward char nil (setq exsist 1))
-        (when (= exsist 1)
-          (search-backward "/")
-          (right-char)
-          (message "%s" (string-trim (current-word) "hmdz/")))
-        (when (= exsist 0)
-          (sayshit))
-        (kill-buffer)
-        (switch-to-buffer old))))
+  (use-package pyim
+    :ensure t
+    :defer t
+    :bind(:map pyim-mode-map
+               ("<up>" . pyim-quit-no-clear)
+               ("<down>" . pyim-quit-no-clear)
+               ("<left>" . pyim-quit-no-clear)
+               ("<right>" . pyim-quit-no-clear))
+    :commands (toggle-input-method)
+    :custom
+    (default-input-method "pyim")
+    :config
+    (cl-defmethod pyim-page-info-format ((_style (eql minibuffer)) page-info)
+      (string-replace ")" ""
+                      (string-replace "(" "" (format "%s %s"
+                                                     ;; (if (plist-get page-info :assistant-enable) " P|" "")
+                                                     (if (plist-get page-info :assistant-enable)  (plist-get page-info :candidates) "")
+                                                     (if (plist-get page-info :assistant-enable)  (plist-get page-info :current-page) "")))))
+    (defun hd()
+      "Show hmdz for the word at point."
+      (interactive)
+      (let ((char (char-after)))
+        (if char
+            (search-hmdz (char-to-string  char)))))
+    (defun search-hmdz(char)
+      "search hmdz for the input"
+      (interactive "p\ncChar: ")
+      (let ((old (current-buffer))
+            (exsist 0))
+        (save-excursion
+          (find-file "~/.local/share/mysource/hmdz.pyim")
+          (beginning-of-buffer)
+          (search-forward char nil (setq exsist 1))
+          (when (= exsist 1)
+            (search-backward "/")
+            (right-char)
+            (message "%s" (string-trim (current-word) "hmdz/")))
+          (when (= exsist 0)
+            (sayshit))
+          (kill-buffer)
+          (switch-to-buffer old))))
 
-  (when
-      (file-exists-p "~/.local/share/mysource/hmdz.pyim")
-    (add-to-list 'pyim-dicts '(:name "hmdz" :file "~/.local/share/mysource/hmdz.pyim"))
-    (pyim-scheme-add
-     '(hmdz
-       :document "虎码单字"
-       :class xingma
-       :code-prefix "hmdz/"
-       :first-chars "abcdefghijklmnopqrstuvwxyz"
-       :rest-chars "abcdefghijklmnopqrstuvwxyz"
-       :code-prefix-history ("_")
-       :code-split-length 100  ;; 不要自动按我的空格: )
-       :code-maximum-length 100 ;; 不要把我的英文消灭掉: )
-       ))
-    (pyim-default-scheme 'hmdz)
-    (donothing))
+    (when
+        (file-exists-p "~/.local/share/mysource/hmdz.pyim")
+      (add-to-list 'pyim-dicts '(:name "hmdz" :file "~/.local/share/mysource/hmdz.pyim"))
+      (pyim-scheme-add
+       '(hmdz
+         :document "虎码单字"
+         :class xingma
+         :code-prefix "hmdz/"
+         :first-chars "abcdefghijklmnopqrstuvwxyz"
+         :rest-chars "abcdefghijklmnopqrstuvwxyz"
+         :code-prefix-history ("_")
+         :code-split-length 100  ;; 不要自动按我的空格: )
+         :code-maximum-length 100 ;; 不要把我的英文消灭掉: )
+         ))
+      (pyim-default-scheme 'hmdz)
+      (donothing))
 
-  :custom
-  (pyim-indicator-list (list #'my-pyim-indicator-with-cursor-color #'pyim-indicator-with-modeline))
-  (pyim-english-input-switch-functions nil)
-  (pyim-process-autoselector nil)
-  (pyim-dhook-verbose nil)
-  (pyim-page-tooltip '(minibuffer popup posframe))
-  (pyim-dicts nil)  ; Initialize the list if it's not already defined
-  (pyim-cloudim nil)
-  (pyim-candidates-search-buffer-p nil)
-  (pyim-enable-shortcode nil)
-  (pyim-punctuation-dict '(("^" "…")("\\" "、")("." "。")("," "，")("'" "‘" "’") ("\"" "“" "”"))))
+    :custom
+    (pyim-indicator-list (list #'my-pyim-indicator-with-cursor-color #'pyim-indicator-with-modeline))
+    (pyim-english-input-switch-functions nil)
+    (pyim-process-autoselector nil)
+    (pyim-dhook-verbose nil)
+    (pyim-page-tooltip '(minibuffer popup posframe))
+    (pyim-dicts nil)  ; Initialize the list if it's not already defined
+    (pyim-cloudim nil)
+    (pyim-candidates-search-buffer-p nil)
+    (pyim-enable-shortcode nil)
+    (pyim-punctuation-dict '(("^" "…")("\\" "、")("." "。")("," "，")("'" "‘" "’") ("\"" "“" "”"))))
 
 (use-package quick-sdcv
   :defer t
@@ -2451,3 +2451,22 @@ Uses word at point as default, or prompts for input."
     (delete-file "./index.tex" nil)
     (find-file (concat myconfigpath "index.pdf"))
     ))
+
+
+
+;; TODO ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; do window divider mode when window number larger than 1.
+
+
+
+;; 文灭志，博溺心，世界嘈杂、瘾品横流、随机与即时构成新的枷锁，而真正的自由来自主动的剥离。当目光离开诱惑、离开广告、离开无意义的瞬息刺激，心才开始变得干净。生活越简，能量越纯；越慢，感受越深；越少，越能看见真正的自己。
+;;
+;; 居事寂静而世事安宁，身体是意志的第一块土地。空腹的清明、弱光的安静、低温的醒觉、缓慢进食的耐性，都在一点点重塑我们早已被工业习惯磨钝的感官。行走、奔跑、提举、拉起、俯卧撑、壶铃、农夫行走——这些最朴素的动作让人重新理解力量的意义：力量不是爆发，而是日复一日不受伤、不懈怠、让心跳稳、饮食亦是自律的延伸。
+;;
+;; 避免加工。让精神长的那种沉稳、远离高糖盐油，回到豆果菜、坚果与发酵的本味，让身体习惯真实的能量，而不是被化学甜味与工业脂肪驱使的假饱与假快乐。克制不是苦行，而是温和地恢复本能。
+;;
+;; 事实是劳动者所知的最美的梦，至于技术，真正的价值不在追逐流行，而在深入底层、理解根本。用 Emacs，不是为了高效，而是为了与世界拉开距离，与自己靠得更近；不随机、不即时、无广告、无噪声，是一种长期的心性训练。读 LFS、LKD 与 SOC 文档，写驱动、调性能、跑 QEMU、玩内核、读源码、用\LaTeX{}和Org写书，是为了获得一种“我真的懂了”的安静感。而这种懂，不是为了炫耀，不是为了沉迷，而是为了让工作成为谋生技能，让生活成为真正的生活。
+;;
+;; 真正的智慧是：学会技术，然后把技术放下；拥有力量，然后让力量变得温柔。生活是吃饭、睡觉、读书、编程、走路、壶铃；生命是健康、乐观、会意、精进、闲适与稳稳的力量。
+;;
+;; 世界广袤、事物繁多，而心若清澈，幸福忽然变得极小，也极近——不来自外界，只来自自身安静而坚定的内心。

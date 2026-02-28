@@ -26,28 +26,126 @@
                 lock-false = {Value = false; Status = "locked";};
                 lock-true = {Value = true; Status = "locked";};
               in {
+                # |-------------------+--------------+------------------------------------|
+                # | procress          | url          | for                                |
+                # |-------------------+--------------+------------------------------------|
+                # | fag               | flag/cintro  | c, pretent iam tsoding             |
+                # | embedded C book   | read book    | c, how compiler/os/c works         |
+                # | Yeetcode          | leetgo/book  | cpp[rust], algo ds, solve task     |
+                # | paperlike-c/el    | paperlike-go | elisp,paperlike emacs controler    |
+                # | ziglings          | ziglings     | zig, basic ziglangs speed run      |
+                # | zag               | fag          | zig, I have language erotic        |
+                # | paperlike-zig     | paperlike-el | zig, make cli/tary                 |
+                # | nixos r2s         | github-repos | nix, for network addiction         |
+                # | TsurgizOS         | os.phil-opp  | zig[rust], make general os for cv  |
+                # | nixos rasberry-pi | github-repos | nix, for embedded os/screen/driver |
+                # | clings            | ziglings     | c, lings but clang                 |
+                # | freertos emulator | rtos         | c, use general rtos                |
+                # | lvgl eink rtos    | lvgl         | c, embedded ui/driver/sdl          |
+                # | lvgl lora loc     | graphic      | c, embedded openstress/sdl/lvgl    |
+                # | RZOS              | rtos         | zig, make general rtos             |
+                # | Celest            | game         | zig, embedded game/sdl             |
+                # | Safephone         | electronic   | lvgl/eink/openstress/lora/3Dprint  |
+                # |                   |              | stm32/nix/electronic/network       |
+                # |                   |              | nsfw image/text detected           |
+                # |-------------------+--------------+------------------------------------|
+                # - I was what I walk and see, come out to be.
+                # - No Phone, No Internet, No Browser, No IDE, On Plain Text, Consume->Creat.
+                # - Master NixOS/Emacs, For Into Boring Stable and Fluent MindFlow Mode.
+                # - Read HTML Reference, Manual, Info, Help, Compilation, Source Code.
+                # - Master C language and it's Std, and library often used with debug exprience.
+                # - Do Leetcode, Learn Algorithm and Data Structure, Exciting to Solving Tasks.
+                # - Do Flag.h/Paperlike-cli/WM/RTOS, Learn Real programming For Myself.
+                # - Accumulate a codebase, Use Erlang/Zig/Rust to creat project You Like.
                 imports = [ inputs.hosts.nixosModule ];
                 # 我得道了，在怡凉乡间独自过着悠然的生活，在蓝天绿树巨石间…
                 networking.stevenBlackHosts = {#一切都在网络上，编写人类。
                   enableIPv6 = false; # 文明演IPv6为传色情，文明演Hosts为戒色
                   enable = true; # 从来都没有什么戒色… 只不过是文明把玩自然本性
-                  # 城市、单身、独生、男性、大学生、亚洲、
-                  # 网瘾、中产、游戏瘾、计算机相关专业人群
-                  # 一切只是“生物本性”与“传统文化”带来的欲望
-                  # 配合“工业革命”与“数字革命”带来的富饶假象
+                  # 绿色、和谐、单调、劳作、无知、无欲、无我、相识、相恋、相爱
+                  # 城市、单身、独生、男性、大学生、亚洲、网瘾、中产、游戏瘾、CS
+                  # 一切只是“生物滥性”与“传统禁忌”带来的冲动，企业用情绩控制人，
+                  # 配合“工业革命”与“数字革命”带来的"机器空间"替代性心流的富饶假象
                   # 开着不会影响学习编程，使用计算机不是为了让别人编程你。
-                  blockPorn = true; # 你知道的，虚假的情欲只会让你溺身
-                  blockSocial = true; # 你知道的，虚假的参与只会让你躁心
-                }; # 不依赖外物，不物物于物，
-                # 内心拒绝即是自由
-                # 外物自由即是强迫
+                  blockPorn = true; # 你知道的，虚假的情欲只会让你溺身，大脑停滞
+                  blockSocial = true; # 你知道的，虚假的参与只会让你躁心，久坐愤怒
+                }; # 不依赖外物，不物物于物，游刃必有余地。
+                #可以保身，可以全生，可以养亲，可以尽年。
+                # 你是想做巴甫洛夫的狗还是斯金纳的鸽子?
+                # 或是马斯克的脑机接口僵尸还是扎克博格的元宇宙coomer?
+                # 越是依赖于算法与机械，身体与灵魂越是分离。
+                # 理其心理，内心拒绝即是自由。
+                # 外其外物，外物自由即是强迫。
+                # 世界上大概会有人看到这个文字，所谓的文字不过是用来blogging。不是和柏拉图一样写“柏拉图式爱情”的男同诗不是写“曹雪芹恋爱幻想”小说只是BLOGGING，在我看来blog是PIM的一种方式。和VIM(Vi IMproved)一样所谓PIM指是的Porn IMproved，通过blogging一些自认为明白的事物给世界多一点躁动，多一点自恋式的垃圾，少一点自尊，少一点自我认同，少一点与家人的时间。通过头脑masterbating填满你的大脑，这就是我PIM的目标。blog应该少看，好了该关闭这个tab了，为的是别让你看到我不小心打上去的密码。好吧PIM的意思其实是Person Information Management，大概就是下面这样:
+                # - 去健身房通过抖音学习锻炼身体
+                # - 去钦点景点如哈尔滨淄博天水合川学习营销
+                # - 去twitter上看懂王和elon谈论bitcoin
+                # - 去囤一些Labubu和NFT以备下一次热潮
+                # - 去关注女性主义作者向每个人说自己是女权男(喜欢强调自己蹲着拉尿)
+                # - 学习前端，制作知乎b站小红书豆瓣热点聚合网站
+                # - 每天花10小时上网，收集链接再发到自己的博客上
+                # - 每天花10小时上网，复制一遍教程发到自己博客上
+                # - 每日用30分钟用gpt生成30万字心得感悟到博客
+                # - 使用LLM生成文本到自己的obsidian第二大脑
+                # - 利用聚合网站的方法，制作色情网站入口
+                # - 和缅甸太子达成协议，接入赌博网站广告
+                # - 在公共厕所大量印刷网址和分发小卡片
+                # - 每天关注国际新闻，为中国发声，强调爱国
+                # - 大量投资低空经济与电动车产业的办证产业
+                # - 每天查阅三联等30个公众号了解世界新编热点
+                # - 大量投资团播/村超/城超/亚洲杯/世界杯等自发“热点”
+                # - 保证能量值，去吃火锅，零食，肯德基可乐和奶茶
+                # - 保证娱乐值，去看演唱会，逛商场，去三亚参与购物
+                # - 相信品牌，把自我认同放在品牌上，我用什么是什么人
+                # - 每天把名人名言放在桌面上，思考今天用什么签名
+                # - 每天要依赖500项工续才能正常生活，增加社会连系
+                # - 每天思的是车子房子奶子票子，保持自己的目标
+                # - 关心名人/世界/国家/地位/热点，买书/点赞/分享
+                # - 通过社交媒体学社交，通过新闻学习知识文化
+                # - 每天花10h思考使用什么工具才能让5s的事效率更高
+                # - 每天得用10h在电脑上用eletron浏览器和手机上用electron应用
+                # - 作为文化人得在久坐上花10h以上，每5小时休息一次
+                # - 多学习到需要眼镜，多久坐到需要小米su7, 多吃少动到去健身房
+                # - 必须在国家间站队，必须在编程语言间站队，必须在编程工具间站队
+                # - 少睡觉，少运动，多上网，多久坐，多比较 ，人生会更好
+                # - Zig 比 C 更好，我听别人blogging说的
+                # - Rust 比 C++ 更好，我听别人blogging说的
+                # - Golang 比 Java 更好，我听别人blogging说的
+                # - Mojo 比 Python 更好，我听别人blogging说的
+                # - Common Lisp 比 Emacs Lisp 更好，我听别人blogging说的
+                # - 新的东西一定是比旧的东西好! 别人的话一定比自己想的对!
+                # - 学历很重要，每天关心大学排名，啥qs啥校友会什么抖音排行榜
+                # - 钱很重要，不然怎么购买带音乐的智能车，带音乐的智能床，带音乐的智能床头柜。
+                # - 领导: 特朗普/金正恩/… All
+                # - 认同: LGBTQ++/左右翼/MBTI/xx党
+                # - 消费: Labubu/谷子/头像壁纸/比特币
+                # - 编程: C++/Rust/Java/Windows
+                # - 生殖: 处男/剩女/生育率/性病/约炮
+                # - 娱乐: Hentai/动漫/电影/电视剧
+                # - 成就: 健身房/网红景点/高等教育
+                # - 性欲: 戒色吧/吃瓜网/海角社区
+                # - 现在: Sora2/AI女友/社交媒体
+                # - 未来: 电车/机器人/低空经济
+                # - 青年: 教育/数学/计算机/传销
+
+
                 programs.nix-ld = {
                   enable = true;
                   libraries = with pkgs; [
                   ];
                 };
-                environment.systemPackages = with pkgs; [
 
+                # services.displayManager.gdm.enable = true;
+                # services.desktopManager.gnome.enable = true;
+                # # To disable installing GNOME's suite of applications
+                # # and only be left with GNOME shell.
+               #  services.gnome.core-apps.enable = false;
+               #  services.gnome.core-developer-tools.enable = false;
+               #  services.gnome.games.enable = false;
+               #  environment.gnome.excludePackages = with pkgs; [ gnome-tour gnome-user-docs ];
+
+                environment.systemPackages = with pkgs; [
+                  # bambu-studio
                   # (pkgs.buildFHSEnv {
                   #   name = "kernel-env";
                   #   targetPkgs = pkgs:
@@ -164,8 +262,8 @@
                   # rust-analyzer
                   # rustc
                   # rustlings
-                  # unstable.nix-search-cli
                   # unstable.lldb
+                  unstable.nix-search-cli
 
                   c-intro-and-ref
                   glibcInfo
@@ -858,7 +956,7 @@
                       # Path=default
                       ### xxxx
                       programs.firefox = {
-                        enable = false;
+                        enable = true;
                         package = pkgs.firefox-beta;
 
                         # 浏览器就像是大脑的信息化改造工具
@@ -920,6 +1018,175 @@
                         languagePacks = ["en-US"];
                         profiles = {
                           default = {
+                            settings  = {
+                            "accessibility.force_disabled" =1;
+                            "app.update.auto" = false;
+                            "app.update.download.promptMaxAttempts" = "0";
+                            "app.update.elevation.promptMaxAttempts" = "0";
+                            "app.update.service.enabled" = false;
+                            "browser.aboutConfig.showWarning" = false;
+                            "browser.aboutwelcome.enabled" = false;
+                            "browser.accessibility.typeaheadfind" = false;
+                            "browser.anchor_color" = "#000000";
+                            "browser.cache.disk.enable" =true;
+                            "browser.ctrlTab.recentlyUsedOrder" = true;
+                            "browser.display.document_color_use" = 2;
+                            "browser.display.use_document_fonts" = "0";
+                            "browser.download.dir" = "/home/${userSetting.username}/Downloads";
+                            "browser.download.forbid_open_with" = true;
+                            "widget.use-xdg-desktop-portal.file-picker" = 1;
+                            "browser.download.lastDir" = "/home/${userSetting.username}/Downloads";
+
+                            "browser.download.open_pdf_attachments_inline" =true;
+                            "browser.download.start_downloads_in_tmp_dir" =true;
+                            "browser.newtabpage.activity-stream.showWeather" =false;
+                            "browser.newtabpage.enabled" = false;
+                            "browser.quitShortcut.disabled" = true;
+                            "browser.safebrowsing.downloads.enabled" = false;
+                            "browser.safebrowsing.malware.enabled" = false;
+                            "browser.safebrowsing.phishing.enabled" = false;
+                            "browser.search.region" = "US";
+                            "browser.sessionstore.max_tabs_undo" =3;
+                            "browser.sessionstore.restore_on_demand" =true;
+                            "browser.sessionstore.warnOnQuit" = true;
+                            "browser.slowStartup.notificationDisabled" =true;
+                            # instaed of blank.org or github, they are not reliable for chinese and eink user.
+                            "browser.startup.homepage" = "https://search.nixos.org";
+                            "browser.tabs.closeTabByDblclick" = true;
+                            "browser.tabs.closeWindowWithLastTab" = false;
+                            "browser.tabs.loadInBackground" = true;
+                            "browser.tabs.tabClipWidth" = 999;
+                            "browser.tabs.warnOnClose" = false;
+                            "browser.toolbars.bookmarks.visibility" = "never";
+                            "browser.translations.automaticallyPopup" = false;
+                            "browser.uidensity" = 1;
+                            "browser.urlbar.oneOffSearches" = false;
+                            "browser.urlbar.shortcuts.tabs" = false;
+                            "browser.urlbar.suggest.quicksuggest.sponsored" = false;
+                            "browser.visited_color" = "#000000";
+                            "canvas.capturestream.enabled" = false;
+                            "datareporting.healthreport.service.enabled" = false;
+                            "devtools.chrome.enabled" = true;
+                            "devtools.debugger.remote-enabled" = true;
+                            "dom.ipc.plugins.enabled" = false;
+                            "dom.ipc.plugins.enabled.libflashplayer.so" = false;
+                            "dom.media.mediasource.enabled" = false;
+                            "dom.mozTCPSocket.enabled" = false;
+                            "dom.netinfo.enabled" = false;
+                            "dom.webaudio.enabled" = false;
+                            "dom.webvtt.enabled" = false;
+                            "extensions.activeThemeID" = "{5f71ffe3-23e2-49b8-b75e-2c032ef4a1d9}";
+                            "extensions.pocket.enabled" = false;
+                            "extensions.update.enabled" = false;
+                            "extensions.webextensions.restrictedDomains" = "";
+                            "font.name-list.emoji" = "";
+                            "font.name.monospace.x-western" ="JetBrainsMono Nerd Font Mono";
+                            "full-screen-api.transition.timeout" = "0";
+                            "full-screen-api.warning.delay" = "0";
+                            "full-screen-api.warning.timeout" = "0";
+                            "general.smoothScroll" = false;
+                            "general.useragent.compatMode.firefox" = true;
+                            "geo.enabled" = false;
+                            "gfx.font_rendering.fontconfig.max_generic_substitutions" = 127;
+                            # "gfx.webrender.all" = false;
+                            "image.jxl.enabled" = true;
+                            "layout.css.prefers-color-scheme.content-override" = 1;
+                            "browser.ml.linkPreview.enabled" = false;
+                            "media.autoplay.block-event.enabled" = true;
+                            "media.autoplay.default" = 2;
+                            "media.videocontrols.picture-in-picture.keyboard-controls.enabled" = false;
+                            "media.av1.enabled" = false;
+                            "media.block-autoplay-until-in-foreground" = true;
+                            "media.block-play-until-visible" = true;
+                            "media.disabled" =true;
+                            "media.eme.enabled" = false;
+                            "media.ffmpeg.enabled" = false;
+                            "media.ffmpeg.vaapi.enabled" = true;
+                            "media.ffvpx.enabled" = false;
+                            "media.flac.enabled" = false;
+                            "toolkit.legacyUserProfileCustomizations.stylesheets" = lock-true; # This is needed for other userX.css files
+                            "media.getusermedia.screensharing.enabled" = false;
+                            "media.gmp-widevinecdm.enabled" = false;
+                            "media.h264.enabled" = false;
+                            "media.libvpx.enabled" = false;
+                            "media.mediasource.enabled" = false;
+                            "media.mediasource.mp4.enabled" = false;
+                            "media.mediasource.webm.enabled" = false;
+                            "media.mediasource.whitelist" = false;
+                            "media.mp4.enabled" = false;
+                            "media.navigator.audio.enabled" = false;
+                            "media.navigator.enabled" = false;
+                            "media.navigator.video.enabled" = false;
+                            "media.ogg.enabled" = false;
+                            "media.peerconnection.enabled" =false;
+                            "media.peerconnection.ice.default_address_only" =true;
+                            "media.wave.enabled" = false;
+                            "media.webm.enabled" = false;
+                            "media.webspeech.recognition.enable" = false;
+                            "media.webspeech.synth.enabled" = false;
+                            "network.dns.echconfig.enabled" = true;
+                            "network.dns.http3_echconfig.enabled" = true;
+                            "permissions.default.image" = 2;
+                            "places.history.enabled" = true;
+                            "plugin.state.flash" = "0";
+                            "privacy.donottrackheader.enabled" = true;
+                            "privacy.resistFingerprinting" = true;
+                            "privacy.resistFingerprinting.block_mozAddonManager" = true;
+                            "privacy.trackingprotection.cryptomining.enabled" =true;
+                            "privacy.trackingprotection.enabled" = true;
+                            "privacy.trackingprotection.fingerprinting.enabled" = true;
+                            "privacy.trackingprotection.socialtracking.enabled" = true;
+                            "reader.parse-on-load.enabled" = false;
+                            "security.enterprise_roots.auto-enabled" = false;
+                            "security.enterprise_roots.enabled" = false;
+                            "services.sync.engine.history" = true;
+                            "services.sync.prefs.sync-seen.services.sync.prefs.sync.capability.policy.maonoscript.sites" =true;
+                            "services.sync.prefs.sync.capability.policy.maonoscript.sites" =true;
+                            "signon.autofillForms" = false;
+                            # "signon.rememberSignons" = true;
+                            "svg.context-properties.content.enabled" = true;
+                            "toolkit.crashreporter.dataDirectory" = "";
+                            "toolkit.crashreporter.enabled" = false;
+                            "toolkit.telemetry.archive.enabled" = false;
+                            "toolkit.telemetry.enabled" = false;
+                            "toolkit.telemetry.rejected" = false;
+                            "toolkit.telemetry.unified" = false;
+                            # Convenience
+                            "browser.formfill.enable" = false;
+                            "browser.search.suggest.enabled" = false;
+                            "browser.search.suggest.enabled.private" = false;
+                            "browser.urlbar.suggest.searches" = false;
+                            "browser.urlbar.showSearchSuggestionsFirst" = false;
+                            "signon.rememberSignons" = false; # Stop asking to save passwords
+                            "extensions.formautofill.addresses.capture.enabled" = false; # Stop asking to save addresses
+                            # Styling
+                            "browser.compactmode.show" = true;
+                            # Containers
+                            "privacy.userContext.enabled" = true;
+                            "privacy.userContext.ui.enabled" = true;
+                            # Downloads
+                            "browser.download.useDownloadDir" = true;
+                            "browser.download.always_ask_before_handling_new_types" = true;
+                            # Privacy
+                            "privacy.sanitize.sanitizeOnShutdown" = true;
+                            "privacy.clearOnShutdown_v2.cache" = true;
+                            "privacy.clearOnShutdown_v2.historyFormDataAndDownloads" = true;
+                            "privacy.clearOnShutdown_v2.browsingHistoryAndDownloads" = true;
+                            "privacy.clearOnShutdown_v2.downloads" = true;
+                            "privacy.clearOnShutdown_v2.formdata" = true;
+                            "privacy.clearOnShutdown_v2.cookiesAndStorage" = true;
+                            # # HTTPS only
+                            # # "dom.security.https_only_mode" = true;
+                            "ui.key.menuAccessKey" = 17;
+                            "ui.key.menuAccessKeyFocuses" = false;
+                            "ui.caretBlinkTime" = "0";
+                            "ui.caretBlinkCount" = -1;
+                            "ui.caretWidth" = 3;
+                            "webgl.disabled" = true;
+                            "widget.non-native-theme.scrollbar.style" = 3;
+                            "xpinstall.signatures.required" = false;
+
+                          };
                             id = 0;
                             name = "firefox";
                             isDefault = true;
@@ -1528,170 +1795,171 @@ hr {
                           };
                           Preferences = {
                             "accessibility.force_disabled" =1;
-                            "app.update.auto" = lock-false;
+                            "app.update.auto" = false;
                             "app.update.download.promptMaxAttempts" = "0";
                             "app.update.elevation.promptMaxAttempts" = "0";
-                            "app.update.service.enabled" = lock-false;
-                            "browser.aboutConfig.showWarning" = lock-false;
-                            "browser.aboutwelcome.enabled" = lock-false;
-                            "browser.accessibility.typeaheadfind" = lock-false;
+                            "app.update.service.enabled" = false;
+                            "browser.aboutConfig.showWarning" = false;
+                            "browser.aboutwelcome.enabled" = false;
+                            "browser.accessibility.typeaheadfind" = false;
                             "browser.anchor_color" = "#000000";
-                            "browser.cache.disk.enable" =lock-true;
-                            "browser.ctrlTab.recentlyUsedOrder" = lock-true;
+                            "browser.cache.disk.enable" =true;
+                            "browser.ctrlTab.recentlyUsedOrder" = true;
                             "browser.display.document_color_use" = 2;
                             "browser.display.use_document_fonts" = "0";
                             "browser.download.dir" = "/home/${userSetting.username}/Downloads";
-                            "browser.download.forbid_open_with" = lock-true;
+                            "browser.download.forbid_open_with" = true;
                             "widget.use-xdg-desktop-portal.file-picker" = 1;
                             "browser.download.lastDir" = "/home/${userSetting.username}/Downloads";
-                            "browser.download.open_pdf_attachments_inline" =lock-true;
-                            "browser.download.start_downloads_in_tmp_dir" =lock-true;
-                            "browser.newtabpage.activity-stream.showWeather" =lock-false;
-                            "browser.newtabpage.enabled" = lock-false;
-                            "browser.quitShortcut.disabled" = lock-true;
-                            "browser.safebrowsing.downloads.enabled" = lock-false;
-                            "browser.safebrowsing.malware.enabled" = lock-false;
-                            "browser.safebrowsing.phishing.enabled" = lock-false;
+
+                            "browser.download.open_pdf_attachments_inline" =true;
+                            "browser.download.start_downloads_in_tmp_dir" =true;
+                            "browser.newtabpage.activity-stream.showWeather" =false;
+                            "browser.newtabpage.enabled" = false;
+                            "browser.quitShortcut.disabled" = true;
+                            "browser.safebrowsing.downloads.enabled" = false;
+                            "browser.safebrowsing.malware.enabled" = false;
+                            "browser.safebrowsing.phishing.enabled" = false;
                             "browser.search.region" = "US";
                             "browser.sessionstore.max_tabs_undo" =3;
-                            "browser.sessionstore.restore_on_demand" =lock-true;
-                            "browser.sessionstore.warnOnQuit" = lock-true;
-                            "browser.slowStartup.notificationDisabled" =lock-true;
+                            "browser.sessionstore.restore_on_demand" =true;
+                            "browser.sessionstore.warnOnQuit" = true;
+                            "browser.slowStartup.notificationDisabled" =true;
                             # instaed of blank.org or github, they are not reliable for chinese and eink user.
                             "browser.startup.homepage" = "https://search.nixos.org";
-                            "browser.tabs.closeTabByDblclick" = lock-true;
-                            "browser.tabs.closeWindowWithLastTab" = lock-false;
-                            "browser.tabs.loadInBackground" = lock-true;
+                            "browser.tabs.closeTabByDblclick" = true;
+                            "browser.tabs.closeWindowWithLastTab" = false;
+                            "browser.tabs.loadInBackground" = true;
                             "browser.tabs.tabClipWidth" = 999;
-                            "browser.tabs.warnOnClose" = lock-false;
+                            "browser.tabs.warnOnClose" = false;
                             "browser.toolbars.bookmarks.visibility" = "never";
-                            "browser.translations.automaticallyPopup" = lock-false;
+                            "browser.translations.automaticallyPopup" = false;
                             "browser.uidensity" = 1;
-                            "browser.urlbar.oneOffSearches" = lock-false;
-                            "browser.urlbar.shortcuts.tabs" = lock-false;
-                            "browser.urlbar.suggest.quicksuggest.sponsored" = lock-false;
+                            "browser.urlbar.oneOffSearches" = false;
+                            "browser.urlbar.shortcuts.tabs" = false;
+                            "browser.urlbar.suggest.quicksuggest.sponsored" = false;
                             "browser.visited_color" = "#000000";
-                            "canvas.capturestream.enabled" = lock-false;
-                            "datareporting.healthreport.service.enabled" = lock-false;
-                            "devtools.chrome.enabled" = lock-true;
-                            "devtools.debugger.remote-enabled" = lock-true;
-                            "dom.ipc.plugins.enabled" = lock-false;
-                            "dom.ipc.plugins.enabled.libflashplayer.so" = lock-false;
-                            "dom.media.mediasource.enabled" = lock-false;
-                            "dom.mozTCPSocket.enabled" = lock-false;
-                            "dom.netinfo.enabled" = lock-false;
-                            "dom.webaudio.enabled" = lock-false;
-                            "dom.webvtt.enabled" = lock-false;
+                            "canvas.capturestream.enabled" = false;
+                            "datareporting.healthreport.service.enabled" = false;
+                            "devtools.chrome.enabled" = true;
+                            "devtools.debugger.remote-enabled" = true;
+                            "dom.ipc.plugins.enabled" = false;
+                            "dom.ipc.plugins.enabled.libflashplayer.so" = false;
+                            "dom.media.mediasource.enabled" = false;
+                            "dom.mozTCPSocket.enabled" = false;
+                            "dom.netinfo.enabled" = false;
+                            "dom.webaudio.enabled" = false;
+                            "dom.webvtt.enabled" = false;
                             "extensions.activeThemeID" = "{5f71ffe3-23e2-49b8-b75e-2c032ef4a1d9}";
-                            "extensions.pocket.enabled" = lock-false;
-                            "extensions.update.enabled" = lock-false;
+                            "extensions.pocket.enabled" = false;
+                            "extensions.update.enabled" = false;
                             "extensions.webextensions.restrictedDomains" = "";
                             "font.name-list.emoji" = "";
                             "font.name.monospace.x-western" ="JetBrainsMono Nerd Font Mono";
                             "full-screen-api.transition.timeout" = "0";
                             "full-screen-api.warning.delay" = "0";
                             "full-screen-api.warning.timeout" = "0";
-                            "general.smoothScroll" = lock-false;
-                            "general.useragent.compatMode.firefox" = lock-true;
-                            "geo.enabled" = lock-false;
+                            "general.smoothScroll" = false;
+                            "general.useragent.compatMode.firefox" = true;
+                            "geo.enabled" = false;
                             "gfx.font_rendering.fontconfig.max_generic_substitutions" = 127;
-                            # "gfx.webrender.all" = lock-false;
-                            "image.jxl.enabled" = lock-true;
+                            # "gfx.webrender.all" = false;
+                            "image.jxl.enabled" = true;
                             "layout.css.prefers-color-scheme.content-override" = 1;
-                            "browser.ml.linkPreview.enabled" = lock-false;
-                            "media.autoplay.block-event.enabled" = lock-true;
+                            "browser.ml.linkPreview.enabled" = false;
+                            "media.autoplay.block-event.enabled" = true;
                             "media.autoplay.default" = 2;
-                            "media.videocontrols.picture-in-picture.keyboard-controls.enabled" = lock-false;
-                            "media.av1.enabled" = lock-false;
-                            "media.block-autoplay-until-in-foreground" = lock-true;
-                            "media.block-play-until-visible" = lock-true;
-                            "media.disabled" =lock-true;
-                            "media.eme.enabled" = lock-false;
-                            "media.ffmpeg.enabled" = lock-false;
-                            "media.ffmpeg.vaapi.enabled" = lock-true;
-                            "media.ffvpx.enabled" = lock-false;
-                            "media.flac.enabled" = lock-false;
-                            "media.getusermedia.screensharing.enabled" = lock-false;
-                            "media.gmp-widevinecdm.enabled" = lock-false;
-                            "media.h264.enabled" = lock-false;
-                            "media.libvpx.enabled" = lock-false;
-                            "media.mediasource.enabled" = lock-false;
-                            "media.mediasource.mp4.enabled" = lock-false;
-                            "media.mediasource.webm.enabled" = lock-false;
-                            "media.mediasource.whitelist" = lock-false;
-                            "media.mp4.enabled" = lock-false;
-                            "media.navigator.audio.enabled" = lock-false;
-                            "media.navigator.enabled" = lock-false;
-                            "media.navigator.video.enabled" = lock-false;
-                            "media.ogg.enabled" = lock-false;
-                            "media.peerconnection.enabled" =lock-false;
-                            "media.peerconnection.ice.default_address_only" =lock-true;
-                            "media.wave.enabled" = lock-false;
-                            "media.webm.enabled" = lock-false;
-                            "media.webspeech.recognition.enable" = lock-false;
-                            "media.webspeech.synth.enabled" = lock-false;
-                            "network.dns.echconfig.enabled" = lock-true;
-                            "network.dns.http3_echconfig.enabled" = lock-true;
-                            "permissions.default.image" = 2;
-                            "places.history.enabled" = lock-true;
-                            "plugin.state.flash" = "0";
-                            "privacy.donottrackheader.enabled" = lock-true;
-                            "privacy.resistFingerprinting" = lock-true;
-                            "privacy.resistFingerprinting.block_mozAddonManager" = lock-true;
-                            "privacy.trackingprotection.cryptomining.enabled" =lock-true;
-                            "privacy.trackingprotection.enabled" = lock-true;
-                            "privacy.trackingprotection.fingerprinting.enabled" = lock-true;
-                            "privacy.trackingprotection.socialtracking.enabled" = lock-true;
-                            "reader.parse-on-load.enabled" = lock-false;
-                            "security.enterprise_roots.auto-enabled" = lock-false;
-                            "security.enterprise_roots.enabled" = lock-false;
-                            "services.sync.engine.history" = lock-true;
-                            "services.sync.prefs.sync-seen.services.sync.prefs.sync.capability.policy.maonoscript.sites" =lock-true;
-                            "services.sync.prefs.sync.capability.policy.maonoscript.sites" =lock-true;
-                            "signon.autofillForms" = lock-false;
-                            # "signon.rememberSignons" = lock-true;
-                            "svg.context-properties.content.enabled" = lock-true;
-                            "toolkit.crashreporter.dataDirectory" = "";
-                            "toolkit.crashreporter.enabled" = lock-false;
-                            "toolkit.telemetry.archive.enabled" = lock-false;
-                            "toolkit.telemetry.enabled" = lock-false;
-                            "toolkit.telemetry.rejected" = lock-false;
-                            "toolkit.telemetry.unified" = lock-false;
-                            # Convenience
-                            "browser.formfill.enable" = lock-false;
-                            "browser.search.suggest.enabled" = lock-false;
-                            "browser.search.suggest.enabled.private" = lock-false;
-                            "browser.urlbar.suggest.searches" = lock-false;
-                            "browser.urlbar.showSearchSuggestionsFirst" = lock-false;
-                            "signon.rememberSignons" = lock-false; # Stop asking to save passwords
-                            "extensions.formautofill.addresses.capture.enabled" = lock-false; # Stop asking to save addresses
-                            # Styling
-                            "browser.compactmode.show" = lock-true;
+                            "media.videocontrols.picture-in-picture.keyboard-controls.enabled" = false;
+                            "media.av1.enabled" = false;
+                            "media.block-autoplay-until-in-foreground" = true;
+                            "media.block-play-until-visible" = true;
+                            "media.disabled" =true;
+                            "media.eme.enabled" = false;
+                            "media.ffmpeg.enabled" = false;
+                            "media.ffmpeg.vaapi.enabled" = true;
+                            "media.ffvpx.enabled" = false;
+                            "media.flac.enabled" = false;
                             "toolkit.legacyUserProfileCustomizations.stylesheets" = lock-true; # This is needed for other userX.css files
+                            "media.getusermedia.screensharing.enabled" = false;
+                            "media.gmp-widevinecdm.enabled" = false;
+                            "media.h264.enabled" = false;
+                            "media.libvpx.enabled" = false;
+                            "media.mediasource.enabled" = false;
+                            "media.mediasource.mp4.enabled" = false;
+                            "media.mediasource.webm.enabled" = false;
+                            "media.mediasource.whitelist" = false;
+                            "media.mp4.enabled" = false;
+                            "media.navigator.audio.enabled" = false;
+                            "media.navigator.enabled" = false;
+                            "media.navigator.video.enabled" = false;
+                            "media.ogg.enabled" = false;
+                            "media.peerconnection.enabled" =false;
+                            "media.peerconnection.ice.default_address_only" =true;
+                            "media.wave.enabled" = false;
+                            "media.webm.enabled" = false;
+                            "media.webspeech.recognition.enable" = false;
+                            "media.webspeech.synth.enabled" = false;
+                            "network.dns.echconfig.enabled" = true;
+                            "network.dns.http3_echconfig.enabled" = true;
+                            "permissions.default.image" = 2;
+                            "places.history.enabled" = true;
+                            "plugin.state.flash" = "0";
+                            "privacy.donottrackheader.enabled" = true;
+                            "privacy.resistFingerprinting" = true;
+                            "privacy.resistFingerprinting.block_mozAddonManager" = true;
+                            "privacy.trackingprotection.cryptomining.enabled" =true;
+                            "privacy.trackingprotection.enabled" = true;
+                            "privacy.trackingprotection.fingerprinting.enabled" = true;
+                            "privacy.trackingprotection.socialtracking.enabled" = true;
+                            "reader.parse-on-load.enabled" = false;
+                            "security.enterprise_roots.auto-enabled" = false;
+                            "security.enterprise_roots.enabled" = false;
+                            "services.sync.engine.history" = true;
+                            "services.sync.prefs.sync-seen.services.sync.prefs.sync.capability.policy.maonoscript.sites" =true;
+                            "services.sync.prefs.sync.capability.policy.maonoscript.sites" =true;
+                            "signon.autofillForms" = false;
+                            # "signon.rememberSignons" = true;
+                            "svg.context-properties.content.enabled" = true;
+                            "toolkit.crashreporter.dataDirectory" = "";
+                            "toolkit.crashreporter.enabled" = false;
+                            "toolkit.telemetry.archive.enabled" = false;
+                            "toolkit.telemetry.enabled" = false;
+                            "toolkit.telemetry.rejected" = false;
+                            "toolkit.telemetry.unified" = false;
+                            # Convenience
+                            "browser.formfill.enable" = false;
+                            "browser.search.suggest.enabled" = false;
+                            "browser.search.suggest.enabled.private" = false;
+                            "browser.urlbar.suggest.searches" = false;
+                            "browser.urlbar.showSearchSuggestionsFirst" = false;
+                            "signon.rememberSignons" = false; # Stop asking to save passwords
+                            "extensions.formautofill.addresses.capture.enabled" = false; # Stop asking to save addresses
+                            # Styling
+                            "browser.compactmode.show" = true;
                             # Containers
-                            "privacy.userContext.enabled" = lock-true;
-                            "privacy.userContext.ui.enabled" = lock-true;
+                            "privacy.userContext.enabled" = true;
+                            "privacy.userContext.ui.enabled" = true;
                             # Downloads
-                            "browser.download.useDownloadDir" = lock-true;
-                            "browser.download.always_ask_before_handling_new_types" = lock-true;
+                            "browser.download.useDownloadDir" = true;
+                            "browser.download.always_ask_before_handling_new_types" = true;
                             # Privacy
-                            "privacy.sanitize.sanitizeOnShutdown" = lock-true;
-                            "privacy.clearOnShutdown_v2.cache" = lock-true;
-                            "privacy.clearOnShutdown_v2.historyFormDataAndDownloads" = lock-true;
-                            "privacy.clearOnShutdown_v2.browsingHistoryAndDownloads" = lock-true;
-                            "privacy.clearOnShutdown_v2.downloads" = lock-true;
-                            "privacy.clearOnShutdown_v2.formdata" = lock-true;
-                            "privacy.clearOnShutdown_v2.cookiesAndStorage" = lock-true;
+                            "privacy.sanitize.sanitizeOnShutdown" = true;
+                            "privacy.clearOnShutdown_v2.cache" = true;
+                            "privacy.clearOnShutdown_v2.historyFormDataAndDownloads" = true;
+                            "privacy.clearOnShutdown_v2.browsingHistoryAndDownloads" = true;
+                            "privacy.clearOnShutdown_v2.downloads" = true;
+                            "privacy.clearOnShutdown_v2.formdata" = true;
+                            "privacy.clearOnShutdown_v2.cookiesAndStorage" = true;
                             # # HTTPS only
-                            # # "dom.security.https_only_mode" = lock-true;
+                            # # "dom.security.https_only_mode" = true;
                             "ui.key.menuAccessKey" = 17;
-                            "ui.key.menuAccessKeyFocuses" = lock-false;
+                            "ui.key.menuAccessKeyFocuses" = false;
                             "ui.caretBlinkTime" = "0";
                             "ui.caretBlinkCount" = -1;
                             "ui.caretWidth" = 3;
-                            "webgl.disabled" = lock-true;
+                            "webgl.disabled" = true;
                             "widget.non-native-theme.scrollbar.style" = 3;
-                            "xpinstall.signatures.required" = lock-false;
+                            "xpinstall.signatures.required" = false;
 
                           };
                         };
@@ -1847,14 +2115,14 @@ hr {
                   # 这也是当今时代互联网正在加速实现的事情…
                   # 但这是以牺牲掌握任何技能为代价换来的，
                   # 我们沉迷得越深，想要掌握一项技能的愿望就会越来越淡化。
-                  0.0.0.0 emacs-china.org
-                  0.0.0.0 hackaday.com
-                  0.0.0.0 ziggit.dev
-                  0.0.0.0 chatgpt.com
-                  0.0.0.0 www.google.com.hk
-                  0.0.0.0 www.google.com
-                  0.0.0.0 google.com.hk
-                  0.0.0.0 google.com
+                  # 0.0.0.0 emacs-china.org
+                  # 0.0.0.0 hackaday.com
+                  # 0.0.0.0 ziggit.dev
+                  # 0.0.0.0 chatgpt.com
+                  # 0.0.0.0 www.google.com.hk
+                  # 0.0.0.0 www.google.com
+                  # 0.0.0.0 google.com.hk
+                  # 0.0.0.0 google.com
 
                   # new
                   0.0.0.0 www.singtao.ca
@@ -1888,7 +2156,7 @@ hr {
                   };
                   pulseaudio.enable = false;
                   pipewire = {
-                    enable = userSetting.sound;
+                    # enable = userSetting.sound;
                     audio.enable = userSetting.sound;
                     pulse.enable = userSetting.sound;
                     alsa = {
@@ -2455,7 +2723,7 @@ include /etc/sway/config.d/*
                 };
 
                 systemd.services.adjustPaperLight = {
-                  enable = true;
+                  enable = false;
                   description = "no light";
                   after = [ "hibernate.target" ];
                   script =
