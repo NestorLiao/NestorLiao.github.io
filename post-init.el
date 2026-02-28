@@ -1073,17 +1073,17 @@
     ;; Tidy shadowed file names
     :hook (rfn-eshadow-update-overlay . vertico-directory-tidy)))
 
-(use-package yasnippet
-  :ensure t
-  :hook
-  (after-init . yas-global-mode)
-  :custom
-  (yas-snippet-dirs '("~/.emacs.d/snippets"))
-  (yas-also-auto-indent-first-line t)  ; Indent first line of snippet
-  (yas-also-indent-empty-lines t)
-  (yas-snippet-revival nil)  ; Setting this to t causes issues with undo
-  :init
-  (setq yas-verbosity 0))
+;; (use-package yasnippet
+;;   :ensure t
+;;   :hook
+;;   (after-init . yas-global-mode)
+;;   :custom
+;;   (yas-snippet-dirs '("~/.emacs.d/snippets"))
+;;   (yas-also-auto-indent-first-line t)  ; Indent first line of snippet
+;;   (yas-also-indent-empty-lines t)
+;;   (yas-snippet-revival nil)  ; Setting this to t causes issues with undo
+;;   :init
+;;   (setq yas-verbosity 0))
 
 (use-package helpful
   :ensure t

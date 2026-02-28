@@ -1021,8 +1021,8 @@
                             settings  = {
                             "accessibility.force_disabled" =1;
                             "app.update.auto" = false;
-                            "app.update.download.promptMaxAttempts" = "0";
-                            "app.update.elevation.promptMaxAttempts" = "0";
+                            "app.update.download.promptMaxAttempts" = 0;
+                            "app.update.elevation.promptMaxAttempts" = 0;
                             "app.update.service.enabled" = false;
                             "browser.aboutConfig.showWarning" = false;
                             "browser.aboutwelcome.enabled" = false;
@@ -1031,7 +1031,7 @@
                             "browser.cache.disk.enable" =true;
                             "browser.ctrlTab.recentlyUsedOrder" = true;
                             "browser.display.document_color_use" = 2;
-                            "browser.display.use_document_fonts" = "0";
+                            "browser.display.use_document_fonts" = 0;
                             "browser.download.dir" = "/home/${userSetting.username}/Downloads";
                             "browser.download.forbid_open_with" = true;
                             "widget.use-xdg-desktop-portal.file-picker" = 1;
@@ -1081,9 +1081,9 @@
                             "extensions.webextensions.restrictedDomains" = "";
                             "font.name-list.emoji" = "";
                             "font.name.monospace.x-western" ="JetBrainsMono Nerd Font Mono";
-                            "full-screen-api.transition.timeout" = "0";
-                            "full-screen-api.warning.delay" = "0";
-                            "full-screen-api.warning.timeout" = "0";
+                            "full-screen-api.transition.timeout" = 0;
+                            "full-screen-api.warning.delay" = 0;
+                            "full-screen-api.warning.timeout" = 0;
                             "general.smoothScroll" = false;
                             "general.useragent.compatMode.firefox" = true;
                             "geo.enabled" = false;
@@ -1128,7 +1128,7 @@
                             "network.dns.http3_echconfig.enabled" = true;
                             "permissions.default.image" = 2;
                             "places.history.enabled" = true;
-                            "plugin.state.flash" = "0";
+                            "plugin.state.flash" = 0;
                             "privacy.donottrackheader.enabled" = true;
                             "privacy.resistFingerprinting" = true;
                             "privacy.resistFingerprinting.block_mozAddonManager" = true;
@@ -1179,7 +1179,7 @@
                             # # "dom.security.https_only_mode" = true;
                             "ui.key.menuAccessKey" = 17;
                             "ui.key.menuAccessKeyFocuses" = false;
-                            "ui.caretBlinkTime" = "0";
+                            "ui.caretBlinkTime" = 0;
                             "ui.caretBlinkCount" = -1;
                             "ui.caretWidth" = 3;
                             "webgl.disabled" = true;
@@ -2123,11 +2123,6 @@ hr {
                   # 0.0.0.0 www.google.com
                   # 0.0.0.0 google.com.hk
                   # 0.0.0.0 google.com
-
-                  # new
-                  0.0.0.0 www.singtao.ca
-                  0.0.0.0 www.chinadaily.com.cn
-                  0.0.0.0 zh.zlib.li
                 '';
                 services = {
                   irqbalance.enable = false;
