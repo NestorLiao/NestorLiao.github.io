@@ -9,7 +9,8 @@
         gitusername = "NestorLiao";
         hostname = "nixos";
         email = "llqingsong@qq.com";
-        windowmanager = "sway";
+        # windowmanager = "sway";
+        windowmanager = "gnome";
         sound = false;
       };
     in {
@@ -134,15 +135,6 @@
                   libraries = with pkgs; [
                   ];
                 };
-
-                # services.displayManager.gdm.enable = true;
-                # services.desktopManager.gnome.enable = true;
-                # # To disable installing GNOME's suite of applications
-                # # and only be left with GNOME shell.
-               #  services.gnome.core-apps.enable = false;
-               #  services.gnome.core-developer-tools.enable = false;
-               #  services.gnome.games.enable = false;
-               #  environment.gnome.excludePackages = with pkgs; [ gnome-tour gnome-user-docs ];
 
                 environment.systemPackages = with pkgs; [
                   # bambu-studio
@@ -273,74 +265,74 @@
                   # clang-manpages
                   # linux-manual
 
-                  (texlive.combine ({ # For Writting my Book.
-                    inherit (texlive) scheme-small;
-                    "adforn" = texlive."adforn"; "amsfonts" = texlive."amsfonts";
-                    "amsmath" = texlive."amsmath"; "anyfontsize" = texlive."anyfontsize";
-                    "appendix" = texlive."appendix"; "apptools" = texlive."apptools";
-                    "atbegshi" = texlive."atbegshi"; "atveryend" = texlive."atveryend";
-                    "auxhook" = texlive."auxhook"; "babel" = texlive."babel";
-                    "bbding" = texlive."bbding"; "bidi" = texlive."bidi";
-                    "bigintcalc" = texlive."bigintcalc"; "bitset" = texlive."bitset";
-                    "blindtext" = texlive."blindtext"; "booktabs" = texlive."booktabs";
-                    "caption" = texlive."caption"; "catchfile" = texlive."catchfile";
-                    "changepage" = texlive."changepage"; "collcell" = texlive."collcell";
-                    "comment" = texlive."comment"; "csquotes" = texlive."csquotes";
-                    "ctablestack" = texlive."ctablestack"; "ctex" = texlive."ctex";
-                    "currfile" = texlive."currfile"; "enumitem" = texlive."enumitem";
-                    "environ" = texlive."environ"; "esint" = texlive."esint";
-                    "etex" = texlive."etex"; "etexcmds" = texlive."etexcmds";
-                    "etoolbox" = texlive."etoolbox"; "everysel" = texlive."everysel";
-                    "everyshi" = texlive."everyshi"; "fancyhdr" = texlive."fancyhdr";
-                    "fancyvrb" = texlive."fancyvrb"; "filehook" = texlive."filehook";
-                    "finstrut" = texlive."finstrut"; "float" = texlive."float";
-                    "fontspec" = texlive."fontspec"; "footmisc" = texlive."footmisc";
-                    "framed" = texlive."framed"; "fvextra" = texlive."fvextra";
-                    "geometry" = texlive."geometry"; "gettitlestring" = texlive."gettitlestring";
-                    "hologo" = texlive."hologo"; "hopatch" = texlive."hopatch";
-                    "hycolor" = texlive."hycolor"; "hyperref" = texlive."hyperref";
-                    "ifmtarg" = texlive."ifmtarg"; "ifplatform" = texlive."ifplatform";
-                    "iftex" = texlive."iftex"; "incgraph" = texlive."incgraph";
-                    "infwarerr" = texlive."infwarerr"; "intcalc" = texlive."intcalc";
-                    "kvdefinekeys" = texlive."kvdefinekeys"; "kvoptions" = texlive."kvoptions";
-                    "kvsetkeys" = texlive."kvsetkeys"; "latex2pydata" = texlive."latex2pydata";
-                    "lineno" = texlive."lineno"; "lipsum" = texlive."lipsum";
-                    "listings" = texlive."listings"; "listingsutf8" = texlive."listingsutf8";
-                    "ltxcmds" = texlive."ltxcmds"; "luacode" = texlive."luacode";
-                    "lualatex-math" = texlive."lualatex-math"; "luaotfload" = texlive."luaotfload";
-                    "luatexbase" = texlive."luatexbase"; "luatexja" = texlive."luatexja";
-                    "makecell" = texlive."makecell"; "manfnt" = texlive."manfnt";
-                    "marvosym" = texlive."marvosym"; "minitoc" = texlive."minitoc";
-                    "minted" = texlive."minted"; "multirow" = texlive."multirow";
-                    "multitoc" = texlive."multitoc"; "mwe" = texlive."mwe";
-                    "natbib" = texlive."natbib"; "newfloat" = texlive."newfloat";
-                    "notoccite" = texlive."notoccite"; "ntheorem" = texlive."ntheorem";
-                    "paralist" = texlive."paralist"; "pdfcol" = texlive."pdfcol";
-                    "pdfescape" = texlive."pdfescape"; "pdftexcmds" = texlive."pdftexcmds";
-                    "pgf" = texlive."pgf"; "pgfopts" = texlive."pgfopts";
-                    "placeins" = texlive."placeins"; "preview" = texlive."preview";
-                    "ragged2e" = texlive."ragged2e"; "refcount" = texlive."refcount";
-                    "relsize" = texlive."relsize"; "rerunfilecheck" = texlive."rerunfilecheck";
-                    "setspace" = texlive."setspace"; "showexpl" = texlive."showexpl";
-                    "siunitx" = texlive."siunitx"; "stringenc" = texlive."stringenc";
-                    "svn-prov" = texlive."svn-prov"; "tcolorbox" = texlive."tcolorbox";
-                    "tex4ht" = texlive."tex4ht"; "threeparttable" = texlive."threeparttable";
-                    "titlesec" = texlive."titlesec"; "tocloft" = texlive."tocloft";
-                    "translations" = texlive."translations"; "translator" = texlive."translator";
-                    "trimspaces" = texlive."trimspaces"; "type1cm" = texlive."type1cm";
-                    "unicode-math" = texlive."unicode-math"; "uniquecounter" = texlive."uniquecounter";
-                    "upquote" = texlive."upquote"; "url" = texlive."url";
-                    "varwidth" = texlive."varwidth"; "xcolor" = texlive."xcolor";
-                    "xifthen" = texlive."xifthen"; "xkeyval" = texlive."xkeyval";
-                    "xstring" = texlive."xstring"; "xunicode" = texlive."xunicode";
-                    "xurl" = texlive."xurl"; "zhnumber" = texlive."zhnumber";
-                    "capt-of" = texlive."capt-of"; "cprotect" = texlive."cprotect";
-                    "ulem" = texlive."ulem"; "wrapfig" = texlive."wrapfig";
-                    "esvect" = texlive."esvect"; "yhmath" =texlive."yhmath";
-                    "biblatex-gb7714-2015" =texlive."biblatex-gb7714-2015"; "biblatex" =texlive."biblatex";
-                    "tikzfill" =texlive."tikzfill"; "bigfoot" =texlive."bigfoot";
-                    "rsfs" =texlive."rsfs"; "tex-gyre" =texlive."tex-gyre";
-                  } ))
+                  # (texlive.combine ({ # For Writting my Book.
+                  #   inherit (texlive) scheme-small;
+                  #   "adforn" = texlive."adforn"; "amsfonts" = texlive."amsfonts";
+                  #   "amsmath" = texlive."amsmath"; "anyfontsize" = texlive."anyfontsize";
+                  #   "appendix" = texlive."appendix"; "apptools" = texlive."apptools";
+                  #   "atbegshi" = texlive."atbegshi"; "atveryend" = texlive."atveryend";
+                  #   "auxhook" = texlive."auxhook"; "babel" = texlive."babel";
+                  #   "bbding" = texlive."bbding"; "bidi" = texlive."bidi";
+                  #   "bigintcalc" = texlive."bigintcalc"; "bitset" = texlive."bitset";
+                  #   "blindtext" = texlive."blindtext"; "booktabs" = texlive."booktabs";
+                  #   "caption" = texlive."caption"; "catchfile" = texlive."catchfile";
+                  #   "changepage" = texlive."changepage"; "collcell" = texlive."collcell";
+                  #   "comment" = texlive."comment"; "csquotes" = texlive."csquotes";
+                  #   "ctablestack" = texlive."ctablestack"; "ctex" = texlive."ctex";
+                  #   "currfile" = texlive."currfile"; "enumitem" = texlive."enumitem";
+                  #   "environ" = texlive."environ"; "esint" = texlive."esint";
+                  #   "etex" = texlive."etex"; "etexcmds" = texlive."etexcmds";
+                  #   "etoolbox" = texlive."etoolbox"; "everysel" = texlive."everysel";
+                  #   "everyshi" = texlive."everyshi"; "fancyhdr" = texlive."fancyhdr";
+                  #   "fancyvrb" = texlive."fancyvrb"; "filehook" = texlive."filehook";
+                  #   "finstrut" = texlive."finstrut"; "float" = texlive."float";
+                  #   "fontspec" = texlive."fontspec"; "footmisc" = texlive."footmisc";
+                  #   "framed" = texlive."framed"; "fvextra" = texlive."fvextra";
+                  #   "geometry" = texlive."geometry"; "gettitlestring" = texlive."gettitlestring";
+                  #   "hologo" = texlive."hologo"; "hopatch" = texlive."hopatch";
+                  #   "hycolor" = texlive."hycolor"; "hyperref" = texlive."hyperref";
+                  #   "ifmtarg" = texlive."ifmtarg"; "ifplatform" = texlive."ifplatform";
+                  #   "iftex" = texlive."iftex"; "incgraph" = texlive."incgraph";
+                  #   "infwarerr" = texlive."infwarerr"; "intcalc" = texlive."intcalc";
+                  #   "kvdefinekeys" = texlive."kvdefinekeys"; "kvoptions" = texlive."kvoptions";
+                  #   "kvsetkeys" = texlive."kvsetkeys"; "latex2pydata" = texlive."latex2pydata";
+                  #   "lineno" = texlive."lineno"; "lipsum" = texlive."lipsum";
+                  #   "listings" = texlive."listings"; "listingsutf8" = texlive."listingsutf8";
+                  #   "ltxcmds" = texlive."ltxcmds"; "luacode" = texlive."luacode";
+                  #   "lualatex-math" = texlive."lualatex-math"; "luaotfload" = texlive."luaotfload";
+                  #   "luatexbase" = texlive."luatexbase"; "luatexja" = texlive."luatexja";
+                  #   "makecell" = texlive."makecell"; "manfnt" = texlive."manfnt";
+                  #   "marvosym" = texlive."marvosym"; "minitoc" = texlive."minitoc";
+                  #   "minted" = texlive."minted"; "multirow" = texlive."multirow";
+                  #   "multitoc" = texlive."multitoc"; "mwe" = texlive."mwe";
+                  #   "natbib" = texlive."natbib"; "newfloat" = texlive."newfloat";
+                  #   "notoccite" = texlive."notoccite"; "ntheorem" = texlive."ntheorem";
+                  #   "paralist" = texlive."paralist"; "pdfcol" = texlive."pdfcol";
+                  #   "pdfescape" = texlive."pdfescape"; "pdftexcmds" = texlive."pdftexcmds";
+                  #   "pgf" = texlive."pgf"; "pgfopts" = texlive."pgfopts";
+                  #   "placeins" = texlive."placeins"; "preview" = texlive."preview";
+                  #   "ragged2e" = texlive."ragged2e"; "refcount" = texlive."refcount";
+                  #   "relsize" = texlive."relsize"; "rerunfilecheck" = texlive."rerunfilecheck";
+                  #   "setspace" = texlive."setspace"; "showexpl" = texlive."showexpl";
+                  #   "siunitx" = texlive."siunitx"; "stringenc" = texlive."stringenc";
+                  #   "svn-prov" = texlive."svn-prov"; "tcolorbox" = texlive."tcolorbox";
+                  #   "tex4ht" = texlive."tex4ht"; "threeparttable" = texlive."threeparttable";
+                  #   "titlesec" = texlive."titlesec"; "tocloft" = texlive."tocloft";
+                  #   "translations" = texlive."translations"; "translator" = texlive."translator";
+                  #   "trimspaces" = texlive."trimspaces"; "type1cm" = texlive."type1cm";
+                  #   "unicode-math" = texlive."unicode-math"; "uniquecounter" = texlive."uniquecounter";
+                  #   "upquote" = texlive."upquote"; "url" = texlive."url";
+                  #   "varwidth" = texlive."varwidth"; "xcolor" = texlive."xcolor";
+                  #   "xifthen" = texlive."xifthen"; "xkeyval" = texlive."xkeyval";
+                  #   "xstring" = texlive."xstring"; "xunicode" = texlive."xunicode";
+                  #   "xurl" = texlive."xurl"; "zhnumber" = texlive."zhnumber";
+                  #   "capt-of" = texlive."capt-of"; "cprotect" = texlive."cprotect";
+                  #   "ulem" = texlive."ulem"; "wrapfig" = texlive."wrapfig";
+                  #   "esvect" = texlive."esvect"; "yhmath" =texlive."yhmath";
+                  #   "biblatex-gb7714-2015" =texlive."biblatex-gb7714-2015"; "biblatex" =texlive."biblatex";
+                  #   "tikzfill" =texlive."tikzfill"; "bigfoot" =texlive."bigfoot";
+                  #   "rsfs" =texlive."rsfs"; "tex-gyre" =texlive."tex-gyre";
+                  # } ))
                   (writeShellScriptBin "wtypefix" ''
                   #!/usr/bin/env bash
                   wtype \"
@@ -1129,13 +1121,13 @@
                             "permissions.default.image" = 2;
                             "places.history.enabled" = true;
                             "plugin.state.flash" = 0;
-                            "privacy.donottrackheader.enabled" = true;
-                            "privacy.resistFingerprinting" = true;
-                            "privacy.resistFingerprinting.block_mozAddonManager" = true;
-                            "privacy.trackingprotection.cryptomining.enabled" =true;
-                            "privacy.trackingprotection.enabled" = true;
-                            "privacy.trackingprotection.fingerprinting.enabled" = true;
-                            "privacy.trackingprotection.socialtracking.enabled" = true;
+                            # "privacy.donottrackheader.enabled" = true;
+                            # "privacy.resistFingerprinting" = true;
+                            # "privacy.resistFingerprinting.block_mozAddonManager" = true;
+                            # "privacy.trackingprotection.cryptomining.enabled" =true;
+                            # "privacy.trackingprotection.enabled" = true;
+                            # "privacy.trackingprotection.fingerprinting.enabled" = true;
+                            # "privacy.trackingprotection.socialtracking.enabled" = true;
                             "reader.parse-on-load.enabled" = false;
                             "security.enterprise_roots.auto-enabled" = false;
                             "security.enterprise_roots.enabled" = false;
@@ -1168,13 +1160,13 @@
                             "browser.download.useDownloadDir" = true;
                             "browser.download.always_ask_before_handling_new_types" = true;
                             # Privacy
-                            "privacy.sanitize.sanitizeOnShutdown" = true;
-                            "privacy.clearOnShutdown_v2.cache" = true;
-                            "privacy.clearOnShutdown_v2.historyFormDataAndDownloads" = true;
-                            "privacy.clearOnShutdown_v2.browsingHistoryAndDownloads" = true;
-                            "privacy.clearOnShutdown_v2.downloads" = true;
-                            "privacy.clearOnShutdown_v2.formdata" = true;
-                            "privacy.clearOnShutdown_v2.cookiesAndStorage" = true;
+                            # "privacy.sanitize.sanitizeOnShutdown" = true;
+                            # "privacy.clearOnShutdown_v2.cache" = true;
+                            # "privacy.clearOnShutdown_v2.historyFormDataAndDownloads" = true;
+                            # "privacy.clearOnShutdown_v2.browsingHistoryAndDownloads" = true;
+                            # "privacy.clearOnShutdown_v2.downloads" = true;
+                            # "privacy.clearOnShutdown_v2.formdata" = true;
+                            # "privacy.clearOnShutdown_v2.cookiesAndStorage" = true;
                             # # HTTPS only
                             # # "dom.security.https_only_mode" = true;
                             "ui.key.menuAccessKey" = 17;
@@ -1182,7 +1174,7 @@
                             "ui.caretBlinkTime" = 0;
                             "ui.caretBlinkCount" = -1;
                             "ui.caretWidth" = 3;
-                            "webgl.disabled" = true;
+                            # "webgl.disabled" = true;
                             "widget.non-native-theme.scrollbar.style" = 3;
                             "xpinstall.signatures.required" = false;
 
@@ -1904,13 +1896,13 @@ hr {
                             "permissions.default.image" = 2;
                             "places.history.enabled" = true;
                             "plugin.state.flash" = "0";
-                            "privacy.donottrackheader.enabled" = true;
-                            "privacy.resistFingerprinting" = true;
-                            "privacy.resistFingerprinting.block_mozAddonManager" = true;
-                            "privacy.trackingprotection.cryptomining.enabled" =true;
-                            "privacy.trackingprotection.enabled" = true;
-                            "privacy.trackingprotection.fingerprinting.enabled" = true;
-                            "privacy.trackingprotection.socialtracking.enabled" = true;
+                            # "privacy.donottrackheader.enabled" = true;
+                            # "privacy.resistFingerprinting" = true;
+                            # "privacy.resistFingerprinting.block_mozAddonManager" = true;
+                            # "privacy.trackingprotection.cryptomining.enabled" =true;
+                            # "privacy.trackingprotection.enabled" = true;
+                            # "privacy.trackingprotection.fingerprinting.enabled" = true;
+                            # "privacy.trackingprotection.socialtracking.enabled" = true;
                             "reader.parse-on-load.enabled" = false;
                             "security.enterprise_roots.auto-enabled" = false;
                             "security.enterprise_roots.enabled" = false;
@@ -1943,13 +1935,13 @@ hr {
                             "browser.download.useDownloadDir" = true;
                             "browser.download.always_ask_before_handling_new_types" = true;
                             # Privacy
-                            "privacy.sanitize.sanitizeOnShutdown" = true;
-                            "privacy.clearOnShutdown_v2.cache" = true;
-                            "privacy.clearOnShutdown_v2.historyFormDataAndDownloads" = true;
-                            "privacy.clearOnShutdown_v2.browsingHistoryAndDownloads" = true;
-                            "privacy.clearOnShutdown_v2.downloads" = true;
-                            "privacy.clearOnShutdown_v2.formdata" = true;
-                            "privacy.clearOnShutdown_v2.cookiesAndStorage" = true;
+                            # "privacy.sanitize.sanitizeOnShutdown" = true;
+                            # "privacy.clearOnShutdown_v2.cache" = true;
+                            # "privacy.clearOnShutdown_v2.historyFormDataAndDownloads" = true;
+                            # "privacy.clearOnShutdown_v2.browsingHistoryAndDownloads" = true;
+                            # "privacy.clearOnShutdown_v2.downloads" = true;
+                            # "privacy.clearOnShutdown_v2.formdata" = true;
+                            # "privacy.clearOnShutdown_v2.cookiesAndStorage" = true;
                             # # HTTPS only
                             # # "dom.security.https_only_mode" = true;
                             "ui.key.menuAccessKey" = 17;
@@ -1957,7 +1949,7 @@ hr {
                             "ui.caretBlinkTime" = "0";
                             "ui.caretBlinkCount" = -1;
                             "ui.caretWidth" = 3;
-                            "webgl.disabled" = true;
+                            # "webgl.disabled" = true;
                             "widget.non-native-theme.scrollbar.style" = 3;
                             "xpinstall.signatures.required" = false;
 
@@ -1988,6 +1980,58 @@ hr {
                         ];
                   };
                 };
+
+                programs.sway = {
+                  enable = userSetting.windowmanager == "sway";
+                  wrapperFeatures.gtk = true;
+                };
+
+
+
+    # 如果选择 "gnome"，则启用 GNOME 相关服务
+    services.displayManager.gdm.enable = userSetting.windowmanager == "gnome";
+    services.desktopManager.gnome.enable = userSetting.windowmanager == "gnome";
+    services.gnome.core-apps.enable = false;
+    services.gnome.core-developer-tools.enable = false;
+    services.gnome.games.enable = false;
+    environment.gnome.excludePackages = with pkgs; [ gnome-tour gnome-user-docs ];
+
+                services.greetd = {
+                  enable = userSetting.windowmanager == "sway";
+                  settings = {
+                    default_session.command =
+                      "${pkgs.tuigreet}/bin/tuigreet --time --cmd ${userSetting.windowmanager} --theme 'text=black;container=white;prompt=black;input=black;border=black;title=black;greet=black;action=black;button=black;time=black'";
+                    initial_session = {
+                      command = "${userSetting.windowmanager}";
+                      user = userSetting.username;
+                    };
+                  };
+                };
+                services.gnome.gnome-keyring.enable = true;
+
+
+                # services.displayManager.gdm.enable = true;
+                # services.desktopManager.gnome.enable = true;
+                # # To disable installing GNOME's suite of applications
+                # # and only be left with GNOME shell.
+                # services.gnome.core-apps.enable = false;
+                # services.gnome.core-developer-tools.enable = false;
+                # services.gnome.games.enable = false;
+                # environment.gnome.excludePackages = with pkgs; [ gnome-tour gnome-user-docs ];
+                #
+                # greetd = {
+                #   enable = false;
+                #   settings = {
+                #     default_session.command =
+                #       "${pkgs.tuigreet}/bin/tuigreet --time --cmd ${userSetting.windowmanager} --theme 'text=black;container=white;prompt=black;input=black;border=black;title=black;greet=black;action=black;button=black;time=black'";
+                #     initial_session = {
+                #       command = "${userSetting.windowmanager}";
+                #       user = userSetting.username;
+                #     };
+                #   };
+                # };
+                # gnome.gnome-keyring.enable = true;
+
                 users.defaultUserShell = pkgs.fish;
                 security.sudo.wheelNeedsPassword = false;
                 programs.thunar.enable = true;
@@ -2198,18 +2242,6 @@ hr {
                     };
                     resolveLocalQueries = true;
                   };
-                  greetd = {
-                    enable = true;
-                    settings = {
-                      default_session.command =
-                        "${pkgs.tuigreet}/bin/tuigreet --time --cmd ${userSetting.windowmanager} --theme 'text=black;container=white;prompt=black;input=black;border=black;title=black;greet=black;action=black;button=black;time=black'";
-                      initial_session = {
-                        command = "${userSetting.windowmanager}";
-                        user = userSetting.username;
-                      };
-                    };
-                  };
-                  gnome.gnome-keyring.enable = true;
                   xserver = {
                     enable = true;
                     xkb.layout = "us";
@@ -2276,155 +2308,155 @@ hr {
                     ];
                   };
                   xserver.dpi = 192;
-                  emacs = {
-                    enable = true;
-                    package =
-                      (pkgs.unstable.emacsPackagesFor
-                        (pkgs.unstable.emacs-pgtk.override {
-                          withNativeCompilation = true;
-                          withSQLite3 = true;
-                        })).emacsWithPackages
-                        (epkgs: (with epkgs.melpaStablePackages; [ ])
-                      ++ (with epkgs.melpaPackages; [
-
-                        ### black MAGIC to Jumping Everwhere
-                        # dired-rsync
-                        ztree
-                        cff
-                        dired-subtree
-                        dumb-jump
-                        goto-chg
-                        rg
-
-                        ## Expand & Edit
-                        # rotate-text # no on melpa
-                        avy
-                        expand-region
-                        iedit
-                        move-text
-                        multiple-cursors
-                        surround
-                        yasnippet # use tempel?(wtf.. it's 31 year old)
-
-                        ### Do Anything In Emacs©
-                        #### Service Manager
-                        # docker
-                        # kubernetes
-                        # ovpn-mode
-                        # journalctl-mode
-                        # syslog-mode
-
-                        #### Project Manager
-                        # disproject
-                        # magit-commit-mark
-                        # magit-tbdiff
-                        # magit-todos #why not just grep TODO??
-                        consult-gh-embark # 集 emacs 牛包之大成
-                        consult-gh-forge
-                        consult-gh-with-pr-review
-                        magit
-                        forge
-                        git-link
-                        git-timemachine
-
-                        #### Get Term
-                        # eshell-toggle # still
-                        # with-editor # magit have it already
-                        multi-vterm
-                        vterm
-
-                        #### Read Books 文灭志，博溺心，少读书，多睡觉。
-                        # pandoc-mode
-                        nov
-                        pdf-tools
-                        saveplace-pdf-view
-
-                        #### Chinese Input Method
-                        # 为什么有人需要让浏览器能用vim(连文本框也要)
-                        # TMD©，直接在emacs写完再复制不就行了吗?
-                        # vimium/tridactyl/vimium C/surfinger…
-                        # 去TM的假装编辑器的浏览器插件们，我就呆在编辑器!
-                        pyim
-
-                        #### read log/manual/doc/dict/gpt/... in emacs
-                        # doxymacs # anything relate to c++ is a f**ked mess.
-                        # posix-manual
-                        # sicp
-                        devdocs-browser
-                        gptel # seems like doctor-plus. I think using woman is better.
-                        # tldr # I just don't want to use it because it's too bloate.. which fetch 140mb just for 50 countries's languages...
-                        helpful # Just use orginal help-mode is better.
-                        quick-sdcv
-
-                        ### the you-know-who guy created a huge list of amazing pkgs
-                        consult
-                        embark
-                        embark-consult
-                        vertico
-                        orderless
-                        marginalia
-                        cape
-                        corfu
-
-                        ### for Language FANBoys: "YOU DON'T HAVE TO LEARN THOSE"
-
-                        nix-mode
-                        # moved to index.org
-                        # 我实在想不通，语言为什么这么多? 需求为什么停不了?
-                        # 这些程序也就几百行… 为什么会产生这么大的“不简洁感”
-                        # 随便配个浏览器就远远大过这些了…
-                        # 人们总是过于关心因自己产生的事物。
-                        # 或是说“人们总是在意自己没用过的事物”，
-                        # 而对轻视已拥有的事物。幻想… 自贱…
-                        # 但确实，注释完这些，启动时间从1.76变成了1.01
-
-                        ### save and format
-                        electric-operator # 我再也不想要什么自动化了…
-                        smart-semicolon # 算了，我再试试，懒化更重要。
-                        aggressive-indent # Only for Elisp or some creepy lang.
-                        super-save # The greatest thing I ever see in my life.
-                        psession # 当然… 自动保存 还是必须的。
-
-                        ### emacs look and feel
-                        no-emoji # for my autism
-                        hide-mode-line # for my adhd
-                        ligature # for my lazy-eye
-                        real-mono-themes # it's my THEME
-
-                        ### feel even better
-                        alert
-                        # compile-angel
-                        envrc
-                        c-eval
-                        basic-c-compile
-                        trashed
-                        undo-fu
-                        undo-fu-session
-                        wgrep
-
-                        # smart-compile 算了吧，简单点，你一天写80种语言
-                        # 可能连它们的hello world都写不出来。
-                        # consult-notes 难道，哥们不知道写笔记不如写代码?
-                        # obsidian/yuque/typora，你让的笔记传销坑还少吗?
-                        # 笔记就是每天后悔，明天期待，复制粘贴，llm输出。
-                        # 谁tm的用笔记就是脑瓜子弱智… 专门给llm加语料…
-                        # fsrs/anki-editor 难道，哥们是出题人? 一天天的搞记忆法。
-                        # 买本单词本记记吧…
-                        # viking-mode 难道，哥们不知道expand-region?
-                        # call-graph 难道，哥们以为画个图就理清楚了?
-                        # el-fetch 难道，哥们真的写得来elisp就写个包?
-                        # 天天关心天气质量和自己编辑器占用多少内存的男性
-                        # 大概率是抖m的男娘吧，bro，get some help!
-                        # 甩几下铁，不关心这些那些，只是用心做事…
-                        # 那里需要管什么RAM和ROM的几百MB…
-                        # BTW, Org-mode is SHIT, just write done plain list.
-                        # Markdown > Org > Latex
-                      ]) ++ (with epkgs.elpaPackages; [
-                        plz # tavily-search
-                      ])
-                      ++ (with pkgs; [
-                      ]));
-                  };
+                  # emacs = {
+                  #   enable = true;
+                  #   package =
+                  #     (pkgs.unstable.emacsPackagesFor
+                  #       (pkgs.unstable.emacs-pgtk.override {
+                  #         withNativeCompilation = true;
+                  #         withSQLite3 = true;
+                  #       })).emacsWithPackages
+                  #       (epkgs: (with epkgs.melpaStablePackages; [ ])
+                  #     ++ (with epkgs.melpaPackages; [
+                  #
+                  #       ### black MAGIC to Jumping Everwhere
+                  #       # dired-rsync
+                  #       ztree
+                  #       cff
+                  #       dired-subtree
+                  #       dumb-jump
+                  #       goto-chg
+                  #       rg
+                  #
+                  #       ## Expand & Edit
+                  #       # rotate-text # no on melpa
+                  #       avy
+                  #       expand-region
+                  #       iedit
+                  #       move-text
+                  #       multiple-cursors
+                  #       surround
+                  #       yasnippet # use tempel?(wtf.. it's 31 year old)
+                  #
+                  #       ### Do Anything In Emacs©
+                  #       #### Service Manager
+                  #       # docker
+                  #       # kubernetes
+                  #       # ovpn-mode
+                  #       # journalctl-mode
+                  #       # syslog-mode
+                  #
+                  #       #### Project Manager
+                  #       # disproject
+                  #       # magit-commit-mark
+                  #       # magit-tbdiff
+                  #       # magit-todos #why not just grep TODO??
+                  #       consult-gh-embark # 集 emacs 牛包之大成
+                  #       consult-gh-forge
+                  #       consult-gh-with-pr-review
+                  #       magit
+                  #       forge
+                  #       git-link
+                  #       git-timemachine
+                  #
+                  #       #### Get Term
+                  #       # eshell-toggle # still
+                  #       # with-editor # magit have it already
+                  #       multi-vterm
+                  #       vterm
+                  #
+                  #       #### Read Books 文灭志，博溺心，少读书，多睡觉。
+                  #       # pandoc-mode
+                  #       nov
+                  #       pdf-tools
+                  #       saveplace-pdf-view
+                  #
+                  #       #### Chinese Input Method
+                  #       # 为什么有人需要让浏览器能用vim(连文本框也要)
+                  #       # TMD©，直接在emacs写完再复制不就行了吗?
+                  #       # vimium/tridactyl/vimium C/surfinger…
+                  #       # 去TM的假装编辑器的浏览器插件们，我就呆在编辑器!
+                  #       pyim
+                  #
+                  #       #### read log/manual/doc/dict/gpt/... in emacs
+                  #       # doxymacs # anything relate to c++ is a f**ked mess.
+                  #       # posix-manual
+                  #       # sicp
+                  #       devdocs-browser
+                  #       gptel # seems like doctor-plus. I think using woman is better.
+                  #       # tldr # I just don't want to use it because it's too bloate.. which fetch 140mb just for 50 countries's languages...
+                  #       helpful # Just use orginal help-mode is better.
+                  #       quick-sdcv
+                  #
+                  #       ### the you-know-who guy created a huge list of amazing pkgs
+                  #       consult
+                  #       embark
+                  #       embark-consult
+                  #       vertico
+                  #       orderless
+                  #       marginalia
+                  #       cape
+                  #       corfu
+                  #
+                  #       ### for Language FANBoys: "YOU DON'T HAVE TO LEARN THOSE"
+                  #
+                  #       nix-mode
+                  #       # moved to index.org
+                  #       # 我实在想不通，语言为什么这么多? 需求为什么停不了?
+                  #       # 这些程序也就几百行… 为什么会产生这么大的“不简洁感”
+                  #       # 随便配个浏览器就远远大过这些了…
+                  #       # 人们总是过于关心因自己产生的事物。
+                  #       # 或是说“人们总是在意自己没用过的事物”，
+                  #       # 而对轻视已拥有的事物。幻想… 自贱…
+                  #       # 但确实，注释完这些，启动时间从1.76变成了1.01
+                  #
+                  #       ### save and format
+                  #       electric-operator # 我再也不想要什么自动化了…
+                  #       smart-semicolon # 算了，我再试试，懒化更重要。
+                  #       aggressive-indent # Only for Elisp or some creepy lang.
+                  #       super-save # The greatest thing I ever see in my life.
+                  #       psession # 当然… 自动保存 还是必须的。
+                  #
+                  #       ### emacs look and feel
+                  #       no-emoji # for my autism
+                  #       hide-mode-line # for my adhd
+                  #       ligature # for my lazy-eye
+                  #       real-mono-themes # it's my THEME
+                  #
+                  #       ### feel even better
+                  #       alert
+                  #       # compile-angel
+                  #       envrc
+                  #       c-eval
+                  #       basic-c-compile
+                  #       trashed
+                  #       undo-fu
+                  #       undo-fu-session
+                  #       wgrep
+                  #
+                  #       # smart-compile 算了吧，简单点，你一天写80种语言
+                  #       # 可能连它们的hello world都写不出来。
+                  #       # consult-notes 难道，哥们不知道写笔记不如写代码?
+                  #       # obsidian/yuque/typora，你让的笔记传销坑还少吗?
+                  #       # 笔记就是每天后悔，明天期待，复制粘贴，llm输出。
+                  #       # 谁tm的用笔记就是脑瓜子弱智… 专门给llm加语料…
+                  #       # fsrs/anki-editor 难道，哥们是出题人? 一天天的搞记忆法。
+                  #       # 买本单词本记记吧…
+                  #       # viking-mode 难道，哥们不知道expand-region?
+                  #       # call-graph 难道，哥们以为画个图就理清楚了?
+                  #       # el-fetch 难道，哥们真的写得来elisp就写个包?
+                  #       # 天天关心天气质量和自己编辑器占用多少内存的男性
+                  #       # 大概率是抖m的男娘吧，bro，get some help!
+                  #       # 甩几下铁，不关心这些那些，只是用心做事…
+                  #       # 那里需要管什么RAM和ROM的几百MB…
+                  #       # BTW, Org-mode is SHIT, just write done plain list.
+                  #       # Markdown > Org > Latex
+                  #     ]) ++ (with epkgs.elpaPackages; [
+                  #       plz # tavily-search
+                  #     ])
+                  #     ++ (with pkgs; [
+                  #     ]));
+                  # };
                 };
                 console = {
                   font = "latarcyrheb-sun32";
@@ -2448,10 +2480,6 @@ hr {
                   ];
                 };
                 security.polkit.enable = true;
-                programs.sway = {
-                  enable = true;
-                  wrapperFeatures.gtk = true;
-                };
                 systemd.services."getdaeconfig" = {
                   script = ''
                                           mkdir -p "/home/${userSetting.username}/.config/dae"
@@ -2754,13 +2782,28 @@ include /etc/sway/config.d/*
                 #   };
                 # };
                 boot.kernelPackages = pkgs.unstable.linuxPackages;
-                # boot.loader.timeout = 5;
-                boot.loader.systemd-boot.enable = true;
-                # boot.loader.systemd-boot.configurationLimit = 5;
+
+                boot.loader.timeout = 5;
+                boot.loader.systemd-boot.enable = false;
+                boot.loader.systemd-boot.configurationLimit = 5;
+                boot.loader.grub = {
+                  enable = true;
+                  device = "nodev"; # "nodev" is used for UEFI
+                  efiSupport = true;
+                  # timeoutStyle = "hidden";
+                  splashImage = null;
+                  extraConfig = ''
+                      set color_normal=black/white
+                          set color_highlight=black/white
+                              i8042.nokbd
+    i8042.noaux
+    atkbd.reset
+  '';
+                };
                 boot.loader.efi.canTouchEfiVariables = true;
                 boot.loader.efi.efiSysMountPoint = "/boot";
-                boot.loader.grub.theme =
-                  "${pkgs.libsForQt5.breeze-grub}/grub/themes/breeze";
+                boot.loader.grub.theme = pkgs.nixos-grub2-theme;
+
                 documentation = {
                   enable = true;
                   doc.enable = true;
@@ -2771,7 +2814,8 @@ include /etc/sway/config.d/*
                   };
                   dev.enable = true;
                 };
-                hardware = { bluetooth.enable = true;
+                hardware = {
+                  bluetooth.enable = true;
                   bluetooth.powerOnBoot = true;
                   graphics = {
                     enable = true;

@@ -1715,7 +1715,7 @@ Optional MAX-RESULTS is the maximum number of results (default 5)."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;                                begin of sway                               ;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defvar sway-rotate 0
+(defvar sway-rotate 1
   "Current sway rotate state, either 0 for horizental or  1 for vertical.")
 
 (defun swayfullstate()
