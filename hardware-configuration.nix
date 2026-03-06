@@ -13,12 +13,25 @@
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
 
-  fileSystems."/" = { device = "/dev/disk/by-id/nvme-ZHITAI_TiPlus5000_1TB_ZTA21T0KA222520MB7-part3"; fsType = "ext4"; };
-  fileSystems."/boot" = { device = "/dev/disk/by-id/nvme-ZHITAI_TiPlus5000_1TB_ZTA21T0KA222520MB7-part1"; fsType = "vfat"; options = [ "fmask=0022" "dmask=0022" ]; };
-  swapDevices = [{ device = "/dev/disk/by-id/nvme-ZHITAI_TiPlus5000_1TB_ZTA21T0KA222520MB7-part2"; }];
 
 
-# fileSystems."/" = { device = "/dev/disk/by-label/root"; fsType = "ext4"; };
+  fileSystems."/" =
+    { device = "/dev/disk/by-uuid/ee4719bc-1457-4b22-890e-59d595a11721";
+      fsType = "ext4";
+    };
+
+  fileSystems."/boot" =
+    { device = "/dev/disk/by-uuid/48BA-65BE";
+      fsType = "vfat";
+      options = [ "fmask=0022" "dmask=0022" ];
+    };
+
+
+  # fileSystems."/" = { device = "/dev/disk/by-id/nvme-ZHITAI_TiPlus5000_1TB_ZTA21T0KA222520MB7-part3"; fsType = "ext4"; };
+  # fileSystems."/boot" = { device = "/dev/disk/by-id/nvme-ZHITAI_TiPlus5000_1TB_ZTA21T0KA222520MB7-part1"; fsType = "vfat"; options = [ "fmask=0022" "dmask=0022" ]; };
+  # swapDevices = [{ device = "/dev/disk/by-id/nvme-ZHITAI_TiPlus5000_1TB_ZTA21T0KA222520MB7-part2"; }];
+
+  # fileSystems."/" = { device = "/dev/disk/by-label/root"; fsType = "ext4"; };
 # fileSystems."/boot/efi" = { device = "/dev/disk/by-label/boot"; fsType = "vfat"; options = [ "fmask=0022" "dmask=0022" ]; };
 # swapDevices = [ { device = "/dev/disk/by-label/swap"; } ];
 
@@ -33,10 +46,10 @@
   #     options = [ "fmask=0022" "dmask=0022" ];
   #   };
   #
-  # swapDevices =
-  #   [
-  #     { device = "/dev/disk/by-uuid/757051e9-379a-4f95-be19-ce203da6df61"; }
-    # ];
+  swapDevices =
+    [
+      { device = "/dev/disk/by-uuid/757051e9-379a-4f95-be19-ce203da6df61"; }
+    ];
 
 # sudo fatlabel /dev/nvme0n1p1 boot
 # sudo e2label /dev/nvme0n1p3 root
